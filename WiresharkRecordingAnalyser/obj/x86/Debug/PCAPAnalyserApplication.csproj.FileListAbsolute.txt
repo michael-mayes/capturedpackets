@@ -1,0 +1,10 @@
+C:\Users\Mayes\AppData\Local\Temporary Projects\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+C:\Users\Mayes\AppData\Local\Temporary Projects\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+C:\Users\Mayes\AppData\Local\Temporary Projects\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.exe
+C:\Users\Mayes\AppData\Local\Temporary Projects\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.pdb
+C:\Users\Mayes\documents\visual studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\bin\Debug\PCAPAnalyserApplication.exe
+C:\Users\Mayes\documents\visual studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\bin\Debug\PCAPAnalyserApplication.pdb
+C:\Users\Mayes\documents\visual studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\PCAPAnalyserApplication.csproj.GenerateResource.Cache
+C:\Users\Mayes\documents\visual studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\PCAPAnalyserApplication.exe
+C:\Users\Mayes\documents\visual studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\PCAPAnalyserApplication.pdb
+C:\Users\Mayes\documents\visual studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\PCAPAnalyserApplication.MainWindowForm.resources
