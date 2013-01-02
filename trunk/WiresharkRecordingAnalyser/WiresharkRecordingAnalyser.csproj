@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{41EF8B4E-E5CB-4384-83C9-D28930BD1F4F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WiresharkRecordingAnalyser</RootNamespace>
+    <AssemblyName>PCAPAnalyserApplication</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WiresharkRecordingAnalyser.MainProgram</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Ethernet Frame\ARP Packet\ARPPacketProcessing.cs" />
+    <Compile Include="Ethernet Frame\ARP Packet\ARPPacketStructures.cs" />
+    <Compile Include="Ethernet Frame\ARP Packet\ARPPacketConstants.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\ICMPv4 Packet\ICMPv4PacketConstants.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\IGMPv2 Packet\IGMPv2PacketConstants.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\TCP Packet\TCPPacketConstants.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\TCP Packet\TCPPacketProcessing.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\UDP Datagram\UDPDatagramConstants.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\UDP Datagram\UDPDatagramProcessing.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\IGMPv2 Packet\IGMPv2PacketProcessing.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\ICMPv4 Packet\ICMPv4PacketProcessing.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\IGMPv2 Packet\IGMPv2PacketStructures.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\ICMPv4 Packet\ICMPv4PacketStructures.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\TCP Packet\TCPPacketStructures.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\UDP Datagram\UDPDatagramStructures.cs" />
+    <Compile Include="Recording Processing\CommonRecordingProcessing.cs" />
+    <Compile Include="Recording Processing\PCAP Recording\PCAPRecordingConstants.cs" />
+    <Compile Include="Recording Processing\ENC Recording\ENCRecordingProcessing.cs" />
+    <Compile Include="Recording Processing\ENC Recording\ENCRecordingStructures.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\IPv4PacketConstants.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\IPv4PacketProcessing.cs" />
+    <Compile Include="Recording Processing\PCAP Recording\PCAPRecordingProcessing.cs" />
+    <Compile Include="Ethernet Frame\IPv4 Packet\IPv4PacketStructures.cs" />
+    <Compile Include="Recording Processing\ENC Recording\ENCRecordingConstants.cs" />
+    <Compile Include="Recording Processing\PCAP Recording\PCAPRecordingStructures.cs" />
+    <Compile Include="Ethernet Frame\EthernetFrameConstants.cs" />
+    <Compile Include="Ethernet Frame\EthernetFrameStructures.cs" />
+    <Compile Include="Ethernet Frame\EthernetFrameProcessing.cs" />
+    <Compile Include="MainWindowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainWindowForm.Designer.cs">
+      <DependentUpon>MainWindowForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainProgram.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainWindowForm.resx">
+      <DependentUpon>MainWindowForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
