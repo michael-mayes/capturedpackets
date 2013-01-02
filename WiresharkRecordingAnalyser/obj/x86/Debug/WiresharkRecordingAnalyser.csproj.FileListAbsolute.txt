@@ -1,8 +1,0 @@
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\WiresharkRecordingAnalyser.MainWindowForm.resources
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\WiresharkRecordingAnalyser.csproj.GenerateResource.Cache
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\PCAPAnalyserApplication.exe
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\obj\x86\Debug\PCAPAnalyserApplication.pdb
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\bin\Debug\PCAPAnalyserApplication.exe
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\PCAPAnalyserApplication\PCAPAnalyserApplication\bin\Debug\PCAPAnalyserApplication.pdb
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\WiresharkRecordingAnalyser\WiresharkRecordingAnalyser\obj\x86\Debug\PCAPAnalyserApplication.exe
-C:\Users\Mayes\Documents\Visual Studio 2010\Projects\WiresharkRecordingAnalyser\WiresharkRecordingAnalyser\obj\x86\Debug\PCAPAnalyserApplication.pdb
