@@ -57,7 +57,7 @@ namespace EthernetFrameNamespace
             TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
 
             //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
-            if (TheEthernetFrameHeader.EtherType < EthernetFrameConstants.EthernetFrameHeaderEtherTypeMinimum)
+            if (TheEthernetFrameHeader.EtherType < (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
             {
                 //This Ethernet frame has a value for "Ether Type" lower than the minimum
                 //This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame
@@ -74,7 +74,7 @@ namespace EthernetFrameNamespace
             {
                 switch (TheEthernetFrameHeader.EtherType)
                 {
-                    case EthernetFrameConstants.EthernetFrameHeaderEtherTypeARP:
+                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
                         {
                             ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing();
 
@@ -83,7 +83,7 @@ namespace EthernetFrameNamespace
                             break;
                         }
 
-                    case EthernetFrameConstants.EthernetFrameHeaderEtherTypeIPv4:
+                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
                         {
                             IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing();
 
@@ -92,7 +92,7 @@ namespace EthernetFrameNamespace
                             break;
                         }
 
-                    case EthernetFrameConstants.EthernetFrameHeaderEtherTypeIPv6:
+                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
                         {
                             //We've got an Ethernet frame containing an IPv6 packet
 
@@ -105,7 +105,7 @@ namespace EthernetFrameNamespace
                             break;
                         }
 
-                    case EthernetFrameConstants.EthernetFrameHeaderEtherTypeLLDP:
+                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.LLDP:
                         {
                             LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing();
 
@@ -114,7 +114,7 @@ namespace EthernetFrameNamespace
                             break;
                         }
 
-                    case EthernetFrameConstants.EthernetFrameHeaderEtherTypeVLANTagged:
+                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
                         {
                             //We've got an Ethernet frame with a VLAN tag (IEEE 802.1Q) so must advance and re-read the Ether Type
 
