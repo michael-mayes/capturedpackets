@@ -33,7 +33,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = TCPPacketConstants.TCPPacketHeaderLength)]
+            Size = TCPPacketConstants.TCPPacketHeaderMinimumLength)]
 
         public struct TCPPacketHeaderStructure
         {
@@ -63,6 +63,8 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
 
             [System.Runtime.InteropServices.FieldOffset(18)]
             public System.UInt16 UrgentPointer; //Urgent pointer
+
+            //There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the TCP packet header length field
         }
     }
 }

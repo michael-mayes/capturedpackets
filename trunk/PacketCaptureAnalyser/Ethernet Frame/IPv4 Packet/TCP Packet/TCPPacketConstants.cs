@@ -33,6 +33,42 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
 
         //Length
 
-        public const int TCPPacketHeaderLength = 20;
+        public const int TCPPacketHeaderMinimumLength = 20;
+        public const int TCPPacketHeaderMaximumLength = 60;
+
+        //Flags
+
+        public enum TCPPacketFlags
+        {
+            CWR = 0,
+            ECE,
+            URG,
+            ACK,
+            PSH,
+            RST,
+            SYN,
+            FIN
+        }
+
+        public bool IsTCPPacketFlagSet(System.Byte TheByte, TCPPacketFlags TheTCPPacketFlag)
+        {
+            if (TheTCPPacketFlag < TCPPacketFlags.CWR ||
+                TheTCPPacketFlag > TCPPacketFlags.FIN)
+            {
+                throw new System.ArgumentOutOfRangeException();
+            }
+
+            int Shift = TCPPacketFlags.FIN - TheTCPPacketFlag;
+
+            // Get a single bit in the proper position
+            byte BitMask = (byte)(1 << Shift);
+
+            // Mask out the appropriate bit
+            byte MaskedByte = (byte)(TheByte & BitMask);
+
+            // If masked != 0, then the masked out bit is 1
+            // Otherwise, masked will be 0
+            return (MaskedByte != 0);
+        }
     }
 }
