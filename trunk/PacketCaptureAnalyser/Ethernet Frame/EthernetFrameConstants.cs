@@ -37,12 +37,14 @@ namespace EthernetFrameNamespace
 
         //Ether Type - provided in little endian representation
 
-        public const System.UInt16 EthernetFrameHeaderEtherTypeMinimum = 0x0600; //Minimum value for Ether Type - lower values indicate length of the Ethernet frame
-
-        public const System.UInt16 EthernetFrameHeaderEtherTypeARP = 0x0806; //Ethernet frame containing an ARP packet
-        public const System.UInt16 EthernetFrameHeaderEtherTypeIPv4 = 0x0800; //Ethernet frame containing an IPv4 packet
-        public const System.UInt16 EthernetFrameHeaderEtherTypeIPv6 = 0x86DD; //Ethernet frame containing an IPv6 packet
-        public const System.UInt16 EthernetFrameHeaderEtherTypeLLDP = 0x88CC; //Ethernet frame containing an LLDP packet (IEEE 802.1AB)
-        public const System.UInt16 EthernetFrameHeaderEtherTypeVLANTagged = 0x8100; //Ethernet frame with a VLAN tag (IEEE 802.1Q)
+        public enum EthernetFrameHeaderEtherTypeEnumeration
+        {
+            MinimumValue = 0x0600, //Minimum value for Ether Type - lower values indicate length of the Ethernet frame
+            ARP = 0x0806, //Ethernet frame containing an ARP packet
+            IPv4 = 0x0800, //Ethernet frame containing an IPv4 packet
+            IPv6 = 0x86DD, //Ethernet frame containing an IPv6 packet
+            LLDP = 0x88CC, //Ethernet frame containing an LLDP packet (IEEE 802.1AB)
+            VLANTagged = 0x8100 //Ethernet frame with a VLAN tag (IEEE 802.1Q)
+        }
     }
 }
