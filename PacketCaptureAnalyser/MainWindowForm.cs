@@ -28,14 +28,14 @@ namespace PacketCaptureAnalyser
     public partial class MainWindowForm : System.Windows.Forms.Form
     {
         //Enumerated list of the types of packet captures supported by the main window form
-        private enum MainWindowFormPacketCaptureType
+        private enum MainWindowFormPacketCaptureTypeEnumeration
         {
             LibpcapTcpdumpPacketCapture = 0,
             SnifferPacketCapture = 1,
             UnknownPacketCapture = 2
         }
 
-        private static MainWindowFormPacketCaptureType TheMainWindowFormPacketCaptureType;
+        private static MainWindowFormPacketCaptureTypeEnumeration TheMainWindowFormPacketCaptureType;
 
         public MainWindowForm()
         {
@@ -63,7 +63,7 @@ namespace PacketCaptureAnalyser
                     case ".libpcap":
                         {
                             //This is a libpcap/tcpdump packet capture
-                            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureType.LibpcapTcpdumpPacketCapture;
+                            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdumpPacketCapture;
                             break;
                         }
 
@@ -71,14 +71,14 @@ namespace PacketCaptureAnalyser
                     case ".enc":
                         {
                             //This is an NA Sniffer (DOS) packet capture
-                            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureType.SnifferPacketCapture;
+                            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureTypeEnumeration.SnifferPacketCapture;
                             break;
                         }
 
                     default:
                         {
                             //This packet capture is either an unsupported form of packet capture or is another type of file
-                            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureType.UnknownPacketCapture;
+                            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture;
                             break;
                         }
                 }
@@ -86,6 +86,7 @@ namespace PacketCaptureAnalyser
                 //Update the window to reflect the selected packet capture
                 ReflectSelectedRecording();
 
+                System.Diagnostics.Debug.WriteLine("Selection of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture");
             }
         }
 
@@ -93,9 +94,11 @@ namespace PacketCaptureAnalyser
         {
             bool TheResult = true;
 
+            System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
+
             switch (TheMainWindowFormPacketCaptureType)
             {
-                case MainWindowFormPacketCaptureType.LibpcapTcpdumpPacketCapture:
+                case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdumpPacketCapture:
                     {
                         PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing = new PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing();
 
@@ -104,7 +107,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureType.SnifferPacketCapture:
+                case MainWindowFormPacketCaptureTypeEnumeration.SnifferPacketCapture:
                     {
                         PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing = new PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing();
 
@@ -113,7 +116,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureType.UnknownPacketCapture:
+                case MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture:
                 default:
                     {
                         System.Diagnostics.Debug.WriteLine("Unknown packet capture type!!!");
@@ -124,16 +127,18 @@ namespace PacketCaptureAnalyser
                     }
             }
 
+            System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture finished");
+
             //Dependent on the result of the processing above, display a message box to indicate success or otherwise
             if (TheResult)
             {
                 //Display a message box to indicate analysis of the packet capture is complete
-                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " completed!", "Run Analysis On Selected Packet Capture");
+                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!", "Run Analysis On Selected Packet Capture");
             }
             else
             {
                 //Display a message box to indicate analysis of the packet capture failed
-                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " failed!!!", "Run Analysis On Selected Packet Capture");
+                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!", "Run Analysis On Selected Packet Capture");
             }
 
             //Clear the selected packet capture after analysis
@@ -155,7 +160,7 @@ namespace PacketCaptureAnalyser
         {
             switch (TheMainWindowFormPacketCaptureType)
             {
-                case MainWindowFormPacketCaptureType.LibpcapTcpdumpPacketCapture:
+                case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdumpPacketCapture:
                     {
                         //This is a libpcap/tcpdump packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "libpcap/tcpdump";
@@ -166,7 +171,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureType.SnifferPacketCapture:
+                case MainWindowFormPacketCaptureTypeEnumeration.SnifferPacketCapture:
                     {
                         //This is an NA Sniffer (DOS) packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "NA Sniffer (DOS)";
@@ -177,7 +182,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureType.UnknownPacketCapture:
+                case MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture:
                 default:
                     {
                         //This packet capture is either an unsupported form of packet capture or is another type of file
@@ -193,7 +198,7 @@ namespace PacketCaptureAnalyser
 
         private void ClearSelectedRecording()
         {
-            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureType.UnknownPacketCapture;
+            TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture;
 
             SelectedPacketCapturePathTextBox.Text = "<No Packet Capture Selected>";
             SelectedPacketCaptureNameTextBox.Text = "<No Packet Capture Selected>";
