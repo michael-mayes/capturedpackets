@@ -74,11 +74,19 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
         {
             bool TheResult = true;
 
-            //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
-            //The remaining length is the total supplied length of the UDP datagram minus the length for the UDP datagram header
-            for (int i = 0; i < TheUDPDatagramPayloadLength; ++i)
+            switch (TheUDPDatagramDestinationPort)
             {
-                ThePackageCaptureBinaryReader.ReadByte();
+                default:
+                    {
+                        //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
+                        //The remaining length is the total supplied length of the UDP datagram minus the length for the UDP datagram header
+                        for (int i = 0; i < TheUDPDatagramPayloadLength; ++i)
+                        {
+                            ThePackageCaptureBinaryReader.ReadByte();
+                        }
+
+                        break;
+                    }
             }
 
             return TheResult;
