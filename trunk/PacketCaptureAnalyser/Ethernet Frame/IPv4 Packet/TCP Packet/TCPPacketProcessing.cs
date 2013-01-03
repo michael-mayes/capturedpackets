@@ -65,7 +65,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             TheTCPPacketHeader.Checksum = ThePackageCaptureBinaryReader.ReadUInt16();
             TheTCPPacketHeader.UrgentPointer = ThePackageCaptureBinaryReader.ReadUInt16();
 
-            //Set up the output parameters for Source Port and Destination Port using the value read from the TCP packet header
+            //Set up the output parameters for source port and destination port using the value read from the TCP packet header
             TheTCPPacketSourcePort = TheTCPPacketHeader.SourcePort;
             TheTCPPacketDestinationPort = TheTCPPacketHeader.DestinationPort;
 
@@ -75,7 +75,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             //The extracted length value is the length of the TCP packet header in 32-bit words so multiply by four to get the actual length in bytes of the TCP packet header
             int TheTCPPacketHeaderLength = (((TheTCPPacketHeader.DataOffsetAndReservedAndNSFlag & 0xF0) >> 4) * 4);
 
-            //Set up the output parameters for the length of the payload of the TCP packet, which is the total length of the TCP packet minus the length of the TCP packet header just calculated
+            //Set up the output parameter for the length of the payload of the TCP packet, which is the total length of the TCP packet minus the length of the TCP packet header just calculated
             TheTCPPacketPayloadLength = (TheTCPPacketLength - TheTCPPacketHeaderLength);
 
             //Validate length of the TCP packet header
