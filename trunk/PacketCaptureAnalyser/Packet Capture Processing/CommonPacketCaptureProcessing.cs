@@ -167,7 +167,7 @@ namespace PacketCaptureProcessingNamespace
 
             if (TheResult)
             {
-                System.Diagnostics.Debug.WriteLine("Processed {0} captured packets successfully in " + duration.TotalSeconds + " seconds", PacketCapturePacketNumber);
+                System.Diagnostics.Debug.WriteLine("Processed {0} captured packets in " + duration.TotalSeconds + " seconds", PacketCapturePacketNumber);
             }
 
             return TheResult;
