@@ -32,19 +32,12 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             bool TheResult = true;
 
             //Process the TCP packet header
-            TheResult = ProcessTCPPacketHeader(ThePackageCaptureBinaryReader);
-
-            //Just read off the remaining bytes of the TCP packet from the packet capture so we can move on
-            //The remaining length is the total supplied length of the ICMPv4 packet minus the length for the TCP packet header
-            for (int i = 0; i < (TheTCPPacketLength - TCPPacketConstants.TCPPacketHeaderLength); ++i)
-            {
-                ThePackageCaptureBinaryReader.ReadByte();
-            }
+            TheResult = ProcessTCPPacketHeader(ThePackageCaptureBinaryReader, TheTCPPacketLength);
 
             return TheResult;
         }
 
-        private bool ProcessTCPPacketHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        private bool ProcessTCPPacketHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader, int TheTCPPacketLength)
         {
             bool TheResult = true;
 
@@ -52,8 +45,8 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             TCPPacketStructures.TCPPacketHeaderStructure TheTCPPacketHeader = new TCPPacketStructures.TCPPacketHeaderStructure();
 
             //Read the values for the TCP packet header from the packet capture
-            TheTCPPacketHeader.SourcePort = ThePackageCaptureBinaryReader.ReadUInt16();
-            TheTCPPacketHeader.DestinationPort = ThePackageCaptureBinaryReader.ReadUInt16();
+            TheTCPPacketHeader.SourcePort = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
+            TheTCPPacketHeader.DestinationPort = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
             TheTCPPacketHeader.SequenceNumber = ThePackageCaptureBinaryReader.ReadUInt32();
             TheTCPPacketHeader.AcknowledgmentNumber = ThePackageCaptureBinaryReader.ReadUInt32();
             TheTCPPacketHeader.DataOffsetAndReservedAndNSFlag = ThePackageCaptureBinaryReader.ReadByte();
@@ -61,6 +54,45 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             TheTCPPacketHeader.WindowSize = ThePackageCaptureBinaryReader.ReadUInt16();
             TheTCPPacketHeader.Checksum = ThePackageCaptureBinaryReader.ReadUInt16();
             TheTCPPacketHeader.UrgentPointer = ThePackageCaptureBinaryReader.ReadUInt16();
+
+            //Determine the length of the TCP packet header
+            //Need to first extract the length value from the combined TCP packet header length, reserved fields and NS flag field
+            //We want the higher four bits from the combined TCP packet header length, reserved fields and NS flag field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
+            //The extracted length value is the length of the TCP packet header in 32-bit words so multiply by four to get the actual length in bytes of the TCP packet header
+            int TheTCPPacketHeaderLength = (((TheTCPPacketHeader.DataOffsetAndReservedAndNSFlag & 0xF0) >> 4) * 4);
+
+            //The length of the payload of the TCP packet (e.g. a TCP packet) is the total length of the TCP packet minus the length of the TCP packet header just calculated
+            int TheTCPPacketPayloadLength = (TheTCPPacketLength - TheTCPPacketHeaderLength);
+
+            //Validate length of the TCP packet header
+            if (TheTCPPacketHeaderLength > TCPPacketConstants.TCPPacketHeaderMaximumLength ||
+                TheTCPPacketHeaderLength < TCPPacketConstants.TCPPacketHeaderMinimumLength)
+            {
+                System.Diagnostics.Debug.WriteLine("The TCP packet contains a header length {0} which is outside the range {1} to {2}", TheTCPPacketHeaderLength, TCPPacketConstants.TCPPacketHeaderMinimumLength, TCPPacketConstants.TCPPacketHeaderMaximumLength);
+
+                TheResult = false;
+            }
+            else
+            {
+                if (TheTCPPacketHeaderLength > TCPPacketConstants.TCPPacketHeaderMinimumLength &&
+                    TheTCPPacketHeaderLength <= TCPPacketConstants.TCPPacketHeaderMaximumLength)
+                {
+                    //The TCP packet contains a header length which is greater than the minimum and less than or equal to the maximum and so contains extra Options bytes at the end (e.g. timestamps from the capture)
+
+                    //Just read off these remaining Options bytes of the TCP packet header from the packet capture so we can move on
+                    for (int i = TCPPacketConstants.TCPPacketHeaderMinimumLength; i < TheTCPPacketHeaderLength; ++i)
+                    {
+                        ThePackageCaptureBinaryReader.ReadByte();
+                    }
+                }
+
+                //Just read off the remaining bytes of the TCP packet from the packet capture so we can move on
+                //The remaining length is the total supplied length of the TCP packet minus the length for the TCP packet header
+                for (int i = 0; i < TheTCPPacketPayloadLength; ++i)
+                {
+                    ThePackageCaptureBinaryReader.ReadByte();
+                }
+            }
 
             return TheResult;
         }
