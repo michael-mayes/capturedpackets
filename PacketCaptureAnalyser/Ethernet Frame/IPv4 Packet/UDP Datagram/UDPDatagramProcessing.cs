@@ -31,20 +31,23 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
         {
             bool TheResult = true;
 
-            //Process the UDP datagram header
-            TheResult = ProcessUDPDatagramHeader(ThePackageCaptureBinaryReader);
+            int TheUDPDatagramPayloadLength = 0;
+            int TheUDPDatagramSourcePort = 0;
+            int TheUDPDatagramDestinationPort = 0;
 
-            //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
-            //The remaining length is the total supplied length of the UDP datagram minus the length for the UDP datagram header
-            for (int i = 0; i < (TheUDPDatagramLength - UDPDatagramConstants.UDPDatagramHeaderLength); ++i)
+            //Process the UDP datagram header
+            TheResult = ProcessUDPDatagramHeader(ThePackageCaptureBinaryReader, TheUDPDatagramLength, out TheUDPDatagramPayloadLength, out TheUDPDatagramSourcePort, out TheUDPDatagramDestinationPort);
+
+            if (TheResult)
             {
-                ThePackageCaptureBinaryReader.ReadByte();
+                //Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
+                TheResult = ProcessUDPDatagramPayload(ThePackageCaptureBinaryReader, TheUDPDatagramPayloadLength, TheUDPDatagramSourcePort, TheUDPDatagramDestinationPort);
             }
 
             return TheResult;
         }
 
-        private bool ProcessUDPDatagramHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        private bool ProcessUDPDatagramHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader, int TheUDPDatagramLength, out int TheUDPDatagramPayloadLength, out int TheUDPDatagramSourcePort, out int TheUDPDatagramDestinationPort)
         {
             bool TheResult = true;
 
@@ -56,6 +59,27 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             TheUDPDatagramHeader.DestinationPort = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
             TheUDPDatagramHeader.Length = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
             TheUDPDatagramHeader.Checksum = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
+
+            //Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
+            TheUDPDatagramPayloadLength = TheUDPDatagramHeader.Length - UDPDatagramConstants.UDPDatagramHeaderLength;
+
+            //Set up the output parameters for source port and destination port using the value read from the UDP datagram header
+            TheUDPDatagramSourcePort = TheUDPDatagramHeader.SourcePort;
+            TheUDPDatagramDestinationPort = TheUDPDatagramHeader.DestinationPort;
+
+            return TheResult;
+        }
+
+        private bool ProcessUDPDatagramPayload(System.IO.BinaryReader ThePackageCaptureBinaryReader, int TheUDPDatagramPayloadLength, int TheUDPDatagramSourcePort, int TheUDPDatagramDestinationPort)
+        {
+            bool TheResult = true;
+
+            //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
+            //The remaining length is the total supplied length of the UDP datagram minus the length for the UDP datagram header
+            for (int i = 0; i < TheUDPDatagramPayloadLength; ++i)
+            {
+                ThePackageCaptureBinaryReader.ReadByte();
+            }
 
             return TheResult;
         }
