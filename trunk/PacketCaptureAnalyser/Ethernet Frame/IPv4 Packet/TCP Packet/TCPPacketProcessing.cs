@@ -109,7 +109,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             bool TheResult = true;
 
             //Just read off the remaining bytes of the TCP packet from the packet capture so we can move on
-            //The remaining length is the total supplied length of the TCP packet minus the length for the TCP packet header
+            //The remaining length is the supplied length of the TCP packet payload
             for (int i = 0; i < TheTCPPacketPayloadLength; ++i)
             {
                 ThePackageCaptureBinaryReader.ReadByte();
