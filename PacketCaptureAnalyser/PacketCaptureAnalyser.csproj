@@ -51,6 +51,9 @@
     <Compile Include="Ethernet Frame\ARP Packet\ARPPacketProcessing.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\ARPPacketStructures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\ARPPacketConstants.cs" />
+    <Compile Include="Ethernet Frame\Loopback Packet\LoopbackPacketConstants.cs" />
+    <Compile Include="Ethernet Frame\Loopback Packet\LoopbackPacketProcessing.cs" />
+    <Compile Include="Ethernet Frame\Loopback Packet\LoopbackPacketStructures.cs" />
     <Compile Include="Ethernet Frame\IPv4 Packet\ICMPv4 Packet\ICMPv4PacketConstants.cs" />
     <Compile Include="Ethernet Frame\IPv4 Packet\IGMPv2 Packet\IGMPv2PacketConstants.cs" />
     <Compile Include="Ethernet Frame\IPv4 Packet\TCP Packet\TCPPacketConstants.cs" />
