@@ -43,52 +43,70 @@ namespace PacketCaptureProcessingNamespace
         {
             bool TheResult = true;
 
-            if (System.IO.File.Exists(ThePacketCapture))
+            try
             {
-                //Read the start time to allow later calculation of the duration of the processing
-                System.DateTime TheStartTime = System.DateTime.Now;
-
-                System.Diagnostics.Debug.WriteLine("Starting read of all bytes from " + ThePacketCapture + " packet capture");
-
-                //Read all the bytes from the packet capture into an array
-                byte[] TheBytes = System.IO.File.ReadAllBytes(ThePacketCapture);
-
-                //Compute the duration between the start and the end times
-
-                System.DateTime TheEndTime = System.DateTime.Now;
-
-                System.TimeSpan TheDuration = TheEndTime - TheStartTime;
-
-                System.Diagnostics.Debug.WriteLine("Finished read of all bytes from " + ThePacketCapture + " packet capture in {0} seconds", TheDuration.Seconds);
-
-                //Create a memory stream to read the packet capture from the byte array
-                System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(TheBytes);
-
-                //Open a binary reader for the memory stream for the packet capture
-                System.IO.BinaryReader TheBinaryReader = new System.IO.BinaryReader(TheMemoryStream);
-
-                //Ensure that the position of the binary reader is set to the beginning of the memory stream
-                TheBinaryReader.BaseStream.Position = 0;
-
-                //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
-                double TheTimestampAccuracy = 0.0;
-
-                //Only continue reading from the packet capture if the packet capture global header was read successfully
-                if (ProcessGlobalHeader(TheBinaryReader, out TheTimestampAccuracy))
+                if (System.IO.File.Exists(ThePacketCapture))
                 {
-                    TheResult = ProcessPackets(TheBinaryReader, TheTimestampAccuracy);
+                    //Read the start time to allow later calculation of the duration of the processing
+                    System.DateTime TheStartTime = System.DateTime.Now;
+
+                    System.Diagnostics.Debug.WriteLine("Starting read of all bytes from " + ThePacketCapture + " packet capture");
+
+                    //Read all the bytes from the packet capture into an array
+                    byte[] TheBytes = System.IO.File.ReadAllBytes(ThePacketCapture);
+
+                    //Compute the duration between the start and the end times
+
+                    System.DateTime TheEndTime = System.DateTime.Now;
+
+                    System.TimeSpan TheDuration = TheEndTime - TheStartTime;
+
+                    System.Diagnostics.Debug.WriteLine("Finished read of all bytes from " + ThePacketCapture + " packet capture in {0} seconds", TheDuration.Seconds);
+
+                    //Create a memory stream to read the packet capture from the byte array
+                    System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(TheBytes);
+
+                    //Open a binary reader for the memory stream for the packet capture
+                    System.IO.BinaryReader TheBinaryReader = new System.IO.BinaryReader(TheMemoryStream);
+
+                    //Ensure that the position of the binary reader is set to the beginning of the memory stream
+                    TheBinaryReader.BaseStream.Position = 0;
+
+                    //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
+                    double TheTimestampAccuracy = 0.0;
+
+                    //Only continue reading from the packet capture if the packet capture global header was read successfully
+                    if (ProcessGlobalHeader(TheBinaryReader, out TheTimestampAccuracy))
+                    {
+                        TheResult = ProcessPackets(TheBinaryReader, TheTimestampAccuracy);
+                    }
+                    else
+                    {
+                        TheResult = false;
+                    }
+
+                    //Close both the binary reader and the underlying memory stream
+                    TheBinaryReader.Close();
                 }
                 else
                 {
+                    System.Diagnostics.Debug.WriteLine("The " + ThePacketCapture + " packet capture does not exist!!!");
+
                     TheResult = false;
                 }
-
-                //Close both the binary reader and the underlying memory stream
-                TheBinaryReader.Close();
             }
-            else
+
+            catch (System.IO.IOException e)
             {
-                System.Diagnostics.Debug.WriteLine("The " + ThePacketCapture + " packet capture does not exist!!!");
+
+                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " was raised as access to the " + ThePacketCapture + " packet capture was denied because it is being used by another process!!!");
+
+                TheResult = false;
+            }
+
+            catch (System.UnauthorizedAccessException e)
+            {
+                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " was raised as access to the " + ThePacketCapture + " packet capture was denied because this process was deemed as unauthorised by the OS!!!");
 
                 TheResult = false;
             }
