@@ -51,7 +51,7 @@
             this.RunAnalysisOnPackageSelectedCaptureButton.TabIndex = 1;
             this.RunAnalysisOnPackageSelectedCaptureButton.Text = "Run Analysis On Selected Packet Capture";
             this.RunAnalysisOnPackageSelectedCaptureButton.UseVisualStyleBackColor = true;
-            this.RunAnalysisOnPackageSelectedCaptureButton.Click += new System.EventHandler(this.RunAnalysisOnRecordingButton_Click);
+            this.RunAnalysisOnPackageSelectedCaptureButton.Click += new System.EventHandler(this.RunAnalysisOnPacketCaptureButton_Click);
             // 
             // ExitButton
             // 
@@ -76,7 +76,7 @@
             this.SelectPacketCaptureButton.TabIndex = 0;
             this.SelectPacketCaptureButton.Text = "Select Packet Capture";
             this.SelectPacketCaptureButton.UseVisualStyleBackColor = true;
-            this.SelectPacketCaptureButton.Click += new System.EventHandler(this.SelectRecordingForAnalysisButton_Click);
+            this.SelectPacketCaptureButton.Click += new System.EventHandler(this.SelectPacketCaptureForAnalysisButton_Click);
             // 
             // SelectedPacketCapturePathTextBox
             // 
@@ -140,7 +140,7 @@
             this.ClearSelectedPacketCaptureButton.TabIndex = 9;
             this.ClearSelectedPacketCaptureButton.Text = "Clear Selected Packet Capture";
             this.ClearSelectedPacketCaptureButton.UseVisualStyleBackColor = true;
-            this.ClearSelectedPacketCaptureButton.Click += new System.EventHandler(this.ClearSelectedRecordingButton_Click);
+            this.ClearSelectedPacketCaptureButton.Click += new System.EventHandler(this.ClearSelectedPacketCaptureButton_Click);
             // 
             // OpenSelectedPackageCaptureButton
             // 

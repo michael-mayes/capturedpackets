@@ -42,15 +42,15 @@ namespace PacketCaptureAnalyser
             InitializeComponent();
 
             //Clear the selected packet capture on window form creation
-            ClearSelectedRecording();
+            ClearSelectedPacketCapture();
         }
 
-        private void SelectRecordingForAnalysisButton_Click(object sender, System.EventArgs e)
+        private void SelectPacketCaptureForAnalysisButton_Click(object sender, System.EventArgs e)
         {
             //Open the packet capture selection dialog box
-            System.Windows.Forms.DialogResult TheSelectRecordingDialogResult = SelectedPacketCaptureForAnalysisDialog.ShowDialog();
+            System.Windows.Forms.DialogResult TheSelectPacketCaptureDialogResult = SelectedPacketCaptureForAnalysisDialog.ShowDialog();
 
-            if (TheSelectRecordingDialogResult == System.Windows.Forms.DialogResult.OK)
+            if (TheSelectPacketCaptureDialogResult == System.Windows.Forms.DialogResult.OK)
             {
                 //Populate the path and name of the selected packet capture, not necessarily a packet capture at this stage
                 SelectedPacketCapturePathTextBox.Text = System.IO.Path.GetDirectoryName(SelectedPacketCaptureForAnalysisDialog.FileName);
@@ -84,13 +84,13 @@ namespace PacketCaptureAnalyser
                 }
 
                 //Update the window to reflect the selected packet capture
-                ReflectSelectedRecording();
+                ReflectSelectedPacketCapture();
 
                 System.Diagnostics.Debug.WriteLine("Selection of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture");
             }
         }
 
-        private void RunAnalysisOnRecordingButton_Click(object sender, System.EventArgs e)
+        private void RunAnalysisOnPacketCaptureButton_Click(object sender, System.EventArgs e)
         {
             bool TheResult = true;
 
@@ -102,7 +102,7 @@ namespace PacketCaptureAnalyser
                     {
                         PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing = new PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing();
 
-                        TheResult = ThePCAPPackageCaptureProcessing.ProcessRecording(SelectedPacketCaptureForAnalysisDialog.FileName);
+                        TheResult = ThePCAPPackageCaptureProcessing.ProcessPacketCapture(SelectedPacketCaptureForAnalysisDialog.FileName);
 
                         break;
                     }
@@ -111,7 +111,7 @@ namespace PacketCaptureAnalyser
                     {
                         PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing = new PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing();
 
-                        TheResult = TheSnifferPackageCaptureProcessing.ProcessRecording(SelectedPacketCaptureForAnalysisDialog.FileName);
+                        TheResult = TheSnifferPackageCaptureProcessing.ProcessPacketCapture(SelectedPacketCaptureForAnalysisDialog.FileName);
 
                         break;
                     }
@@ -142,7 +142,7 @@ namespace PacketCaptureAnalyser
             }
 
             //Clear the selected packet capture after analysis
-            ClearSelectedRecording();
+            ClearSelectedPacketCapture();
         }
 
         private void ExitButton_Click(object sender, System.EventArgs e)
@@ -150,13 +150,13 @@ namespace PacketCaptureAnalyser
             this.Close();
         }
 
-        private void ClearSelectedRecordingButton_Click(object sender, System.EventArgs e)
+        private void ClearSelectedPacketCaptureButton_Click(object sender, System.EventArgs e)
         {
             //Clear the selected packet capture on user request
-            ClearSelectedRecording();
+            ClearSelectedPacketCapture();
         }
 
-        private void ReflectSelectedRecording()
+        private void ReflectSelectedPacketCapture()
         {
             switch (TheMainWindowFormPacketCaptureType)
             {
@@ -196,7 +196,7 @@ namespace PacketCaptureAnalyser
             }
         }
 
-        private void ClearSelectedRecording()
+        private void ClearSelectedPacketCapture()
         {
             TheMainWindowFormPacketCaptureType = MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture;
 
