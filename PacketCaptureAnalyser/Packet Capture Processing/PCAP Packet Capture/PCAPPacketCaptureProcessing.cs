@@ -31,7 +31,7 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - override abstract methods on the base class
         //
 
-        public override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -39,13 +39,13 @@ namespace PacketCaptureProcessingNamespace
             PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure ThePCAPPackageCaptureGlobalHeader = new PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure();
 
             //Populate the PCAP packet capture global header from the packet capture
-            ThePCAPPackageCaptureGlobalHeader.MagicNumber = ThePackageCaptureBinaryReader.ReadUInt32();
-            ThePCAPPackageCaptureGlobalHeader.VersionMajor = ThePackageCaptureBinaryReader.ReadUInt16();
-            ThePCAPPackageCaptureGlobalHeader.VersionMinor = ThePackageCaptureBinaryReader.ReadUInt16();
-            ThePCAPPackageCaptureGlobalHeader.ThisTimeZone = ThePackageCaptureBinaryReader.ReadInt32();
-            ThePCAPPackageCaptureGlobalHeader.SignificantFigures = ThePackageCaptureBinaryReader.ReadUInt32();
-            ThePCAPPackageCaptureGlobalHeader.SnapshotLength = ThePackageCaptureBinaryReader.ReadUInt32();
-            ThePCAPPackageCaptureGlobalHeader.NetworkDataLinkType = ThePackageCaptureBinaryReader.ReadUInt32();
+            ThePCAPPackageCaptureGlobalHeader.MagicNumber = TheBinaryReader.ReadUInt32();
+            ThePCAPPackageCaptureGlobalHeader.VersionMajor = TheBinaryReader.ReadUInt16();
+            ThePCAPPackageCaptureGlobalHeader.VersionMinor = TheBinaryReader.ReadUInt16();
+            ThePCAPPackageCaptureGlobalHeader.ThisTimeZone = TheBinaryReader.ReadInt32();
+            ThePCAPPackageCaptureGlobalHeader.SignificantFigures = TheBinaryReader.ReadUInt32();
+            ThePCAPPackageCaptureGlobalHeader.SnapshotLength = TheBinaryReader.ReadUInt32();
+            ThePCAPPackageCaptureGlobalHeader.NetworkDataLinkType = TheBinaryReader.ReadUInt32();
 
             //Validate fields from the PCAP packet capture global header
             TheResult = ValidatePCAPPackageCaptureGlobalHeader(ThePCAPPackageCaptureGlobalHeader);
@@ -53,7 +53,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public override bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public override bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -61,10 +61,10 @@ namespace PacketCaptureProcessingNamespace
             PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure ThePCAPPackageCapturePacketHeader = new PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure();
 
             //Populate the PCAP packet capture packet header from the packet capture
-            ThePCAPPackageCapturePacketHeader.TimestampSeconds = ThePackageCaptureBinaryReader.ReadUInt32();
-            ThePCAPPackageCapturePacketHeader.TimestampMicroseconds = ThePackageCaptureBinaryReader.ReadUInt32();
-            ThePCAPPackageCapturePacketHeader.SavedLength = ThePackageCaptureBinaryReader.ReadUInt32();
-            ThePCAPPackageCapturePacketHeader.ActualLength = ThePackageCaptureBinaryReader.ReadUInt32();
+            ThePCAPPackageCapturePacketHeader.TimestampSeconds = TheBinaryReader.ReadUInt32();
+            ThePCAPPackageCapturePacketHeader.TimestampMicroseconds = TheBinaryReader.ReadUInt32();
+            ThePCAPPackageCapturePacketHeader.SavedLength = TheBinaryReader.ReadUInt32();
+            ThePCAPPackageCapturePacketHeader.ActualLength = TheBinaryReader.ReadUInt32();
 
             //No need to validate fields from the PCAP packet capture packet header
 

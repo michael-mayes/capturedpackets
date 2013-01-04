@@ -31,7 +31,7 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - override abstract methods on the base class
         //
 
-        public override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -39,22 +39,22 @@ namespace PacketCaptureProcessingNamespace
             SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure TheSnifferPackageCaptureGlobalHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure();
 
             //Populate the Sniffer packet capture global header from the packet capture
-            TheSnifferPackageCaptureGlobalHeader.MagicNumberHigh = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt64());
-            TheSnifferPackageCaptureGlobalHeader.MagicNumberLow = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt64());
-            TheSnifferPackageCaptureGlobalHeader.MagicNumberTerminator = ThePackageCaptureBinaryReader.ReadByte();
-            TheSnifferPackageCaptureGlobalHeader.RecordType = ThePackageCaptureBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.RecordLength = ThePackageCaptureBinaryReader.ReadInt32();
-            TheSnifferPackageCaptureGlobalHeader.VersionMajor = ThePackageCaptureBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.VersionMinor = ThePackageCaptureBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.Time = ThePackageCaptureBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.Date = ThePackageCaptureBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.Type = ThePackageCaptureBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.NetworkEncapsulationType = ThePackageCaptureBinaryReader.ReadByte();
-            TheSnifferPackageCaptureGlobalHeader.FormatVersion = ThePackageCaptureBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.TimestampUnits = ThePackageCaptureBinaryReader.ReadByte();
-            TheSnifferPackageCaptureGlobalHeader.CompressionVersion = ThePackageCaptureBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.CompressionLevel = ThePackageCaptureBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.Reserved = ThePackageCaptureBinaryReader.ReadInt32();
+            TheSnifferPackageCaptureGlobalHeader.MagicNumberHigh = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
+            TheSnifferPackageCaptureGlobalHeader.MagicNumberLow = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
+            TheSnifferPackageCaptureGlobalHeader.MagicNumberTerminator = TheBinaryReader.ReadByte();
+            TheSnifferPackageCaptureGlobalHeader.RecordType = TheBinaryReader.ReadInt16();
+            TheSnifferPackageCaptureGlobalHeader.RecordLength = TheBinaryReader.ReadInt32();
+            TheSnifferPackageCaptureGlobalHeader.VersionMajor = TheBinaryReader.ReadInt16();
+            TheSnifferPackageCaptureGlobalHeader.VersionMinor = TheBinaryReader.ReadInt16();
+            TheSnifferPackageCaptureGlobalHeader.Time = TheBinaryReader.ReadInt16();
+            TheSnifferPackageCaptureGlobalHeader.Date = TheBinaryReader.ReadInt16();
+            TheSnifferPackageCaptureGlobalHeader.Type = TheBinaryReader.ReadSByte();
+            TheSnifferPackageCaptureGlobalHeader.NetworkEncapsulationType = TheBinaryReader.ReadByte();
+            TheSnifferPackageCaptureGlobalHeader.FormatVersion = TheBinaryReader.ReadSByte();
+            TheSnifferPackageCaptureGlobalHeader.TimestampUnits = TheBinaryReader.ReadByte();
+            TheSnifferPackageCaptureGlobalHeader.CompressionVersion = TheBinaryReader.ReadSByte();
+            TheSnifferPackageCaptureGlobalHeader.CompressionLevel = TheBinaryReader.ReadSByte();
+            TheSnifferPackageCaptureGlobalHeader.Reserved = TheBinaryReader.ReadInt32();
 
             //Validate fields from the Sniffer packet capture global header
             TheResult = ValidateSnifferPackageCaptureGlobalHeader(TheSnifferPackageCaptureGlobalHeader);
@@ -62,7 +62,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public override bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public override bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -70,8 +70,8 @@ namespace PacketCaptureProcessingNamespace
             SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure TheSnifferPackageCaptureRecordHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure();
 
             //Populate the Sniffer packet capture record header from the packet capture
-            TheSnifferPackageCaptureRecordHeader.RecordType = ThePackageCaptureBinaryReader.ReadUInt16();
-            TheSnifferPackageCaptureRecordHeader.RecordLength = ThePackageCaptureBinaryReader.ReadUInt32();
+            TheSnifferPackageCaptureRecordHeader.RecordType = TheBinaryReader.ReadUInt16();
+            TheSnifferPackageCaptureRecordHeader.RecordLength = TheBinaryReader.ReadUInt32();
 
             TheResult = ValidateSnifferPackageCaptureRecordHeader(TheSnifferPackageCaptureRecordHeader);
 
@@ -85,15 +85,15 @@ namespace PacketCaptureProcessingNamespace
                             SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure TheSnifferPackageCaptureSnifferType2Record = new SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure();
 
                             //Populate the Sniffer packet capture Sniffer type 2 data record from the packet capture
-                            TheSnifferPackageCaptureSnifferType2Record.TimestampLow = ThePackageCaptureBinaryReader.ReadUInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.TimestampMiddle = ThePackageCaptureBinaryReader.ReadUInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.TimestampHigh = ThePackageCaptureBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.TimeDays = ThePackageCaptureBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.Size = ThePackageCaptureBinaryReader.ReadInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.FrameErrorStatusBits = ThePackageCaptureBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.Flags = ThePackageCaptureBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.TrueSize = ThePackageCaptureBinaryReader.ReadInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.Reserved = ThePackageCaptureBinaryReader.ReadInt16();
+                            TheSnifferPackageCaptureSnifferType2Record.TimestampLow = TheBinaryReader.ReadUInt16();
+                            TheSnifferPackageCaptureSnifferType2Record.TimestampMiddle = TheBinaryReader.ReadUInt16();
+                            TheSnifferPackageCaptureSnifferType2Record.TimestampHigh = TheBinaryReader.ReadByte();
+                            TheSnifferPackageCaptureSnifferType2Record.TimeDays = TheBinaryReader.ReadByte();
+                            TheSnifferPackageCaptureSnifferType2Record.Size = TheBinaryReader.ReadInt16();
+                            TheSnifferPackageCaptureSnifferType2Record.FrameErrorStatusBits = TheBinaryReader.ReadByte();
+                            TheSnifferPackageCaptureSnifferType2Record.Flags = TheBinaryReader.ReadByte();
+                            TheSnifferPackageCaptureSnifferType2Record.TrueSize = TheBinaryReader.ReadInt16();
+                            TheSnifferPackageCaptureSnifferType2Record.Reserved = TheBinaryReader.ReadInt16();
                             break;
                         }
 

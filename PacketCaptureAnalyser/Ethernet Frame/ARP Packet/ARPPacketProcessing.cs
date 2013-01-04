@@ -27,7 +27,7 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 {
     class ARPPacketProcessing
     {
-        public bool ProcessARPPacket(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public bool ProcessARPPacket(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -35,17 +35,17 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
             ARPPacketStructures.ARPPacketStructure TheARPPacket = new ARPPacketStructures.ARPPacketStructure();
 
             //Just read off the bytes for the ARP packet from the packet capture so we can move on
-            TheARPPacket.HardwareType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
-            TheARPPacket.ProtocolType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
-            TheARPPacket.HardwareAddressLength = ThePackageCaptureBinaryReader.ReadByte();
-            TheARPPacket.ProtocolAddressLength = ThePackageCaptureBinaryReader.ReadByte();
-            TheARPPacket.Operation = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
-            TheARPPacket.SenderHardwareAddressHigh = ThePackageCaptureBinaryReader.ReadUInt32();
-            TheARPPacket.SenderHardwareAddressLow = ThePackageCaptureBinaryReader.ReadUInt16();
-            TheARPPacket.SenderProtocolAddress = (System.UInt32)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt32());
-            TheARPPacket.TargetHardwareAddressHigh = ThePackageCaptureBinaryReader.ReadUInt32();
-            TheARPPacket.TargetHardwareAddressLow = ThePackageCaptureBinaryReader.ReadUInt16();
-            TheARPPacket.TargetProtocolAddress = (System.UInt32)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt32());
+            TheARPPacket.HardwareType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+            TheARPPacket.ProtocolType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+            TheARPPacket.HardwareAddressLength = TheBinaryReader.ReadByte();
+            TheARPPacket.ProtocolAddressLength = TheBinaryReader.ReadByte();
+            TheARPPacket.Operation = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+            TheARPPacket.SenderHardwareAddressHigh = TheBinaryReader.ReadUInt32();
+            TheARPPacket.SenderHardwareAddressLow = TheBinaryReader.ReadUInt16();
+            TheARPPacket.SenderProtocolAddress = (System.UInt32)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt32());
+            TheARPPacket.TargetHardwareAddressHigh = TheBinaryReader.ReadUInt32();
+            TheARPPacket.TargetHardwareAddressLow = TheBinaryReader.ReadUInt16();
+            TheARPPacket.TargetProtocolAddress = (System.UInt32)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt32());
 
             return TheResult;
         }

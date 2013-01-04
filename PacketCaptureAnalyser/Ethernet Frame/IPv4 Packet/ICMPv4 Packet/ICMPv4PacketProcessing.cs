@@ -27,21 +27,21 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
 {
     class ICMPv4PacketProcessing
     {
-        public bool ProcessICMPv4Packet(System.IO.BinaryReader ThePackageCaptureBinaryReader, int TheICMPv4PacketLength)
+        public bool ProcessICMPv4Packet(System.IO.BinaryReader TheBinaryReader, int TheICMPv4PacketLength)
         {
             bool TheResult = true;
 
             //Process the ICMPv4 packet header
-            TheResult = ProcessICMPv4PacketHeader(ThePackageCaptureBinaryReader);
+            TheResult = ProcessICMPv4PacketHeader(TheBinaryReader);
             
             //Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
             //The remaining length is the total supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
-            ThePackageCaptureBinaryReader.ReadBytes(TheICMPv4PacketLength - ICMPv4PacketConstants.ICMPv4PacketHeaderLength);
+            TheBinaryReader.ReadBytes(TheICMPv4PacketLength - ICMPv4PacketConstants.ICMPv4PacketHeaderLength);
 
             return TheResult;
         }
 
-        private bool ProcessICMPv4PacketHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        private bool ProcessICMPv4PacketHeader(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -49,9 +49,9 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
             ICMPv4PacketStructures.ICMPv4PacketHeaderStructure TheICMPPacketHeader = new ICMPv4PacketStructures.ICMPv4PacketHeaderStructure();
 
             //Read the values for the ICMPv4 packet header from the packet capture
-            TheICMPPacketHeader.Type = ThePackageCaptureBinaryReader.ReadByte();
-            TheICMPPacketHeader.Code = ThePackageCaptureBinaryReader.ReadByte();
-            TheICMPPacketHeader.Checksum = ThePackageCaptureBinaryReader.ReadUInt16();
+            TheICMPPacketHeader.Type = TheBinaryReader.ReadByte();
+            TheICMPPacketHeader.Code = TheBinaryReader.ReadByte();
+            TheICMPPacketHeader.Checksum = TheBinaryReader.ReadUInt16();
 
             return TheResult;
         }

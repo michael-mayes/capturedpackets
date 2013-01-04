@@ -27,7 +27,7 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
 {
     class LLDPPacketProcessing
     {
-        public bool ProcessLLDPPacket(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public bool ProcessLLDPPacket(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -35,13 +35,13 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
             LLDPPacketStructures.LLDPPacketStructure TheLLDPPacket = new LLDPPacketStructures.LLDPPacketStructure();
 
             //Just read off the bytes for the LLDP packet from the packet capture so we can move on
-            TheLLDPPacket.UnusedField1 = ThePackageCaptureBinaryReader.ReadUInt64();
-            TheLLDPPacket.UnusedField2 = ThePackageCaptureBinaryReader.ReadUInt64();
-            TheLLDPPacket.UnusedField3 = ThePackageCaptureBinaryReader.ReadUInt64();
-            TheLLDPPacket.UnusedField4 = ThePackageCaptureBinaryReader.ReadUInt64();
-            TheLLDPPacket.UnusedField5 = ThePackageCaptureBinaryReader.ReadUInt64();
-            TheLLDPPacket.UnusedField6 = ThePackageCaptureBinaryReader.ReadUInt32();
-            TheLLDPPacket.UnusedField7 = ThePackageCaptureBinaryReader.ReadUInt16();
+            TheLLDPPacket.UnusedField1 = TheBinaryReader.ReadUInt64();
+            TheLLDPPacket.UnusedField2 = TheBinaryReader.ReadUInt64();
+            TheLLDPPacket.UnusedField3 = TheBinaryReader.ReadUInt64();
+            TheLLDPPacket.UnusedField4 = TheBinaryReader.ReadUInt64();
+            TheLLDPPacket.UnusedField5 = TheBinaryReader.ReadUInt64();
+            TheLLDPPacket.UnusedField6 = TheBinaryReader.ReadUInt32();
+            TheLLDPPacket.UnusedField7 = TheBinaryReader.ReadUInt16();
 
             return TheResult;
         }
