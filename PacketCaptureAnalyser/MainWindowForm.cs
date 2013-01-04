@@ -102,7 +102,7 @@ namespace PacketCaptureAnalyser
                     {
                         PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing = new PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing();
 
-                        TheResult = ThePCAPPackageCaptureProcessing.ProcessPacketCapture(SelectedPacketCaptureForAnalysisDialog.FileName);
+                        TheResult = ThePCAPPackageCaptureProcessing.Process(SelectedPacketCaptureForAnalysisDialog.FileName);
 
                         break;
                     }
@@ -111,7 +111,7 @@ namespace PacketCaptureAnalyser
                     {
                         PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing = new PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing();
 
-                        TheResult = TheSnifferPackageCaptureProcessing.ProcessPacketCapture(SelectedPacketCaptureForAnalysisDialog.FileName);
+                        TheResult = TheSnifferPackageCaptureProcessing.Process(SelectedPacketCaptureForAnalysisDialog.FileName);
 
                         break;
                     }

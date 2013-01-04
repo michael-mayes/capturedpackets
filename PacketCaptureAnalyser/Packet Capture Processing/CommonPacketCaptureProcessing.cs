@@ -31,38 +31,38 @@ namespace PacketCaptureProcessingNamespace
         //Abstract methods - must be overriden with a concrete implementation by a derived class
         //
 
-        public abstract bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader TheBinaryReader);
+        public abstract bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out double TheTimestampAccuracy);
 
-        public abstract bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader TheBinaryReader);
+        public abstract bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out double TheTimestamp);
 
         //
         //Concrete methods - cannot be overriden by a derived class
         //
 
-        public bool ProcessPacketCapture(string ThePacketCapture)
+        public bool Process(string ThePacketCapture)
         {
             bool TheResult = true;
 
             if (System.IO.File.Exists(ThePacketCapture))
             {
-                //Read the start time for reading all bytes from the packet capture
-                System.DateTime TheReadAllBytesStartTime = System.DateTime.Now;
+                //Read the start time to allow later calculation of the duration of the processing
+                System.DateTime TheStartTime = System.DateTime.Now;
 
                 System.Diagnostics.Debug.WriteLine("Starting read of all bytes from " + ThePacketCapture + " packet capture");
 
                 //Read all the bytes from the packet capture into an array
-                byte[] ThePackageCaptureBytes = System.IO.File.ReadAllBytes(ThePacketCapture);
-
-                //Read the end time for reading all bytes from the packet capture
-                System.DateTime TheReadAllBytesEndTime = System.DateTime.Now;
+                byte[] TheBytes = System.IO.File.ReadAllBytes(ThePacketCapture);
 
                 //Compute the duration between the start and the end times
-                System.TimeSpan TheReadAllBytesDuration = TheReadAllBytesEndTime - TheReadAllBytesStartTime;
 
-                System.Diagnostics.Debug.WriteLine("Finished read of all bytes from " + ThePacketCapture + " packet capture in {0} seconds", TheReadAllBytesDuration.Seconds);
+                System.DateTime TheEndTime = System.DateTime.Now;
+
+                System.TimeSpan TheDuration = TheEndTime - TheStartTime;
+
+                System.Diagnostics.Debug.WriteLine("Finished read of all bytes from " + ThePacketCapture + " packet capture in {0} seconds", TheDuration.Seconds);
 
                 //Create a memory stream to read the packet capture from the byte array
-                System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(ThePackageCaptureBytes);
+                System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(TheBytes);
 
                 //Open a binary reader for the memory stream for the packet capture
                 System.IO.BinaryReader TheBinaryReader = new System.IO.BinaryReader(TheMemoryStream);
@@ -70,19 +70,20 @@ namespace PacketCaptureProcessingNamespace
                 //Ensure that the position of the binary reader is set to the beginning of the memory stream
                 TheBinaryReader.BaseStream.Position = 0;
 
-                //Read the packet capture global header
+                //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
+                double TheTimestampAccuracy = 0.0;
+
                 //Only continue reading from the packet capture if the packet capture global header was read successfully
-                if (ProcessPacketCaptureGlobalHeader(TheBinaryReader))
+                if (ProcessGlobalHeader(TheBinaryReader, out TheTimestampAccuracy))
                 {
-                    //Process all packets in the packet capture
-                    TheResult = ProcessPacketCapturePackets(TheBinaryReader);
+                    TheResult = ProcessPackets(TheBinaryReader, TheTimestampAccuracy);
                 }
                 else
                 {
                     TheResult = false;
                 }
 
-                //Close both the binary reader and the underlying stream for the packet capture
+                //Close both the binary reader and the underlying memory stream
                 TheBinaryReader.Close();
             }
             else
@@ -95,19 +96,18 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public bool ProcessPacketCapturePackets(System.IO.BinaryReader TheBinaryReader)
+        public bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
-            int PacketCapturePacketNumber = 0;
+            int PacketsProcessed = 0;
 
-            //Read the start time
+            //Read the start time to allow later calculation of the duration of the processing
             System.DateTime TheStartTime = System.DateTime.Now;
-
-            //Attempt to process the packets in the packet capture
 
             System.Diagnostics.Debug.WriteLine("Started processing of captured packets");
 
+            //Attempt to process the packets in the packet capture
             try
             {
                 EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing();
@@ -115,34 +115,35 @@ namespace PacketCaptureProcessingNamespace
                 //Store the length of the stream locally - the .NET framework does not cache it so each query requires an expensive read - this is OK so long as not editing the file at the same time as analysing it
                 long TheStreamLength = TheBinaryReader.BaseStream.Length;
 
-                //Keep looping through the packet capture, processing each packet capture packet header and Ethernet frame in turn, while characters remain in the packet capture and there are no errors
-                //Cannot use the PeekChar method here as some characters in the file may fall outside of the range of UTF-8 character encoding - it is a binary file after all!
+                //Declare an entity to be used for each timestamp extracted from a packet header
+                double TheTimestamp = 0.0;
+
+                //Keep looping through the packet capture, processing each packet header and Ethernet frame in turn, while characters remain in the packet capture and there are no errors
+                //Cannot use the PeekChar method here as some characters in the file may fall outside of the bounds of the character encoding - it is a binary file after all!
                 //Instead use the position of the binary reader within the stream, stopping once the length of stream has been reached
+
                 while (TheBinaryReader.BaseStream.Position < TheStreamLength)
                 {
-                    //Increment the counter for the number captured packets processed
-                    ++PacketCapturePacketNumber;
+                    ++PacketsProcessed;
 
                     //Check whether the end of the packet capture has been reached
                     if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                     {
-                        //Process the packet capture packet header
-                        if (ProcessPacketCapturePacketHeader(TheBinaryReader))
+                        if (ProcessPacketHeader(TheBinaryReader, TheTimestampAccuracy, out TheTimestamp))
                         {
                             //Check whether the end of the packet capture has been reached
                             if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                             {
-                                //Process the Ethernet frame
-                                if (TheEthernetFrameProcessing.ProcessEthernetFrame(TheBinaryReader))
+                                if (TheEthernetFrameProcessing.Process(TheBinaryReader))
                                 {
-                                    //Start the next iteration of the loop i.e. perform the validation for the while loop condition
+                                    //Start the next iteration of the loop
                                     continue;
                                 }
                                 else
                                 {
                                     TheResult = false;
 
-                                    System.Diagnostics.Debug.WriteLine("Processing of captured packet #{0} failed during processing of packet header!!!", PacketCapturePacketNumber);
+                                    System.Diagnostics.Debug.WriteLine("Processing of captured packet #{0} failed during processing of packet header!!!", PacketsProcessed);
 
                                     //Stop looping as there has been an error!!!
                                     break;
@@ -159,7 +160,7 @@ namespace PacketCaptureProcessingNamespace
                         {
                             TheResult = false;
 
-                            System.Diagnostics.Debug.WriteLine("Processing of captured packet #{0} failed during processing of Ethernet frame!!!", PacketCapturePacketNumber);
+                            System.Diagnostics.Debug.WriteLine("Processing of captured packet #{0} failed during processing of Ethernet frame!!!", PacketsProcessed);
 
                             //Stop looping as there has been an error!!!
                             break;
@@ -181,17 +182,15 @@ namespace PacketCaptureProcessingNamespace
                 TheResult = true;
             }
 
-
-
             if (TheResult)
             {
-                //Read the end time
+                //Compute the duration between the start and the end times
+
                 System.DateTime TheEndTime = System.DateTime.Now;
 
-                //Compute the duration between the start and the end times
                 System.TimeSpan TheDuration = TheEndTime - TheStartTime;
 
-                System.Diagnostics.Debug.WriteLine("Finished processing of {0} captured packets in {1} seconds", PacketCapturePacketNumber, TheDuration.TotalSeconds);
+                System.Diagnostics.Debug.WriteLine("Finished processing of {0} captured packets in {1} seconds", PacketsProcessed, TheDuration.TotalSeconds);
             }
 
             return TheResult;

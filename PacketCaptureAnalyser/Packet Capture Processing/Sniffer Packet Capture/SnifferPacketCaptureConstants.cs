@@ -42,6 +42,9 @@ namespace PacketCaptureProcessingNamespace
 
         public const System.Byte SnifferPackageCaptureExpectedMagicNumberTerminator = 0x1A; //Terminating byte ASCII control character 'SUB' completes the magic number
 
+        //Record type
+        public const System.Int16 SnifferPackageCaptureExpectedRecordType = 1; //Sniffer version record type
+
         //Version numbers
 
         public const System.Int16 SnifferPackageCaptureExpectedVersionMajor = 4;
@@ -49,7 +52,7 @@ namespace PacketCaptureProcessingNamespace
 
         //Type of records that follow the Sniffer packet capture global header in the packet capture
 
-        public const System.SByte SnifferPackageCaptureExpectedType = 4;
+        public const System.SByte SnifferPackageCaptureExpectedType = 4; //Sniffer type 2 data records
 
         //Network encapsulation type
 
