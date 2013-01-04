@@ -51,6 +51,10 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
         {
             bool TheResult = true;
 
+            //Provide default values for the output parameters for source port and destination port
+            TheSourcePort = 0;
+            TheDestinationPort = 0;
+
             //Create an instance of the TCP packet header
             TCPPacketStructures.TCPPacketHeaderStructure TheHeader = new TCPPacketStructures.TCPPacketHeaderStructure();
 
@@ -65,10 +69,6 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             TheHeader.Checksum = TheBinaryReader.ReadUInt16();
             TheHeader.UrgentPointer = TheBinaryReader.ReadUInt16();
 
-            //Set up the output parameters for source port and destination port using the value read from the TCP packet header
-            TheSourcePort = TheHeader.SourcePort;
-            TheDestinationPort = TheHeader.DestinationPort;
-
             //Determine the length of the TCP packet header
             //Need to first extract the length value from the combined TCP packet header length, reserved fields and NS flag field
             //We want the higher four bits from the combined TCP packet header length, reserved fields and NS flag field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
@@ -80,6 +80,10 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
 
             if (TheResult)
             {
+                //Set up the output parameters for source port and destination port using the value read from the TCP packet header
+                TheSourcePort = TheHeader.SourcePort;
+                TheDestinationPort = TheHeader.DestinationPort;
+
                 //Set up the output parameter for the length of the payload of the TCP packet, which is the total length of the TCP packet minus the length of the TCP packet header just calculated
                 ThePayloadLength = (TheLength - TheHeaderLength);
 
