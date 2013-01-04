@@ -31,9 +31,9 @@ namespace PacketCaptureProcessingNamespace
         //Abstract methods - must be overriden with a concrete implementation by a derived class
         //
 
-        public abstract bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader);
+        public abstract bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader TheBinaryReader);
 
-        public abstract bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader ThePackageCaptureBinaryReader);
+        public abstract bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader TheBinaryReader);
 
         //
         //Concrete methods - cannot be overriden by a derived class
@@ -65,17 +65,17 @@ namespace PacketCaptureProcessingNamespace
                 System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(ThePackageCaptureBytes);
 
                 //Open a binary reader for the memory stream for the packet capture
-                System.IO.BinaryReader ThePackageCaptureBinaryReader = new System.IO.BinaryReader(TheMemoryStream);
+                System.IO.BinaryReader TheBinaryReader = new System.IO.BinaryReader(TheMemoryStream);
 
                 //Ensure that the position of the binary reader is set to the beginning of the memory stream
-                ThePackageCaptureBinaryReader.BaseStream.Position = 0;
+                TheBinaryReader.BaseStream.Position = 0;
 
                 //Read the packet capture global header
                 //Only continue reading from the packet capture if the packet capture global header was read successfully
-                if (ProcessPacketCaptureGlobalHeader(ThePackageCaptureBinaryReader))
+                if (ProcessPacketCaptureGlobalHeader(TheBinaryReader))
                 {
                     //Process all packets in the packet capture
-                    TheResult = ProcessPacketCapturePackets(ThePackageCaptureBinaryReader);
+                    TheResult = ProcessPacketCapturePackets(TheBinaryReader);
                 }
                 else
                 {
@@ -83,7 +83,7 @@ namespace PacketCaptureProcessingNamespace
                 }
 
                 //Close both the binary reader and the underlying stream for the packet capture
-                ThePackageCaptureBinaryReader.Close();
+                TheBinaryReader.Close();
             }
             else
             {
@@ -95,7 +95,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public bool ProcessPacketCapturePackets(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public bool ProcessPacketCapturePackets(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -113,27 +113,27 @@ namespace PacketCaptureProcessingNamespace
                 EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing();
 
                 //Store the length of the stream locally - the .NET framework does not cache it so each query requires an expensive read - this is OK so long as not editing the file at the same time as analysing it
-                long TheStreamLength = ThePackageCaptureBinaryReader.BaseStream.Length;
+                long TheStreamLength = TheBinaryReader.BaseStream.Length;
 
                 //Keep looping through the packet capture, processing each packet capture packet header and Ethernet frame in turn, while characters remain in the packet capture and there are no errors
                 //Cannot use the PeekChar method here as some characters in the file may fall outside of the range of UTF-8 character encoding - it is a binary file after all!
                 //Instead use the position of the binary reader within the stream, stopping once the length of stream has been reached
-                while (ThePackageCaptureBinaryReader.BaseStream.Position < TheStreamLength)
+                while (TheBinaryReader.BaseStream.Position < TheStreamLength)
                 {
                     //Increment the counter for the number captured packets processed
                     ++PacketCapturePacketNumber;
 
                     //Check whether the end of the packet capture has been reached
-                    if (ThePackageCaptureBinaryReader.BaseStream.Position < TheStreamLength)
+                    if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                     {
                         //Process the packet capture packet header
-                        if (ProcessPacketCapturePacketHeader(ThePackageCaptureBinaryReader))
+                        if (ProcessPacketCapturePacketHeader(TheBinaryReader))
                         {
                             //Check whether the end of the packet capture has been reached
-                            if (ThePackageCaptureBinaryReader.BaseStream.Position < TheStreamLength)
+                            if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                             {
                                 //Process the Ethernet frame
-                                if (TheEthernetFrameProcessing.ProcessEthernetFrame(ThePackageCaptureBinaryReader))
+                                if (TheEthernetFrameProcessing.ProcessEthernetFrame(TheBinaryReader))
                                 {
                                     //Start the next iteration of the loop i.e. perform the validation for the while loop condition
                                     continue;
@@ -191,7 +191,7 @@ namespace PacketCaptureProcessingNamespace
                 //Compute the duration between the start and the end times
                 System.TimeSpan TheDuration = TheEndTime - TheStartTime;
 
-                System.Diagnostics.Debug.WriteLine("Finished processing {0} captured packets in {1} seconds", PacketCapturePacketNumber, TheDuration.TotalSeconds);
+                System.Diagnostics.Debug.WriteLine("Finished processing of {0} captured packets in {1} seconds", PacketCapturePacketNumber, TheDuration.TotalSeconds);
             }
 
             return TheResult;

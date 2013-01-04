@@ -27,7 +27,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
 {
     class IGMPv2PacketProcessing
     {
-        public bool ProcessIGMPv2Packet(System.IO.BinaryReader ThePackageCaptureBinaryReader, int TheIGMPv2PacketLength)
+        public bool ProcessIGMPv2Packet(System.IO.BinaryReader TheBinaryReader, int TheIGMPv2PacketLength)
         {
             bool TheResult = true;
 
@@ -37,10 +37,10 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
             IGMPv2PacketStructures.IGMPv2PacketStructure TheIGMPv2Packet = new IGMPv2PacketStructures.IGMPv2PacketStructure();
 
             //Just read off the bytes for the IGMPv2 packet from the packet capture so we can move on
-            TheIGMPv2Packet.Type = ThePackageCaptureBinaryReader.ReadByte();
-            TheIGMPv2Packet.MaxResponseTime = ThePackageCaptureBinaryReader.ReadByte();
-            TheIGMPv2Packet.Checksum = ThePackageCaptureBinaryReader.ReadUInt16();
-            TheIGMPv2Packet.GroupAddress = ThePackageCaptureBinaryReader.ReadUInt32();
+            TheIGMPv2Packet.Type = TheBinaryReader.ReadByte();
+            TheIGMPv2Packet.MaxResponseTime = TheBinaryReader.ReadByte();
+            TheIGMPv2Packet.Checksum = TheBinaryReader.ReadUInt16();
+            TheIGMPv2Packet.GroupAddress = TheBinaryReader.ReadUInt32();
 
             return TheResult;
         }

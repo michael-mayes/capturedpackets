@@ -27,7 +27,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 {
     class IPv4PacketProcessing
     {
-        public bool ProcessIPv4Packet(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public bool ProcessIPv4Packet(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -35,16 +35,16 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             IPv4PacketStructures.IPv4PacketHeaderStructure TheIPv4PacketHeader = new IPv4PacketStructures.IPv4PacketHeaderStructure();
 
             //Read the values for the IPv4 packet header from the packet capture
-            TheIPv4PacketHeader.VersionAndHeaderLength = ThePackageCaptureBinaryReader.ReadByte();
-            TheIPv4PacketHeader.TypeOfService = ThePackageCaptureBinaryReader.ReadByte();
-            TheIPv4PacketHeader.TotalLength = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
-            TheIPv4PacketHeader.Identifier = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
-            TheIPv4PacketHeader.FlagsAndOffset = ThePackageCaptureBinaryReader.ReadUInt16();
-            TheIPv4PacketHeader.TimeToLive = ThePackageCaptureBinaryReader.ReadByte();
-            TheIPv4PacketHeader.Protocol = ThePackageCaptureBinaryReader.ReadByte();
-            TheIPv4PacketHeader.HeaderChecksum = ThePackageCaptureBinaryReader.ReadUInt16();
-            TheIPv4PacketHeader.SourceAddress = ThePackageCaptureBinaryReader.ReadInt32();
-            TheIPv4PacketHeader.DestinationAddress = ThePackageCaptureBinaryReader.ReadInt32();
+            TheIPv4PacketHeader.VersionAndHeaderLength = TheBinaryReader.ReadByte();
+            TheIPv4PacketHeader.TypeOfService = TheBinaryReader.ReadByte();
+            TheIPv4PacketHeader.TotalLength = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+            TheIPv4PacketHeader.Identifier = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+            TheIPv4PacketHeader.FlagsAndOffset = TheBinaryReader.ReadUInt16();
+            TheIPv4PacketHeader.TimeToLive = TheBinaryReader.ReadByte();
+            TheIPv4PacketHeader.Protocol = TheBinaryReader.ReadByte();
+            TheIPv4PacketHeader.HeaderChecksum = TheBinaryReader.ReadUInt16();
+            TheIPv4PacketHeader.SourceAddress = TheBinaryReader.ReadInt32();
+            TheIPv4PacketHeader.DestinationAddress = TheBinaryReader.ReadInt32();
 
             //Determine the length of the IPv4 packet header
             //Need to first extract the length value from the combined IP version/IP header length field
@@ -72,7 +72,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                             ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing();
 
                             //We've got an IPv4 packet containing an ICMPv4 packet so process it
-                            TheResult = TheICMPv4PacketProcessing.ProcessICMPv4Packet(ThePackageCaptureBinaryReader, TheIPv4PacketPayloadLength);
+                            TheResult = TheICMPv4PacketProcessing.ProcessICMPv4Packet(TheBinaryReader, TheIPv4PacketPayloadLength);
                             break;
                         }
 
@@ -81,7 +81,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                             IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing();
 
                             //We've got an IPv4 packet containing an IGMPv2 packet so process it
-                            TheResult = TheIGMPv2PacketProcessing.ProcessIGMPv2Packet(ThePackageCaptureBinaryReader, TheIPv4PacketPayloadLength);
+                            TheResult = TheIGMPv2PacketProcessing.ProcessIGMPv2Packet(TheBinaryReader, TheIPv4PacketPayloadLength);
                             break;
                         }
 
@@ -90,7 +90,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                             TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing();
 
                             //We've got an IPv4 packet containing an TCP packet so process it
-                            TheResult = TheTCPPacketProcessing.ProcessTCPPacket(ThePackageCaptureBinaryReader, TheIPv4PacketPayloadLength);
+                            TheResult = TheTCPPacketProcessing.ProcessTCPPacket(TheBinaryReader, TheIPv4PacketPayloadLength);
                             break;
                         }
 
@@ -99,7 +99,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                             UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing();
 
                             //We've got an IPv4 packet containing an UDP datagram so process it
-                            TheResult = TheUDPDatagramProcessing.ProcessUDPDatagram(ThePackageCaptureBinaryReader, TheIPv4PacketPayloadLength);
+                            TheResult = TheUDPDatagramProcessing.ProcessUDPDatagram(TheBinaryReader, TheIPv4PacketPayloadLength);
                             break;
                         }
 

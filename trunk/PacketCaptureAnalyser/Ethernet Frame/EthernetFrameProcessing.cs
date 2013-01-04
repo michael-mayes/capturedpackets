@@ -27,7 +27,7 @@ namespace EthernetFrameNamespace
 {
     class EthernetFrameProcessing
     {
-        public bool ProcessEthernetFrame(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public bool ProcessEthernetFrame(System.IO.BinaryReader TheBinaryReader)
         {
             bool TheResult = true;
 
@@ -35,26 +35,26 @@ namespace EthernetFrameNamespace
             EthernetFrameStructures.EthernetFrameHeaderStructure TheEthernetFrameHeader = new EthernetFrameStructures.EthernetFrameHeaderStructure();
 
             //Read the Destination MAC Address for the Ethernet frame from the packet capture
-            TheEthernetFrameHeader.DestinationMACAddressHigh = ThePackageCaptureBinaryReader.ReadUInt32();
-            TheEthernetFrameHeader.DestinationMACAddressLow = ThePackageCaptureBinaryReader.ReadUInt16();
+            TheEthernetFrameHeader.DestinationMACAddressHigh = TheBinaryReader.ReadUInt32();
+            TheEthernetFrameHeader.DestinationMACAddressLow = TheBinaryReader.ReadUInt16();
 
             //Read the Source MAC Address for the Ethernet frame from the packet capture
-            TheEthernetFrameHeader.SourceMACAddressHigh = ThePackageCaptureBinaryReader.ReadUInt32();
-            TheEthernetFrameHeader.SourceMACAddressLow = ThePackageCaptureBinaryReader.ReadUInt16();
+            TheEthernetFrameHeader.SourceMACAddressHigh = TheBinaryReader.ReadUInt32();
+            TheEthernetFrameHeader.SourceMACAddressLow = TheBinaryReader.ReadUInt16();
 
             //Read the Ether Type for the Ethernet frame from the packet capture and process it
-            TheResult = ProcessEthernetFrameEtherType(ThePackageCaptureBinaryReader, TheEthernetFrameHeader);
+            TheResult = ProcessEthernetFrameEtherType(TheBinaryReader, TheEthernetFrameHeader);
 
             return TheResult;
         }
 
         //A re-read of the Ether Type for an Ethernet frame with a VLAN tag (IEEE 802.1Q), if required, will be acheived by another call to this method
         //Therefore this method must be re-entrant so no explicitly static entities and the like!
-        public bool ProcessEthernetFrameEtherType(System.IO.BinaryReader ThePackageCaptureBinaryReader, EthernetFrameStructures.EthernetFrameHeaderStructure TheEthernetFrameHeader)
+        public bool ProcessEthernetFrameEtherType(System.IO.BinaryReader TheBinaryReader, EthernetFrameStructures.EthernetFrameHeaderStructure TheEthernetFrameHeader)
         {
             bool TheResult = true;
 
-            TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(ThePackageCaptureBinaryReader.ReadInt16());
+            TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
 
             //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
             if (TheEthernetFrameHeader.EtherType < (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
@@ -65,7 +65,7 @@ namespace EthernetFrameNamespace
 
                 //Not going to process IEEE 802.3 Ethernet frames currently as they do not include any data of interest
                 //Just read off the bytes for the IEEE 802.3 Ethernet frame from the packet capture so we can move on
-                ThePackageCaptureBinaryReader.ReadBytes(TheEthernetFrameHeader.EtherType);
+                TheBinaryReader.ReadBytes(TheEthernetFrameHeader.EtherType);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace EthernetFrameNamespace
                             ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing();
 
                             //We've got an Ethernet frame containing an ARP packet so process it
-                            TheResult = TheARPPacketProcessing.ProcessARPPacket(ThePackageCaptureBinaryReader);
+                            TheResult = TheARPPacketProcessing.ProcessARPPacket(TheBinaryReader);
                             break;
                         }
 
@@ -85,7 +85,7 @@ namespace EthernetFrameNamespace
                             IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing();
 
                             //We've got an Ethernet frame containing an IPv4 packet so process it
-                            TheResult = TheIPv4PacketProcessing.ProcessIPv4Packet(ThePackageCaptureBinaryReader);
+                            TheResult = TheIPv4PacketProcessing.ProcessIPv4Packet(TheBinaryReader);
                             break;
                         }
 
@@ -107,7 +107,7 @@ namespace EthernetFrameNamespace
                             LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing();
 
                             //We've got an Ethernet frame containing an LLDP packet so process it
-                            TheResult = TheLLDPPacketProcessing.ProcessLLDPPacket(ThePackageCaptureBinaryReader);
+                            TheResult = TheLLDPPacketProcessing.ProcessLLDPPacket(TheBinaryReader);
                             break;
                         }
 
@@ -118,11 +118,11 @@ namespace EthernetFrameNamespace
                             //The "Ether Type" we've just read will actually be the IEEE 802.1Q Tag Protocol Identifier
 
                             //First just read off the IEEE 802.1Q Tag Control Identifier so we can move on
-                            System.UInt16 TagControlIdentifier = ThePackageCaptureBinaryReader.ReadUInt16();
+                            System.UInt16 TagControlIdentifier = TheBinaryReader.ReadUInt16();
 
                             //Then re-read the Ether Type, this time obtaining the real value (so long as there is only one VLAN tag of course!)
                             //Then re-read of the Ether Type will be acheived by another call to this method so it must be re-entrant
-                            TheResult = ProcessEthernetFrameEtherType(ThePackageCaptureBinaryReader, TheEthernetFrameHeader);
+                            TheResult = ProcessEthernetFrameEtherType(TheBinaryReader, TheEthernetFrameHeader);
 
                             break;
                         }
