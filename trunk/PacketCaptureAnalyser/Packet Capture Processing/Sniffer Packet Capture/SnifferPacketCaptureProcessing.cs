@@ -71,9 +71,12 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out double TheTimestamp)
+        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
         {
             bool TheResult = true;
+
+            //Provide a default value to the output parameter for the length of the PCAP packet capture packet payload
+            ThePayloadLength = 0;
 
             //Provide a default value to the output parameter for the timestamp
             TheTimestamp = 0.0;
@@ -106,6 +109,10 @@ namespace PacketCaptureProcessingNamespace
                             TheType2Record.Flags = TheBinaryReader.ReadByte();
                             TheType2Record.TrueSize = TheBinaryReader.ReadInt16();
                             TheType2Record.Reserved = TheBinaryReader.ReadInt16();
+
+                            //Set up the output parameter for the length of the Sniffer packet payload
+                            //Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
+                            ThePayloadLength = TheType2Record.Size - 12;
 
                             //Set up the output parameter for the timestamp based on the supplied timestamp slice and the timestamp from the Sniffer type 2 data record
                             //This is the number of seconds passed on this particular day

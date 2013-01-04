@@ -56,9 +56,15 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out double TheTimestamp)
+        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
         {
             bool TheResult = true;
+
+            //Provide a default value to the output parameter for the length of the PCAP packet capture packet payload
+            ThePayloadLength = 0;
+
+            //Provide a default value to the output parameter for the timestamp
+            TheTimestamp = 0.0;
 
             //Create an instance of the PCAP packet capture packet header
             PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure ThePacketHeader = new PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure();
@@ -69,10 +75,16 @@ namespace PacketCaptureProcessingNamespace
             ThePacketHeader.SavedLength = TheBinaryReader.ReadUInt32();
             ThePacketHeader.ActualLength = TheBinaryReader.ReadUInt32();
 
-            //Set up the output parameter for the timestamp based on the timestamp values in seconds and microseconds
-            TheTimestamp = (double)ThePacketHeader.TimestampSeconds + ((double)(ThePacketHeader.TimestampMicroseconds) / 1000000.0);
-
             //No need to validate fields from the PCAP packet capture packet header
+            if (TheResult)
+            {
+                //Set up the output parameter for the length of the PCAP packet capture packet payload
+                //Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
+                ThePayloadLength = ThePacketHeader.SavedLength - 12;
+
+                //Set up the output parameter for the timestamp based on the timestamp values in seconds and microseconds
+                TheTimestamp = (double)ThePacketHeader.TimestampSeconds + ((double)(ThePacketHeader.TimestampMicroseconds) / 1000000.0);
+            }
 
             return TheResult;
         }
