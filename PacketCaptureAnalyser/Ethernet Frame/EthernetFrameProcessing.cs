@@ -65,10 +65,7 @@ namespace EthernetFrameNamespace
 
                 //Not going to process IEEE 802.3 Ethernet frames currently as they do not include any data of interest
                 //Just read off the bytes for the IEEE 802.3 Ethernet frame from the packet capture so we can move on
-                for (int i = 0; i < TheEthernetFrameHeader.EtherType; ++i)
-                {
-                    ThePackageCaptureBinaryReader.ReadByte();
-                }
+                ThePackageCaptureBinaryReader.ReadBytes(TheEthernetFrameHeader.EtherType);
             }
             else
             {

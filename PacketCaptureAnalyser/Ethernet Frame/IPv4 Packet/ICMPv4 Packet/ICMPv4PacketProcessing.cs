@@ -36,10 +36,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
             
             //Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
             //The remaining length is the total supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
-            for (int i = 0; i < (TheICMPv4PacketLength - ICMPv4PacketConstants.ICMPv4PacketHeaderLength); ++i)
-            {
-                ThePackageCaptureBinaryReader.ReadByte();
-            }
+            ThePackageCaptureBinaryReader.ReadBytes(TheICMPv4PacketLength - ICMPv4PacketConstants.ICMPv4PacketHeaderLength);
 
             return TheResult;
         }
