@@ -33,7 +33,7 @@ namespace PacketCaptureProcessingNamespace
 
         public abstract bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out double TheTimestampAccuracy);
 
-        public abstract bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out double TheTimestamp);
+        public abstract bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp);
 
         //
         //Concrete methods - cannot be overriden by a derived class
@@ -115,26 +115,35 @@ namespace PacketCaptureProcessingNamespace
                 //Store the length of the stream locally - the .NET framework does not cache it so each query requires an expensive read - this is OK so long as not editing the file at the same time as analysing it
                 long TheStreamLength = TheBinaryReader.BaseStream.Length;
 
+                //Declare an entity to be used for each payload length extracted from a packet header
+                long ThePayloadLength = 0;
+
                 //Declare an entity to be used for each timestamp extracted from a packet header
                 double TheTimestamp = 0.0;
 
                 //Keep looping through the packet capture, processing each packet header and Ethernet frame in turn, while characters remain in the packet capture and there are no errors
-                //Cannot use the PeekChar method here as some characters in the file may fall outside of the bounds of the character encoding - it is a binary file after all!
+                //Cannot use the PeekChar method here as some characters in the packet capture may fall outside of the bounds of the character encoding - it is a binary format after all!
                 //Instead use the position of the binary reader within the stream, stopping once the length of stream has been reached
 
                 while (TheBinaryReader.BaseStream.Position < TheStreamLength)
                 {
                     ++PacketsProcessed;
 
+                    //
+                    //Restore the following line if you want indication of progress through the packet capture or want to tie an error condition to a particular packet
+                    //
+
+                    //System.Diagnostics.Debug.WriteLine("Started processing of captured packet #{0}", PacketsProcessed);
+
                     //Check whether the end of the packet capture has been reached
                     if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                     {
-                        if (ProcessPacketHeader(TheBinaryReader, TheTimestampAccuracy, out TheTimestamp))
+                        if (ProcessPacketHeader(TheBinaryReader, TheTimestampAccuracy, out ThePayloadLength, out TheTimestamp))
                         {
                             //Check whether the end of the packet capture has been reached
                             if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                             {
-                                if (TheEthernetFrameProcessing.Process(TheBinaryReader))
+                                if (TheEthernetFrameProcessing.Process(TheBinaryReader, ThePayloadLength))
                                 {
                                     //Start the next iteration of the loop
                                     continue;
