@@ -79,11 +79,8 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
                 default:
                     {
                         //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
-                        //The remaining length is the total supplied length of the UDP datagram payload
-                        for (int i = 0; i < TheUDPDatagramPayloadLength; ++i)
-                        {
-                            ThePackageCaptureBinaryReader.ReadByte();
-                        }
+                        //The remaining length is the supplied length of the UDP datagram payload
+                        ThePackageCaptureBinaryReader.ReadBytes(TheUDPDatagramPayloadLength);
 
                         break;
                     }
