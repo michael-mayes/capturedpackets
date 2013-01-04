@@ -31,69 +31,90 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - override abstract methods on the base class
         //
 
-        public override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader TheBinaryReader)
+        public override bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
+            //Provide a default value to the output parameter for the timestamp accuracy
+            TheTimestampAccuracy = 0.0;
+
             //Create the single instance of the Sniffer packet capture global header
-            SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure TheSnifferPackageCaptureGlobalHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure();
+            SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure TheGlobalHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure();
 
             //Populate the Sniffer packet capture global header from the packet capture
-            TheSnifferPackageCaptureGlobalHeader.MagicNumberHigh = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
-            TheSnifferPackageCaptureGlobalHeader.MagicNumberLow = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
-            TheSnifferPackageCaptureGlobalHeader.MagicNumberTerminator = TheBinaryReader.ReadByte();
-            TheSnifferPackageCaptureGlobalHeader.RecordType = TheBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.RecordLength = TheBinaryReader.ReadInt32();
-            TheSnifferPackageCaptureGlobalHeader.VersionMajor = TheBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.VersionMinor = TheBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.Time = TheBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.Date = TheBinaryReader.ReadInt16();
-            TheSnifferPackageCaptureGlobalHeader.Type = TheBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.NetworkEncapsulationType = TheBinaryReader.ReadByte();
-            TheSnifferPackageCaptureGlobalHeader.FormatVersion = TheBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.TimestampUnits = TheBinaryReader.ReadByte();
-            TheSnifferPackageCaptureGlobalHeader.CompressionVersion = TheBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.CompressionLevel = TheBinaryReader.ReadSByte();
-            TheSnifferPackageCaptureGlobalHeader.Reserved = TheBinaryReader.ReadInt32();
+            TheGlobalHeader.MagicNumberHigh = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
+            TheGlobalHeader.MagicNumberLow = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
+            TheGlobalHeader.MagicNumberTerminator = TheBinaryReader.ReadByte();
+            TheGlobalHeader.RecordType = TheBinaryReader.ReadInt16();
+            TheGlobalHeader.RecordLength = TheBinaryReader.ReadInt32();
+            TheGlobalHeader.VersionMajor = TheBinaryReader.ReadInt16();
+            TheGlobalHeader.VersionMinor = TheBinaryReader.ReadInt16();
+            TheGlobalHeader.Time = TheBinaryReader.ReadInt16();
+            TheGlobalHeader.Date = TheBinaryReader.ReadInt16();
+            TheGlobalHeader.Type = TheBinaryReader.ReadSByte();
+            TheGlobalHeader.NetworkEncapsulationType = TheBinaryReader.ReadByte();
+            TheGlobalHeader.FormatVersion = TheBinaryReader.ReadSByte();
+            TheGlobalHeader.TimestampUnits = TheBinaryReader.ReadByte();
+            TheGlobalHeader.CompressionVersion = TheBinaryReader.ReadSByte();
+            TheGlobalHeader.CompressionLevel = TheBinaryReader.ReadSByte();
+            TheGlobalHeader.Reserved = TheBinaryReader.ReadInt32();
 
             //Validate fields from the Sniffer packet capture global header
-            TheResult = ValidateSnifferPackageCaptureGlobalHeader(TheSnifferPackageCaptureGlobalHeader);
+            TheResult = ValidateGlobalHeader(TheGlobalHeader);
+
+            if (TheResult)
+            {
+                //Derive the output parameter for the timestamp accuracy (actually a timestamp slice for a Sniffer packet capture) from the timestamp units in the Sniffer packet capture global header
+                TheResult = CalculateTimestampAccuracy(TheGlobalHeader.TimestampUnits, out TheTimestampAccuracy);
+            }
 
             return TheResult;
         }
 
-        public override bool ProcessPacketCapturePacketHeader(System.IO.BinaryReader TheBinaryReader)
+        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out double TheTimestamp)
         {
             bool TheResult = true;
 
+            //Provide a default value to the output parameter for the timestamp
+            TheTimestamp = 0.0;
+
             //Create an instance of the Sniffer packet capture record header
-            SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure TheSnifferPackageCaptureRecordHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure();
+            SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure TheRecordHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure();
 
             //Populate the Sniffer packet capture record header from the packet capture
-            TheSnifferPackageCaptureRecordHeader.RecordType = TheBinaryReader.ReadUInt16();
-            TheSnifferPackageCaptureRecordHeader.RecordLength = TheBinaryReader.ReadUInt32();
+            TheRecordHeader.RecordType = TheBinaryReader.ReadUInt16();
+            TheRecordHeader.RecordLength = TheBinaryReader.ReadUInt32();
 
-            TheResult = ValidateSnifferPackageCaptureRecordHeader(TheSnifferPackageCaptureRecordHeader);
+            TheResult = ValidateRecordHeader(TheRecordHeader);
 
             if (TheResult)
             {
-                switch (TheSnifferPackageCaptureRecordHeader.RecordType)
+                switch (TheRecordHeader.RecordType)
                 {
                     case SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferType2RecordType:
                         {
                             //Create an instance of the Sniffer packet capture Sniffer type 2 data record
-                            SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure TheSnifferPackageCaptureSnifferType2Record = new SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure();
+                            SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure TheType2Record = new SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure();
 
                             //Populate the Sniffer packet capture Sniffer type 2 data record from the packet capture
-                            TheSnifferPackageCaptureSnifferType2Record.TimestampLow = TheBinaryReader.ReadUInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.TimestampMiddle = TheBinaryReader.ReadUInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.TimestampHigh = TheBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.TimeDays = TheBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.Size = TheBinaryReader.ReadInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.FrameErrorStatusBits = TheBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.Flags = TheBinaryReader.ReadByte();
-                            TheSnifferPackageCaptureSnifferType2Record.TrueSize = TheBinaryReader.ReadInt16();
-                            TheSnifferPackageCaptureSnifferType2Record.Reserved = TheBinaryReader.ReadInt16();
+                            TheType2Record.TimestampLow = TheBinaryReader.ReadUInt16();
+                            TheType2Record.TimestampMiddle = TheBinaryReader.ReadUInt16();
+                            TheType2Record.TimestampHigh = TheBinaryReader.ReadByte();
+                            TheType2Record.TimeDays = TheBinaryReader.ReadByte();
+                            TheType2Record.Size = TheBinaryReader.ReadInt16();
+                            TheType2Record.FrameErrorStatusBits = TheBinaryReader.ReadByte();
+                            TheType2Record.Flags = TheBinaryReader.ReadByte();
+                            TheType2Record.TrueSize = TheBinaryReader.ReadInt16();
+                            TheType2Record.Reserved = TheBinaryReader.ReadInt16();
+
+                            //Set up the output parameter for the timestamp based on the supplied timestamp slice and the timestamp from the Sniffer type 2 data record
+                            //This is the number of seconds passed on this particular day
+                            //To match up with a timestamp displayed since epoch would have to get the value of the Date field from the Sniffer packet capture global header
+                            TheTimestamp =
+                                ((TheTimestampAccuracy * TheType2Record.TimestampHigh * 4294967296) +
+                                (TheTimestampAccuracy * TheType2Record.TimestampMiddle * 65536) +
+                                (TheTimestampAccuracy * TheType2Record.TimestampLow));
+
                             break;
                         }
 
@@ -109,7 +130,7 @@ namespace PacketCaptureProcessingNamespace
 
                             //Processing of Sniffer packet captures with record types not enumerated above are obviously not currently supported!
 
-                            System.Diagnostics.Debug.WriteLine("The Sniffer packet capture contains an unexpected record type of {0}", TheSnifferPackageCaptureRecordHeader.RecordType);
+                            System.Diagnostics.Debug.WriteLine("The Sniffer packet capture contains an unexpected record type of {0}", TheRecordHeader.RecordType);
 
                             TheResult = false;
 
@@ -125,64 +146,71 @@ namespace PacketCaptureProcessingNamespace
         //Private methods - provide methods specific to Sniffer packet captures, not required to derive from the abstract base class
         //
 
-        private bool ValidateSnifferPackageCaptureGlobalHeader(SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure TheSnifferPackageCaptureGlobalHeader)
+        private bool ValidateGlobalHeader(SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure TheGlobalHeader)
         {
             bool TheResult = true;
 
             //Validate fields from the Sniffer packet capture global header
 
-            if (TheSnifferPackageCaptureGlobalHeader.MagicNumberHigh != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberHigh)
+            if (TheGlobalHeader.MagicNumberHigh != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberHigh)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected high bytes for the magic number, is {0:X} not {1:X}", TheSnifferPackageCaptureGlobalHeader.MagicNumberHigh, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberHigh);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected high bytes for the magic number, is {0:X} not {1:X}", TheGlobalHeader.MagicNumberHigh, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberHigh);
 
                 TheResult = false;
             }
 
-            if (TheSnifferPackageCaptureGlobalHeader.MagicNumberLow != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberLow)
+            if (TheGlobalHeader.MagicNumberLow != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberLow)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected low bytes for the magic number, is {0:X} not {1:X}", TheSnifferPackageCaptureGlobalHeader.MagicNumberLow, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberLow);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected low bytes for the magic number, is {0:X} not {1:X}", TheGlobalHeader.MagicNumberLow, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberLow);
 
                 TheResult = false;
             }
 
-            if (TheSnifferPackageCaptureGlobalHeader.MagicNumberTerminator != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberTerminator)
+            if (TheGlobalHeader.MagicNumberTerminator != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberTerminator)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected magic number terminating character, is {0} not {1}", TheSnifferPackageCaptureGlobalHeader.MagicNumberTerminator, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberTerminator);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected magic number terminating character, is {0} not {1}", TheGlobalHeader.MagicNumberTerminator, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberTerminator);
 
                 TheResult = false;
             }
 
-            if (TheSnifferPackageCaptureGlobalHeader.VersionMajor != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMajor)
+            if (TheGlobalHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedRecordType)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected major version number, is {0} not {1}", TheSnifferPackageCaptureGlobalHeader.VersionMajor, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMajor);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected record type, is {0} not {1}", TheGlobalHeader.RecordType, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedRecordType);
 
                 TheResult = false;
             }
 
-            if (TheSnifferPackageCaptureGlobalHeader.VersionMinor != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMinor)
+            if (TheGlobalHeader.VersionMajor != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMajor)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected minor version number, is {0} not {1}", TheSnifferPackageCaptureGlobalHeader.VersionMinor, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMinor);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected major version number, is {0} not {1}", TheGlobalHeader.VersionMajor, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMajor);
 
                 TheResult = false;
             }
 
-            if (TheSnifferPackageCaptureGlobalHeader.Type != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedType)
+            if (TheGlobalHeader.VersionMinor != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMinor)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected record type, is {0} not {1}", TheSnifferPackageCaptureGlobalHeader.Type, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedType);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected minor version number, is {0} not {1}", TheGlobalHeader.VersionMinor, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedVersionMinor);
 
                 TheResult = false;
             }
 
-            if (TheSnifferPackageCaptureGlobalHeader.NetworkEncapsulationType != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedNetworkEncapsulationType)
+            if (TheGlobalHeader.Type != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedType)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected network encapsulation type, is {0} not {1}", TheSnifferPackageCaptureGlobalHeader.NetworkEncapsulationType, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedNetworkEncapsulationType);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected record type, is {0} not {1}", TheGlobalHeader.Type, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedType);
 
                 TheResult = false;
             }
 
-            if (TheSnifferPackageCaptureGlobalHeader.FormatVersion != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedFormatVersion)
+            if (TheGlobalHeader.NetworkEncapsulationType != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedNetworkEncapsulationType)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected format version, is {0} not {1}", TheSnifferPackageCaptureGlobalHeader.FormatVersion, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedFormatVersion);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected network encapsulation type, is {0} not {1}", TheGlobalHeader.NetworkEncapsulationType, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedNetworkEncapsulationType);
+
+                TheResult = false;
+            }
+
+            if (TheGlobalHeader.FormatVersion != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedFormatVersion)
+            {
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected format version, is {0} not {1}", TheGlobalHeader.FormatVersion, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedFormatVersion);
 
                 TheResult = false;
             }
@@ -190,17 +218,87 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        private bool ValidateSnifferPackageCaptureRecordHeader(SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure TheSnifferPackageCaptureRecordHeader)
+        private bool ValidateRecordHeader(SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure TheRecordHeader)
         {
             bool TheResult = true;
 
             //Validate fields from the Sniffer packet capture record header
-            if (TheSnifferPackageCaptureRecordHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferType2RecordType &&
-                TheSnifferPackageCaptureRecordHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferEndOfFileRecordType)
+            if (TheRecordHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferType2RecordType &&
+                TheRecordHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferEndOfFileRecordType)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture does not contain the expected record type, is {0}", TheSnifferPackageCaptureRecordHeader.RecordType);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture record header does not contain the expected type, is {0}", TheRecordHeader.RecordType);
 
                 TheResult = false;
+            }
+
+            return TheResult;
+        }
+
+        private bool CalculateTimestampAccuracy(System.Byte TheTimestampUnits, out double TheTimestampAccuracy)
+        {
+            bool TheResult = true;
+
+            switch (TheTimestampUnits)
+            {
+                //15.0 microseconds
+                case 0:
+                    {
+                        TheTimestampAccuracy = 0.000015;
+                        break;
+                    }
+
+                //0.838096 microseconds
+                case 1:
+                    {
+                        TheTimestampAccuracy = 0.000000838096;
+                        break;
+                    }
+
+                //15.0 microseconds
+                case 2:
+                    {
+                        TheTimestampAccuracy = 0.000015;
+                        break;
+                    }
+
+                //0.5 microseconds
+                case 3:
+                    {
+                        TheTimestampAccuracy = 0.0000005;
+                        break;
+                    }
+
+                //2.0 microseconds
+                case 4:
+                    {
+                        TheTimestampAccuracy = 0.000002;
+                        break;
+                    }
+
+                //0.08 microseconds
+                case 5:
+                    {
+                        TheTimestampAccuracy = 0.00000008;
+                        break;
+                    }
+
+                //0.1 microseconds
+                case 6:
+                    {
+                        TheTimestampAccuracy = 0.0000001;
+                        break;
+                    }
+
+                default:
+                    {
+                        System.Diagnostics.Debug.WriteLine("The Sniffer packet capture contains an unexpected timestamp unit {0}!!!", TheTimestampUnits);
+
+                        TheTimestampAccuracy = 0.0;
+
+                        TheResult = false;
+
+                        break;
+                    }
             }
 
             return TheResult;
