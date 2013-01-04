@@ -36,6 +36,14 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
         public const int TCPPacketHeaderMinimumLength = 20;
         public const int TCPPacketHeaderMaximumLength = 60;
 
+        //Port number
+
+        public enum TCPPacketPortNumberEnumeration
+        {
+          DummyValueMin = 0,
+          DummyValueMax = 65535
+        }
+
         //Flags
 
         public enum TCPPacketFlags
