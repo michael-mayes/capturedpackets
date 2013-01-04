@@ -23,29 +23,24 @@
 
 //For more information, please refer to <http://unlicense.org/>
 
-namespace EthernetFrameNamespace
+namespace EthernetFrameNamespace.LoopbackPacketNamespace
 {
-    class EthernetFrameConstants
+    class LoopbackPacketConstants
     {
         //
-        //Ethernet frame header - 14 bytes
+        //Loopback packet header - 6 bytes
         //
 
         //Length
 
-        public const int EthernetFrameHeaderLength = 14;
+        public const int LoopbackPacketHeaderLength = 6;
 
-        //Ether Type - provided in little endian representation
+        //
+        //Loopback packet payload
+        //
 
-        public enum EthernetFrameHeaderEtherTypeEnumeration
-        {
-            MinimumValue = 0x0600, //Minimum value for Ether Type - lower values indicate length of the Ethernet frame
-            ARP = 0x0806, //Ethernet frame containing an ARP packet
-            IPv4 = 0x0800, //Ethernet frame containing an IPv4 packet
-            IPv6 = 0x86DD, //Ethernet frame containing an IPv6 packet
-            LLDP = 0x88CC, //Ethernet frame containing an LLDP packet (IEEE 802.1AB)
-            Loopback = 0x9000, //Configuration Test Protocol (Loopback)
-            VLANTagged = 0x8100 //Ethernet frame with a VLAN tag (IEEE 802.1Q)
-        }
+        //Length
+
+        public const int LoopbackPacketPayloadLength = 40;
     }
 }
