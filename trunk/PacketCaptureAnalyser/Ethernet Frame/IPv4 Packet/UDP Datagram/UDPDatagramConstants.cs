@@ -34,5 +34,13 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
         //Length
 
         public const int UDPDatagramHeaderLength = 8;
+
+        //Port number
+
+        public enum UDPDatagramPortNumberEnumeration
+        {
+          DummyValueMin = 0,
+          DummyValueMax = 65535
+        }
     }
 }
