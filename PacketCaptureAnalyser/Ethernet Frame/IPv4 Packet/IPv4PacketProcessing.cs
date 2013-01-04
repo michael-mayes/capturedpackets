@@ -31,6 +31,31 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
         {
             bool TheResult = true;
 
+            int ThePayloadLength = 0;
+            int TheProtocol = 0;
+
+            //Process the TCP packet header
+            TheResult = ProcessHeader(TheBinaryReader, out ThePayloadLength, out TheProtocol);
+
+            if (TheResult)
+            {
+                //Process the payload of the TCP packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the TCP packet header
+                TheResult = ProcessPayload(TheBinaryReader, ThePayloadLength, TheProtocol);
+            }
+
+            return TheResult;
+        }
+
+        private bool ProcessHeader(System.IO.BinaryReader TheBinaryReader, out int ThePayloadLength, out int TheProtocol)
+        {
+            bool TheResult = true;
+
+            //Provide a default value for the output parameter for the length of the IPv4 packet payload
+            ThePayloadLength = 0;
+
+            //Provide a default value for the output parameter for the protocol for the IPv4 packet
+            TheProtocol = 0;
+
             //Create an instance of the IPv4 packet header
             IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader = new IPv4PacketStructures.IPv4PacketHeaderStructure();
 
@@ -52,70 +77,91 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             //The extracted length value is the length of the IPv4 packet header in 32-bit words so multiply by four to get the actual length in bytes of the IPv4 packet header
             int TheHeaderLength = ((TheHeader.VersionAndHeaderLength & 0xF) * 4);
 
-            //The length of the payload of the IPv4 packet (e.g. a TCP packet) is the total length of the IPv4 packet minus the length of the IPv4 packet header just calculated
-            int ThePayloadLength = (TheHeader.TotalLength - TheHeaderLength);
+            //Validate the IPv4 packet header
+            TheResult = ValidateHeader(TheHeader, TheHeaderLength);
+
+            if (TheResult)
+            {
+                //Set up the output parameter for the length of the payload of the IPv4 packet (e.g. a TCP packet), which is the total length of the IPv4 packet minus the length of the IPv4 packet header just calculated
+                ThePayloadLength = (TheHeader.TotalLength - TheHeaderLength);
+
+                //Set up the output parameter for the protocol for the IPv4 packet
+                TheProtocol = TheHeader.Protocol;
+            }
+
+            return TheResult;
+        }
+
+        private bool ProcessPayload(System.IO.BinaryReader TheBinaryReader, int ThePayloadLength, int TheProtocol)
+        {
+            bool TheResult = true;
+
+            //Process the IPv4 packet based on the value indicated for the protocol in the the IPv4 packet header
+            switch (TheProtocol)
+            {
+                case IPv4PacketConstants.IPv4PacketHeaderProtocolICMP:
+                    {
+                        ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing();
+
+                        //We've got an IPv4 packet containing an ICMPv4 packet so process it
+                        TheResult = TheICMPv4PacketProcessing.Process(TheBinaryReader, ThePayloadLength);
+                        break;
+                    }
+
+                case IPv4PacketConstants.IPv4PacketHeaderProtocolIGMP:
+                    {
+                        IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing();
+
+                        //We've got an IPv4 packet containing an IGMPv2 packet so process it
+                        TheResult = TheIGMPv2PacketProcessing.Process(TheBinaryReader, ThePayloadLength);
+                        break;
+                    }
+
+                case IPv4PacketConstants.IPv4PacketHeaderProtocolTCP:
+                    {
+                        TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing();
+
+                        //We've got an IPv4 packet containing an TCP packet so process it
+                        TheResult = TheTCPPacketProcessing.Process(TheBinaryReader, ThePayloadLength);
+                        break;
+                    }
+
+                case IPv4PacketConstants.IPv4PacketHeaderProtocolUDP:
+                    {
+                        UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing();
+
+                        //We've got an IPv4 packet containing an UDP datagram so process it
+                        TheResult = TheUDPDatagramProcessing.Process(TheBinaryReader, ThePayloadLength);
+                        break;
+                    }
+
+                default:
+                    {
+                        //We've got an IPv4 packet containing an unknown protocol
+
+                        //Processing of packets with network data link types not enumerated above are obviously not currently supported!
+
+                        System.Diagnostics.Debug.WriteLine("The IPv4 packet contains an unexpected protocol of {0:X}", TheProtocol);
+
+                        TheResult = false;
+
+                        break;
+                    }
+            }
+
+            return TheResult;
+        }
+
+        private bool ValidateHeader(IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader, int TheHeaderLength)
+        {
+            bool TheResult = true;
 
             //Validate length of the IPv4 packet header
             if (TheHeaderLength != IPv4PacketConstants.IPv4PacketHeaderLength)
             {
-                System.Diagnostics.Debug.WriteLine("The IPv4 packet does not contain the expected header length, is {0:X} not {1:X}", TheHeaderLength, IPv4PacketConstants.IPv4PacketHeaderLength);
+                System.Diagnostics.Debug.WriteLine("The IPv4 packet does not contain the expected header length, is {0} not {1}", TheHeaderLength, IPv4PacketConstants.IPv4PacketHeaderLength);
 
                 TheResult = false;
-            }
-            else
-            {
-                //Process the IPv4 packet based on the value indicated for the protocol in the the IPv4 packet header
-                switch (TheHeader.Protocol)
-                {
-                    case IPv4PacketConstants.IPv4PacketHeaderProtocolICMP:
-                        {
-                            ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing();
-
-                            //We've got an IPv4 packet containing an ICMPv4 packet so process it
-                            TheResult = TheICMPv4PacketProcessing.Process(TheBinaryReader, ThePayloadLength);
-                            break;
-                        }
-
-                    case IPv4PacketConstants.IPv4PacketHeaderProtocolIGMP:
-                        {
-                            IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing();
-
-                            //We've got an IPv4 packet containing an IGMPv2 packet so process it
-                            TheResult = TheIGMPv2PacketProcessing.Process(TheBinaryReader, ThePayloadLength);
-                            break;
-                        }
-
-                    case IPv4PacketConstants.IPv4PacketHeaderProtocolTCP:
-                        {
-                            TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing();
-
-                            //We've got an IPv4 packet containing an TCP packet so process it
-                            TheResult = TheTCPPacketProcessing.Process(TheBinaryReader, ThePayloadLength);
-                            break;
-                        }
-
-                    case IPv4PacketConstants.IPv4PacketHeaderProtocolUDP:
-                        {
-                            UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing();
-
-                            //We've got an IPv4 packet containing an UDP datagram so process it
-                            TheResult = TheUDPDatagramProcessing.Process(TheBinaryReader, ThePayloadLength);
-                            break;
-                        }
-
-                    default:
-                        {
-                            //We've got an IPv4 packet containing an unknown protocol
-
-                            //Processing of packets with network data link types not enumerated above are obviously not currently supported!
-
-                            System.Diagnostics.Debug.WriteLine("The IPv4 packet contains an unexpected protocol of {0:X}", TheHeader.Protocol);
-
-                            TheResult = false;
-
-                            break;
-                        }
-                }
             }
 
             return TheResult;
