@@ -51,6 +51,10 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
         {
             bool TheResult = true;
 
+            //Provide default values for the output parameters for source port and destination port
+            TheSourcePort = 0;
+            TheDestinationPort = 0;
+
             //Create an instance of the UDP datagram header
             UDPDatagramStructures.UDPDatagramHeaderStructure TheHeader = new UDPDatagramStructures.UDPDatagramHeaderStructure();
 
@@ -63,9 +67,12 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             //Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
             ThePayloadLength = TheHeader.Length - UDPDatagramConstants.UDPDatagramHeaderLength;
 
-            //Set up the output parameters for source port and destination port using the value read from the UDP datagram header
-            TheSourcePort = TheHeader.SourcePort;
-            TheDestinationPort = TheHeader.DestinationPort;
+            if (TheResult)
+            {
+                //Set up the output parameters for source port and destination port using the value read from the UDP datagram header
+                TheSourcePort = TheHeader.SourcePort;
+                TheDestinationPort = TheHeader.DestinationPort;
+            }
 
             return TheResult;
         }
@@ -77,14 +84,13 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             //Only process this UDP datagram if the payload has a non-zero payload length i.e. it actually includes data (unlikely to not include data, but retain check for consistency with TCP packet processing)
             if (ThePayloadLength > 0)
             {
-                switch (TheDestinationPort)
+                switch (TheSourcePort)
                 {
                     default:
                         {
                             //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
                             //The remaining length is the supplied length of the UDP datagram payload
                             TheBinaryReader.ReadBytes(ThePayloadLength);
-
                             break;
                         }
                 }
