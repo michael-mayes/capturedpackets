@@ -27,7 +27,7 @@ namespace EthernetFrameNamespace
 {
     class EthernetFrameProcessing
     {
-        public bool Process(System.IO.BinaryReader TheBinaryReader)
+        public bool Process(System.IO.BinaryReader TheBinaryReader, long ThePayloadLength)
         {
             bool TheResult = true;
 
@@ -43,16 +43,19 @@ namespace EthernetFrameNamespace
             TheEthernetFrameHeader.SourceMACAddressLow = TheBinaryReader.ReadUInt16();
 
             //Read the Ether Type for the Ethernet frame from the packet capture and process it
-            TheResult = ProcessEtherType(TheBinaryReader, TheEthernetFrameHeader);
+            TheResult = ProcessEtherType(TheBinaryReader, TheEthernetFrameHeader, ThePayloadLength);
 
             return TheResult;
         }
 
         //A re-read of the Ether Type for an Ethernet frame with a VLAN tag (IEEE 802.1Q), if required, will be acheived by another call to this method
         //Therefore this method must be re-entrant so no explicitly static entities and the like!
-        public bool ProcessEtherType(System.IO.BinaryReader TheBinaryReader, EthernetFrameStructures.EthernetFrameHeaderStructure TheEthernetFrameHeader)
+        public bool ProcessEtherType(System.IO.BinaryReader TheBinaryReader, EthernetFrameStructures.EthernetFrameHeaderStructure TheEthernetFrameHeader, long ThePayloadLength)
         {
             bool TheResult = true;
+
+            //Record the position in the stream for the packet capture so we can later determine how far has been progressed
+            long TheStartingStreamPosition = TheBinaryReader.BaseStream.Position;
 
             TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
 
@@ -111,6 +114,15 @@ namespace EthernetFrameNamespace
                             break;
                         }
 
+                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.Loopback:
+                        {
+                            LoopbackPacketNamespace.LoopbackPacketProcessing TheLoopbackPacketProcessing = new LoopbackPacketNamespace.LoopbackPacketProcessing();
+
+                            //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
+                            TheResult = TheLoopbackPacketProcessing.Process(TheBinaryReader);
+                            break;
+                        }
+
                     case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
                         {
                             //We've got an Ethernet frame with a VLAN tag (IEEE 802.1Q) so must advance and re-read the Ether Type
@@ -122,7 +134,7 @@ namespace EthernetFrameNamespace
 
                             //Then re-read the Ether Type, this time obtaining the real value (so long as there is only one VLAN tag of course!)
                             //Then re-read of the Ether Type will be acheived by another call to this method so it must be re-entrant
-                            TheResult = ProcessEtherType(TheBinaryReader, TheEthernetFrameHeader);
+                            TheResult = ProcessEtherType(TheBinaryReader, TheEthernetFrameHeader, ThePayloadLength);
 
                             break;
                         }
@@ -139,6 +151,31 @@ namespace EthernetFrameNamespace
 
                             break;
                         }
+                }
+            }
+
+            if (TheResult)
+            {
+                //Calculate how far has been progressed through the stream by the actions above to read from the packet capture
+                long TheStreamPositionDifference = TheBinaryReader.BaseStream.Position - TheStartingStreamPosition;
+
+                //Check whether the Ethernet frame payload has extra trailer bytes
+                //These would typically not be exposed in the packet capture by the recorder, but sometimes are for whatever reason!
+                if (ThePayloadLength != TheStreamPositionDifference)
+                {
+                    if (ThePayloadLength > TheStreamPositionDifference)
+                    {
+                        //Trim the extra trailer bytes
+                        TheBinaryReader.ReadBytes((int)(ThePayloadLength - TheStreamPositionDifference));
+                    }
+                    else
+                    {
+                        //This is a strange error condition so indicate a failure
+
+                        System.Diagnostics.Debug.WriteLine("The length {0} of payload of Ethernet frame does not match the progression {1} through the stream ", ThePayloadLength, TheStreamPositionDifference);
+
+                        TheResult = false;
+                    }
                 }
             }
 
