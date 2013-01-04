@@ -75,7 +75,7 @@ namespace PacketCaptureProcessingNamespace
                 if (ProcessPacketCaptureGlobalHeader(ThePackageCaptureBinaryReader))
                 {
                     //Process all packets in the packet capture
-                    TheResult = ProcessPacketCapture(ThePackageCaptureBinaryReader);
+                    TheResult = ProcessPacketCapturePackets(ThePackageCaptureBinaryReader);
                 }
                 else
                 {
@@ -95,7 +95,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public bool ProcessPacketCapture(System.IO.BinaryReader ThePackageCaptureBinaryReader)
+        public bool ProcessPacketCapturePackets(System.IO.BinaryReader ThePackageCaptureBinaryReader)
         {
             bool TheResult = true;
 
