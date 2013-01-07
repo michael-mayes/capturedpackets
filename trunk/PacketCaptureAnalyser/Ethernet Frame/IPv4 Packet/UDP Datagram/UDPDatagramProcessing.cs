@@ -28,13 +28,15 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
     class UDPDatagramProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+        private LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
 
-        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader)
+        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
         }
 
-        public bool Process(int TheLength)
+        public bool Process(double TheTimestamp, int TheLength)
         {
             bool TheResult = true;
 
@@ -48,7 +50,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             if (TheResult)
             {
                 //Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                TheResult = ProcessPayload(ThePayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
@@ -84,7 +86,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
+        private bool ProcessPayload(double TheTimestamp, int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
         {
             bool TheResult = true;
 

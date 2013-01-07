@@ -28,13 +28,15 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
     class TCPPacketProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+        private LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
 
-        public TCPPacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        public TCPPacketProcessing(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
         }
 
-        public bool Process(int TheLength)
+        public bool Process(double TheTimestamp, int TheLength)
         {
             bool TheResult = true;
 
@@ -48,7 +50,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             if (TheResult)
             {
                 //Process the payload of the TCP packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the TCP packet header
-                TheResult = ProcessPayload(ThePayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
@@ -114,7 +116,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
+        private bool ProcessPayload(double TheTimestamp, int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
         {
             bool TheResult = true;
 
