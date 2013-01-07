@@ -96,13 +96,19 @@ namespace PacketCaptureAnalyser
 
             System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
 
+            LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
+                new LatencyAnalysisNamespace.LatencyAnalysisProcessing();
+
+            //Initialise the functionality to perform latency analysis on the messages found
+            TheLatencyAnalysisProcessing.Create();
+
             switch (TheMainWindowFormPacketCaptureType)
             {
                 case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdumpPacketCapture:
                     {
                         PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing = new PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing();
 
-                        TheResult = ThePCAPPackageCaptureProcessing.Process(SelectedPacketCaptureForAnalysisDialog.FileName);
+                        TheResult = ThePCAPPackageCaptureProcessing.Process(TheLatencyAnalysisProcessing, SelectedPacketCaptureForAnalysisDialog.FileName);
 
                         break;
                     }
@@ -111,7 +117,7 @@ namespace PacketCaptureAnalyser
                     {
                         PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing = new PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing();
 
-                        TheResult = TheSnifferPackageCaptureProcessing.Process(SelectedPacketCaptureForAnalysisDialog.FileName);
+                        TheResult = TheSnifferPackageCaptureProcessing.Process(TheLatencyAnalysisProcessing, SelectedPacketCaptureForAnalysisDialog.FileName);
 
                         break;
                     }
@@ -128,6 +134,9 @@ namespace PacketCaptureAnalyser
             }
 
             System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture finished");
+
+            //Finalise the latency analysis on the messages found including outputting results
+            TheLatencyAnalysisProcessing.Finalise();
 
             //Dependent on the result of the processing above, display a message box to indicate success or otherwise
             if (TheResult)

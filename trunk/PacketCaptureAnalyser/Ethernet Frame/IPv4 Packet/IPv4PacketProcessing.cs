@@ -28,13 +28,15 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
     class IPv4PacketProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+        private LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
 
-        public IPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        public IPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
         }
 
-        public bool Process()
+        public bool Process(double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -47,7 +49,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             if (TheResult)
             {
                 //Process the payload of the TCP packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the TCP packet header
-                TheResult = ProcessPayload(ThePayloadLength, TheProtocol);
+                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheProtocol);
             }
 
             return TheResult;
@@ -99,7 +101,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(int ThePayloadLength, int TheProtocol)
+        private bool ProcessPayload(double TheTimestamp, int ThePayloadLength, int TheProtocol)
         {
             bool TheResult = true;
 
@@ -126,19 +128,19 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                 case IPv4PacketConstants.IPv4PacketHeaderProtocolTCP:
                     {
-                        TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader);
+                        TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an TCP packet so process it
-                        TheResult = TheTCPPacketProcessing.Process(ThePayloadLength);
+                        TheResult = TheTCPPacketProcessing.Process(TheTimestamp, ThePayloadLength);
                         break;
                     }
 
                 case IPv4PacketConstants.IPv4PacketHeaderProtocolUDP:
                     {
-                        UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader);
+                        UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an UDP datagram so process it
-                        TheResult = TheUDPDatagramProcessing.Process(ThePayloadLength);
+                        TheResult = TheUDPDatagramProcessing.Process(TheTimestamp, ThePayloadLength);
                         break;
                     }
 

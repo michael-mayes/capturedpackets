@@ -28,17 +28,19 @@ namespace EthernetFrameNamespace
     class EthernetFrameProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+        private LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
 
         private long ThePayloadLength;
 
         private System.UInt16 TheEtherType;
 
-        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader)
+        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
         }
 
-        public bool Process(long ThePayloadLength)
+        public bool Process(long ThePayloadLength, double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -50,7 +52,13 @@ namespace EthernetFrameNamespace
 
             if (TheResult)
             {
-                ProcessPayload();
+                //Read the Ether Type for the Ethernet frame from the packet capture and process it
+                TheResult = ProcessEtherType();
+
+                if (TheResult)
+                {
+                    TheResult = ProcessPayload(TheTimestamp);
+                }
             }
 
             return TheResult;
@@ -79,9 +87,6 @@ namespace EthernetFrameNamespace
 
             //Store the Ether Type for use in further processing
             TheEtherType = TheEthernetFrameHeader.EtherType;
-
-            //Read the Ether Type for the Ethernet frame from the packet capture and process it
-            TheResult = ProcessEtherType();
 
             return TheResult;
         }
@@ -128,7 +133,7 @@ namespace EthernetFrameNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload()
+        private bool ProcessPayload(double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -148,10 +153,10 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
                     {
-                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader);
+                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
-                        TheResult = TheIPv4PacketProcessing.Process();
+                        TheResult = TheIPv4PacketProcessing.Process(TheTimestamp);
                         break;
                     }
 
