@@ -27,7 +27,36 @@ namespace EthernetFrameNamespace
 {
     class EthernetFrameProcessing
     {
-        public bool Process(System.IO.BinaryReader TheBinaryReader, long ThePayloadLength)
+        private System.IO.BinaryReader TheBinaryReader;
+
+        private long ThePayloadLength;
+
+        private System.UInt16 TheEtherType;
+
+        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader)
+        {
+            this.TheBinaryReader = TheBinaryReader;
+        }
+
+        public bool Process(long ThePayloadLength)
+        {
+            bool TheResult = true;
+
+            //Store the length of the payload of the Ethernet frame for use in further processing
+            this.ThePayloadLength = ThePayloadLength;
+
+            //Process the Ethernet frame header
+            TheResult = ProcessHeader();
+
+            if (TheResult)
+            {
+                ProcessPayload();
+            }
+
+            return TheResult;
+        }
+
+        private bool ProcessHeader()
         {
             bool TheResult = true;
 
@@ -42,116 +71,159 @@ namespace EthernetFrameNamespace
             TheEthernetFrameHeader.SourceMACAddressHigh = TheBinaryReader.ReadUInt32();
             TheEthernetFrameHeader.SourceMACAddressLow = TheBinaryReader.ReadUInt16();
 
+            //Read the Ether Type for the Ethernet frame from the packet capture
+            TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+
+            //Reduce the length of the payload of the Ethernet frame to reflect that the Ether Type of two bytes would have been included
+            this.ThePayloadLength = ThePayloadLength - 2;
+
+            //Store the Ether Type for use in further processing
+            TheEtherType = TheEthernetFrameHeader.EtherType;
+
             //Read the Ether Type for the Ethernet frame from the packet capture and process it
-            TheResult = ProcessEtherType(TheBinaryReader, TheEthernetFrameHeader, ThePayloadLength);
+            TheResult = ProcessEtherType();
 
             return TheResult;
         }
 
-        //A re-read of the Ether Type for an Ethernet frame with a VLAN tag (IEEE 802.1Q), if required, will be acheived by another call to this method
-        //Therefore this method must be re-entrant so no explicitly static entities and the like!
-        public bool ProcessEtherType(System.IO.BinaryReader TheBinaryReader, EthernetFrameStructures.EthernetFrameHeaderStructure TheEthernetFrameHeader, long ThePayloadLength)
+        public bool ProcessEtherType()
+        {
+            bool TheResult = true;
+
+            switch (TheEtherType)
+            {
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.LLDP:
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.Loopback:
+                    {
+                        break;
+                    }
+
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
+                    {
+                        //We've got an Ethernet frame with a VLAN tag (IEEE 802.1Q) so must advance and re-read the Ether Type
+
+                        //The "Ether Type" we've just read will actually be the IEEE 802.1Q Tag Protocol Identifier
+
+                        //First just read off the IEEE 802.1Q Tag Control Identifier so we can move on
+                        System.UInt16 TheTagControlIdentifier = TheBinaryReader.ReadUInt16();
+
+                        //Then re-read the Ether Type, this time obtaining the real value (so long as there is only one VLAN tag of course!)
+                        TheEtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+
+                        //Reduce the length of the payload of the Ethernet frame to reflect that the VLAN tag of four bytes would have been included
+                        this.ThePayloadLength = ThePayloadLength - 4;
+
+                        break;
+                    }
+
+                default:
+                    {
+                        break;
+                    }
+            }
+
+            return TheResult;
+        }
+
+        private bool ProcessPayload()
         {
             bool TheResult = true;
 
             //Record the position in the stream for the packet capture so we can later determine how far has been progressed
             long TheStartingStreamPosition = TheBinaryReader.BaseStream.Position;
 
-            TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
-
-            //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
-            if (TheEthernetFrameHeader.EtherType < (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
+            switch (TheEtherType)
             {
-                //This Ethernet frame has a value for "Ether Type" lower than the minimum
-                //This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame
-                //This value is the length of the IEEE 802.3 Ethernet frame
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
+                    {
+                        ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing();
 
-                //Not going to process IEEE 802.3 Ethernet frames currently as they do not include any data of interest
-                //Just read off the bytes for the IEEE 802.3 Ethernet frame from the packet capture so we can move on
-                TheBinaryReader.ReadBytes(TheEthernetFrameHeader.EtherType);
-            }
-            else
-            {
-                switch (TheEthernetFrameHeader.EtherType)
-                {
-                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
+                        //We've got an Ethernet frame containing an ARP packet so process it
+                        TheResult = TheARPPacketProcessing.Process(TheBinaryReader);
+                        break;
+                    }
+
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
+                    {
+                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing();
+
+                        //We've got an Ethernet frame containing an IPv4 packet so process it
+                        TheResult = TheIPv4PacketProcessing.Process(TheBinaryReader);
+                        break;
+                    }
+
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
+                    {
+                        //We've got an Ethernet frame containing an IPv6 packet
+
+                        //Processing of Ethernet frames containing an IPv6 packet is not currently supported!
+
+                        System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an IPv6 packet which is not currently supported!!!");
+
+                        TheResult = false;
+
+                        break;
+                    }
+
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.LLDP:
+                    {
+                        LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing();
+
+                        //We've got an Ethernet frame containing an LLDP packet so process it
+                        TheResult = TheLLDPPacketProcessing.Process(TheBinaryReader);
+                        break;
+                    }
+
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.Loopback:
+                    {
+                        LoopbackPacketNamespace.LoopbackPacketProcessing TheLoopbackPacketProcessing = new LoopbackPacketNamespace.LoopbackPacketProcessing();
+
+                        //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
+                        TheResult = TheLoopbackPacketProcessing.Process(TheBinaryReader);
+                        break;
+                    }
+
+                case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
+                    {
+                        //We've got an Ethernet frame containing an unknown network data link type
+
+                        //Processing of Ethernet frames with two VLAN tags is not currently supported!
+
+                        System.Diagnostics.Debug.WriteLine("The Ethernet frame contains a second VLAN tag!!!");
+
+                        TheResult = false;
+
+                        break;
+                    }
+
+                default:
+                    {
+                        //We've got an Ethernet frame containing an unknown network data link type
+
+                        //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
+                        if (TheEtherType < (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
                         {
-                            ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing();
+                            //This Ethernet frame has a value for "Ether Type" lower than the minimum
+                            //This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame
+                            //This value is the length of the IEEE 802.3 Ethernet frame
 
-                            //We've got an Ethernet frame containing an ARP packet so process it
-                            TheResult = TheARPPacketProcessing.Process(TheBinaryReader);
-                            break;
+                            //Not going to process IEEE 802.3 Ethernet frames currently as they do not include any data of interest
+                            //Just read off the bytes for the IEEE 802.3 Ethernet frame from the packet capture so we can move on
+                            TheBinaryReader.ReadBytes(TheEtherType);
                         }
-
-                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
+                        else
                         {
-                            IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing();
-
-                            //We've got an Ethernet frame containing an IPv4 packet so process it
-                            TheResult = TheIPv4PacketProcessing.Process(TheBinaryReader);
-                            break;
-                        }
-
-                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
-                        {
-                            //We've got an Ethernet frame containing an IPv6 packet
-
-                            //Processing of Ethernet frames containing an IPv6 packet is not currently supported!
-
-                            System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an IPv6 packet which is not currently supported!!!");
-
-                            TheResult = false;
-
-                            break;
-                        }
-
-                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.LLDP:
-                        {
-                            LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing();
-
-                            //We've got an Ethernet frame containing an LLDP packet so process it
-                            TheResult = TheLLDPPacketProcessing.Process(TheBinaryReader);
-                            break;
-                        }
-
-                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.Loopback:
-                        {
-                            LoopbackPacketNamespace.LoopbackPacketProcessing TheLoopbackPacketProcessing = new LoopbackPacketNamespace.LoopbackPacketProcessing();
-
-                            //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
-                            TheResult = TheLoopbackPacketProcessing.Process(TheBinaryReader);
-                            break;
-                        }
-
-                    case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
-                        {
-                            //We've got an Ethernet frame with a VLAN tag (IEEE 802.1Q) so must advance and re-read the Ether Type
-
-                            //The "Ether Type" we've just read will actually be the IEEE 802.1Q Tag Protocol Identifier
-
-                            //First just read off the IEEE 802.1Q Tag Control Identifier so we can move on
-                            System.UInt16 TheTagControlIdentifier = TheBinaryReader.ReadUInt16();
-
-                            //Then re-read the Ether Type, this time obtaining the real value (so long as there is only one VLAN tag of course!)
-                            //Then re-read of the Ether Type will be acheived by another call to this method so it must be re-entrant
-                            TheResult = ProcessEtherType(TheBinaryReader, TheEthernetFrameHeader, ThePayloadLength);
-
-                            break;
-                        }
-
-                    default:
-                        {
-                            //We've got an Ethernet frame containing an unknown network data link type
-
                             //Processing of Ethernet frames with network data link types not enumerated above are obviously not currently supported!
 
-                            System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an unexpected network data link type of {0:X}", TheEthernetFrameHeader.EtherType);
+                            System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an unexpected network data link type of {0:X}", TheEtherType);
 
                             TheResult = false;
-
-                            break;
                         }
-                }
+                        break;
+                    }
             }
 
             if (TheResult)
