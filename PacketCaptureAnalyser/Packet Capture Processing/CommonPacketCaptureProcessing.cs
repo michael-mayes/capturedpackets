@@ -39,7 +39,7 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - cannot be overriden by a derived class
         //
 
-        public bool Process(string ThePacketCapture)
+        public bool Process(LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, string ThePacketCapture)
         {
             bool TheResult = true;
 
@@ -78,7 +78,7 @@ namespace PacketCaptureProcessingNamespace
                             //Only continue reading from the packet capture if the packet capture global header was read successfully
                             if (ProcessGlobalHeader(TheBinaryReader, out TheTimestampAccuracy))
                             {
-                                TheResult = ProcessPackets(TheBinaryReader, TheTimestampAccuracy);
+                                TheResult = ProcessPackets(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimestampAccuracy);
                             }
                             else
                             {
@@ -113,7 +113,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy)
+        public bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -127,7 +127,7 @@ namespace PacketCaptureProcessingNamespace
             //Attempt to process the packets in the packet capture
             try
             {
-                EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader);
+                EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
                 //Store the length of the stream locally - the .NET framework does not cache it so each query requires an expensive read - this is OK so long as not editing the file at the same time as analysing it
                 long TheStreamLength = TheBinaryReader.BaseStream.Length;
@@ -160,7 +160,7 @@ namespace PacketCaptureProcessingNamespace
                             //Check whether the end of the packet capture has been reached
                             if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                             {
-                                if (TheEthernetFrameProcessing.Process(ThePayloadLength))
+                                if (TheEthernetFrameProcessing.Process(ThePayloadLength, TheTimestamp))
                                 {
                                     //Start the next iteration of the loop
                                     continue;
