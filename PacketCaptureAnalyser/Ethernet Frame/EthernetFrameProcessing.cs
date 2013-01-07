@@ -139,19 +139,19 @@ namespace EthernetFrameNamespace
             {
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
                     {
-                        ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing();
+                        ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an ARP packet so process it
-                        TheResult = TheARPPacketProcessing.Process(TheBinaryReader);
+                        TheResult = TheARPPacketProcessing.Process();
                         break;
                     }
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
                     {
-                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing();
+                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
-                        TheResult = TheIPv4PacketProcessing.Process(TheBinaryReader);
+                        TheResult = TheIPv4PacketProcessing.Process();
                         break;
                     }
 
@@ -170,19 +170,19 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.LLDP:
                     {
-                        LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing();
+                        LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an LLDP packet so process it
-                        TheResult = TheLLDPPacketProcessing.Process(TheBinaryReader);
+                        TheResult = TheLLDPPacketProcessing.Process();
                         break;
                     }
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.Loopback:
                     {
-                        LoopbackPacketNamespace.LoopbackPacketProcessing TheLoopbackPacketProcessing = new LoopbackPacketNamespace.LoopbackPacketProcessing();
+                        LoopbackPacketNamespace.LoopbackPacketProcessing TheLoopbackPacketProcessing = new LoopbackPacketNamespace.LoopbackPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
-                        TheResult = TheLoopbackPacketProcessing.Process(TheBinaryReader);
+                        TheResult = TheLoopbackPacketProcessing.Process();
                         break;
                     }
 

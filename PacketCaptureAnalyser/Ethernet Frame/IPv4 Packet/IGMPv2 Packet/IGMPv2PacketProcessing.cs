@@ -27,7 +27,14 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
 {
     class IGMPv2PacketProcessing
     {
-        public bool Process(System.IO.BinaryReader TheBinaryReader, int TheLength)
+        private System.IO.BinaryReader TheBinaryReader;
+
+        public IGMPv2PacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        {
+            this.TheBinaryReader = TheBinaryReader;
+        }
+
+        public bool Process(int TheLength)
         {
             bool TheResult = true;
 
