@@ -99,14 +99,14 @@ namespace PacketCaptureProcessingNamespace
             catch (System.IO.IOException e)
             {
 
-                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " was raised as access to the " + ThePacketCapture + " packet capture was denied because it is being used by another process!!!");
+                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " with the following message: " + e.Message + " was raised as access to the " + ThePacketCapture + " packet capture was denied because it is being used by another process!!!");
 
                 TheResult = false;
             }
 
             catch (System.UnauthorizedAccessException e)
             {
-                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " was raised as access to the " + ThePacketCapture + " packet capture was denied because this process was deemed as unauthorised by the OS!!!");
+                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " with the following message: " + e.Message + " was raised as access to the " + ThePacketCapture + " packet capture was denied because this process was deemed as unauthorised by the OS!!!");
 
                 TheResult = false;
             }
@@ -128,7 +128,7 @@ namespace PacketCaptureProcessingNamespace
             //Attempt to process the packets in the packet capture
             try
             {
-                EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing();
+                EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader);
 
                 //Store the length of the stream locally - the .NET framework does not cache it so each query requires an expensive read - this is OK so long as not editing the file at the same time as analysing it
                 long TheStreamLength = TheBinaryReader.BaseStream.Length;
@@ -161,7 +161,7 @@ namespace PacketCaptureProcessingNamespace
                             //Check whether the end of the packet capture has been reached
                             if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                             {
-                                if (TheEthernetFrameProcessing.Process(TheBinaryReader, ThePayloadLength))
+                                if (TheEthernetFrameProcessing.Process(ThePayloadLength))
                                 {
                                     //Start the next iteration of the loop
                                     continue;
@@ -204,7 +204,7 @@ namespace PacketCaptureProcessingNamespace
             // If the end of the stream is reached while reading the packet capture, ignore the error as there is no more processing to conduct and we don't want to lose the data we have already processed
             catch (System.IO.EndOfStreamException e)
             {
-                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " has been caught and ignored!");
+                System.Diagnostics.Debug.WriteLine("The exception " + e.GetType().Name + " with the following message: " + e.Message + " has been caught and ignored!");
 
                 TheResult = true;
             }
