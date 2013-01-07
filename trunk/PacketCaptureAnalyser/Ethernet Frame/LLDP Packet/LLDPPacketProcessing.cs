@@ -27,7 +27,14 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
 {
     class LLDPPacketProcessing
     {
-        public bool Process(System.IO.BinaryReader TheBinaryReader)
+        private System.IO.BinaryReader TheBinaryReader;
+
+        public LLDPPacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        {
+            this.TheBinaryReader = TheBinaryReader;
+        }
+
+        public bool Process()
         {
             bool TheResult = true;
 

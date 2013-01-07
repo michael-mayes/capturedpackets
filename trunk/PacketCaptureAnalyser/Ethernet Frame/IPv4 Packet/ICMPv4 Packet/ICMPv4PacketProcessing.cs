@@ -27,13 +27,20 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
 {
     class ICMPv4PacketProcessing
     {
-        public bool Process(System.IO.BinaryReader TheBinaryReader, int TheLength)
+        private System.IO.BinaryReader TheBinaryReader;
+
+        public ICMPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        {
+            this.TheBinaryReader = TheBinaryReader;
+        }
+
+        public bool Process(int TheLength)
         {
             bool TheResult = true;
 
             //Process the ICMPv4 packet header
-            TheResult = ProcessHeader(TheBinaryReader);
-            
+            TheResult = ProcessHeader();
+
             //Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
             //The remaining length is the supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
             TheBinaryReader.ReadBytes(TheLength - ICMPv4PacketConstants.ICMPv4PacketHeaderLength);
@@ -41,7 +48,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ProcessHeader(System.IO.BinaryReader TheBinaryReader)
+        private bool ProcessHeader()
         {
             bool TheResult = true;
 

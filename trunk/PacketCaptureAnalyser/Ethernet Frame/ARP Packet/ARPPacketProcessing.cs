@@ -27,7 +27,14 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 {
     class ARPPacketProcessing
     {
-        public bool Process(System.IO.BinaryReader TheBinaryReader)
+        private System.IO.BinaryReader TheBinaryReader;
+
+        public ARPPacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        {
+            this.TheBinaryReader = TheBinaryReader;
+        }
+
+        public bool Process()
         {
             bool TheResult = true;
 

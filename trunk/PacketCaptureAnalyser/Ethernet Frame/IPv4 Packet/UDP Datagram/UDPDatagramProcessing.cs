@@ -27,7 +27,14 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
 {
     class UDPDatagramProcessing
     {
-        public bool Process(System.IO.BinaryReader TheBinaryReader, int TheLength)
+        private System.IO.BinaryReader TheBinaryReader;
+
+        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader)
+        {
+            this.TheBinaryReader = TheBinaryReader;
+        }
+
+        public bool Process(int TheLength)
         {
             bool TheResult = true;
 
@@ -36,18 +43,18 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             int TheDestinationPort = 0;
 
             //Process the UDP datagram header
-            TheResult = ProcessHeader(TheBinaryReader, TheLength, out ThePayloadLength, out TheSourcePort, out TheDestinationPort);
+            TheResult = ProcessHeader(TheLength, out ThePayloadLength, out TheSourcePort, out TheDestinationPort);
 
             if (TheResult)
             {
                 //Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                TheResult = ProcessPayload(TheBinaryReader, ThePayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(ThePayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
         }
 
-        private bool ProcessHeader(System.IO.BinaryReader TheBinaryReader, int TheLength, out int ThePayloadLength, out int TheSourcePort, out int TheDestinationPort)
+        private bool ProcessHeader(int TheLength, out int ThePayloadLength, out int TheSourcePort, out int TheDestinationPort)
         {
             bool TheResult = true;
 
@@ -77,7 +84,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(System.IO.BinaryReader TheBinaryReader, int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
+        private bool ProcessPayload(int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
         {
             bool TheResult = true;
 
