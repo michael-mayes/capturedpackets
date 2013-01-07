@@ -64,29 +64,28 @@ namespace PacketCaptureProcessingNamespace
                     System.Diagnostics.Debug.WriteLine("Finished read of all bytes from " + ThePacketCapture + " packet capture in {0} seconds", TheDuration.Seconds);
 
                     //Create a memory stream to read the packet capture from the byte array
-                    System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(TheBytes);
-
-                    //Open a binary reader for the memory stream for the packet capture
-                    System.IO.BinaryReader TheBinaryReader = new System.IO.BinaryReader(TheMemoryStream);
-
-                    //Ensure that the position of the binary reader is set to the beginning of the memory stream
-                    TheBinaryReader.BaseStream.Position = 0;
-
-                    //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
-                    double TheTimestampAccuracy = 0.0;
-
-                    //Only continue reading from the packet capture if the packet capture global header was read successfully
-                    if (ProcessGlobalHeader(TheBinaryReader, out TheTimestampAccuracy))
+                    using (System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(TheBytes))
                     {
-                        TheResult = ProcessPackets(TheBinaryReader, TheTimestampAccuracy);
-                    }
-                    else
-                    {
-                        TheResult = false;
-                    }
+                        //Open a binary reader for the memory stream for the packet capture
+                        using (System.IO.BinaryReader TheBinaryReader = new System.IO.BinaryReader(TheMemoryStream))
+                        {
+                            //Ensure that the position of the binary reader is set to the beginning of the memory stream
+                            TheBinaryReader.BaseStream.Position = 0;
 
-                    //Close both the binary reader and the underlying memory stream
-                    TheBinaryReader.Close();
+                            //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
+                            double TheTimestampAccuracy = 0.0;
+
+                            //Only continue reading from the packet capture if the packet capture global header was read successfully
+                            if (ProcessGlobalHeader(TheBinaryReader, out TheTimestampAccuracy))
+                            {
+                                TheResult = ProcessPackets(TheBinaryReader, TheTimestampAccuracy);
+                            }
+                            else
+                            {
+                                TheResult = false;
+                            }
+                        }
+                    }
                 }
                 else
                 {
