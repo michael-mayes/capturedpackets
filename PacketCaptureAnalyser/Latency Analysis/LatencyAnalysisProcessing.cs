@@ -72,6 +72,12 @@ namespace LatencyAnalysisNamespace
 
         public void RegisterMessage(byte TheHostId, ulong TheSequenceNumber, double TheTimestamp)
         {
+            //Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
+            if (TheSequenceNumber == 0)
+            {
+                return;
+            }
+
             //Add the supplied host Id to the set of encountered during the latency analysis if not already in there
 
             object[] TheHostIdDataRowFindObject = new object[1];
@@ -82,6 +88,8 @@ namespace LatencyAnalysisNamespace
 
             if (TheHostIdDataRowFound == null)
             {
+                System.Diagnostics.Debug.WriteLine("Found entry for Host Id of {0} so adding it to latency analysis", TheHostId);
+
                 System.Data.DataRow TheHostIdDataRowToAdd = TheHostIdDataTable.NewRow();
 
                 TheHostIdDataRowToAdd["HostId"] = TheHostId;
@@ -120,13 +128,13 @@ namespace LatencyAnalysisNamespace
 
                 if (!(bool)TheLatencyDataRowFound["FirstInstanceFound"])
                 {
-                    System.Diagnostics.Debug.WriteLine("Found the row but the FirstInstanceFound flag is not set!!!");
+                    System.Diagnostics.Debug.WriteLine("Found the row for Host Id of {0} and Sequence Number {1} but the FirstInstanceFound flag is not set!!!", TheHostId, TheSequenceNumber);
                     return;
                 }
 
                 if ((bool)TheLatencyDataRowFound["SecondInstanceFound"])
                 {
-                    System.Diagnostics.Debug.WriteLine("Found the row but the SecondInstanceFound flag is already set!!!");
+                    System.Diagnostics.Debug.WriteLine("Found the row for Host Id of {0} and Sequence Number {1} but the SecondInstanceFound flag is already set!!!", TheHostId, TheSequenceNumber);
                     return;
                 }
 
@@ -144,7 +152,7 @@ namespace LatencyAnalysisNamespace
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Found the row, but the timestamp of the first message is higher than that of the second message!!!");
+                    System.Diagnostics.Debug.WriteLine("Found the row for Host Id of {0} and Sequence Number {1}, but the timestamp of the first message is higher than that of the second message!!!", TheHostId, TheSequenceNumber);
                 }
             }
         }
@@ -163,6 +171,9 @@ namespace LatencyAnalysisNamespace
 
             foreach (System.Data.DataRow TheHostIdDataRow in TheHostIdDataRowsFound)
             {
+                ulong MinTimestampSequenceNumber = 0;
+                ulong MaxTimestampSequenceNumber = 0;
+
                 double MinTimestampDifference = double.MaxValue;
                 double MaxTimestampDifference = double.MinValue;
 
@@ -178,12 +189,21 @@ namespace LatencyAnalysisNamespace
                 {
                     double TimestampDifference = (double)TheDataRow["TimestampDifference"];
 
-                    MinTimestampDifference = System.Math.Min(MinTimestampDifference, TimestampDifference);
-                    MaxTimestampDifference = System.Math.Max(MaxTimestampDifference, TimestampDifference);
+                    if (MinTimestampDifference > TimestampDifference)
+                    {
+                        MinTimestampDifference = TimestampDifference;
+                        MinTimestampSequenceNumber = (ulong)TheDataRow["SequenceNumber"];
+                    }
+
+                    if (MaxTimestampDifference < TimestampDifference)
+                    {
+                        MaxTimestampDifference = TimestampDifference;
+                        MaxTimestampSequenceNumber = (ulong)TheDataRow["SequenceNumber"];
+                    }
                 }
 
-                System.Diagnostics.Debug.WriteLine("The miniumum latency is {0} ms", MinTimestampDifference);
-                System.Diagnostics.Debug.WriteLine("The maxiumum latency is {0} ms", MaxTimestampDifference);
+                System.Diagnostics.Debug.WriteLine("The miniumum latency is {0} ms for sequence number {1}", MinTimestampDifference, MinTimestampSequenceNumber);
+                System.Diagnostics.Debug.WriteLine("The maxiumum latency is {0} ms for sequence number {1}", MaxTimestampDifference, MaxTimestampSequenceNumber);
                 System.Diagnostics.Debug.WriteLine(System.Environment.NewLine);
             }
         }
