@@ -161,9 +161,8 @@ namespace EthernetFrameNamespace
 
                         //Processing of Ethernet frames containing an IPv6 packet is not currently supported!
 
+                        //Just record the event and fall through to the processing below that will read off the payload so we can move on
                         System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an IPv6 packet which is not currently supported!!!");
-
-                        TheResult = false;
 
                         break;
                     }
@@ -192,9 +191,8 @@ namespace EthernetFrameNamespace
 
                         //Processing of Ethernet frames with two VLAN tags is not currently supported!
 
+                        //Just record the event and fall through to the processing below that will read off the payload so we can move on
                         System.Diagnostics.Debug.WriteLine("The Ethernet frame contains a second VLAN tag!!!");
-
-                        TheResult = false;
 
                         break;
                     }
@@ -218,36 +216,35 @@ namespace EthernetFrameNamespace
                         {
                             //Processing of Ethernet frames with network data link types not enumerated above are obviously not currently supported!
 
+                            //Just record the event and fall through to the processing below that will read off the payload so we can move on
                             System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an unexpected network data link type of {0:X}", TheEtherType);
-
-                            TheResult = false;
                         }
                         break;
                     }
             }
 
-            if (TheResult)
+            //Calculate how far has been progressed through the stream by the actions above to read from the packet capture
+            long TheStreamPositionDifference = TheBinaryReader.BaseStream.Position - TheStartingStreamPosition;
+
+            //Check whether the Ethernet frame payload has extra trailer bytes
+            //These would typically not be exposed in the packet capture by the recorder, but sometimes are for whatever reason!
+
+            //This processing would also read off the payload of the Ethernet frame in the event of an unknown or unsupported network datalink type
+
+            if (ThePayloadLength != TheStreamPositionDifference)
             {
-                //Calculate how far has been progressed through the stream by the actions above to read from the packet capture
-                long TheStreamPositionDifference = TheBinaryReader.BaseStream.Position - TheStartingStreamPosition;
-
-                //Check whether the Ethernet frame payload has extra trailer bytes
-                //These would typically not be exposed in the packet capture by the recorder, but sometimes are for whatever reason!
-                if (ThePayloadLength != TheStreamPositionDifference)
+                if (ThePayloadLength > TheStreamPositionDifference)
                 {
-                    if (ThePayloadLength > TheStreamPositionDifference)
-                    {
-                        //Trim the extra trailer bytes
-                        TheBinaryReader.ReadBytes((int)(ThePayloadLength - TheStreamPositionDifference));
-                    }
-                    else
-                    {
-                        //This is a strange error condition so indicate a failure
+                    //Trim the extra trailer bytes
+                    TheBinaryReader.ReadBytes((int)(ThePayloadLength - TheStreamPositionDifference));
+                }
+                else
+                {
+                    //This is a strange error condition so indicate a failure
 
-                        System.Diagnostics.Debug.WriteLine("The length {0} of payload of Ethernet frame does not match the progression {1} through the stream ", ThePayloadLength, TheStreamPositionDifference);
+                    System.Diagnostics.Debug.WriteLine("The length {0} of payload of Ethernet frame does not match the progression {1} through the stream ", ThePayloadLength, TheStreamPositionDifference);
 
-                        TheResult = false;
-                    }
+                    TheResult = false;
                 }
             }
 
