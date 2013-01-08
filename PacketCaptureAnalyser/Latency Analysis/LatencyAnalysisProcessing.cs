@@ -165,8 +165,6 @@ namespace LatencyAnalysisNamespace
                                          orderby r.Field<byte>("HostId") ascending
                                          select r;
 
-            System.Diagnostics.Debug.WriteLine(System.Environment.NewLine);
-
             //Loop across all the latency data for the message pairings using each of these host Ids in turn
 
             foreach (System.Data.DataRow TheHostIdDataRow in TheHostIdDataRowsFound)
