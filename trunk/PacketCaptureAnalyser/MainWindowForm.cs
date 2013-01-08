@@ -142,12 +142,14 @@ namespace PacketCaptureAnalyser
             if (TheResult)
             {
                 //Display a message box to indicate analysis of the packet capture is complete
+                System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!");
                 System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!", "Run Analysis On Selected Packet Capture");
             }
             else
             {
                 //Display a message box to indicate analysis of the packet capture failed
-                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!", "Run Analysis On Selected Packet Capture");
+                System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
+                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
             }
 
             //Clear the selected packet capture after analysis
