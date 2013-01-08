@@ -27,6 +27,8 @@ namespace PacketCaptureProcessingNamespace
 {
     class PCAPPackageCaptureProcessing : CommonPacketCaptureProcessing
     {
+        private bool IsTheGlobalHeaderLittleEndian = true;
+
         //
         //Concrete methods - override abstract methods on the base class
         //
@@ -38,14 +40,42 @@ namespace PacketCaptureProcessingNamespace
             //Create the single instance of the PCAP packet capture global header
             PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure TheGlobalHeader = new PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure();
 
-            //Populate the PCAP packet capture global header from the packet capture
+            //Read the magic number of the PCAP packet capture global header from the packet capture
             TheGlobalHeader.MagicNumber = TheBinaryReader.ReadUInt32();
-            TheGlobalHeader.VersionMajor = TheBinaryReader.ReadUInt16();
-            TheGlobalHeader.VersionMinor = TheBinaryReader.ReadUInt16();
-            TheGlobalHeader.ThisTimeZone = TheBinaryReader.ReadInt32();
-            TheGlobalHeader.SignificantFigures = TheBinaryReader.ReadUInt32();
-            TheGlobalHeader.SnapshotLength = TheBinaryReader.ReadUInt32();
-            TheGlobalHeader.NetworkDataLinkType = TheBinaryReader.ReadUInt32();
+
+            //The endianism of the remainder of the values in the PCAP packet capture global header will be corrected to little endian if the magic number indicates big endian representation
+            if (TheGlobalHeader.MagicNumber == PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber)
+            {
+                System.Diagnostics.Debug.WriteLine("The PCAP packet capture contains the little endian magic number");
+
+                IsTheGlobalHeaderLittleEndian = true;
+            }
+            else if (TheGlobalHeader.MagicNumber == PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber)
+            {
+                System.Diagnostics.Debug.WriteLine("The PCAP packet capture contains the big endian magic number");
+
+                IsTheGlobalHeaderLittleEndian = false;
+            }
+
+            //Read the remainder of the PCAP packet capture global header from the packet capture
+            if (IsTheGlobalHeaderLittleEndian)
+            {
+                TheGlobalHeader.VersionMajor = TheBinaryReader.ReadUInt16();
+                TheGlobalHeader.VersionMinor = TheBinaryReader.ReadUInt16();
+                TheGlobalHeader.ThisTimeZone = TheBinaryReader.ReadInt32();
+                TheGlobalHeader.SignificantFigures = TheBinaryReader.ReadUInt32();
+                TheGlobalHeader.SnapshotLength = TheBinaryReader.ReadUInt32();
+                TheGlobalHeader.NetworkDataLinkType = TheBinaryReader.ReadUInt32();
+            }
+            else
+            {
+                TheGlobalHeader.VersionMajor = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+                TheGlobalHeader.VersionMinor = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+                TheGlobalHeader.ThisTimeZone = System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt32());
+                TheGlobalHeader.SignificantFigures = (System.UInt32)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt32());
+                TheGlobalHeader.SnapshotLength = (System.UInt32)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt32());
+                TheGlobalHeader.NetworkDataLinkType = (System.UInt32)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt32());
+            }
 
             //Validate fields from the PCAP packet capture global header
             TheResult = ValidateGlobalHeader(TheGlobalHeader);
@@ -99,9 +129,24 @@ namespace PacketCaptureProcessingNamespace
 
             //Validate fields from the PCAP packet capture global header
 
-            if (TheGlobalHeader.MagicNumber != PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedMagicNumber)
+            if (TheGlobalHeader.MagicNumber != PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber &&
+                TheGlobalHeader.MagicNumber != PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber)
             {
-                System.Diagnostics.Debug.WriteLine("The PCAP packet capture does not contain the expected magic number, is {0} not {1}", TheGlobalHeader.MagicNumber, PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedMagicNumber);
+                System.Diagnostics.Debug.WriteLine("The PCAP packet capture does not contain the expected magic number, is {0} not {1} or {2}", TheGlobalHeader.MagicNumber, PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber, PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber);
+
+                TheResult = false;
+            }
+
+            if (TheGlobalHeader.VersionMajor != PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMajor)
+            {
+                System.Diagnostics.Debug.WriteLine("The PCAP packet capture global header does not contain the expected major version number, is {0} not {1}", TheGlobalHeader.VersionMajor, PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMajor);
+
+                TheResult = false;
+            }
+
+            if (TheGlobalHeader.VersionMinor != PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMinor)
+            {
+                System.Diagnostics.Debug.WriteLine("The PCAP packet capture global header does not contain the expected minor version number, is {0} not {1}", TheGlobalHeader.VersionMinor, PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMinor);
 
                 TheResult = false;
             }

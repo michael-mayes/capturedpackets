@@ -37,8 +37,13 @@ namespace PacketCaptureProcessingNamespace
 
         //Magic number
 
-        public const System.UInt32 PCAPPackageCaptureExpectedMagicNumber = 0xa1b2c3d4;
-        public const System.UInt32 PCAPPackageCaptureByteSwappedMagicNumber = 0xd4c3b2a1;
+        public const System.UInt32 PCAPPackageCaptureLittleEndianMagicNumber = 0xa1b2c3d4;
+        public const System.UInt32 PCAPPackageCaptureBigEndianMagicNumber = 0xd4c3b2a1;
+
+        //Version numbers
+
+        public const System.Int16 PCAPPackageCaptureExpectedVersionMajor = 2;
+        public const System.Int16 PCAPPackageCaptureExpectedVersionMinor = 4;
 
         //Network data link type
 
