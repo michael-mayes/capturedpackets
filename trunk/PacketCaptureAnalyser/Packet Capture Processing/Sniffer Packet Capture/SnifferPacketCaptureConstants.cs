@@ -33,7 +33,7 @@ namespace PacketCaptureProcessingNamespace
 
         //Length
 
-        public const int SnifferPackageCaptureGlobalHeaderLength = 41;
+        public const ushort SnifferPackageCaptureGlobalHeaderLength = 41;
 
         //Magic number - provided in little endian representation
 
@@ -41,9 +41,6 @@ namespace PacketCaptureProcessingNamespace
         public const System.UInt64 SnifferPackageCaptureExpectedMagicNumberLow = 0x6461746120202020;  //Low bytes containing ASCII characters "data    " continue the magic number
 
         public const System.Byte SnifferPackageCaptureExpectedMagicNumberTerminator = 0x1A; //Terminating byte ASCII control character 'SUB' completes the magic number
-
-        //Record type
-        public const System.Int16 SnifferPackageCaptureExpectedRecordType = 1; //Sniffer version record type
 
         //Version numbers
 
@@ -56,7 +53,7 @@ namespace PacketCaptureProcessingNamespace
 
         //Network encapsulation type
 
-        public const System.UInt32 SnifferPackageCaptureExpectedNetworkEncapsulationType = 1; //Ethernet
+        public const System.Byte SnifferPackageCaptureExpectedNetworkEncapsulationType = 1; //Ethernet
 
         //Format version number
 
@@ -68,10 +65,11 @@ namespace PacketCaptureProcessingNamespace
 
         //Length
 
-        public const int SnifferPackageCaptureRecordHeaderLength = 6;
+        public const ushort SnifferPackageCaptureRecordHeaderLength = 6;
 
         //Record type
 
+        public const System.UInt16 SnifferPackageCaptureRecordHeaderSnifferVersionRecordType = 1; //Sniffer version record type
         public const System.UInt16 SnifferPackageCaptureRecordHeaderSnifferType2RecordType = 4; //Sniffer type 2 data record type
         public const System.UInt16 SnifferPackageCaptureRecordHeaderSnifferEndOfFileRecordType = 3; //Sniffer end of file record type
         
@@ -79,6 +77,6 @@ namespace PacketCaptureProcessingNamespace
         //Sniffer packet capture Sniffer type 2 data record - 14 bytes
         //
 
-        public const int SnifferPackageCaptureSnifferType2RecordLength = 14;
+        public const ushort SnifferPackageCaptureSnifferType2RecordLength = 14;
     }
 }

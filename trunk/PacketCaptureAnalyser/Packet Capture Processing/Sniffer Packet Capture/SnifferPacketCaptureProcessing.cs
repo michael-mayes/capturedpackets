@@ -45,8 +45,8 @@ namespace PacketCaptureProcessingNamespace
             TheGlobalHeader.MagicNumberHigh = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
             TheGlobalHeader.MagicNumberLow = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
             TheGlobalHeader.MagicNumberTerminator = TheBinaryReader.ReadByte();
-            TheGlobalHeader.RecordType = TheBinaryReader.ReadInt16();
-            TheGlobalHeader.RecordLength = TheBinaryReader.ReadInt32();
+            TheGlobalHeader.RecordType = TheBinaryReader.ReadUInt16();
+            TheGlobalHeader.RecordLength = TheBinaryReader.ReadUInt32();
             TheGlobalHeader.VersionMajor = TheBinaryReader.ReadInt16();
             TheGlobalHeader.VersionMinor = TheBinaryReader.ReadInt16();
             TheGlobalHeader.Time = TheBinaryReader.ReadInt16();
@@ -180,9 +180,9 @@ namespace PacketCaptureProcessingNamespace
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedRecordType)
+            if (TheGlobalHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferVersionRecordType)
             {
-                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected record type, is {0} not {1}", TheGlobalHeader.RecordType, SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedRecordType);
+                System.Diagnostics.Debug.WriteLine("The Sniffer packet capture global header does not contain the expected record type, is {0} not {1}", TheGlobalHeader.RecordType, SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferVersionRecordType);
 
                 TheResult = false;
             }

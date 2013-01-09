@@ -47,10 +47,10 @@ namespace PacketCaptureProcessingNamespace
             public System.Byte MagicNumberTerminator; //Terminating byte for the magic number
 
             [System.Runtime.InteropServices.FieldOffset(17)]
-            public System.Int16 RecordType; //Type of version record
+            public System.UInt16 RecordType; //Type of version record
 
             [System.Runtime.InteropServices.FieldOffset(19)]
-            public System.Int32 RecordLength; //Length of version record - only the first two bytes are length, the latter two are "reserved" and so not processed
+            public System.UInt32 RecordLength; //Length of version record - only the first two bytes are length, the latter two are "reserved" and so not processed
 
             [System.Runtime.InteropServices.FieldOffset(23)]
             public System.Int16 VersionMajor; //Major version number

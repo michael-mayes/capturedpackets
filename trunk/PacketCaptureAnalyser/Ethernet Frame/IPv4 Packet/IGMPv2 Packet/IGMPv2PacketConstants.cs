@@ -33,6 +33,6 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
 
         //Length
 
-        public const int IGMPv2PacketHeaderLength = 8;
+        public const ushort IGMPv2PacketHeaderLength = 8;
     }
 }

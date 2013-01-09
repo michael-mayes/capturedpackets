@@ -33,6 +33,6 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
 
         //Length
 
-        public const int LLDPPacketHeaderLength = 46;
+        public const ushort LLDPPacketHeaderLength = 46;
     }
 }

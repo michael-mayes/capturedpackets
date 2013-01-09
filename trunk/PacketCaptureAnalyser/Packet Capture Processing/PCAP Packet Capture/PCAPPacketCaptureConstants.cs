@@ -33,7 +33,7 @@ namespace PacketCaptureProcessingNamespace
 
         //Length
 
-        public const int PCAPPackageCaptureGlobalHeaderLength = 24;
+        public const ushort PCAPPackageCaptureGlobalHeaderLength = 24;
 
         //Magic number
 
@@ -42,8 +42,8 @@ namespace PacketCaptureProcessingNamespace
 
         //Version numbers
 
-        public const System.Int16 PCAPPackageCaptureExpectedVersionMajor = 2;
-        public const System.Int16 PCAPPackageCaptureExpectedVersionMinor = 4;
+        public const System.UInt16 PCAPPackageCaptureExpectedVersionMajor = 2;
+        public const System.UInt16 PCAPPackageCaptureExpectedVersionMinor = 4;
 
         //Network data link type
 
@@ -55,6 +55,6 @@ namespace PacketCaptureProcessingNamespace
 
         //Length
 
-        public const int PCAPPackageCapturePacketHeaderLength = 16;
+        public const ushort PCAPPackageCapturePacketHeaderLength = 16;
     }
 }
