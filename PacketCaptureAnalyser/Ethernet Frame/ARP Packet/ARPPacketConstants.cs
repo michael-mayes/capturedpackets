@@ -33,6 +33,6 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 
         //Length
 
-        public const int ARPPacketHeaderLength = 28;
+        public const ushort ARPPacketHeaderLength = 28;
     }
 }

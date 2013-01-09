@@ -41,7 +41,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             bool TheResult = true;
 
             int ThePayloadLength = 0;
-            int TheProtocol = 0;
+            byte TheProtocol = 0;
 
             //Process the TCP packet header
             TheResult = ProcessHeader(out ThePayloadLength, out TheProtocol);
@@ -55,7 +55,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ProcessHeader(out int ThePayloadLength, out int TheProtocol)
+        private bool ProcessHeader(out int ThePayloadLength, out byte TheProtocol)
         {
             bool TheResult = true;
 
@@ -101,14 +101,14 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(double TheTimestamp, int ThePayloadLength, int TheProtocol)
+        private bool ProcessPayload(double TheTimestamp, int ThePayloadLength, byte TheProtocol)
         {
             bool TheResult = true;
 
             //Process the IPv4 packet based on the value indicated for the protocol in the the IPv4 packet header
             switch (TheProtocol)
             {
-                case IPv4PacketConstants.IPv4PacketHeaderProtocolICMP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtcol.ICMP:
                     {
                         ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing(TheBinaryReader);
 
@@ -117,7 +117,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         break;
                     }
 
-                case IPv4PacketConstants.IPv4PacketHeaderProtocolIGMP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtcol.IGMP:
                     {
                         IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing(TheBinaryReader);
 
@@ -126,7 +126,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         break;
                     }
 
-                case IPv4PacketConstants.IPv4PacketHeaderProtocolTCP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtcol.TCP:
                     {
                         TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
@@ -135,7 +135,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         break;
                     }
 
-                case IPv4PacketConstants.IPv4PacketHeaderProtocolUDP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtcol.UDP:
                     {
                         UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 

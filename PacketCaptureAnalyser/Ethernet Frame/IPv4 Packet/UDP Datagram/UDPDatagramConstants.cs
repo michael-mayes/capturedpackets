@@ -33,11 +33,11 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
 
         //Length
 
-        public const int UDPDatagramHeaderLength = 8;
+        public const ushort UDPDatagramHeaderLength = 8;
 
         //Port number
 
-        public enum UDPDatagramPortNumberEnumeration
+        public enum UDPDatagramPortNumberEnumeration : ushort
         {
           DummyValueMin = 0,
           DummyValueMax = 65535

@@ -33,13 +33,17 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
         //Length
 
-        public const int IPv4PacketHeaderLength = 20;
+        public const ushort IPv4PacketHeaderLength = 20;
 
         //Protocol
 
-        public const System.Byte IPv4PacketHeaderProtocolICMP = 0x01; //ICMP - Internet Control Message Protocol (RFC 792)
-        public const System.Byte IPv4PacketHeaderProtocolIGMP = 0x02; //IGMP - Internet Group Management Protocol (RFC 1112)
-        public const System.Byte IPv4PacketHeaderProtocolTCP = 0x06; //TCP - Transmission Control Protocol (RFC 793)
-        public const System.Byte IPv4PacketHeaderProtocolUDP = 0x11; //UDP - User Datagram Protocol (RFC 768)
+        public enum IPv4PacketProtcol : byte
+        {
+
+            ICMP = 0x01, //ICMP - Internet Control Message Protocol (RFC 792)
+            IGMP = 0x02, //IGMP - Internet Group Management Protocol (RFC 1112)
+            TCP = 0x06, //TCP - Transmission Control Protocol (RFC 793)
+            UDP = 0x11 //UDP - User Datagram Protocol (RFC 768)
+        }
     }
 }
