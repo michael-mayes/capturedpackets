@@ -37,7 +37,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
         //Protocol
 
-        public enum IPv4PacketProtcol : byte
+        public enum IPv4PacketProtocol : byte
         {
 
             ICMP = 0x01, //ICMP - Internet Control Message Protocol (RFC 792)

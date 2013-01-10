@@ -108,7 +108,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             //Process the IPv4 packet based on the value indicated for the protocol in the the IPv4 packet header
             switch (TheProtocol)
             {
-                case (byte)IPv4PacketConstants.IPv4PacketProtcol.ICMP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtocol.ICMP:
                     {
                         ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing(TheBinaryReader);
 
@@ -117,7 +117,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         break;
                     }
 
-                case (byte)IPv4PacketConstants.IPv4PacketProtcol.IGMP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtocol.IGMP:
                     {
                         IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing(TheBinaryReader);
 
@@ -126,7 +126,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         break;
                     }
 
-                case (byte)IPv4PacketConstants.IPv4PacketProtcol.TCP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtocol.TCP:
                     {
                         TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
@@ -135,7 +135,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         break;
                     }
 
-                case (byte)IPv4PacketConstants.IPv4PacketProtcol.UDP:
+                case (byte)IPv4PacketConstants.IPv4PacketProtocol.UDP:
                     {
                         UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
