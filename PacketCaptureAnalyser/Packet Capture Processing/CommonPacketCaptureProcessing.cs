@@ -50,7 +50,7 @@ namespace PacketCaptureProcessingNamespace
                     //Read the start time to allow later calculation of the duration of the processing
                     System.DateTime TheStartTime = System.DateTime.Now;
 
-                    System.Diagnostics.Debug.WriteLine("Starting read of all bytes from " + ThePacketCapture + " packet capture");
+                    System.Diagnostics.Debug.WriteLine("Starting read of all bytes from the " + ThePacketCapture + " packet capture");
 
                     //Read all the bytes from the packet capture into an array
                     byte[] TheBytes = System.IO.File.ReadAllBytes(ThePacketCapture);
@@ -61,7 +61,7 @@ namespace PacketCaptureProcessingNamespace
 
                     System.TimeSpan TheDuration = TheEndTime - TheStartTime;
 
-                    System.Diagnostics.Debug.WriteLine("Finished read of all bytes from " + ThePacketCapture + " packet capture in {0} seconds", TheDuration.Seconds);
+                    System.Diagnostics.Debug.WriteLine("Finished read of all bytes from the " + ThePacketCapture + " packet capture in {0} seconds", TheDuration.Seconds);
 
                     //Create a memory stream to read the packet capture from the byte array
                     using (System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(TheBytes))
@@ -122,7 +122,7 @@ namespace PacketCaptureProcessingNamespace
             //Read the start time to allow later calculation of the duration of the processing
             System.DateTime TheStartTime = System.DateTime.Now;
 
-            System.Diagnostics.Debug.WriteLine("Started processing of captured packets");
+            System.Diagnostics.Debug.WriteLine("Started processing of the captured packets");
 
             //Attempt to process the packets in the packet capture
             try
@@ -169,7 +169,7 @@ namespace PacketCaptureProcessingNamespace
                                 {
                                     TheResult = false;
 
-                                    System.Diagnostics.Debug.WriteLine("Processing of captured packet #{0} failed during processing of packet header!!!", PacketsProcessed);
+                                    System.Diagnostics.Debug.WriteLine("Processing of the captured packet #{0} failed during processing of packet header!!!", PacketsProcessed);
 
                                     //Stop looping as there has been an error!!!
                                     break;
@@ -186,7 +186,7 @@ namespace PacketCaptureProcessingNamespace
                         {
                             TheResult = false;
 
-                            System.Diagnostics.Debug.WriteLine("Processing of captured packet #{0} failed during processing of Ethernet frame!!!", PacketsProcessed);
+                            System.Diagnostics.Debug.WriteLine("Processing of the captured packet #{0} failed during processing of Ethernet frame!!!", PacketsProcessed);
 
                             //Stop looping as there has been an error!!!
                             break;
