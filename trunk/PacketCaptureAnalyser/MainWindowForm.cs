@@ -86,7 +86,7 @@ namespace PacketCaptureAnalyser
                 //Update the window to reflect the selected packet capture
                 ReflectSelectedPacketCapture();
 
-                System.Diagnostics.Debug.WriteLine("Selection of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture");
+                System.Diagnostics.Debug.WriteLine("Selection of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture");
             }
         }
 
@@ -94,7 +94,7 @@ namespace PacketCaptureAnalyser
         {
             bool TheResult = true;
 
-            System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
+            System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
 
             LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
                 new LatencyAnalysisNamespace.LatencyAnalysisProcessing();
@@ -125,7 +125,7 @@ namespace PacketCaptureAnalyser
                 case MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture:
                 default:
                     {
-                        System.Diagnostics.Debug.WriteLine("Unknown packet capture type!!!");
+                        System.Diagnostics.Debug.WriteLine("The" + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture is of an unknown type!!!");
 
                         TheResult = false;
 
@@ -133,23 +133,31 @@ namespace PacketCaptureAnalyser
                     }
             }
 
-            System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture finished");
+            //Dependent on the result of the processing above, display a debug message to indicate success or otherwise
+            if (TheResult)
+            {
+                //Display a debug message to indicate analysis of the packet capture completed successfully
+                System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!");
+            }
+            else
+            {
+                //Display a debug message to indicate analysis of the packet capture failed
+                System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
+            }
 
-            //Finalise the latency analysis on the messages found including outputting results
+            //Finalise the latency analysis on the messages found including printing the results to debug output
             TheLatencyAnalysisProcessing.Finalise();
 
             //Dependent on the result of the processing above, display a message box to indicate success or otherwise
             if (TheResult)
             {
                 //Display a message box to indicate analysis of the packet capture is complete
-                System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!");
-                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!", "Run Analysis On Selected Packet Capture");
+                System.Windows.Forms.MessageBox.Show("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!", "Run Analysis On Selected Packet Capture");
             }
             else
             {
                 //Display a message box to indicate analysis of the packet capture failed
-                System.Diagnostics.Debug.WriteLine("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
-                System.Windows.Forms.MessageBox.Show("Analysis of " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
+                System.Windows.Forms.MessageBox.Show("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
             }
 
             //Clear the selected packet capture after analysis
