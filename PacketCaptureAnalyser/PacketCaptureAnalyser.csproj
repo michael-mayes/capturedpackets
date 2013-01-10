@@ -70,6 +70,8 @@
     <Compile Include="Ethernet Frame\LLDP Packet\LLDPPacketConstants.cs" />
     <Compile Include="Ethernet Frame\LLDP Packet\LLDPPacketProcessing.cs" />
     <Compile Include="Ethernet Frame\LLDP Packet\LLDPPacketStructures.cs" />
+    <Compile Include="Latency Analysis\LatencyAnalysisHistogram.cs" />
+    <Compile Include="Latency Analysis\LatencyAnalysisConstants.cs" />
     <Compile Include="Latency Analysis\LatencyAnalysisProcessing.cs" />
     <Compile Include="Packet Capture Processing\CommonPacketCaptureProcessing.cs" />
     <Compile Include="Packet Capture Processing\PCAP Packet Capture\PCAPPacketCaptureConstants.cs" />
