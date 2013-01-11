@@ -83,7 +83,7 @@ namespace EthernetFrameNamespace
             TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
 
             //Reduce the length of the payload of the Ethernet frame to reflect that the Ether Type of two bytes would have been included
-            this.ThePayloadLength = ThePayloadLength - 2;
+            ThePayloadLength -= 2;
 
             //Store the Ether Type for use in further processing
             TheEtherType = TheEthernetFrameHeader.EtherType;
@@ -119,7 +119,7 @@ namespace EthernetFrameNamespace
                         TheEtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
 
                         //Reduce the length of the payload of the Ethernet frame to reflect that the VLAN tag of four bytes would have been included
-                        this.ThePayloadLength = ThePayloadLength - 4;
+                        ThePayloadLength -= 4;
 
                         break;
                     }
@@ -147,7 +147,7 @@ namespace EthernetFrameNamespace
                         ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an ARP packet so process it
-                        TheResult = TheARPPacketProcessing.Process();
+                        TheResult = TheARPPacketProcessing.Process(ThePayloadLength);
                         break;
                     }
 
@@ -156,7 +156,7 @@ namespace EthernetFrameNamespace
                         IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
-                        TheResult = TheIPv4PacketProcessing.Process(TheTimestamp);
+                        TheResult = TheIPv4PacketProcessing.Process(ThePayloadLength, TheTimestamp);
                         break;
                     }
 
@@ -177,7 +177,7 @@ namespace EthernetFrameNamespace
                         LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an LLDP packet so process it
-                        TheResult = TheLLDPPacketProcessing.Process();
+                        TheResult = TheLLDPPacketProcessing.Process(ThePayloadLength);
                         break;
                     }
 
@@ -186,7 +186,7 @@ namespace EthernetFrameNamespace
                         LoopbackPacketNamespace.LoopbackPacketProcessing TheLoopbackPacketProcessing = new LoopbackPacketNamespace.LoopbackPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
-                        TheResult = TheLoopbackPacketProcessing.Process();
+                        TheResult = TheLoopbackPacketProcessing.Process(ThePayloadLength);
                         break;
                     }
 

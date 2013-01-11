@@ -36,21 +36,22 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
         }
 
-        public bool Process(double TheTimestamp, int TheLength)
+        public bool Process(double TheTimestamp, long ThePayloadLength, int TheUDPDatagramLength)
         {
             bool TheResult = true;
 
-            int ThePayloadLength = 0;
+            int TheUDPDatagramPayloadLength = 0;
+
             int TheSourcePort = 0;
             int TheDestinationPort = 0;
 
             //Process the UDP datagram header
-            TheResult = ProcessHeader(TheLength, out ThePayloadLength, out TheSourcePort, out TheDestinationPort);
+            TheResult = ProcessHeader(TheUDPDatagramLength, out TheUDPDatagramPayloadLength, out TheSourcePort, out TheDestinationPort);
 
             if (TheResult)
             {
                 //Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheUDPDatagramPayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
@@ -86,12 +87,12 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(double TheTimestamp, int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
+        private bool ProcessPayload(double TheTimestamp, long ThePayloadLength, int TheUDPDatagramPayloadLength, int TheSourcePort, int TheDestinationPort)
         {
             bool TheResult = true;
 
             //Only process this UDP datagram if the payload has a non-zero payload length i.e. it actually includes data (unlikely to not include data, but retain check for consistency with TCP packet processing)
-            if (ThePayloadLength > 0)
+            if (TheUDPDatagramPayloadLength > 0)
             {
                 switch (TheSourcePort)
                 {
@@ -99,7 +100,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
                         {
                             //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
                             //The remaining length is the supplied length of the UDP datagram payload
-                            TheBinaryReader.ReadBytes(ThePayloadLength);
+                            TheBinaryReader.ReadBytes(TheUDPDatagramPayloadLength);
                             break;
                         }
                 }

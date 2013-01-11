@@ -28,11 +28,11 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
     class LLDPPacketConstants
     {
         //
-        //LLDP packet header - 46 bytes
+        //LLDP packet - 46 bytes
         //
 
         //Length
 
-        public const ushort LLDPPacketHeaderLength = 46;
+        public const ushort LLDPPacketLength = 46;
     }
 }

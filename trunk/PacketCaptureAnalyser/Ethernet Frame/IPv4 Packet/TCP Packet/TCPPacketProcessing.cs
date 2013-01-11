@@ -36,21 +36,21 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
         }
 
-        public bool Process(double TheTimestamp, int TheLength)
+        public bool Process(double TheTimestamp, long ThePayloadLength, int TheTCPPacketLength)
         {
             bool TheResult = true;
 
-            int ThePayloadLength = 0;
+            int TheTCPPacketPayloadLength = 0;
             int TheSourcePort = 0;
             int TheDestinationPort = 0;
 
             //Process the TCP packet header
-            TheResult = ProcessHeader(TheLength, out ThePayloadLength, out TheSourcePort, out TheDestinationPort);
+            TheResult = ProcessHeader(TheTCPPacketLength, out TheTCPPacketPayloadLength, out TheSourcePort, out TheDestinationPort);
 
             if (TheResult)
             {
                 //Process the payload of the TCP packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the TCP packet header
-                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheTCPPacketPayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
@@ -116,16 +116,16 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(double TheTimestamp, int ThePayloadLength, int TheSourcePort, int TheDestinationPort)
+        private bool ProcessPayload(double TheTimestamp, long ThePayloadLength, int TheTCPPacketPayloadLength, int TheSourcePort, int TheDestinationPort)
         {
             bool TheResult = true;
 
             //Only process this TCP packet if the payload has a non-zero payload length i.e. it actually includes data so is not part of the three-way handshake or a plain acknowledgement
-            if (ThePayloadLength > 0)
+            if (TheTCPPacketPayloadLength > 0)
             {
                 //Just read off the remaining bytes of the TCP packet from the packet capture so we can move on
                 //The remaining length is the supplied length of the TCP packet payload
-                TheBinaryReader.ReadBytes(ThePayloadLength);
+                TheBinaryReader.ReadBytes(TheTCPPacketPayloadLength);
             }
 
             return TheResult;

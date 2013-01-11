@@ -33,7 +33,7 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = ARPPacketConstants.ARPPacketHeaderLength)]
+            Size = ARPPacketConstants.ARPPacketLength)]
 
         public struct ARPPacketStructure
         {

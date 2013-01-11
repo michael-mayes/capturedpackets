@@ -33,7 +33,7 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = LLDPPacketConstants.LLDPPacketHeaderLength)]
+            Size = LLDPPacketConstants.LLDPPacketLength)]
 
         public struct LLDPPacketStructure
         {
