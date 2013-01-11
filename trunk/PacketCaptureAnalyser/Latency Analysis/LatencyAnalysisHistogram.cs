@@ -90,6 +90,11 @@ namespace LatencyAnalysisNamespace
             return TheValueBinCounts.Length;
         }
 
+        public double GetMaxAllowedValue()
+        {
+            return TheValueBinBoundaries[TheValueBinBoundaries.Length - 1];
+        }
+
         public int GetNumberOfValuesLowerThanBins()
         {
             return TheNumberOfValuesLowerThanBins;
@@ -143,8 +148,9 @@ namespace LatencyAnalysisNamespace
 
         public void AddValue(double TheValue)
         {
-            //Check if the value is the highest value encountered since the creation or reset of the histogram
-            if (TheMaxValueEncountered < TheValue)
+            //Check if the value is the highest valid value encountered since the creation or reset of the histogram
+            if (TheMaxValueEncountered < TheValue &&
+                TheValue <= GetMaxAllowedValue())
             {
                 TheMaxValueEncountered = TheValue;
             }
