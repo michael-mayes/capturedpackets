@@ -94,6 +94,9 @@ namespace PacketCaptureAnalyser
         {
             bool TheResult = true;
 
+            //Clear all text from the output window on starting the analysis for each packet capture to simplify examination of results on multiple successive runs
+            ClearOutputWindow();
+
             System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
 
             LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
@@ -138,15 +141,16 @@ namespace PacketCaptureAnalyser
             {
                 //Display a debug message to indicate analysis of the packet capture completed successfully
                 System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!");
+
+                //Finalise the latency analysis on the messages found including printing the results to debug output
+                //Only perform this action if the analysis of the packet capture completed successfully
+                TheLatencyAnalysisProcessing.Finalise();
             }
             else
             {
                 //Display a debug message to indicate analysis of the packet capture failed
                 System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
             }
-
-            //Finalise the latency analysis on the messages found including printing the results to debug output
-            TheLatencyAnalysisProcessing.Finalise();
 
             //Dependent on the result of the processing above, display a message box to indicate success or otherwise
             if (TheResult)
@@ -157,7 +161,7 @@ namespace PacketCaptureAnalyser
             else
             {
                 //Display a message box to indicate analysis of the packet capture failed
-                System.Windows.Forms.MessageBox.Show("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
+                System.Windows.Forms.MessageBox.Show("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!", "Run Analysis On Selected Packet Capture");
             }
 
             //Clear the selected packet capture after analysis
@@ -233,6 +237,18 @@ namespace PacketCaptureAnalyser
             {
                 System.Diagnostics.Process.Start(SelectedPacketCaptureForAnalysisDialog.FileName);
             }
+        }
+
+        //Clears all text from the output window
+        private void ClearOutputWindow()
+        {
+            //This is a bit of a version dependent dirty hack, but it works really nicely!
+
+            EnvDTE80.DTE2 IDE = (EnvDTE80.DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject("VisualStudio.DTE.10.0");
+
+            IDE.ExecuteCommand("Edit.ClearOutputWindow", "");
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(IDE);
         }
     }
 }
