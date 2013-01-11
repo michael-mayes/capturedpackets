@@ -93,7 +93,7 @@ namespace LatencyAnalysisNamespace
 
             if (TheHostIdDataRowFound == null)
             {
-                System.Diagnostics.Debug.WriteLine("Found a message with a Host Id of value {0,3} - adding that Host Id to the latency analysis!", TheHostId);
+                System.Diagnostics.Debug.WriteLine("Found a message with a Host Id of value {0,3} - adding that Host Id to the latency analysis", TheHostId);
 
                 System.Data.DataRow TheHostIdRowToAdd = TheHostIdTable.NewRow();
 
@@ -237,7 +237,7 @@ namespace LatencyAnalysisNamespace
 
             int TheLatencyDataRowsFoundCount = TheLatencyValuesRowsFound.Count();
 
-            System.Diagnostics.Debug.WriteLine("The number of " + TheProtocolString + " message pairs was {0}", TheLatencyDataRowsFoundCount);
+            System.Diagnostics.Debug.WriteLine("The number of pairs of " + TheProtocolString + " messages was {0}", TheLatencyDataRowsFoundCount);
 
             if (TheLatencyDataRowsFoundCount > 0)
             {
@@ -280,8 +280,8 @@ namespace LatencyAnalysisNamespace
             }
 
             System.Diagnostics.Debug.Write(System.Environment.NewLine);
-            System.Diagnostics.Debug.WriteLine("The minimum latency value between " + TheProtocolString + " messages was {0} ms for sequence number {1}", TheMinTimestampDifference, TheMinTimestampSequenceNumber);
-            System.Diagnostics.Debug.WriteLine("The maximum latency value between " + TheProtocolString + " messages was {0} ms for sequence number {1}", TheMaxTimestampDifference, TheMaxTimestampSequenceNumber);
+            System.Diagnostics.Debug.WriteLine("The minimum latency value for " + TheProtocolString + " messages was {0} ms for sequence number {1}", TheMinTimestampDifference, TheMinTimestampSequenceNumber);
+            System.Diagnostics.Debug.WriteLine("The maximum latency value for " + TheProtocolString + " messages was {0} ms for sequence number {1}", TheMaxTimestampDifference, TheMaxTimestampSequenceNumber);
             System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
             //Output the values for the histogram
