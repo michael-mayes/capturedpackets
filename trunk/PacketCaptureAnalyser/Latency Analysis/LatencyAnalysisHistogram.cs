@@ -37,33 +37,33 @@ namespace LatencyAnalysisNamespace
         private int TheNumberOfValuesLowerThanBins = 0;
         private int TheNumberOfValuesHigherThanBins = 0;
 
+        private double TheMaxValueEncountered = double.MinValue;
+
         //
         //Public constructor method
         //
 
-        public LatencyAnalysisHistogram(int TheNumOfValueBins, double TheMinValue, double TheMaxValue)
+        public LatencyAnalysisHistogram(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
         {
-            if (TheMinValue == TheMaxValue)
+            if (TheMinAllowedValue == TheMaxAllowedValue)
             {
-                System.Diagnostics.Debug.WriteLine("The minimum and maximum values are equal!!!");
+                System.Diagnostics.Debug.WriteLine("The minimum and maximum allowed values for the histogram are equal!!!");
 
-                throw new System.ArgumentException("The minimum and maximum values are equal!!!");
+                throw new System.ArgumentException("The minimum and maximum allowed values for the histogram are equal!!!");
             }
 
             TheValueBinCounts = new int[TheNumOfValueBins];
 
-            if (TheMaxValue > TheMinValue)
+            if (TheMaxAllowedValue > TheMinAllowedValue)
             {
-                CalculateValueBinBoundaries(TheNumOfValueBins, TheMinValue, TheMaxValue);
+                CalculateValueBinBoundaries(TheNumOfValueBins, TheMinAllowedValue, TheMaxAllowedValue);
             }
             else
             {
                 System.Diagnostics.Debug.WriteLine("The minimum value is greater than the maximum value!");
 
-                CalculateValueBinBoundaries(TheNumOfValueBins, TheMaxValue, TheMinValue);
+                CalculateValueBinBoundaries(TheNumOfValueBins, TheMaxAllowedValue, TheMinAllowedValue);
             }
-
-            CheckBinBoundaries(this.TheValueBinBoundaries);
         }
 
         //
@@ -104,23 +104,26 @@ namespace LatencyAnalysisNamespace
         //Private methods
         //
 
-        private void CalculateValueBinBoundaries(int TheNumOfValueBins, double TheMinValue, double TheMaxValue)
+        private void CalculateValueBinBoundaries(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
         {
             TheValueBinBoundaries = new double[TheNumOfValueBins + 1];
 
-            TheValueBinBoundaries[0] = TheMinValue;
+            TheValueBinBoundaries[0] = TheMinAllowedValue;
 
-            TheValueBinBoundaries[TheValueBinBoundaries.Length - 1] = TheMaxValue;
+            TheValueBinBoundaries[TheValueBinBoundaries.Length - 1] = TheMaxAllowedValue;
 
-            double binSize = (TheMaxValue - TheMinValue) / TheNumOfValueBins;
+            double binSize = (TheMaxAllowedValue - TheMinAllowedValue) / TheNumOfValueBins;
 
             for (int i = 1; i < TheValueBinBoundaries.Length - 1; ++i)
             {
                 TheValueBinBoundaries[i] = TheValueBinBoundaries[0] + i * binSize;
             }
+
+            //Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values
+            CheckBinBoundaries(this.TheValueBinBoundaries);
         }
 
-        //Check that the bin boundaries are a strictly monotonically increasing sequence of values
+        //Check that the supplied bin boundaries are a strictly monotonically increasing sequence of values
         private void CheckBinBoundaries(double[] TheBinBoundaries)
         {
             for (int i = 0; i < TheBinBoundaries.Length - 1; ++i)
@@ -140,6 +143,12 @@ namespace LatencyAnalysisNamespace
 
         public void AddValue(double TheValue)
         {
+            //Check if the value is the highest value encountered since the creation or reset of the histogram
+            if (TheMaxValueEncountered < TheValue)
+            {
+                TheMaxValueEncountered = TheValue;
+            }
+
             if (TheValue < TheValueBinBoundaries[0])
             {
                 ++TheNumberOfValuesLowerThanBins;
@@ -172,6 +181,8 @@ namespace LatencyAnalysisNamespace
             TheNumberOfValuesLowerThanBins = 0;
             TheNumberOfValuesHigherThanBins = 0;
 
+            TheMaxValueEncountered = double.MinValue;
+
             for (int i = 0; i < TheValueBinCounts.Length; ++i)
             {
                 TheValueBinCounts[i] = 0;
@@ -179,13 +190,14 @@ namespace LatencyAnalysisNamespace
         }
 
         //Format the contents of the histogram and output it to the debug console
-        public void OutputValues(double TheMaxValue)
+        public void OutputValues()
         {
             int i, j;
 
             if (TheNumberOfValuesLowerThanBins > 0)
             {
                 System.Diagnostics.Debug.WriteLine("Number of values lower than bins: {0}", TheNumberOfValuesLowerThanBins);
+                System.Diagnostics.Debug.Write(System.Environment.NewLine);
             }
 
             for (i = 0; i < TheValueBinCounts.Length; ++i)
@@ -199,6 +211,7 @@ namespace LatencyAnalysisNamespace
                 {
                     if (j < TheValueBinCounts[i])
                     {
+                        //Truncate the output after 130 columns to ensure it fits on screen
                         if (j < 130)
                         {
                             System.Diagnostics.Debug.Write(')');
@@ -224,7 +237,7 @@ namespace LatencyAnalysisNamespace
 
                 System.Diagnostics.Debug.Write('\n');
 
-                if (TheValueBinBoundaries[i + 1] > TheMaxValue)
+                if (TheValueBinBoundaries[i + 1] > TheMaxValueEncountered)
                 {
                     break;
                 }
@@ -232,6 +245,7 @@ namespace LatencyAnalysisNamespace
 
             if (TheNumberOfValuesHigherThanBins > 0)
             {
+                System.Diagnostics.Debug.Write(System.Environment.NewLine);
                 System.Diagnostics.Debug.WriteLine("Number of values higher than bins: {0}", TheNumberOfValuesHigherThanBins);
             }
         }
