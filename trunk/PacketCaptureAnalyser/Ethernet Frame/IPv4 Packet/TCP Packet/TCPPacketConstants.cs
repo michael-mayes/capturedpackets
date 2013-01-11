@@ -60,12 +60,6 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
 
         public bool IsTCPPacketFlagSet(System.Byte TheByte, TCPPacketFlags TheTCPPacketFlag)
         {
-            if (TheTCPPacketFlag < TCPPacketFlags.CWR ||
-                TheTCPPacketFlag > TCPPacketFlags.FIN)
-            {
-                throw new System.ArgumentOutOfRangeException();
-            }
-
             int Shift = TCPPacketFlags.FIN - TheTCPPacketFlag;
 
             // Get a single bit in the proper position
