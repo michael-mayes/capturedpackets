@@ -34,9 +34,16 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
             this.TheBinaryReader = TheBinaryReader;
         }
 
-        public bool Process()
+        public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
+
+            if (ThePayloadLength < LLDPPacketConstants.LLDPPacketLength)
+            {
+                System.Diagnostics.Debug.WriteLine("The payload length of the Ethernet frame is lower than the length of the LLDP packet!!!");
+
+                return false;
+            }
 
             //Create an instance of the LLDP packet
             LLDPPacketStructures.LLDPPacketStructure ThePacket = new LLDPPacketStructures.LLDPPacketStructure();

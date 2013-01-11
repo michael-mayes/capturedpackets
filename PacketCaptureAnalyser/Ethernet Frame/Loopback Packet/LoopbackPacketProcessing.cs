@@ -34,9 +34,16 @@ namespace EthernetFrameNamespace.LoopbackPacketNamespace
             this.TheBinaryReader = TheBinaryReader;
         }
 
-        public bool Process()
+        public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
+
+            if (ThePayloadLength < (LoopbackPacketConstants.LoopbackPacketHeaderLength + LoopbackPacketConstants.LoopbackPacketPayloadLength))
+            {
+                System.Diagnostics.Debug.WriteLine("The payload length of the Ethernet frame is lower than the length of the Loopback packet!!!");
+
+                return false;
+            }
 
             //Process the Loopback packet header
             TheResult = ProcessHeader();

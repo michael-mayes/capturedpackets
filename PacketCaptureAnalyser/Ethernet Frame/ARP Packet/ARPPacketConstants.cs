@@ -28,11 +28,11 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
     class ARPPacketConstants
     {
         //
-        //ARP packet header - 28 bytes
+        //ARP packet - 28 bytes
         //
 
         //Length
 
-        public const ushort ARPPacketHeaderLength = 28;
+        public const ushort ARPPacketLength = 28;
     }
 }

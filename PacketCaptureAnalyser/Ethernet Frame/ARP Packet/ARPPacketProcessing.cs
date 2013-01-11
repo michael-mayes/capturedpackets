@@ -34,9 +34,16 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
             this.TheBinaryReader = TheBinaryReader;
         }
 
-        public bool Process()
+        public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
+
+            if (ThePayloadLength < ARPPacketConstants.ARPPacketLength)
+            {
+                System.Diagnostics.Debug.WriteLine("The payload length of the Ethernet frame is lower than the length of the ARP packet!!!");
+
+                return false;
+            }
 
             //Create an instance of the ARP packet
             ARPPacketStructures.ARPPacketStructure ThePacket = new ARPPacketStructures.ARPPacketStructure();
