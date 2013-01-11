@@ -33,7 +33,8 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
         //Length
 
-        public const ushort IPv4PacketHeaderLength = 20;
+        public const ushort IPv4PacketHeaderMinimumLength = 20;
+        public const ushort IPv4PacketHeaderMaximumLength = 60;
 
         //Protocol
 

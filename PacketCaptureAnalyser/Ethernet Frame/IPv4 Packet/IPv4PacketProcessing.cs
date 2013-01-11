@@ -96,6 +96,18 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                 //Set up the output parameter for the protocol for the IPv4 packet
                 TheProtocol = TheHeader.Protocol;
+
+                if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMinimumLength &&
+                    TheHeaderLength <= IPv4PacketConstants.IPv4PacketHeaderMaximumLength)
+                {
+                    //The IPv4 packet contains a header length which is greater than the minimum and less than or equal to the maximum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
+
+                    //Just read off these remaining Options bytes of the IPv4 packet header from the packet capture so we can move on
+                    for (int i = IPv4PacketConstants.IPv4PacketHeaderMinimumLength; i < TheHeaderLength; ++i)
+                    {
+                        TheBinaryReader.ReadByte();
+                    }
+                }
             }
 
             return TheResult;
@@ -166,9 +178,10 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             bool TheResult = true;
 
             //Validate length of the IPv4 packet header
-            if (TheHeaderLength != IPv4PacketConstants.IPv4PacketHeaderLength)
+            if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMaximumLength ||
+                TheHeaderLength < IPv4PacketConstants.IPv4PacketHeaderMinimumLength)
             {
-                System.Diagnostics.Debug.WriteLine("The IPv4 packet does not contain the expected header length, is {0} not {1}", TheHeaderLength, IPv4PacketConstants.IPv4PacketHeaderLength);
+                System.Diagnostics.Debug.WriteLine("The IPv4 packet contains a header length {0} which is outside the range {1} to {2}", TheHeaderLength, IPv4PacketConstants.IPv4PacketHeaderMinimumLength, IPv4PacketConstants.IPv4PacketHeaderMaximumLength);
 
                 TheResult = false;
             }

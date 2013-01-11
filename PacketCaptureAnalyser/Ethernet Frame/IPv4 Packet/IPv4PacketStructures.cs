@@ -33,7 +33,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = IPv4PacketConstants.IPv4PacketHeaderLength)]
+            Size = IPv4PacketConstants.IPv4PacketHeaderMinimumLength)]
 
         public struct IPv4PacketHeaderStructure
         {
@@ -66,6 +66,8 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
             [System.Runtime.InteropServices.FieldOffset(16)]
             public System.Int32 DestinationAddress; //Destination IP address
+
+            //There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the IPv4 packet header length field
         }
     }
 }
