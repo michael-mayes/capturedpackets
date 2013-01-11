@@ -93,7 +93,7 @@ namespace LatencyAnalysisNamespace
 
             if (TheHostIdDataRowFound == null)
             {
-                System.Diagnostics.Debug.WriteLine("Found entry for Host Id of {0} so adding it to latency analysis", TheHostId);
+                System.Diagnostics.Debug.WriteLine("Found a message with a Host Id of value {0,3} - adding that Host Id to the latency analysis!", TheHostId);
 
                 System.Data.DataRow TheHostIdRowToAdd = TheHostIdTable.NewRow();
 
@@ -249,7 +249,10 @@ namespace LatencyAnalysisNamespace
 
         private void FinaliseRows(string TheProtocolString, EnumerableRowCollection<System.Data.DataRow> TheLatencyValueRows)
         {
-            LatencyAnalysisHistogram TheHistogram = new LatencyAnalysisHistogram(LatencyAnalysisConstants.LatencyAnalysisNumberOfBins, 0.0, LatencyAnalysisConstants.LatencyAnalysisWorstCaseLatency);
+            LatencyAnalysisHistogram TheHistogram = new LatencyAnalysisHistogram
+                (LatencyAnalysisConstants.LatencyAnalysisNumberOfBins,
+                LatencyAnalysisConstants.LatencyAnalysisBestCaseLatency,
+                LatencyAnalysisConstants.LatencyAnalysisWorstCaseLatency);
 
             ulong TheMinTimestampSequenceNumber = 0;
             ulong TheMaxTimestampSequenceNumber = 0;
@@ -277,16 +280,16 @@ namespace LatencyAnalysisNamespace
             }
 
             System.Diagnostics.Debug.Write(System.Environment.NewLine);
-            System.Diagnostics.Debug.WriteLine("The minimum latency for " + TheProtocolString + " messages is {0} ms for sequence number {1}", TheMinTimestampDifference, TheMinTimestampSequenceNumber);
-            System.Diagnostics.Debug.WriteLine("The maximum latency for " + TheProtocolString + " messages is {0} ms for sequence number {1}", TheMaxTimestampDifference, TheMaxTimestampSequenceNumber);
+            System.Diagnostics.Debug.WriteLine("The minimum latency value between " + TheProtocolString + " messages was {0} ms for sequence number {1}", TheMinTimestampDifference, TheMinTimestampSequenceNumber);
+            System.Diagnostics.Debug.WriteLine("The maximum latency value between " + TheProtocolString + " messages was {0} ms for sequence number {1}", TheMaxTimestampDifference, TheMaxTimestampSequenceNumber);
             System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
             //Output the values for the histogram
 
-            System.Diagnostics.Debug.WriteLine("Histogram for latency for " + TheProtocolString + " messages:");
+            System.Diagnostics.Debug.WriteLine("The histogram for latency values for " + TheProtocolString + " messages:");
             System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
-            TheHistogram.OutputValues(TheMaxTimestampDifference);
+            TheHistogram.OutputValues();
         }
     }
 }

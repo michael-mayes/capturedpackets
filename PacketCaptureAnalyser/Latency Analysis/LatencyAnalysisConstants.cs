@@ -35,11 +35,14 @@ namespace LatencyAnalysisNamespace
             UDP = 1 //UDP - User Datagram Protocol (RFC 768)
         }
 
+        //Latencies
+
+        public const int LatencyAnalysisBestCaseLatency = 0; //Milliseconds
+        public const int LatencyAnalysisWorstCaseLatency = 50; //Milliseconds
+
         //Value bins
 
         private const int LatencyAnalysisBinsPerMs = 10; //Ten value bins for every millisecond of latency
-        private const int LatencyAnalysisWorstCaseLatency = 50; //Milliseconds
-
         public const int LatencyAnalysisNumberOfBins = (LatencyAnalysisWorstCaseLatency * LatencyAnalysisBinsPerMs) ;
     }
 }
