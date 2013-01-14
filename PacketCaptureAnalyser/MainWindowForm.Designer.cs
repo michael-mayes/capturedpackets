@@ -134,6 +134,7 @@
             // 
             // ClearSelectedPacketCaptureButton
             // 
+            this.ClearSelectedPacketCaptureButton.Enabled = false;
             this.ClearSelectedPacketCaptureButton.Location = new System.Drawing.Point(12, 41);
             this.ClearSelectedPacketCaptureButton.Name = "ClearSelectedPacketCaptureButton";
             this.ClearSelectedPacketCaptureButton.Size = new System.Drawing.Size(242, 23);
