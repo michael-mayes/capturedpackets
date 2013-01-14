@@ -188,7 +188,8 @@ namespace PacketCaptureAnalyser
                         //This is a libpcap/tcpdump packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "libpcap/tcpdump";
 
-                        //Analysis of a libpcap/tcpdump packet capture is supported so enable the button to open the package capture or start the analysis on it
+                        //Analysis of a libpcap/tcpdump packet capture is supported so enable the buttons to clear the selected package capture, to open the package capture and to start the analysis on it
+                        ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = true;
                         RunAnalysisOnPackageSelectedCaptureButton.Enabled = true;
                         break;
@@ -199,7 +200,8 @@ namespace PacketCaptureAnalyser
                         //This is an NA Sniffer (DOS) packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "NA Sniffer (DOS)";
 
-                        //Analysis of an NA Sniffer (DOS) packet capture is supported so enable the button to open the package capture or start the analysis on it
+                        //Analysis of an NA Sniffer (DOS) packet capture is supported so enable the buttons to clear the selected package capture, to open the package capture and to start the analysis on it
+                        ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = true;
                         RunAnalysisOnPackageSelectedCaptureButton.Enabled = true;
                         break;
@@ -211,7 +213,8 @@ namespace PacketCaptureAnalyser
                         //This packet capture is either an unsupported form of packet capture or is another type of file
                         SelectedPacketCaptureTypeTextBox.Text = "<Unknown Packet Capture Type>";
 
-                        //Analysis of this packet capture is not supported so disable the button to open the package capture or start the analysis on it
+                        //Analysis of this packet capture is not supported so enable the button to clear the selected packet capture and disable the buttons to open the package capture and start the analysis on it
+                        ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = false;
                         RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
                         break;
@@ -227,6 +230,7 @@ namespace PacketCaptureAnalyser
             SelectedPacketCaptureNameTextBox.Text = "<No Packet Capture Selected>";
             SelectedPacketCaptureTypeTextBox.Text = "<No Packet Capture Selected>";
 
+            ClearSelectedPacketCaptureButton.Enabled = false;
             OpenSelectedPackageCaptureButton.Enabled = false;
             RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
         }
