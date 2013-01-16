@@ -241,7 +241,7 @@ namespace LatencyAnalysisNamespace
                     }
                 }
 
-                System.Diagnostics.Debug.Write('\n');
+                System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
                 if (TheValueBinBoundaries[i + 1] > TheMaxValueEncountered)
                 {

@@ -40,12 +40,18 @@
             this.SelectedPacketCaptureTypeTextBox = new System.Windows.Forms.TextBox();
             this.ClearSelectedPacketCaptureButton = new System.Windows.Forms.Button();
             this.OpenSelectedPackageCaptureButton = new System.Windows.Forms.Button();
+            this.SelectedOutputFileForAnalysisDialog = new System.Windows.Forms.SaveFileDialog();
+            this.SelectOutputFileButton = new System.Windows.Forms.Button();
+            this.SelectedOutputFileNameLabel = new System.Windows.Forms.Label();
+            this.SelectedOutputFileNameTextBox = new System.Windows.Forms.TextBox();
+            this.SelectedOutputFilePathLabel = new System.Windows.Forms.Label();
+            this.SelectedOutputFilePathTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // RunAnalysisOnPackageSelectedCaptureButton
             // 
             this.RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
-            this.RunAnalysisOnPackageSelectedCaptureButton.Location = new System.Drawing.Point(11, 187);
+            this.RunAnalysisOnPackageSelectedCaptureButton.Location = new System.Drawing.Point(12, 324);
             this.RunAnalysisOnPackageSelectedCaptureButton.Name = "RunAnalysisOnPackageSelectedCaptureButton";
             this.RunAnalysisOnPackageSelectedCaptureButton.Size = new System.Drawing.Size(242, 23);
             this.RunAnalysisOnPackageSelectedCaptureButton.TabIndex = 1;
@@ -55,7 +61,7 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(11, 246);
+            this.ExitButton.Location = new System.Drawing.Point(12, 353);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(242, 23);
             this.ExitButton.TabIndex = 2;
@@ -65,7 +71,7 @@
             // 
             // SelectedPacketCaptureForAnalysisDialog
             // 
-            this.SelectedPacketCaptureForAnalysisDialog.Filter = "Wireshark Packet Captures|*.pcap;*.libpcap;*.enc";
+            this.SelectedPacketCaptureForAnalysisDialog.Filter = "Packet Captures (*.pcap,*.libpcap,*.enc,*.cap)|*.pcap;*.libpcap;*.enc;*.cap";
             this.SelectedPacketCaptureForAnalysisDialog.Title = "Select Packet Capture For Analysis";
             // 
             // SelectPacketCaptureButton
@@ -85,6 +91,7 @@
             this.SelectedPacketCapturePathTextBox.ReadOnly = true;
             this.SelectedPacketCapturePathTextBox.Size = new System.Drawing.Size(242, 20);
             this.SelectedPacketCapturePathTextBox.TabIndex = 3;
+            this.SelectedPacketCapturePathTextBox.TabStop = false;
             this.SelectedPacketCapturePathTextBox.Text = "<No Packet Capture Selected>";
             // 
             // SelectedPacketCapturePathLabel
@@ -112,6 +119,7 @@
             this.SelectedPacketCaptureNameTextBox.ReadOnly = true;
             this.SelectedPacketCaptureNameTextBox.Size = new System.Drawing.Size(242, 20);
             this.SelectedPacketCaptureNameTextBox.TabIndex = 5;
+            this.SelectedPacketCaptureNameTextBox.TabStop = false;
             this.SelectedPacketCaptureNameTextBox.Text = "<No Packet Capture Selected>";
             // 
             // SelectedPacketCaptureTypeLabel
@@ -130,6 +138,7 @@
             this.SelectedPacketCaptureTypeTextBox.ReadOnly = true;
             this.SelectedPacketCaptureTypeTextBox.Size = new System.Drawing.Size(242, 20);
             this.SelectedPacketCaptureTypeTextBox.TabIndex = 7;
+            this.SelectedPacketCaptureTypeTextBox.TabStop = false;
             this.SelectedPacketCaptureTypeTextBox.Text = "<No Packet Capture Selected>";
             // 
             // ClearSelectedPacketCaptureButton
@@ -146,7 +155,7 @@
             // OpenSelectedPackageCaptureButton
             // 
             this.OpenSelectedPackageCaptureButton.Enabled = false;
-            this.OpenSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 217);
+            this.OpenSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 187);
             this.OpenSelectedPackageCaptureButton.Name = "OpenSelectedPackageCaptureButton";
             this.OpenSelectedPackageCaptureButton.Size = new System.Drawing.Size(242, 23);
             this.OpenSelectedPackageCaptureButton.TabIndex = 10;
@@ -154,11 +163,68 @@
             this.OpenSelectedPackageCaptureButton.UseVisualStyleBackColor = true;
             this.OpenSelectedPackageCaptureButton.Click += new System.EventHandler(this.OpenSelectedPackageCaptureButton_Click);
             // 
+            // SelectedOutputFileForAnalysisDialog
+            // 
+            this.SelectedOutputFileForAnalysisDialog.Filter = "Text File (*.txt)|*.txt";
+            // 
+            // SelectOutputFileButton
+            // 
+            this.SelectOutputFileButton.Location = new System.Drawing.Point(12, 216);
+            this.SelectOutputFileButton.Name = "SelectOutputFileButton";
+            this.SelectOutputFileButton.Size = new System.Drawing.Size(243, 23);
+            this.SelectOutputFileButton.TabIndex = 11;
+            this.SelectOutputFileButton.Text = "Select Output File";
+            this.SelectOutputFileButton.UseVisualStyleBackColor = true;
+            this.SelectOutputFileButton.Click += new System.EventHandler(this.SelectOuputFileButton_Click);
+            // 
+            // SelectedOutputFileNameLabel
+            // 
+            this.SelectedOutputFileNameLabel.AutoSize = true;
+            this.SelectedOutputFileNameLabel.Location = new System.Drawing.Point(11, 281);
+            this.SelectedOutputFileNameLabel.Name = "SelectedOutputFileNameLabel";
+            this.SelectedOutputFileNameLabel.Size = new System.Drawing.Size(106, 13);
+            this.SelectedOutputFileNameLabel.TabIndex = 15;
+            this.SelectedOutputFileNameLabel.Text = "Name Of Output File:";
+            // 
+            // SelectedOutputFileNameTextBox
+            // 
+            this.SelectedOutputFileNameTextBox.Location = new System.Drawing.Point(13, 297);
+            this.SelectedOutputFileNameTextBox.Name = "SelectedOutputFileNameTextBox";
+            this.SelectedOutputFileNameTextBox.ReadOnly = true;
+            this.SelectedOutputFileNameTextBox.Size = new System.Drawing.Size(242, 20);
+            this.SelectedOutputFileNameTextBox.TabIndex = 14;
+            this.SelectedOutputFileNameTextBox.TabStop = false;
+            this.SelectedOutputFileNameTextBox.Text = "<No Output File Selected>";
+            // 
+            // SelectedOutputFilePathLabel
+            // 
+            this.SelectedOutputFilePathLabel.AutoSize = true;
+            this.SelectedOutputFilePathLabel.Location = new System.Drawing.Point(11, 242);
+            this.SelectedOutputFilePathLabel.Name = "SelectedOutputFilePathLabel";
+            this.SelectedOutputFilePathLabel.Size = new System.Drawing.Size(145, 13);
+            this.SelectedOutputFilePathLabel.TabIndex = 13;
+            this.SelectedOutputFilePathLabel.Text = "Path Of Selected Output File:";
+            // 
+            // SelectedOutputFilePathTextBox
+            // 
+            this.SelectedOutputFilePathTextBox.Location = new System.Drawing.Point(12, 258);
+            this.SelectedOutputFilePathTextBox.Name = "SelectedOutputFilePathTextBox";
+            this.SelectedOutputFilePathTextBox.ReadOnly = true;
+            this.SelectedOutputFilePathTextBox.Size = new System.Drawing.Size(242, 20);
+            this.SelectedOutputFilePathTextBox.TabIndex = 12;
+            this.SelectedOutputFilePathTextBox.TabStop = false;
+            this.SelectedOutputFilePathTextBox.Text = "<No Output File Selected>";
+            // 
             // MainWindowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(265, 279);
+            this.ClientSize = new System.Drawing.Size(265, 387);
+            this.Controls.Add(this.SelectedOutputFileNameLabel);
+            this.Controls.Add(this.SelectedOutputFileNameTextBox);
+            this.Controls.Add(this.SelectedOutputFilePathLabel);
+            this.Controls.Add(this.SelectedOutputFilePathTextBox);
+            this.Controls.Add(this.SelectOutputFileButton);
             this.Controls.Add(this.OpenSelectedPackageCaptureButton);
             this.Controls.Add(this.ClearSelectedPacketCaptureButton);
             this.Controls.Add(this.SelectedPacketCaptureTypeLabel);
@@ -191,5 +257,11 @@
         private System.Windows.Forms.TextBox SelectedPacketCaptureTypeTextBox;
         private System.Windows.Forms.Button ClearSelectedPacketCaptureButton;
         private System.Windows.Forms.Button OpenSelectedPackageCaptureButton;
+        private System.Windows.Forms.SaveFileDialog SelectedOutputFileForAnalysisDialog;
+        private System.Windows.Forms.Button SelectOutputFileButton;
+        private System.Windows.Forms.Label SelectedOutputFileNameLabel;
+        private System.Windows.Forms.TextBox SelectedOutputFileNameTextBox;
+        private System.Windows.Forms.Label SelectedOutputFilePathLabel;
+        private System.Windows.Forms.TextBox SelectedOutputFilePathTextBox;
     }
 }

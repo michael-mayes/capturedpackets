@@ -57,7 +57,7 @@ namespace PacketCaptureAnalyser
                 SelectedPacketCaptureNameTextBox.Text = System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName);
 
                 //Determine the type of the packet capture from the extension
-                switch(System.IO.Path.GetExtension(SelectedPacketCaptureForAnalysisDialog.FileName))
+                switch (System.IO.Path.GetExtension(SelectedPacketCaptureForAnalysisDialog.FileName))
                 {
                     case ".pcap":
                     case ".libpcap":
@@ -96,6 +96,21 @@ namespace PacketCaptureAnalyser
 
             //Clear all text from the output window on starting the analysis for each packet capture to simplify examination of results on multiple successive runs
             ClearOutputWindow();
+
+            //Delete any existing output files with the selected name to ape the clearing of all text from the output window
+            if (System.IO.File.Exists(SelectedOutputFileForAnalysisDialog.FileName))
+            {
+                System.IO.File.Delete(SelectedOutputFileForAnalysisDialog.FileName);
+            }
+
+            //Redirect any text added to the output window to the output file
+
+            System.Diagnostics.TextWriterTraceListener TheOutputWindowListener =
+                new System.Diagnostics.TextWriterTraceListener(SelectedOutputFileForAnalysisDialog.FileName);
+
+            System.Diagnostics.Debug.Listeners.Add(TheOutputWindowListener);
+
+            //Start the analysis of the packet capture
 
             System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
 
@@ -166,6 +181,11 @@ namespace PacketCaptureAnalyser
 
             //Clear the selected packet capture after analysis
             ClearSelectedPacketCapture();
+
+            // Flush and close the output to the output file
+
+            TheOutputWindowListener.Flush();
+            TheOutputWindowListener.Close();
         }
 
         private void ExitButton_Click(object sender, System.EventArgs e)
@@ -188,10 +208,15 @@ namespace PacketCaptureAnalyser
                         //This is a libpcap/tcpdump packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "libpcap/tcpdump";
 
-                        //Analysis of a libpcap/tcpdump packet capture is supported so enable the buttons to clear the selected package capture, to open the package capture and to start the analysis on it
+                        //Analysis of a libpcap/tcpdump packet capture is supported:
+                        //1) Enable the button to clear the selected package capture
+                        //2) Enable the button to open the package capture
+                        //3) Enable the button to select the output file
+                        //4) Disable the button to start the analysis on the packet capture - enabled on selection of the output file
                         ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = true;
-                        RunAnalysisOnPackageSelectedCaptureButton.Enabled = true;
+                        SelectOutputFileButton.Enabled = true;
+                        RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
                         break;
                     }
 
@@ -200,10 +225,15 @@ namespace PacketCaptureAnalyser
                         //This is an NA Sniffer (DOS) packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "NA Sniffer (DOS)";
 
-                        //Analysis of an NA Sniffer (DOS) packet capture is supported so enable the buttons to clear the selected package capture, to open the package capture and to start the analysis on it
+                        //Analysis of an NA Sniffer (DOS) packet capture is supported:
+                        //1) Enable the button to clear the selected package capture
+                        //2) Enable the button to open the package capture
+                        //3) Enable the button to select the output file
+                        //4) Disable the button to start the analysis on the packet capture - enabled on selection of the output file
                         ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = true;
-                        RunAnalysisOnPackageSelectedCaptureButton.Enabled = true;
+                        SelectOutputFileButton.Enabled = true;
+                        RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
                         break;
                     }
 
@@ -213,9 +243,14 @@ namespace PacketCaptureAnalyser
                         //This packet capture is either an unsupported form of packet capture or is another type of file
                         SelectedPacketCaptureTypeTextBox.Text = "<Unknown Packet Capture Type>";
 
-                        //Analysis of this packet capture is not supported so enable the button to clear the selected packet capture and disable the buttons to open the package capture and start the analysis on it
+                        //Analysis of this packet capture is not supported:
+                        //1) Enable the button to clear the selected package capture
+                        //2) Disable the button to open the package capture - not valid for opening
+                        //3) Disable the button to select the output file - not needed if no analysis
+                        //4) Disable the button to start the analysis on the packet capture - not needed if no analysis
                         ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = false;
+                        SelectOutputFileButton.Enabled = false;
                         RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
                         break;
                     }
@@ -230,9 +265,35 @@ namespace PacketCaptureAnalyser
             SelectedPacketCaptureNameTextBox.Text = "<No Packet Capture Selected>";
             SelectedPacketCaptureTypeTextBox.Text = "<No Packet Capture Selected>";
 
+            SelectedOutputFilePathTextBox.Text = "<No Output File Selected>";
+            SelectedOutputFileNameTextBox.Text = "<No Output File Selected>";
+
             ClearSelectedPacketCaptureButton.Enabled = false;
+            SelectOutputFileButton.Enabled = false;
             OpenSelectedPackageCaptureButton.Enabled = false;
             RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
+        }
+
+        private void ReflectSelectedOutputFile()
+        {
+            switch (TheMainWindowFormPacketCaptureType)
+            {
+                case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdumpPacketCapture:
+                case MainWindowFormPacketCaptureTypeEnumeration.SnifferPacketCapture:
+                    {
+                        //Analysis of a libpcap/tcpdump packet capture or an NA Sniffer (DOS) packet capture is supported so enable the button to start the analysis on it
+                        RunAnalysisOnPackageSelectedCaptureButton.Enabled = true;
+                        break;
+                    }
+
+                case MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture:
+                default:
+                    {
+                        //Analysis of this packet capture is not supported so disable the button to start the analysis on it
+                        RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
+                        break;
+                    }
+            }
         }
 
         private void OpenSelectedPackageCaptureButton_Click(object sender, System.EventArgs e)
@@ -253,6 +314,27 @@ namespace PacketCaptureAnalyser
             IDE.ExecuteCommand("Edit.ClearOutputWindow", "");
 
             System.Runtime.InteropServices.Marshal.ReleaseComObject(IDE);
+        }
+
+        private void SelectOuputFileButton_Click(object sender, System.EventArgs e)
+        {
+            //Open the packet capture selection dialog box - set the name to that of the packet capture, but without the file extension
+
+            SelectedOutputFileForAnalysisDialog.FileName = System.IO.Path.GetFileNameWithoutExtension(SelectedPacketCaptureForAnalysisDialog.FileName);
+
+            System.Windows.Forms.DialogResult TheSelectOutputFileDialogResult = SelectedOutputFileForAnalysisDialog.ShowDialog();
+
+            if (TheSelectOutputFileDialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                //Populate the path and name of the selected output file
+                SelectedOutputFilePathTextBox.Text = System.IO.Path.GetDirectoryName(SelectedOutputFileForAnalysisDialog.FileName);
+                SelectedOutputFileNameTextBox.Text = System.IO.Path.GetFileName(SelectedOutputFileForAnalysisDialog.FileName);
+
+                //Update the window to reflect the selected output file
+                ReflectSelectedOutputFile();
+
+                System.Diagnostics.Debug.WriteLine("Selection of the " + SelectedOutputFileForAnalysisDialog.FileName + " output file");
+            }
         }
     }
 }
