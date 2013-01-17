@@ -104,73 +104,82 @@ namespace PacketCaptureAnalyser
             }
 
             //Redirect any text added to the output window to the output file
-
-            System.Diagnostics.TextWriterTraceListener TheOutputWindowListener =
-                new System.Diagnostics.TextWriterTraceListener(SelectedOutputFileForAnalysisDialog.FileName);
-
-            System.Diagnostics.Debug.Listeners.Add(TheOutputWindowListener);
-
-            //Start the analysis of the packet capture
-
-            System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
-
-            LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
-                new LatencyAnalysisNamespace.LatencyAnalysisProcessing();
-
-            //Initialise the functionality to perform latency analysis on the messages found
-            TheLatencyAnalysisProcessing.Create();
-
-            switch (TheMainWindowFormPacketCaptureType)
+            using (System.Diagnostics.TextWriterTraceListener TheOutputWindowListener =
+                new System.Diagnostics.TextWriterTraceListener(SelectedOutputFileForAnalysisDialog.FileName))
             {
-                case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdumpPacketCapture:
-                    {
-                        PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing = new PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing();
+                System.Diagnostics.Debug.Listeners.Add(TheOutputWindowListener);
 
-                        TheResult = ThePCAPPackageCaptureProcessing.Process(TheLatencyAnalysisProcessing, SelectedPacketCaptureForAnalysisDialog.FileName);
+                //Start the analysis of the packet capture
 
-                        break;
-                    }
+                System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
 
-                case MainWindowFormPacketCaptureTypeEnumeration.SnifferPacketCapture:
-                    {
-                        PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing = new PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing();
+                LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
+                    new LatencyAnalysisNamespace.LatencyAnalysisProcessing();
 
-                        TheResult = TheSnifferPackageCaptureProcessing.Process(TheLatencyAnalysisProcessing, SelectedPacketCaptureForAnalysisDialog.FileName);
+                //Initialise the functionality to perform latency analysis on the messages found
+                TheLatencyAnalysisProcessing.Create();
 
-                        break;
-                    }
+                switch (TheMainWindowFormPacketCaptureType)
+                {
+                    case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdumpPacketCapture:
+                        {
+                            PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing = new PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing();
 
-                case MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture:
-                default:
-                    {
-                        System.Diagnostics.Debug.WriteLine("The" + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture is of an unknown type!!!");
+                            TheResult = ThePCAPPackageCaptureProcessing.Process(TheLatencyAnalysisProcessing, SelectedPacketCaptureForAnalysisDialog.FileName);
 
-                        TheResult = false;
+                            break;
+                        }
 
-                        break;
-                    }
+                    case MainWindowFormPacketCaptureTypeEnumeration.SnifferPacketCapture:
+                        {
+                            PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing = new PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing();
+
+                            TheResult = TheSnifferPackageCaptureProcessing.Process(TheLatencyAnalysisProcessing, SelectedPacketCaptureForAnalysisDialog.FileName);
+
+                            break;
+                        }
+
+                    case MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture:
+                    default:
+                        {
+                            System.Diagnostics.Debug.WriteLine("The" + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture is of an unknown type!!!");
+
+                            TheResult = false;
+
+                            break;
+                        }
+                }
+
+                //Dependent on the result of the processing above, display a debug message to indicate success or otherwise
+                if (TheResult)
+                {
+                    //Display a debug message to indicate analysis of the packet capture completed successfully
+                    System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!");
+
+                    //Finalise the latency analysis on the messages found including printing the results to debug output
+                    //Only perform this action if the analysis of the packet capture completed successfully
+
+                    //Read the start time to allow later calculation of the duration of the latency analysis finalisation
+                    System.DateTime TheStartTime = System.DateTime.Now;
+
+                    System.Diagnostics.Debug.WriteLine("Latency analysis for the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
+
+                    TheLatencyAnalysisProcessing.Finalise();
+
+                    //Compute the duration between the start and the end times
+
+                    System.DateTime TheEndTime = System.DateTime.Now;
+
+                    System.TimeSpan TheDuration = TheEndTime - TheStartTime;
+
+                    System.Diagnostics.Debug.WriteLine("Latency analysis for the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed in {0} seconds", TheDuration.TotalSeconds);
+                }
+                else
+                {
+                    //Display a debug message to indicate analysis of the packet capture failed
+                    System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
+                }
             }
-
-            //Dependent on the result of the processing above, display a debug message to indicate success or otherwise
-            if (TheResult)
-            {
-                //Display a debug message to indicate analysis of the packet capture completed successfully
-                System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!");
-
-                //Finalise the latency analysis on the messages found including printing the results to debug output
-                //Only perform this action if the analysis of the packet capture completed successfully
-                TheLatencyAnalysisProcessing.Finalise();
-            }
-            else
-            {
-                //Display a debug message to indicate analysis of the packet capture failed
-                System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
-            }
-
-            // Flush and close the output to the output file
-
-            TheOutputWindowListener.Flush();
-            TheOutputWindowListener.Close();
 
             //Dependent on the result of the processing above, display a message box to indicate success or otherwise
 
