@@ -167,25 +167,51 @@ namespace PacketCaptureAnalyser
                 System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
             }
 
-            //Dependent on the result of the processing above, display a message box to indicate success or otherwise
-            if (TheResult)
-            {
-                //Display a message box to indicate analysis of the packet capture is complete
-                System.Windows.Forms.MessageBox.Show("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!", "Run Analysis On Selected Packet Capture");
-            }
-            else
-            {
-                //Display a message box to indicate analysis of the packet capture failed
-                System.Windows.Forms.MessageBox.Show("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!", "Run Analysis On Selected Packet Capture");
-            }
-
-            //Clear the selected packet capture after analysis
-            ClearSelectedPacketCapture();
-
             // Flush and close the output to the output file
 
             TheOutputWindowListener.Flush();
             TheOutputWindowListener.Close();
+
+            //Dependent on the result of the processing above, display a message box to indicate success or otherwise
+
+            System.Windows.Forms.DialogResult TheMessageBoxResult;
+
+            if (TheResult)
+            {
+                //Display a message box to indicate analysis of the packet capture is complete and ask whether to open the output file
+                TheMessageBoxResult =
+                    System.Windows.Forms.MessageBox.Show
+                    (
+                    "Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!" + System.Environment.NewLine + System.Environment.NewLine + "Do you want to open the output file?",
+                    "Run Analysis On Selected Packet Capture",
+                    System.Windows.Forms.MessageBoxButtons.YesNo,
+                    System.Windows.Forms.MessageBoxIcon.Question
+                    );
+            }
+            else
+            {
+                //Display a message box to indicate analysis of the packet capture failed and ask whether to open the output file
+                TheMessageBoxResult =
+                    System.Windows.Forms.MessageBox.Show
+                    (
+                    "Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!" + System.Environment.NewLine + System.Environment.NewLine + "Do you want to open the output file?",
+                    "Run Analysis On Selected Packet Capture",
+                    System.Windows.Forms.MessageBoxButtons.YesNo,
+                    System.Windows.Forms.MessageBoxIcon.Error
+                    );
+            }
+
+            //Dependent on the button selection at the message box, open the output file
+            if (TheMessageBoxResult == System.Windows.Forms.DialogResult.Yes)
+            {
+                if (System.IO.File.Exists(SelectedOutputFileForAnalysisDialog.FileName))
+                {
+                    System.Diagnostics.Process.Start(SelectedOutputFileForAnalysisDialog.FileName);
+                }
+            }
+
+            //Clear the selected packet capture after analysis
+            ClearSelectedPacketCapture();
         }
 
         private void ExitButton_Click(object sender, System.EventArgs e)

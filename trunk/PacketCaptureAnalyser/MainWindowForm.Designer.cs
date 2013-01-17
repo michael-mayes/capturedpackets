@@ -53,7 +53,7 @@
             this.RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
             this.RunAnalysisOnPackageSelectedCaptureButton.Location = new System.Drawing.Point(12, 324);
             this.RunAnalysisOnPackageSelectedCaptureButton.Name = "RunAnalysisOnPackageSelectedCaptureButton";
-            this.RunAnalysisOnPackageSelectedCaptureButton.Size = new System.Drawing.Size(242, 23);
+            this.RunAnalysisOnPackageSelectedCaptureButton.Size = new System.Drawing.Size(241, 23);
             this.RunAnalysisOnPackageSelectedCaptureButton.TabIndex = 1;
             this.RunAnalysisOnPackageSelectedCaptureButton.Text = "Run Analysis On Selected Packet Capture";
             this.RunAnalysisOnPackageSelectedCaptureButton.UseVisualStyleBackColor = true;
@@ -63,7 +63,7 @@
             // 
             this.ExitButton.Location = new System.Drawing.Point(12, 353);
             this.ExitButton.Name = "ExitButton";
-            this.ExitButton.Size = new System.Drawing.Size(242, 23);
+            this.ExitButton.Size = new System.Drawing.Size(241, 23);
             this.ExitButton.TabIndex = 2;
             this.ExitButton.Text = "Exit";
             this.ExitButton.UseVisualStyleBackColor = true;
@@ -78,7 +78,7 @@
             // 
             this.SelectPacketCaptureButton.Location = new System.Drawing.Point(12, 12);
             this.SelectPacketCaptureButton.Name = "SelectPacketCaptureButton";
-            this.SelectPacketCaptureButton.Size = new System.Drawing.Size(242, 23);
+            this.SelectPacketCaptureButton.Size = new System.Drawing.Size(241, 23);
             this.SelectPacketCaptureButton.TabIndex = 0;
             this.SelectPacketCaptureButton.Text = "Select Packet Capture";
             this.SelectPacketCaptureButton.UseVisualStyleBackColor = true;
@@ -86,10 +86,10 @@
             // 
             // SelectedPacketCapturePathTextBox
             // 
-            this.SelectedPacketCapturePathTextBox.Location = new System.Drawing.Point(12, 83);
+            this.SelectedPacketCapturePathTextBox.Location = new System.Drawing.Point(12, 54);
             this.SelectedPacketCapturePathTextBox.Name = "SelectedPacketCapturePathTextBox";
             this.SelectedPacketCapturePathTextBox.ReadOnly = true;
-            this.SelectedPacketCapturePathTextBox.Size = new System.Drawing.Size(242, 20);
+            this.SelectedPacketCapturePathTextBox.Size = new System.Drawing.Size(241, 20);
             this.SelectedPacketCapturePathTextBox.TabIndex = 3;
             this.SelectedPacketCapturePathTextBox.TabStop = false;
             this.SelectedPacketCapturePathTextBox.Text = "<No Packet Capture Selected>";
@@ -97,7 +97,7 @@
             // SelectedPacketCapturePathLabel
             // 
             this.SelectedPacketCapturePathLabel.AutoSize = true;
-            this.SelectedPacketCapturePathLabel.Location = new System.Drawing.Point(12, 67);
+            this.SelectedPacketCapturePathLabel.Location = new System.Drawing.Point(12, 38);
             this.SelectedPacketCapturePathLabel.Name = "SelectedPacketCapturePathLabel";
             this.SelectedPacketCapturePathLabel.Size = new System.Drawing.Size(168, 13);
             this.SelectedPacketCapturePathLabel.TabIndex = 4;
@@ -106,7 +106,7 @@
             // SelectedPacketCaptureNameLabel
             // 
             this.SelectedPacketCaptureNameLabel.AutoSize = true;
-            this.SelectedPacketCaptureNameLabel.Location = new System.Drawing.Point(12, 106);
+            this.SelectedPacketCaptureNameLabel.Location = new System.Drawing.Point(12, 77);
             this.SelectedPacketCaptureNameLabel.Name = "SelectedPacketCaptureNameLabel";
             this.SelectedPacketCaptureNameLabel.Size = new System.Drawing.Size(174, 13);
             this.SelectedPacketCaptureNameLabel.TabIndex = 6;
@@ -114,10 +114,10 @@
             // 
             // SelectedPacketCaptureNameTextBox
             // 
-            this.SelectedPacketCaptureNameTextBox.Location = new System.Drawing.Point(12, 122);
+            this.SelectedPacketCaptureNameTextBox.Location = new System.Drawing.Point(12, 93);
             this.SelectedPacketCaptureNameTextBox.Name = "SelectedPacketCaptureNameTextBox";
             this.SelectedPacketCaptureNameTextBox.ReadOnly = true;
-            this.SelectedPacketCaptureNameTextBox.Size = new System.Drawing.Size(242, 20);
+            this.SelectedPacketCaptureNameTextBox.Size = new System.Drawing.Size(241, 20);
             this.SelectedPacketCaptureNameTextBox.TabIndex = 5;
             this.SelectedPacketCaptureNameTextBox.TabStop = false;
             this.SelectedPacketCaptureNameTextBox.Text = "<No Packet Capture Selected>";
@@ -125,7 +125,7 @@
             // SelectedPacketCaptureTypeLabel
             // 
             this.SelectedPacketCaptureTypeLabel.AutoSize = true;
-            this.SelectedPacketCaptureTypeLabel.Location = new System.Drawing.Point(12, 145);
+            this.SelectedPacketCaptureTypeLabel.Location = new System.Drawing.Point(12, 116);
             this.SelectedPacketCaptureTypeLabel.Name = "SelectedPacketCaptureTypeLabel";
             this.SelectedPacketCaptureTypeLabel.Size = new System.Drawing.Size(170, 13);
             this.SelectedPacketCaptureTypeLabel.TabIndex = 8;
@@ -133,10 +133,10 @@
             // 
             // SelectedPacketCaptureTypeTextBox
             // 
-            this.SelectedPacketCaptureTypeTextBox.Location = new System.Drawing.Point(12, 161);
+            this.SelectedPacketCaptureTypeTextBox.Location = new System.Drawing.Point(12, 132);
             this.SelectedPacketCaptureTypeTextBox.Name = "SelectedPacketCaptureTypeTextBox";
             this.SelectedPacketCaptureTypeTextBox.ReadOnly = true;
-            this.SelectedPacketCaptureTypeTextBox.Size = new System.Drawing.Size(242, 20);
+            this.SelectedPacketCaptureTypeTextBox.Size = new System.Drawing.Size(241, 20);
             this.SelectedPacketCaptureTypeTextBox.TabIndex = 7;
             this.SelectedPacketCaptureTypeTextBox.TabStop = false;
             this.SelectedPacketCaptureTypeTextBox.Text = "<No Packet Capture Selected>";
@@ -144,7 +144,7 @@
             // ClearSelectedPacketCaptureButton
             // 
             this.ClearSelectedPacketCaptureButton.Enabled = false;
-            this.ClearSelectedPacketCaptureButton.Location = new System.Drawing.Point(12, 41);
+            this.ClearSelectedPacketCaptureButton.Location = new System.Drawing.Point(11, 158);
             this.ClearSelectedPacketCaptureButton.Name = "ClearSelectedPacketCaptureButton";
             this.ClearSelectedPacketCaptureButton.Size = new System.Drawing.Size(242, 23);
             this.ClearSelectedPacketCaptureButton.TabIndex = 9;
@@ -155,7 +155,7 @@
             // OpenSelectedPackageCaptureButton
             // 
             this.OpenSelectedPackageCaptureButton.Enabled = false;
-            this.OpenSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 187);
+            this.OpenSelectedPackageCaptureButton.Location = new System.Drawing.Point(11, 187);
             this.OpenSelectedPackageCaptureButton.Name = "OpenSelectedPackageCaptureButton";
             this.OpenSelectedPackageCaptureButton.Size = new System.Drawing.Size(242, 23);
             this.OpenSelectedPackageCaptureButton.TabIndex = 10;
@@ -169,9 +169,9 @@
             // 
             // SelectOutputFileButton
             // 
-            this.SelectOutputFileButton.Location = new System.Drawing.Point(12, 216);
+            this.SelectOutputFileButton.Location = new System.Drawing.Point(11, 216);
             this.SelectOutputFileButton.Name = "SelectOutputFileButton";
-            this.SelectOutputFileButton.Size = new System.Drawing.Size(243, 23);
+            this.SelectOutputFileButton.Size = new System.Drawing.Size(242, 23);
             this.SelectOutputFileButton.TabIndex = 11;
             this.SelectOutputFileButton.Text = "Select Output File";
             this.SelectOutputFileButton.UseVisualStyleBackColor = true;
@@ -182,16 +182,16 @@
             this.SelectedOutputFileNameLabel.AutoSize = true;
             this.SelectedOutputFileNameLabel.Location = new System.Drawing.Point(11, 281);
             this.SelectedOutputFileNameLabel.Name = "SelectedOutputFileNameLabel";
-            this.SelectedOutputFileNameLabel.Size = new System.Drawing.Size(106, 13);
+            this.SelectedOutputFileNameLabel.Size = new System.Drawing.Size(151, 13);
             this.SelectedOutputFileNameLabel.TabIndex = 15;
-            this.SelectedOutputFileNameLabel.Text = "Name Of Output File:";
+            this.SelectedOutputFileNameLabel.Text = "Name Of Selected Output File:";
             // 
             // SelectedOutputFileNameTextBox
             // 
             this.SelectedOutputFileNameTextBox.Location = new System.Drawing.Point(13, 297);
             this.SelectedOutputFileNameTextBox.Name = "SelectedOutputFileNameTextBox";
             this.SelectedOutputFileNameTextBox.ReadOnly = true;
-            this.SelectedOutputFileNameTextBox.Size = new System.Drawing.Size(242, 20);
+            this.SelectedOutputFileNameTextBox.Size = new System.Drawing.Size(240, 20);
             this.SelectedOutputFileNameTextBox.TabIndex = 14;
             this.SelectedOutputFileNameTextBox.TabStop = false;
             this.SelectedOutputFileNameTextBox.Text = "<No Output File Selected>";
@@ -210,7 +210,7 @@
             this.SelectedOutputFilePathTextBox.Location = new System.Drawing.Point(12, 258);
             this.SelectedOutputFilePathTextBox.Name = "SelectedOutputFilePathTextBox";
             this.SelectedOutputFilePathTextBox.ReadOnly = true;
-            this.SelectedOutputFilePathTextBox.Size = new System.Drawing.Size(242, 20);
+            this.SelectedOutputFilePathTextBox.Size = new System.Drawing.Size(241, 20);
             this.SelectedOutputFilePathTextBox.TabIndex = 12;
             this.SelectedOutputFilePathTextBox.TabStop = false;
             this.SelectedOutputFilePathTextBox.Text = "<No Output File Selected>";
