@@ -179,6 +179,12 @@ namespace PacketCaptureAnalyser
                     //Display a debug message to indicate analysis of the packet capture failed
                     System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
                 }
+
+                //Flush output to the output file and then close it
+                TheOutputWindowListener.Flush();
+                TheOutputWindowListener.Close();
+
+                System.Diagnostics.Debug.Listeners.Remove(TheOutputWindowListener);
             }
 
             //Dependent on the result of the processing above, display a message box to indicate success or otherwise
