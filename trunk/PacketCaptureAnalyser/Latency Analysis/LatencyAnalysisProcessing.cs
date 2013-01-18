@@ -218,8 +218,6 @@ namespace LatencyAnalysisNamespace
 
         public void Finalise()
         {
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
-
             //Obtain the set of host Ids encountered during the latency analysis in ascending order
 
             EnumerableRowCollection<System.Data.DataRow>
@@ -232,6 +230,8 @@ namespace LatencyAnalysisNamespace
 
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
+                System.Diagnostics.Debug.Write(System.Environment.NewLine);
+
                 System.Diagnostics.Debug.WriteLine("Host Id {0,3}", (byte)TheHostIdRow["HostId"]);
                 System.Diagnostics.Debug.WriteLine("===========");
                 System.Diagnostics.Debug.Write(System.Environment.NewLine);
