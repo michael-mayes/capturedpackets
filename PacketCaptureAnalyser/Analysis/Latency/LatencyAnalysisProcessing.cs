@@ -31,8 +31,8 @@ namespace AnalysisNamespace
     class LatencyAnalysisProcessing
     {
         private System.Data.DataTable TheLatencyValuesTable;
-        private System.Data.DataTable TheHostIdTable;
-        private System.Data.DataTable TheMessageIdTable;
+        private System.Data.DataTable TheHostIdsTable;
+        private System.Data.DataTable TheMessageIdsTable;
 
         public LatencyAnalysisProcessing()
         {
@@ -40,10 +40,10 @@ namespace AnalysisNamespace
             TheLatencyValuesTable = new System.Data.DataTable();
 
             //Create a datatable to hold the set of host Ids encountered during the latency analysis
-            TheHostIdTable = new System.Data.DataTable();
+            TheHostIdsTable = new System.Data.DataTable();
 
             //Create a datatable to hold the set of message Ids encountered during the latency analysis
-            TheMessageIdTable = new System.Data.DataTable();
+            TheMessageIdsTable = new System.Data.DataTable();
         }
 
         public void Create()
@@ -71,23 +71,23 @@ namespace AnalysisNamespace
             };
 
             //Add the required column to the datatable to hold the set of host Ids encountered during the latency analysis
-            TheHostIdTable.Columns.Add("HostId", typeof(byte));
+            TheHostIdsTable.Columns.Add("HostId", typeof(byte));
 
             //Set the primary key to be the only column
             //The primary key is needed to allow for use of the Find method against the datatable
-            TheHostIdTable.PrimaryKey = new System.Data.DataColumn[] { TheHostIdTable.Columns["HostId"] };
+            TheHostIdsTable.PrimaryKey = new System.Data.DataColumn[] { TheHostIdsTable.Columns["HostId"] };
 
-            //Add the required column to the datatable to hold the set of message Ids encountered during the latency analysis
-            TheMessageIdTable.Columns.Add("MessageId", typeof(ulong));
-            TheMessageIdTable.Columns.Add("HostId", typeof(byte));
+            //Add the required columns to the datatable to hold the set of message Ids encountered during the latency analysis
+            TheMessageIdsTable.Columns.Add("HostId", typeof(byte));
+            TheMessageIdsTable.Columns.Add("MessageId", typeof(ulong));
 
             //Set a multi-column primary key
             //The primary key is needed to allow for use of the Find method against the datatable
-            TheMessageIdTable.PrimaryKey =
+            TheMessageIdsTable.PrimaryKey =
                 new System.Data.DataColumn[]
                 {
-                    TheMessageIdTable.Columns["MessageId"],
-                    TheMessageIdTable.Columns["HostId"]
+                    TheMessageIdsTable.Columns["HostId"],
+                    TheMessageIdsTable.Columns["MessageId"]
                 };
         }
 
@@ -95,6 +95,12 @@ namespace AnalysisNamespace
         {
             //Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
             if (TheSequenceNumber == 0)
+            {
+                return;
+            }
+
+            //Do not process messages where the message Id is not populated as we would not be able match message pairs using them
+            if (TheHostId == 0)
             {
                 return;
             }
@@ -108,44 +114,10 @@ namespace AnalysisNamespace
             byte TheProtocolAsByte = (byte)TheProtocol;
 
             //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
-
-            object[] TheHostIdRowFindObject = new object[1];
-
-            TheHostIdRowFindObject[0] = TheHostId.ToString(); //Primary key
-
-            System.Data.DataRow TheHostIdDataRowFound = TheHostIdTable.Rows.Find(TheHostIdRowFindObject);
-
-            if (TheHostIdDataRowFound == null)
-            {
-                System.Diagnostics.Debug.WriteLine("Found a message with a Host Id of value {0,3} - adding that Host Id to the latency analysis", TheHostId);
-
-                System.Data.DataRow TheHostIdRowToAdd = TheHostIdTable.NewRow();
-
-                TheHostIdRowToAdd["HostId"] = TheHostId;
-
-                TheHostIdTable.Rows.Add(TheHostIdRowToAdd);
-            }
+            RegisterEncounteredHostId(TheHostId);
 
             //Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
-
-            object[] TheMessageIdRowFindObject = new object[2];
-
-            TheMessageIdRowFindObject[0] = TheMessageId.ToString(); //Primary key (part one)
-            TheMessageIdRowFindObject[1] = TheHostId.ToString(); //Primary key (part two)
-
-            System.Data.DataRow TheMessageIdDataRowFound = TheMessageIdTable.Rows.Find(TheMessageIdRowFindObject);
-
-            if (TheMessageIdDataRowFound == null)
-            {
-                System.Diagnostics.Debug.WriteLine("Found a message with a Message Id of value {0,5} for Host Id {1,3} - adding that Message Id to the latency analysis", TheMessageId, TheHostId);
-
-                System.Data.DataRow TheMessageIdRowToAdd = TheMessageIdTable.NewRow();
-
-                TheMessageIdRowToAdd["MessageId"] = TheMessageId;
-                TheMessageIdRowToAdd["HostId"] = TheHostId;
-
-                TheMessageIdTable.Rows.Add(TheMessageIdRowToAdd);
-            }
+            RegisterEncounteredMessageId(TheHostId, TheMessageId);
 
             //Add the supplied sequence number and timestamp to latency values datatable
 
@@ -216,32 +188,75 @@ namespace AnalysisNamespace
             }
         }
 
+        //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
+        private void RegisterEncounteredHostId(byte TheHostId)
+        {
+            object[] TheHostIdRowFindObject = new object[1];
+
+            TheHostIdRowFindObject[0] = TheHostId.ToString(); //Primary key
+
+            System.Data.DataRow TheHostIdDataRowFound = TheHostIdsTable.Rows.Find(TheHostIdRowFindObject);
+
+            if (TheHostIdDataRowFound == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Found a message with a Host Id of value {0,3} - adding that Host Id to the latency analysis", TheHostId);
+
+                System.Data.DataRow TheHostIdRowToAdd = TheHostIdsTable.NewRow();
+
+                TheHostIdRowToAdd["HostId"] = TheHostId;
+
+                TheHostIdsTable.Rows.Add(TheHostIdRowToAdd);
+            }
+        }
+
+        //Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
+        private void RegisterEncounteredMessageId(byte TheHostId, ulong TheMessageId)
+        {
+            object[] TheMessageIdRowFindObject = new object[2];
+
+            TheMessageIdRowFindObject[0] = TheHostId.ToString(); //Primary key (part one)
+            TheMessageIdRowFindObject[1] = TheMessageId.ToString(); //Primary key (part two)
+
+            System.Data.DataRow TheMessageIdDataRowFound = TheMessageIdsTable.Rows.Find(TheMessageIdRowFindObject);
+
+            if (TheMessageIdDataRowFound == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Found a message with a Message Id of value {0,5} for Host Id {1,3} - adding that Message Id to the latency analysis", TheMessageId, TheHostId);
+
+                System.Data.DataRow TheMessageIdRowToAdd = TheMessageIdsTable.NewRow();
+
+                TheMessageIdRowToAdd["HostId"] = TheHostId;
+                TheMessageIdRowToAdd["MessageId"] = TheMessageId;
+
+                TheMessageIdsTable.Rows.Add(TheMessageIdRowToAdd);
+            }
+        }
+
         public void Finalise()
         {
             //Obtain the set of host Ids encountered during the latency analysis in ascending order
 
             EnumerableRowCollection<System.Data.DataRow>
                 TheHostIdRowsFound =
-                from r in TheHostIdTable.AsEnumerable()
+                from r in TheHostIdsTable.AsEnumerable()
                 orderby r.Field<byte>("HostId") ascending
                 select r;
 
             //Loop across all the latency values for the message pairings using each of these host Ids in turn
 
+            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
-                System.Diagnostics.Debug.Write(System.Environment.NewLine);
-
                 System.Diagnostics.Debug.WriteLine("Host Id {0,3}", (byte)TheHostIdRow["HostId"]);
                 System.Diagnostics.Debug.WriteLine("===========");
                 System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
-                //Finalise the latency analysis for the pairings of messages of each supported protocol for this host Id
-                FinaliseProtocols((byte)TheHostIdRow["HostId"]);
+                FinaliseProtocolsForHostId((byte)TheHostIdRow["HostId"]);
             }
         }
 
-        private void FinaliseProtocols(byte TheHostId)
+        private void FinaliseProtocolsForHostId(byte TheHostId)
         {
             foreach (byte TheProtocol in System.Enum.GetValues(typeof(LatencyAnalysisConstants.LatencyAnalysisProtocol)))
             {
@@ -251,11 +266,11 @@ namespace AnalysisNamespace
                 System.Diagnostics.Debug.WriteLine("------------");
                 System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
-                //Obtain the set of message Ids encountered during the latency analysis in ascending order
+                //Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
 
                 EnumerableRowCollection<System.Data.DataRow>
                     TheMessageIdRowsFound =
-                    from r in TheMessageIdTable.AsEnumerable()
+                    from r in TheMessageIdsTable.AsEnumerable()
                     where r.Field<byte>("HostId") == TheHostId
                     orderby r.Field<ulong>("MessageId") ascending
                     select r;
@@ -278,13 +293,13 @@ namespace AnalysisNamespace
                     {
                         System.Diagnostics.Debug.WriteLine("The number of pairs of " + TheProtocolString + " messages with a Message Id of {0,5} was {1}", (ulong)TheMessageIdRow["MessageId"], TheLatencyDataRowsFoundCount);
 
-                        FinaliseRows(TheProtocolString, (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFound);
+                        FinaliseRowsForMessageId(TheProtocolString, (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFound);
                     }
                 }
             }
         }
 
-        private void FinaliseRows(string TheProtocolString, ulong TheMessageId, EnumerableRowCollection<System.Data.DataRow> TheLatencyValueRows)
+        private void FinaliseRowsForMessageId(string TheProtocolString, ulong TheMessageId, EnumerableRowCollection<System.Data.DataRow> TheLatencyValueRows)
         {
             CommonAnalysisHistogram TheHistogram = new CommonAnalysisHistogram
                 (LatencyAnalysisConstants.LatencyAnalysisNumberOfBins,
@@ -297,22 +312,22 @@ namespace AnalysisNamespace
             double TheMinTimestampDifference = double.MaxValue;
             double TheMaxTimestampDifference = double.MinValue;
 
-            foreach (System.Data.DataRow TheDataRow in TheLatencyValueRows)
+            foreach (System.Data.DataRow TheLatencyValueRow in TheLatencyValueRows)
             {
-                double TheTimestampDifference = (double)TheDataRow["TimestampDifference"];
+                double TheTimestampDifference = (double)TheLatencyValueRow["TimestampDifference"];
 
                 TheHistogram.AddValue(TheTimestampDifference);
 
                 if (TheMinTimestampDifference > TheTimestampDifference)
                 {
                     TheMinTimestampDifference = TheTimestampDifference;
-                    TheMinTimestampSequenceNumber = (ulong)TheDataRow["SequenceNumber"];
+                    TheMinTimestampSequenceNumber = (ulong)TheLatencyValueRow["SequenceNumber"];
                 }
 
                 if (TheMaxTimestampDifference < TheTimestampDifference)
                 {
                     TheMaxTimestampDifference = TheTimestampDifference;
-                    TheMaxTimestampSequenceNumber = (ulong)TheDataRow["SequenceNumber"];
+                    TheMaxTimestampSequenceNumber = (ulong)TheLatencyValueRow["SequenceNumber"];
                 }
             }
 
