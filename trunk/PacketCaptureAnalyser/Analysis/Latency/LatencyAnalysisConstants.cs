@@ -42,7 +42,7 @@ namespace AnalysisNamespace
 
         //Value bins
 
-        private const int LatencyAnalysisBinsPerMs = 10; //Ten value bins for every millisecond of latency
+        public const int LatencyAnalysisBinsPerMs = 10; //Ten value bins for every millisecond of latency
         public const int LatencyAnalysisNumberOfBins = (LatencyAnalysisWorstCaseLatency * LatencyAnalysisBinsPerMs);
     }
 }

@@ -29,11 +29,13 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
-        public IPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
+        public IPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
         public bool Process(long ThePayloadLength, double TheTimestamp)
@@ -140,7 +142,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                 case (byte)IPv4PacketConstants.IPv4PacketProtocol.TCP:
                     {
-                        TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
+                        TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an TCP packet so process it
                         TheResult = TheTCPPacketProcessing.Process(TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
@@ -149,7 +151,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                 case (byte)IPv4PacketConstants.IPv4PacketProtocol.UDP:
                     {
-                        UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
+                        UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an UDP datagram so process it
                         TheResult = TheUDPDatagramProcessing.Process(TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
