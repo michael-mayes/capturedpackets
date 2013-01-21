@@ -79,6 +79,8 @@
     <Compile Include="Analysis\CommonAnalysisHistogram.cs" />
     <Compile Include="Analysis\Latency\LatencyAnalysisConstants.cs" />
     <Compile Include="Analysis\Latency\LatencyAnalysisProcessing.cs" />
+    <Compile Include="Analysis\Time\TimeAnalysisConstants.cs" />
+    <Compile Include="Analysis\Time\TimeAnalysisProcessing.cs" />
     <Compile Include="Packet Capture\CommonPacketCaptureProcessing.cs" />
     <Compile Include="Packet Capture\PCAP Packet Capture\PCAPPacketCaptureConstants.cs" />
     <Compile Include="Packet Capture\Sniffer Packet Capture\SnifferPacketCaptureProcessing.cs" />

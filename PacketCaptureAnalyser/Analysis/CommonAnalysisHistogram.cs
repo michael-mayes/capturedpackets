@@ -37,6 +37,7 @@ namespace AnalysisNamespace
         private int TheNumberOfValuesLowerThanBins = 0;
         private int TheNumberOfValuesHigherThanBins = 0;
 
+        private double TheMinValueEncountered = double.MaxValue;
         private double TheMaxValueEncountered = double.MinValue;
 
         //
@@ -90,6 +91,11 @@ namespace AnalysisNamespace
             return TheValueBinCounts.Length;
         }
 
+        public double GetMinAllowedValue()
+        {
+            return TheValueBinBoundaries[0];
+        }
+
         public double GetMaxAllowedValue()
         {
             return TheValueBinBoundaries[TheValueBinBoundaries.Length - 1];
@@ -117,11 +123,11 @@ namespace AnalysisNamespace
 
             TheValueBinBoundaries[TheValueBinBoundaries.Length - 1] = TheMaxAllowedValue;
 
-            double binSize = (TheMaxAllowedValue - TheMinAllowedValue) / TheNumOfValueBins;
+            double TheSizeOfValueBins = (TheMaxAllowedValue - TheMinAllowedValue) / TheNumOfValueBins;
 
             for (int i = 1; i < TheValueBinBoundaries.Length - 1; ++i)
             {
-                TheValueBinBoundaries[i] = TheValueBinBoundaries[0] + i * binSize;
+                TheValueBinBoundaries[i] = TheValueBinBoundaries[0] + i * TheSizeOfValueBins;
             }
 
             //Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values
@@ -148,6 +154,13 @@ namespace AnalysisNamespace
 
         public void AddValue(double TheValue)
         {
+            //Check if the value is the lowest valid value encountered since the creation or reset of the histogram
+            if (TheMinValueEncountered > TheValue &&
+                TheValue >= GetMinAllowedValue())
+            {
+                TheMinValueEncountered = TheValue;
+            }
+
             //Check if the value is the highest valid value encountered since the creation or reset of the histogram
             if (TheMaxValueEncountered < TheValue &&
                 TheValue <= GetMaxAllowedValue())
@@ -155,29 +168,26 @@ namespace AnalysisNamespace
                 TheMaxValueEncountered = TheValue;
             }
 
-            if (TheValue < TheValueBinBoundaries[0])
+            if (TheValue < GetMinAllowedValue())
             {
                 ++TheNumberOfValuesLowerThanBins;
             }
-            else if (TheValue > TheValueBinBoundaries[TheValueBinBoundaries.Length - 1])
+            else if (TheValue > GetMaxAllowedValue())
             {
                 ++TheNumberOfValuesHigherThanBins;
             }
             else
             {
-                int TheBin = 1;
-
-                while (TheBin < TheValueBinBoundaries.Length && TheValue >= TheValueBinBoundaries[TheBin])
+                //Loop while the supplied value is smaller than the next bin boundary
+                //Once the supplied value is no longer smaller than the next bin boundary then we've found our bin
+                //This ordering is more efficient when most supplied values are towards the lower end of the range
+                for (int i = 0; i < TheValueBinBoundaries.Length; ++i)
                 {
-                    ++TheBin;
-                }
-                if (TheBin == TheValueBinBoundaries.Length)
-                {
-                    ++TheValueBinCounts[TheValueBinCounts.Length - 1];
-                }
-                else
-                {
-                    ++TheValueBinCounts[TheBin - 1];
+                    if (TheValue < TheValueBinBoundaries[i + 1])
+                    {
+                        ++TheValueBinCounts[i];
+                        break;
+                    }
                 }
             }
         }
@@ -187,6 +197,7 @@ namespace AnalysisNamespace
             TheNumberOfValuesLowerThanBins = 0;
             TheNumberOfValuesHigherThanBins = 0;
 
+            TheMinValueEncountered = double.MaxValue;
             TheMaxValueEncountered = double.MinValue;
 
             for (int i = 0; i < TheValueBinCounts.Length; ++i)
@@ -208,22 +219,50 @@ namespace AnalysisNamespace
 
             for (i = 0; i < TheValueBinCounts.Length; ++i)
             {
-                System.Diagnostics.Debug.Write(TheValueBinBoundaries[i].ToString("00.00"));
-                System.Diagnostics.Debug.Write(" - ");
-                System.Diagnostics.Debug.Write(TheValueBinBoundaries[i + 1].ToString("00.00"));
+                //Do not start processing bins for the histogram until we've reached the minimum value encountered
+                if (TheValueBinBoundaries[i + 1] < TheMinValueEncountered)
+                {
+                    continue;
+                }
+
+                //Correct the formatting for negative values
+
+                if (TheValueBinBoundaries[i] >= 0.0)
+                {
+                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i].ToString(" 00.00000"));
+
+                }
+                else
+                {
+                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i].ToString("00.00000"));
+                }
+
+                System.Diagnostics.Debug.Write(" to ");
+
+                if (TheValueBinBoundaries[i + 1] >= 0.0)
+                {
+                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i + 1].ToString(" 00.00000"));
+                }
+                else
+                {
+                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i + 1].ToString("00.00000"));
+                }
+
                 System.Diagnostics.Debug.Write(" | ");
 
+                //Output a single ) character for each entry in this bin
                 for (j = 0; j <= TheValueBinCounts[i]; ++j)
                 {
                     if (j < TheValueBinCounts[i])
                     {
-                        //Truncate the output after 130 columns to ensure it fits on screen
-                        if (j < 130)
+                        //Truncate the output after 120 columns to ensure it fits on screen
+                        if (j < 120)
                         {
                             System.Diagnostics.Debug.Write(')');
                         }
                         else
                         {
+                            //Leave a space after the last ) character for this bin for clarity
                             System.Diagnostics.Debug.Write(" ");
                             System.Diagnostics.Debug.Write(TheValueBinCounts[i]);
                             break;
@@ -231,6 +270,7 @@ namespace AnalysisNamespace
                     }
                     else
                     {
+                        //Leave a space after the last ) character for this bin for clarity except if there are no entries
                         if (j != 0)
                         {
                             System.Diagnostics.Debug.Write(" ");
@@ -241,8 +281,10 @@ namespace AnalysisNamespace
                     }
                 }
 
+                //Complete the line for this bin
                 System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
+                //Do not continue processing further bins for the histogram if we've reached the maximum value encountered
                 if (TheValueBinBoundaries[i + 1] > TheMaxValueEncountered)
                 {
                     break;

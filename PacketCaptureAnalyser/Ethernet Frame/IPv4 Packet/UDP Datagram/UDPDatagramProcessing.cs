@@ -29,11 +29,13 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
-        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
+        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
         public bool Process(double TheTimestamp, long ThePayloadLength, int TheUDPDatagramLength)

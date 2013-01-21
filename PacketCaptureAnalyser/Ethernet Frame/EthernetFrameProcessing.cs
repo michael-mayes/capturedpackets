@@ -29,15 +29,17 @@ namespace EthernetFrameNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
         private long ThePayloadLength;
 
         private System.UInt16 TheEtherType;
 
-        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
+        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
         public bool Process(long ThePayloadLength, double TheTimestamp)
@@ -153,7 +155,7 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
                     {
-                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing);
+                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
                         TheResult = TheIPv4PacketProcessing.Process(ThePayloadLength, TheTimestamp);
