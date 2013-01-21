@@ -28,13 +28,13 @@ namespace EthernetFrameNamespace
     class EthernetFrameProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
-        private LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
 
         private long ThePayloadLength;
 
         private System.UInt16 TheEtherType;
 
-        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
+        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;

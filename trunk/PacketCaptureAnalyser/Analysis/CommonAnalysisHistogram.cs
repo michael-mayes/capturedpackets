@@ -23,9 +23,9 @@
 
 //For more information, please refer to <http://unlicense.org/>
 
-namespace LatencyAnalysisNamespace
+namespace AnalysisNamespace
 {
-    public class LatencyAnalysisHistogram
+    public class CommonAnalysisHistogram
     {
         //
         //Private entities
@@ -43,7 +43,7 @@ namespace LatencyAnalysisNamespace
         //Public constructor method
         //
 
-        public LatencyAnalysisHistogram(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
+        public CommonAnalysisHistogram(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
         {
             if (TheMinAllowedValue == TheMaxAllowedValue)
             {

@@ -28,9 +28,9 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
     class TCPPacketProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
-        private LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
 
-        public TCPPacketProcessing(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
+        public TCPPacketProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;

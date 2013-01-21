@@ -28,9 +28,9 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
     class UDPDatagramProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
-        private LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
 
-        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader, LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
+        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;

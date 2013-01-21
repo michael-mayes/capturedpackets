@@ -23,38 +23,26 @@
 
 //For more information, please refer to <http://unlicense.org/>
 
-namespace PacketCaptureProcessingNamespace
+namespace AnalysisNamespace
 {
-    class PCAPPackageCaptureConstants
+    class LatencyAnalysisConstants
     {
-        //
-        //PCAP packet capture global header - 24 bytes
-        //
+        //Protocol
 
-        //Length
+        public enum LatencyAnalysisProtocol : byte
+        {
+            TCP, //TCP - Transmission Control Protocol (RFC 793)
+            UDP //UDP - User Datagram Protocol (RFC 768)
+        }
 
-        public const ushort PCAPPackageCaptureGlobalHeaderLength = 24;
+        //Latencies
 
-        //Magic number
+        public const int LatencyAnalysisBestCaseLatency = 0; //Milliseconds
+        public const int LatencyAnalysisWorstCaseLatency = 50; //Milliseconds
 
-        public const System.UInt32 PCAPPackageCaptureLittleEndianMagicNumber = 0xa1b2c3d4;
-        public const System.UInt32 PCAPPackageCaptureBigEndianMagicNumber = 0xd4c3b2a1;
+        //Value bins
 
-        //Version numbers
-
-        public const System.UInt16 PCAPPackageCaptureExpectedVersionMajor = 2;
-        public const System.UInt16 PCAPPackageCaptureExpectedVersionMinor = 4;
-
-        //Network data link type
-
-        public const System.UInt32 PCAPPackageCaptureExpectedNetworkDataLinkType = 1; //Ethernet
-
-        //
-        //PCAP packet capture packet header - 16 bytes
-        //
-
-        //Length
-
-        public const ushort PCAPPackageCapturePacketHeaderLength = 16;
+        private const int LatencyAnalysisBinsPerMs = 10; //Ten value bins for every millisecond of latency
+        public const int LatencyAnalysisNumberOfBins = (LatencyAnalysisWorstCaseLatency * LatencyAnalysisBinsPerMs);
     }
 }
