@@ -23,7 +23,7 @@
 
 //For more information, please refer to <http://unlicense.org/>
 
-namespace LatencyAnalysisNamespace
+namespace AnalysisNamespace
 {
     using System.Data; //Required to be able to use AsEnumerable method
     using System.Linq; //Required to be able to use Count method
@@ -236,78 +236,57 @@ namespace LatencyAnalysisNamespace
                 System.Diagnostics.Debug.WriteLine("===========");
                 System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
-                //Finalise the latency analysis for the pairings of TCP messages for this host Id
-                FinaliseProtocol((byte)TheHostIdRow["HostId"], LatencyAnalysisConstants.LatencyAnalysisProtocol.TCP);
-
-                //Finalise the latency analysis for the pairings of UDP messages for this host Id
-                FinaliseProtocol((byte)TheHostIdRow["HostId"], LatencyAnalysisConstants.LatencyAnalysisProtocol.UDP);
+                //Finalise the latency analysis for the pairings of messages of each supported protocol for this host Id
+                FinaliseProtocols((byte)TheHostIdRow["HostId"]);
             }
         }
 
-        private void FinaliseProtocol(byte TheHostId, LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol)
+        private void FinaliseProtocols(byte TheHostId)
         {
-            string TheProtocolString;
-
-            switch (TheProtocol)
+            foreach (byte TheProtocol in System.Enum.GetValues(typeof(LatencyAnalysisConstants.LatencyAnalysisProtocol)))
             {
-                case LatencyAnalysisConstants.LatencyAnalysisProtocol.TCP:
-                    {
-                        TheProtocolString = "TCP";
-                        break;
-                    }
+                string TheProtocolString = ((LatencyAnalysisConstants.LatencyAnalysisProtocol)TheProtocol).ToString();
 
-                case LatencyAnalysisConstants.LatencyAnalysisProtocol.UDP:
-                    {
-                        TheProtocolString = "UDP";
-                        break;
-                    }
+                System.Diagnostics.Debug.WriteLine(TheProtocolString + " messages");
+                System.Diagnostics.Debug.WriteLine("------------");
+                System.Diagnostics.Debug.Write(System.Environment.NewLine);
 
-                default:
-                    {
-                        TheProtocolString = "<Unknown Protocol>";
-                        break;
-                    }
-            }
+                //Obtain the set of message Ids encountered during the latency analysis in ascending order
 
-            System.Diagnostics.Debug.WriteLine(TheProtocolString + " messages");
-            System.Diagnostics.Debug.WriteLine("------------");
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
-
-            //Obtain the set of message Ids encountered during the latency analysis in ascending order
-
-            EnumerableRowCollection<System.Data.DataRow>
-                TheMessageIdRowsFound =
-                from r in TheMessageIdTable.AsEnumerable()
-                where r.Field<byte>("HostId") == TheHostId
-                orderby r.Field<ulong>("MessageId") ascending
-                select r;
-
-            //Loop across all the latency values for the message pairings using each of these message Ids in turn
-
-            foreach (System.Data.DataRow TheMessageIdRow in TheMessageIdRowsFound)
-            {
                 EnumerableRowCollection<System.Data.DataRow>
-                    TheLatencyValuesRowsFound =
-                    from r in TheLatencyValuesTable.AsEnumerable()
-                    where r.Field<byte>("Protocol") == (byte)TheProtocol &&
-                    r.Field<ulong>("MessageId") == (ulong)TheMessageIdRow["MessageId"] &&
-                    r.Field<bool>("TimestampDifferenceCalculated")
+                    TheMessageIdRowsFound =
+                    from r in TheMessageIdTable.AsEnumerable()
+                    where r.Field<byte>("HostId") == TheHostId
+                    orderby r.Field<ulong>("MessageId") ascending
                     select r;
 
-                int TheLatencyDataRowsFoundCount = TheLatencyValuesRowsFound.Count();
+                //Loop across all the latency values for the message pairings using each of these message Ids in turn
 
-                if (TheLatencyDataRowsFoundCount > 0)
+                foreach (System.Data.DataRow TheMessageIdRow in TheMessageIdRowsFound)
                 {
-                    System.Diagnostics.Debug.WriteLine("The number of pairs of " + TheProtocolString + " messages with a Message Id of {0,5} was {1}", (ulong)TheMessageIdRow["MessageId"], TheLatencyDataRowsFoundCount);
+                    EnumerableRowCollection<System.Data.DataRow>
+                        TheLatencyValuesRowsFound =
+                        from r in TheLatencyValuesTable.AsEnumerable()
+                        where r.Field<byte>("Protocol") == (byte)TheProtocol &&
+                        r.Field<ulong>("MessageId") == (ulong)TheMessageIdRow["MessageId"] &&
+                        r.Field<bool>("TimestampDifferenceCalculated")
+                        select r;
 
-                    FinaliseRows(TheProtocolString, (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFound);
+                    int TheLatencyDataRowsFoundCount = TheLatencyValuesRowsFound.Count();
+
+                    if (TheLatencyDataRowsFoundCount > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("The number of pairs of " + TheProtocolString + " messages with a Message Id of {0,5} was {1}", (ulong)TheMessageIdRow["MessageId"], TheLatencyDataRowsFoundCount);
+
+                        FinaliseRows(TheProtocolString, (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFound);
+                    }
                 }
             }
         }
 
         private void FinaliseRows(string TheProtocolString, ulong TheMessageId, EnumerableRowCollection<System.Data.DataRow> TheLatencyValueRows)
         {
-            LatencyAnalysisHistogram TheHistogram = new LatencyAnalysisHistogram
+            CommonAnalysisHistogram TheHistogram = new CommonAnalysisHistogram
                 (LatencyAnalysisConstants.LatencyAnalysisNumberOfBins,
                 LatencyAnalysisConstants.LatencyAnalysisBestCaseLatency,
                 LatencyAnalysisConstants.LatencyAnalysisWorstCaseLatency);

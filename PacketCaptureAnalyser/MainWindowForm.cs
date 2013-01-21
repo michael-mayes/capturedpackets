@@ -113,8 +113,8 @@ namespace PacketCaptureAnalyser
 
                 System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
 
-                LatencyAnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
-                    new LatencyAnalysisNamespace.LatencyAnalysisProcessing();
+                AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
+                    new AnalysisNamespace.LatencyAnalysisProcessing();
 
                 //Initialise the functionality to perform latency analysis on the messages found
                 TheLatencyAnalysisProcessing.Create();
