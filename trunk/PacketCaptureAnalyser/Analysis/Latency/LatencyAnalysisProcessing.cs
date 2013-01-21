@@ -293,13 +293,13 @@ namespace AnalysisNamespace
                     {
                         System.Diagnostics.Debug.WriteLine("The number of pairs of " + TheProtocolString + " messages with a Message Id of {0,5} was {1}", (ulong)TheMessageIdRow["MessageId"], TheLatencyDataRowsFoundCount);
 
-                        FinaliseRowsForMessageId(TheProtocolString, (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFound);
+                        FinaliseLatencyValuesForMessageId(TheProtocolString, (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFound);
                     }
                 }
             }
         }
 
-        private void FinaliseRowsForMessageId(string TheProtocolString, ulong TheMessageId, EnumerableRowCollection<System.Data.DataRow> TheLatencyValueRows)
+        private void FinaliseLatencyValuesForMessageId(string TheProtocolString, ulong TheMessageId, EnumerableRowCollection<System.Data.DataRow> TheLatencyValueRows)
         {
             CommonAnalysisHistogram TheHistogram = new CommonAnalysisHistogram
                 (LatencyAnalysisConstants.LatencyAnalysisNumberOfBins,
