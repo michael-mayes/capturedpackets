@@ -171,7 +171,10 @@ namespace EthernetFrameNamespace
                         //Processing of Ethernet frames containing an IPv6 packet is not currently supported!
 
                         //Just record the event and fall through to the processing below that will read off the payload so we can move on
-                        System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an IPv6 packet which is not currently supported!!!");
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The Ethernet frame contains an IPv6 packet which is not currently supported!!!"
+                            );
 
                         break;
                     }
@@ -203,7 +206,10 @@ namespace EthernetFrameNamespace
                         //Processing of Ethernet frames with two VLAN tags is not currently supported!
 
                         //Just record the event and fall through to the processing below that will read off the payload so we can move on
-                        System.Diagnostics.Debug.WriteLine("The Ethernet frame contains a second VLAN tag!!!");
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The Ethernet frame contains a second VLAN tag!!!"
+                            );
 
                         break;
                     }
@@ -228,7 +234,11 @@ namespace EthernetFrameNamespace
                             //Processing of Ethernet frames with network data link types not enumerated above are obviously not currently supported!
 
                             //Just record the event and fall through to the processing below that will read off the payload so we can move on
-                            System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an unexpected network data link type of {0:X}", TheEtherType);
+                            System.Diagnostics.Trace.WriteLine
+                                (
+                                "The Ethernet frame contains an unexpected network data link type of " +
+                                string.Format("{0:X}", TheEtherType)
+                                );
                         }
 
                         break;
@@ -254,7 +264,14 @@ namespace EthernetFrameNamespace
                 {
                     //This is a strange error condition so indicate a failure
 
-                    System.Diagnostics.Debug.WriteLine("The length {0} of payload of Ethernet frame does not match the progression {1} through the stream ", ThePayloadLength, TheStreamPositionDifference);
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "The length " +
+                        ThePayloadLength.ToString() +
+                        " of payload of Ethernet frame does not match the progression " +
+                        TheStreamPositionDifference.ToString() +
+                        " through the stream!!!"
+                        );
 
                     TheResult = false;
                 }

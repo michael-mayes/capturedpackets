@@ -48,9 +48,15 @@ namespace AnalysisNamespace
         {
             if (TheMinAllowedValue == TheMaxAllowedValue)
             {
-                System.Diagnostics.Debug.WriteLine("The minimum and maximum allowed values for the histogram are equal!!!");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The minimum and maximum allowed values for the histogram are equal!!!"
+                    );
 
-                throw new System.ArgumentException("The minimum and maximum allowed values for the histogram are equal!!!");
+                throw new System.ArgumentException
+                    (
+                    "The minimum and maximum allowed values for the histogram are equal!!!"
+                    );
             }
 
             TheValueBinCounts = new int[TheNumOfValueBins];
@@ -61,7 +67,10 @@ namespace AnalysisNamespace
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("The minimum value is greater than the maximum value!");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The minimum value is greater than the maximum value!"
+                    );
 
                 CalculateValueBinBoundaries(TheNumOfValueBins, TheMaxAllowedValue, TheMinAllowedValue);
             }
@@ -141,11 +150,18 @@ namespace AnalysisNamespace
             {
                 if (TheBinBoundaries[i] >= TheBinBoundaries[i + 1])
                 {
-                    System.Diagnostics.Debug.WriteLine("Bin boundary {0} is >= Bin boundary {1}!!!",
-                      TheBinBoundaries[i], TheBinBoundaries[i + 1]);
+                    string TheExceptionMessage =
+                        string.Format
+                        (
+                        "Bin boundary {0} is >= Bin boundary {1}!!!",
+                        TheBinBoundaries[i],
+                        TheBinBoundaries[i + 1]
+                        );
 
-                    string TheExceptionMessage = string.Format("Bin boundary {0} is >= Bin boundary {1}!!!",
-                      TheBinBoundaries[i], TheBinBoundaries[i + 1]);
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        TheExceptionMessage
+                        );
 
                     throw new System.ArgumentException(TheExceptionMessage);
                 }
@@ -213,8 +229,13 @@ namespace AnalysisNamespace
 
             if (TheNumberOfValuesLowerThanBins > 0)
             {
-                System.Diagnostics.Debug.WriteLine("Number of values lower than bins: {0}", TheNumberOfValuesLowerThanBins);
-                System.Diagnostics.Debug.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Number of values lower than bins: " +
+                    TheNumberOfValuesLowerThanBins.ToString()
+                    );
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
             }
 
             for (i = 0; i < TheValueBinCounts.Length; ++i)
@@ -229,26 +250,26 @@ namespace AnalysisNamespace
 
                 if (TheValueBinBoundaries[i] >= 0.0)
                 {
-                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i].ToString(" 00.00000"));
+                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i].ToString(" 00.00000"));
 
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i].ToString("00.00000"));
+                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i].ToString("00.00000"));
                 }
 
-                System.Diagnostics.Debug.Write(" to ");
+                System.Diagnostics.Trace.Write(" to ");
 
                 if (TheValueBinBoundaries[i + 1] >= 0.0)
                 {
-                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i + 1].ToString(" 00.00000"));
+                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i + 1].ToString(" 00.00000"));
                 }
                 else
                 {
-                    System.Diagnostics.Debug.Write(TheValueBinBoundaries[i + 1].ToString("00.00000"));
+                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i + 1].ToString("00.00000"));
                 }
 
-                System.Diagnostics.Debug.Write(" | ");
+                System.Diagnostics.Trace.Write(" | ");
 
                 //Output a single ) character for each entry in this bin
                 for (j = 0; j <= TheValueBinCounts[i]; ++j)
@@ -258,13 +279,13 @@ namespace AnalysisNamespace
                         //Truncate the output after 120 columns to ensure it fits on screen
                         if (j < 120)
                         {
-                            System.Diagnostics.Debug.Write(')');
+                            System.Diagnostics.Trace.Write(')');
                         }
                         else
                         {
                             //Leave a space after the last ) character for this bin for clarity
-                            System.Diagnostics.Debug.Write(" ");
-                            System.Diagnostics.Debug.Write(TheValueBinCounts[i]);
+                            System.Diagnostics.Trace.Write(" ");
+                            System.Diagnostics.Trace.Write(TheValueBinCounts[i]);
                             break;
                         }
                     }
@@ -273,16 +294,16 @@ namespace AnalysisNamespace
                         //Leave a space after the last ) character for this bin for clarity except if there are no entries
                         if (j != 0)
                         {
-                            System.Diagnostics.Debug.Write(" ");
+                            System.Diagnostics.Trace.Write(" ");
                         }
 
-                        System.Diagnostics.Debug.Write(TheValueBinCounts[i]);
+                        System.Diagnostics.Trace.Write(TheValueBinCounts[i]);
                         break;
                     }
                 }
 
                 //Complete the line for this bin
-                System.Diagnostics.Debug.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
                 //Do not continue processing further bins for the histogram if we've reached the maximum value encountered
                 if (TheValueBinBoundaries[i + 1] > TheMaxValueEncountered)
@@ -293,8 +314,13 @@ namespace AnalysisNamespace
 
             if (TheNumberOfValuesHigherThanBins > 0)
             {
-                System.Diagnostics.Debug.Write(System.Environment.NewLine);
-                System.Diagnostics.Debug.WriteLine("Number of values higher than bins: {0}", TheNumberOfValuesHigherThanBins);
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Number of values higher than bins: " +
+                    TheNumberOfValuesHigherThanBins.ToString()
+                    );
             }
         }
     }

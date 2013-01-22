@@ -86,7 +86,12 @@ namespace PacketCaptureAnalyser
                 //Update the window to reflect the selected packet capture
                 ReflectSelectedPacketCapture();
 
-                System.Diagnostics.Debug.WriteLine("Selection of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Selection of the " +
+                    SelectedPacketCaptureForAnalysisDialog.FileName +
+                    " packet capture"
+                    );
             }
         }
 
@@ -103,15 +108,21 @@ namespace PacketCaptureAnalyser
                 System.IO.File.Delete(SelectedOutputFileForAnalysisDialog.FileName);
             }
 
+            System.Diagnostics.Debug.Listeners.Clear();
+
             //Redirect any text added to the output window to the output file
             using (System.Diagnostics.TextWriterTraceListener TheOutputWindowListener =
                 new System.Diagnostics.TextWriterTraceListener(SelectedOutputFileForAnalysisDialog.FileName))
             {
-                System.Diagnostics.Debug.Listeners.Add(TheOutputWindowListener);
+                System.Diagnostics.Trace.Listeners.Add(TheOutputWindowListener);
 
                 //Start the analysis of the packet capture
-
-                System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Analysis of the " +
+                    SelectedPacketCaptureForAnalysisDialog.FileName +
+                    " packet capture started"
+                    );
 
                 AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing =
                     new AnalysisNamespace.LatencyAnalysisProcessing();
@@ -148,7 +159,12 @@ namespace PacketCaptureAnalyser
                     case MainWindowFormPacketCaptureTypeEnumeration.UnknownPacketCapture:
                     default:
                         {
-                            System.Diagnostics.Debug.WriteLine("The" + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture is of an unknown type!!!");
+                            System.Diagnostics.Trace.WriteLine
+                                (
+                                "The" +
+                                SelectedPacketCaptureForAnalysisDialog.FileName +
+                                " packet capture is of an unknown type!!!"
+                                );
 
                             TheResult = false;
 
@@ -160,9 +176,14 @@ namespace PacketCaptureAnalyser
                 if (TheResult)
                 {
                     //Display a debug message to indicate analysis of the packet capture completed successfully
-                    System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed successfully!");
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Analysis of the " +
+                        SelectedPacketCaptureForAnalysisDialog.FileName +
+                        " packet capture completed successfully!"
+                        );
 
-                    System.Diagnostics.Debug.Write(System.Environment.NewLine);
+                    System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
                     //Finalise the latency analysis on the messages found including printing the results to debug output
                     //Only perform this action if the analysis of the packet capture completed successfully
@@ -170,7 +191,12 @@ namespace PacketCaptureAnalyser
                     //Read the start time to allow later calculation of the duration of the latency analysis finalisation
                     System.DateTime TheLatencyAnalysisStartTime = System.DateTime.Now;
 
-                    System.Diagnostics.Debug.WriteLine("Latency analysis for the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Latency analysis for the " +
+                        SelectedPacketCaptureForAnalysisDialog.FileName +
+                        " packet capture started"
+                        );
 
                     TheLatencyAnalysisProcessing.Finalise();
 
@@ -180,9 +206,16 @@ namespace PacketCaptureAnalyser
 
                     System.TimeSpan TheLatencyAnalysisDuration = TheLatencyAnalysisEndTime - TheLatencyAnalysisStartTime;
 
-                    System.Diagnostics.Debug.WriteLine("Latency analysis for the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed in {0} seconds", TheLatencyAnalysisDuration.TotalSeconds);
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Latency analysis for the " +
+                        SelectedPacketCaptureForAnalysisDialog.FileName +
+                        " packet capture completed in " +
+                        TheLatencyAnalysisDuration.TotalSeconds.ToString() +
+                        " seconds"
+                        );
 
-                    System.Diagnostics.Debug.Write(System.Environment.NewLine);
+                    System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
                     //Finalise the time analysis on the messages found including printing the results to debug output
                     //Only perform this action if the analysis of the packet capture completed successfully
@@ -190,7 +223,12 @@ namespace PacketCaptureAnalyser
                     //Read the start time to allow later calculation of the duration of the time analysis finalisation
                     System.DateTime TheTimeAnalysisStartTime = System.DateTime.Now;
 
-                    System.Diagnostics.Debug.WriteLine("Time analysis for the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture started");
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Time analysis for the " +
+                        SelectedPacketCaptureForAnalysisDialog.FileName +
+                        " packet capture started"
+                        );
 
                     TheTimeAnalysisProcessing.Finalise();
 
@@ -200,12 +238,24 @@ namespace PacketCaptureAnalyser
 
                     System.TimeSpan TheTimeAnalysisDuration = TheTimeAnalysisEndTime - TheTimeAnalysisStartTime;
 
-                    System.Diagnostics.Debug.WriteLine("Time analysis for the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture completed in {0} seconds", TheTimeAnalysisDuration.TotalSeconds);
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Time analysis for the " +
+                        SelectedPacketCaptureForAnalysisDialog.FileName +
+                        " packet capture completed in " +
+                        TheTimeAnalysisDuration.TotalSeconds.ToString() +
+                        " seconds"
+                        );
                 }
                 else
                 {
                     //Display a debug message to indicate analysis of the packet capture failed
-                    System.Diagnostics.Debug.WriteLine("Analysis of the " + SelectedPacketCaptureForAnalysisDialog.FileName + " packet capture failed!!!");
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Analysis of the " +
+                        SelectedPacketCaptureForAnalysisDialog.FileName +
+                        " packet capture failed!!!"
+                        );
                 }
 
                 //Flush output to the output file and then close it
@@ -402,7 +452,12 @@ namespace PacketCaptureAnalyser
                 //Update the window to reflect the selected output file
                 ReflectSelectedOutputFile();
 
-                System.Diagnostics.Debug.WriteLine("Selection of the " + SelectedOutputFileForAnalysisDialog.FileName + " output file");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Selection of the " +
+                    SelectedOutputFileForAnalysisDialog.FileName +
+                    " output file"
+                    );
             }
         }
     }

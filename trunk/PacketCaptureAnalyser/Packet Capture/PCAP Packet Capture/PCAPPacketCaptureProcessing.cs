@@ -46,13 +46,19 @@ namespace PacketCaptureProcessingNamespace
             //The endianism of the remainder of the values in the PCAP packet capture global header will be corrected to little endian if the magic number indicates big endian representation
             if (TheGlobalHeader.MagicNumber == PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber)
             {
-                System.Diagnostics.Debug.WriteLine("The PCAP packet capture contains the little endian magic number");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The PCAP packet capture contains the little endian magic number"
+                    );
 
                 IsTheGlobalHeaderLittleEndian = true;
             }
             else if (TheGlobalHeader.MagicNumber == PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber)
             {
-                System.Diagnostics.Debug.WriteLine("The PCAP packet capture contains the big endian magic number");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The PCAP packet capture contains the big endian magic number"
+                    );
 
                 IsTheGlobalHeaderLittleEndian = false;
             }
@@ -132,28 +138,54 @@ namespace PacketCaptureProcessingNamespace
             if (TheGlobalHeader.MagicNumber != PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber &&
                 TheGlobalHeader.MagicNumber != PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber)
             {
-                System.Diagnostics.Debug.WriteLine("The PCAP packet capture does not contain the expected magic number, is {0} not {1} or {2}", TheGlobalHeader.MagicNumber, PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber, PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The PCAP packet capture does not contain the expected magic number, is " +
+                    TheGlobalHeader.MagicNumber.ToString() +
+                    " not " +
+                    PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber.ToString() +
+                    " or " +
+                    PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber.ToString()
+                    );
 
                 TheResult = false;
             }
 
             if (TheGlobalHeader.VersionMajor != PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMajor)
             {
-                System.Diagnostics.Debug.WriteLine("The PCAP packet capture global header does not contain the expected major version number, is {0} not {1}", TheGlobalHeader.VersionMajor, PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMajor);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The PCAP packet capture global header does not contain the expected major version number, is " +
+                    TheGlobalHeader.VersionMajor.ToString() +
+                    " not " +
+                    PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMajor.ToString()
+                    );
 
                 TheResult = false;
             }
 
             if (TheGlobalHeader.VersionMinor != PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMinor)
             {
-                System.Diagnostics.Debug.WriteLine("The PCAP packet capture global header does not contain the expected minor version number, is {0} not {1}", TheGlobalHeader.VersionMinor, PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMinor);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The PCAP packet capture global header does not contain the expected minor version number, is " +
+                    TheGlobalHeader.VersionMinor.ToString() +
+                    " not " +
+                    PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedVersionMinor.ToString()
+                    );
 
                 TheResult = false;
             }
 
             if (TheGlobalHeader.NetworkDataLinkType != PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedNetworkDataLinkType)
             {
-                System.Diagnostics.Debug.WriteLine("The PCAP packet capture does not contain the expected network data link type, is {0} not {1}", TheGlobalHeader.NetworkDataLinkType, PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedNetworkDataLinkType);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The PCAP packet capture does not contain the expected network data link type, is " +
+                    TheGlobalHeader.NetworkDataLinkType.ToString() +
+                    " not " +
+                    PCAPPackageCaptureConstants.PCAPPackageCaptureExpectedNetworkDataLinkType.ToString()
+                    );
 
                 TheResult = false;
             }

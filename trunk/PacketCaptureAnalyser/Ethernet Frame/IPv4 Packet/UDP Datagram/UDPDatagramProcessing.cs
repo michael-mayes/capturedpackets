@@ -126,7 +126,14 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             //The length in the UDP datagram header includes both the header itself and the payload so the minimum length is that of just the header
             if (TheHeaderLength < UDPDatagramConstants.UDPDatagramHeaderLength)
             {
-                System.Diagnostics.Debug.WriteLine("The UDP datagram contains an unexpected header length, is {0} not {1} or above", TheHeaderLength, UDPDatagramConstants.UDPDatagramHeaderLength);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The UDP datagram contains an unexpected header length, is " +
+                    TheHeaderLength.ToString() +
+                    " not " +
+                    UDPDatagramConstants.UDPDatagramHeaderLength.ToString() +
+                    " or above"
+                    );
 
                 TheResult = false;
             }
