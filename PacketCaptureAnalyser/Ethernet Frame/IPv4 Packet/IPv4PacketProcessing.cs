@@ -164,7 +164,11 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                         //Processing of packets with network data link types not enumerated above are obviously not currently supported!
 
-                        System.Diagnostics.Debug.WriteLine("The IPv4 packet contains an unexpected protocol of {0:X}", TheIPv4PacketProtocol);
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The IPv4 packet contains an unexpected protocol of " +
+                            string.Format("{0:X}", TheIPv4PacketProtocol)
+                            );
 
                         TheResult = false;
 
@@ -183,7 +187,15 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMaximumLength ||
                 TheHeaderLength < IPv4PacketConstants.IPv4PacketHeaderMinimumLength)
             {
-                System.Diagnostics.Debug.WriteLine("The IPv4 packet contains a header length {0} which is outside the range {1} to {2}", TheHeaderLength, IPv4PacketConstants.IPv4PacketHeaderMinimumLength, IPv4PacketConstants.IPv4PacketHeaderMaximumLength);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The IPv4 packet contains a header length " +
+                    TheHeaderLength.ToString() +
+                    " which is outside the range " +
+                    IPv4PacketConstants.IPv4PacketHeaderMinimumLength.ToString() +
+                    " to " +
+                    IPv4PacketConstants.IPv4PacketHeaderMaximumLength.ToString()
+                    );
 
                 TheResult = false;
             }

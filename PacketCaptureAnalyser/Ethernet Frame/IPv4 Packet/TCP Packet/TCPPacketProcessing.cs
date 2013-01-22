@@ -148,7 +148,15 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.TCPPacketNamespace
             if (TheHeaderLength > TCPPacketConstants.TCPPacketHeaderMaximumLength ||
                 TheHeaderLength < TCPPacketConstants.TCPPacketHeaderMinimumLength)
             {
-                System.Diagnostics.Debug.WriteLine("The TCP packet contains a header length {0} which is outside the range {1} to {2}", TheHeaderLength, TCPPacketConstants.TCPPacketHeaderMinimumLength, TCPPacketConstants.TCPPacketHeaderMaximumLength);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The TCP packet contains a header length " +
+                    TheHeaderLength.ToString() +
+                    " which is outside the range " +
+                    TCPPacketConstants.TCPPacketHeaderMinimumLength.ToString() +
+                    " to " +
+                    TCPPacketConstants.TCPPacketHeaderMaximumLength.ToString()
+                    );
 
                 TheResult = false;
             }

@@ -40,7 +40,10 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 
             if (ThePayloadLength < ARPPacketConstants.ARPPacketLength)
             {
-                System.Diagnostics.Debug.WriteLine("The payload length of the Ethernet frame is lower than the length of the ARP packet!!!");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The payload length of the Ethernet frame is lower than the length of the ARP packet!!!"
+                    );
 
                 return false;
             }

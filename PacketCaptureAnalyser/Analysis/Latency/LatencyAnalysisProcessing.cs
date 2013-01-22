@@ -158,13 +158,29 @@ namespace AnalysisNamespace
 
                 if (!(bool)TheLatencyValuesRowFound["FirstInstanceFound"])
                 {
-                    System.Diagnostics.Debug.WriteLine("Found the row for Host Id of {0} and Sequence Number {1} but the FirstInstanceFound flag is not set!!!", TheHostId, TheSequenceNumber);
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Found the row for Host Id of " +
+                        TheHostId.ToString() +
+                        " and Sequence Number " +
+                        TheSequenceNumber.ToString() +
+                        " but the FirstInstanceFound flag is not set!!!"
+                        );
+
                     return;
                 }
 
                 if ((bool)TheLatencyValuesRowFound["SecondInstanceFound"])
                 {
-                    System.Diagnostics.Debug.WriteLine("Found the row for Host Id of {0} and Sequence Number {1} but the SecondInstanceFound flag is already set!!!", TheHostId, TheSequenceNumber);
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Found the row for Host Id of " +
+                        TheHostId.ToString() +
+                        " and Sequence Number "
+                        + TheSequenceNumber.ToString() +
+                        " but the SecondInstanceFound flag is already set!!!"
+                        );
+
                     return;
                 }
 
@@ -185,7 +201,15 @@ namespace AnalysisNamespace
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("Found the row for Host Id of {0} and Sequence Number {1}, but the timestamp of the first message is higher than that of the second message!!!", TheHostId, TheSequenceNumber);
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "Found the row for Host Id of " +
+                        TheHostId.ToString() +
+                        " and Sequence Number " +
+                        TheSequenceNumber.ToString() +
+                        ", but the timestamp of the first message is higher than that of the second message!!!"
+                        );
+
                     TheLatencyValuesRowFound["SecondInstanceFound"] = true;
                     TheLatencyValuesRowFound["TimestampDifferenceCalculated"] = false;
                 }
@@ -203,7 +227,12 @@ namespace AnalysisNamespace
 
             if (TheHostIdDataRowFound == null)
             {
-                System.Diagnostics.Debug.WriteLine("Found a message with a Host Id of value {0,3} - adding that Host Id to the latency analysis", TheHostId);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Found a message with a Host Id of value " +
+                    string.Format("{0,3}", TheHostId) +
+                    " - adding that Host Id to the latency analysis"
+                    );
 
                 System.Data.DataRow TheHostIdRowToAdd = TheHostIdsTable.NewRow();
 
@@ -225,7 +254,14 @@ namespace AnalysisNamespace
 
             if (TheMessageIdDataRowFound == null)
             {
-                System.Diagnostics.Debug.WriteLine("Found a message with a Message Id of value {0,5} for Host Id {1,3} - adding that Message Id to the latency analysis", TheMessageId, TheHostId);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Found a message with a Message Id of value " +
+                    string.Format("{0,5}", TheMessageId) +
+                    " for a Host Id of value " +
+                    string.Format("{0,3}", TheHostId) +
+                    " - adding that Message Id to the latency analysis"
+                    );
 
                 System.Data.DataRow TheMessageIdRowToAdd = TheMessageIdsTable.NewRow();
 
@@ -248,17 +284,22 @@ namespace AnalysisNamespace
 
             //Loop across all the latency values for the message pairings using each of these host Ids in turn
 
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
-            System.Diagnostics.Debug.WriteLine("======================");
-            System.Diagnostics.Debug.WriteLine("== Latency Analysis ==");
-            System.Diagnostics.Debug.WriteLine("======================");
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.WriteLine("======================");
+            System.Diagnostics.Trace.WriteLine("== Latency Analysis ==");
+            System.Diagnostics.Trace.WriteLine("======================");
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
-                System.Diagnostics.Debug.WriteLine("Host Id {0,3}", (byte)TheHostIdRow["HostId"]);
-                System.Diagnostics.Debug.WriteLine("===========");
-                System.Diagnostics.Debug.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Host Id " +
+                    string.Format("{0,3}", ((byte)TheHostIdRow["HostId"]).ToString())
+                    );
+
+                System.Diagnostics.Trace.WriteLine("===========");
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
                 FinaliseProtocolsForHostId((byte)TheHostIdRow["HostId"]);
             }
@@ -270,9 +311,14 @@ namespace AnalysisNamespace
             {
                 string TheProtocolString = ((LatencyAnalysisConstants.LatencyAnalysisProtocol)TheProtocol).ToString();
 
-                System.Diagnostics.Debug.WriteLine(TheProtocolString + " messages");
-                System.Diagnostics.Debug.WriteLine("------------");
-                System.Diagnostics.Debug.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    TheProtocolString +
+                    " messages"
+                    );
+
+                System.Diagnostics.Trace.WriteLine("------------");
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
                 //Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
 
@@ -299,7 +345,15 @@ namespace AnalysisNamespace
 
                     if (TheLatencyValuesRowsFoundCount > 0)
                     {
-                        System.Diagnostics.Debug.WriteLine("The number of pairs of " + TheProtocolString + " messages with a Message Id of {0,5} was {1}", (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFoundCount);
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The number of pairs of " +
+                            TheProtocolString +
+                            " messages with a Message Id of " +
+                            ((ulong)TheMessageIdRow["MessageId"]).ToString() +
+                            " was " +
+                            TheLatencyValuesRowsFoundCount.ToString()
+                            );
 
                         FinaliseLatencyValuesForMessageId(TheProtocolString, (ulong)TheMessageIdRow["MessageId"], TheLatencyValuesRowsFound);
                     }
@@ -340,19 +394,52 @@ namespace AnalysisNamespace
                 }
             }
 
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
-            System.Diagnostics.Debug.WriteLine("The minimum latency for pairs of " + TheProtocolString + " messages with a Message Id of {0,5} was {1} ms for sequence number {2}", TheMessageId, TheMinTimestampDifference, TheMinTimestampSequenceNumber);
-            System.Diagnostics.Debug.WriteLine("The maximum latency for pairs of " + TheProtocolString + " messages with a Message Id of {0,5} was {1} ms for sequence number {2}", TheMessageId, TheMaxTimestampDifference, TheMaxTimestampSequenceNumber);
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The minimum latency for pairs of " +
+                TheProtocolString +
+                " messages with a Message Id of " +
+                TheMessageId.ToString() +
+                " was " +
+                TheMinTimestampDifference.ToString() +
+                " ms for sequence number " +
+                TheMinTimestampSequenceNumber.ToString()
+                );
+
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The maximum latency for pairs of " +
+                TheProtocolString +
+                " messages with a Message Id of " +
+                TheMessageId.ToString() +
+                " was " +
+                TheMaxTimestampDifference.ToString() +
+                " ms for sequence number " +
+                TheMaxTimestampSequenceNumber.ToString()
+                );
+
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             //Output the histogram
 
-            System.Diagnostics.Debug.WriteLine("The histogram ({0} bins per ms) for latency values for " + TheProtocolString + " messages with a Message Id of {1,5} is:", LatencyAnalysisConstants.LatencyAnalysisBinsPerMs, TheMessageId);
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The histogram (" +
+                LatencyAnalysisConstants.LatencyAnalysisBinsPerMs.ToString() +
+                " bins per ms) for latency values for " +
+                TheProtocolString +
+                " messages with a Message Id of " +
+                TheMessageId.ToString() +
+                " is:"
+                );
+
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             TheHistogram.OutputValues();
 
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
         }
     }
 }

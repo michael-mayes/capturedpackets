@@ -40,7 +40,10 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
 
             if (ThePayloadLength < LLDPPacketConstants.LLDPPacketLength)
             {
-                System.Diagnostics.Debug.WriteLine("The payload length of the Ethernet frame is lower than the length of the LLDP packet!!!");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The payload length of the Ethernet frame is lower than the length of the LLDP packet!!!"
+                    );
 
                 return false;
             }

@@ -88,7 +88,12 @@ namespace AnalysisNamespace
 
             if (TheHostIdDataRowFound == null)
             {
-                System.Diagnostics.Debug.WriteLine("Found a time-supplying message with a Host Id of value {0,3} - adding that Host Id to the time analysis", TheHostId);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Found a time-supplying message with a Host Id of value " +
+                    string.Format("{0,3}", TheHostId) +
+                    " - adding that Host Id to the time analysis"
+                    );
 
                 System.Data.DataRow TheHostIdRowToAdd = TheHostIdsTable.NewRow();
 
@@ -110,17 +115,22 @@ namespace AnalysisNamespace
 
             //Loop across all the time values for each of these host Ids in turn
 
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
-            System.Diagnostics.Debug.WriteLine("===================");
-            System.Diagnostics.Debug.WriteLine("== Time Analysis ==");
-            System.Diagnostics.Debug.WriteLine("===================");
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.WriteLine("===================");
+            System.Diagnostics.Trace.WriteLine("== Time Analysis ==");
+            System.Diagnostics.Trace.WriteLine("===================");
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
-                System.Diagnostics.Debug.WriteLine("Host Id {0,3}", (byte)TheHostIdRow["HostId"]);
-                System.Diagnostics.Debug.WriteLine("===========");
-                System.Diagnostics.Debug.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Host Id " +
+                    string.Format("{0,3}", ((byte)TheHostIdRow["HostId"]).ToString())
+                    );
+
+                System.Diagnostics.Trace.WriteLine("===========");
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
                 FinaliseTimeValuesForHostId((byte)TheHostIdRow["HostId"]);
             }
@@ -209,30 +219,67 @@ namespace AnalysisNamespace
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("The minimum timestamp difference was {0} ms", TheMinTimestampDifference);
-            System.Diagnostics.Debug.WriteLine("The maximum timestamp difference was {0} ms", TheMaxTimestampDifference);
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The minimum timestamp difference was " +
+                TheMinTimestampDifference.ToString() +
+                " ms"
+                );
+
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The maximum timestamp difference was " +
+                TheMaxTimestampDifference.ToString() +
+                " ms"
+                );
+
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             //Output the histogram
 
-            System.Diagnostics.Debug.WriteLine("The histogram ({0} bins per ms) for timestamp values is:", TimeAnalysisConstants.TimeAnalysisTimestampBinsPerMs);
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The histogram (" +
+                TimeAnalysisConstants.TimeAnalysisTimestampBinsPerMs.ToString() +
+                " bins per ms) for timestamp values is:"
+                );
+
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             TheTimestampHistogram.OutputValues();
 
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
-            System.Diagnostics.Debug.WriteLine("The minimum time difference was {0} ms", TheMinTimeDifference);
-            System.Diagnostics.Debug.WriteLine("The maximum time difference was {0} ms", TheMaxTimeDifference);
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The minimum time difference was " +
+                TheMinTimeDifference.ToString() +
+                " ms"
+                );
+
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The maximum time difference was " +
+                TheMaxTimeDifference.ToString() +
+                " ms"
+                );
+
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             //Output the histogram
 
-            System.Diagnostics.Debug.WriteLine("The histogram ({0} bins per ms) for time values is:", TimeAnalysisConstants.TimeAnalysisTimeBinsPerMs);
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.WriteLine
+                (
+                "The histogram (" +
+                TimeAnalysisConstants.TimeAnalysisTimeBinsPerMs.ToString() +
+                " bins per ms) for time values is:"
+                );
+
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
             TheTimeHistogram.OutputValues();
 
-            System.Diagnostics.Debug.Write(System.Environment.NewLine);
+            System.Diagnostics.Trace.Write(System.Environment.NewLine);
         }
     }
 }

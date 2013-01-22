@@ -40,7 +40,10 @@ namespace EthernetFrameNamespace.LoopbackPacketNamespace
 
             if (ThePayloadLength < (LoopbackPacketConstants.LoopbackPacketHeaderLength + LoopbackPacketConstants.LoopbackPacketPayloadLength))
             {
-                System.Diagnostics.Debug.WriteLine("The payload length of the Ethernet frame is lower than the length of the Loopback packet!!!");
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The payload length of the Ethernet frame is lower than the length of the Loopback packet!!!"
+                    );
 
                 return false;
             }
