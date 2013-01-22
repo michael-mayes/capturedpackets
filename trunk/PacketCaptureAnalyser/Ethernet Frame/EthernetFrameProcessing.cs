@@ -150,6 +150,7 @@ namespace EthernetFrameNamespace
 
                         //We've got an Ethernet frame containing an ARP packet so process it
                         TheResult = TheARPPacketProcessing.Process(ThePayloadLength);
+
                         break;
                     }
 
@@ -159,6 +160,7 @@ namespace EthernetFrameNamespace
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
                         TheResult = TheIPv4PacketProcessing.Process(ThePayloadLength, TheTimestamp);
+
                         break;
                     }
 
@@ -180,6 +182,7 @@ namespace EthernetFrameNamespace
 
                         //We've got an Ethernet frame containing an LLDP packet so process it
                         TheResult = TheLLDPPacketProcessing.Process(ThePayloadLength);
+
                         break;
                     }
 
@@ -189,6 +192,7 @@ namespace EthernetFrameNamespace
 
                         //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
                         TheResult = TheLoopbackPacketProcessing.Process(ThePayloadLength);
+
                         break;
                     }
 
@@ -226,6 +230,7 @@ namespace EthernetFrameNamespace
                             //Just record the event and fall through to the processing below that will read off the payload so we can move on
                             System.Diagnostics.Debug.WriteLine("The Ethernet frame contains an unexpected network data link type of {0:X}", TheEtherType);
                         }
+
                         break;
                     }
             }
