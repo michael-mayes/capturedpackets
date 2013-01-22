@@ -151,12 +151,11 @@ namespace AnalysisNamespace
                 if (TheBinBoundaries[i] >= TheBinBoundaries[i + 1])
                 {
                     string TheExceptionMessage =
-                        string.Format
-                        (
-                        "Bin boundary {0} is >= Bin boundary {1}!!!",
-                        TheBinBoundaries[i],
-                        TheBinBoundaries[i + 1]
-                        );
+                        "Bin boundary " +
+                        TheBinBoundaries[i].ToString() +
+                        " is >= Bin boundary " +
+                        TheBinBoundaries[i + 1].ToString() +
+                        "!!!";
 
                     System.Diagnostics.Trace.WriteLine
                         (
