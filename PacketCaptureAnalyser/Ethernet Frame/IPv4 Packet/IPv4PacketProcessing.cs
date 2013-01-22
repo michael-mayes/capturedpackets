@@ -42,7 +42,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
         {
             bool TheResult = true;
 
-            int TheIPv4PacketPayloadLength;
+            ushort TheIPv4PacketPayloadLength;
             byte TheIPv4PacketProtocol;
 
             //Process the IPv4 packet header
@@ -57,7 +57,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ProcessHeader(out int ThePayloadLength, out byte TheProtocol)
+        private bool ProcessHeader(out ushort ThePayloadLength, out byte TheProtocol)
         {
             bool TheResult = true;
 
@@ -86,7 +86,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             //Need to first extract the length value from the combined IP version/IP header length field
             //We want the lower four bits from the combined IP version/IP header length field (as it's in a big endian representation) so do a bitwise OR with 0xF (i.e. 00001111 in binary)
             //The extracted length value is the length of the IPv4 packet header in 32-bit words so multiply by four to get the actual length in bytes of the IPv4 packet header
-            int TheHeaderLength = ((TheHeader.VersionAndHeaderLength & 0xF) * 4);
+            ushort TheHeaderLength = (ushort)((TheHeader.VersionAndHeaderLength & 0xF) * 4);
 
             //Validate the IPv4 packet header
             TheResult = ValidateHeader(TheHeader, TheHeaderLength);
@@ -94,28 +94,24 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             if (TheResult)
             {
                 //Set up the output parameter for the length of the payload of the IPv4 packet (e.g. a TCP packet), which is the total length of the IPv4 packet minus the length of the IPv4 packet header just calculated
-                ThePayloadLength = (TheHeader.TotalLength - TheHeaderLength);
+                ThePayloadLength = (ushort)(TheHeader.TotalLength - TheHeaderLength);
 
                 //Set up the output parameter for the protocol for the IPv4 packet
                 TheProtocol = TheHeader.Protocol;
 
-                if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMinimumLength &&
-                    TheHeaderLength <= IPv4PacketConstants.IPv4PacketHeaderMaximumLength)
+                if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMinimumLength)
                 {
-                    //The IPv4 packet contains a header length which is greater than the minimum and less than or equal to the maximum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
+                    //The IPv4 packet contains a header length which is greater than the minimum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
 
                     //Just read off these remaining Options bytes of the IPv4 packet header from the packet capture so we can move on
-                    for (int i = IPv4PacketConstants.IPv4PacketHeaderMinimumLength; i < TheHeaderLength; ++i)
-                    {
-                        TheBinaryReader.ReadByte();
-                    }
+                    TheBinaryReader.ReadBytes(TheHeaderLength - IPv4PacketConstants.IPv4PacketHeaderMinimumLength);
                 }
             }
 
             return TheResult;
         }
 
-        private bool ProcessPayload(double TheTimestamp, long ThePayloadLength, int TheIPv4PacketPayloadLength, byte TheIPv4PacketProtocol)
+        private bool ProcessPayload(double TheTimestamp, long ThePayloadLength, ushort TheIPv4PacketPayloadLength, byte TheIPv4PacketProtocol)
         {
             bool TheResult = true;
 
@@ -128,6 +124,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                         //We've got an IPv4 packet containing an ICMPv4 packet so process it
                         TheResult = TheICMPv4PacketProcessing.Process(TheIPv4PacketPayloadLength);
+
                         break;
                     }
 
@@ -137,6 +134,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                         //We've got an IPv4 packet containing an IGMPv2 packet so process it
                         TheResult = TheIGMPv2PacketProcessing.Process(TheIPv4PacketPayloadLength);
+
                         break;
                     }
 
@@ -146,6 +144,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                         //We've got an IPv4 packet containing an TCP packet so process it
                         TheResult = TheTCPPacketProcessing.Process(TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
+
                         break;
                     }
 
@@ -155,6 +154,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
 
                         //We've got an IPv4 packet containing an UDP datagram so process it
                         TheResult = TheUDPDatagramProcessing.Process(TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
+
                         break;
                     }
 
@@ -175,7 +175,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ValidateHeader(IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader, int TheHeaderLength)
+        private bool ValidateHeader(IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader, ushort TheHeaderLength)
         {
             bool TheResult = true;
 

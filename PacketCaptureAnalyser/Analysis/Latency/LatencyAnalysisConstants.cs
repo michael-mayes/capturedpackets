@@ -37,12 +37,12 @@ namespace AnalysisNamespace
 
         //Latencies
 
-        public const int LatencyAnalysisBestCaseLatency = 0; //Milliseconds
-        public const int LatencyAnalysisWorstCaseLatency = 50; //Milliseconds
+        public const double LatencyAnalysisBestCaseLatency = 0.0; //Milliseconds
+        public const double LatencyAnalysisWorstCaseLatency = 50.0; //Milliseconds
 
         //Value bins
 
         public const int LatencyAnalysisBinsPerMs = 10; //Ten value bins for every millisecond of latency
-        public const int LatencyAnalysisNumberOfBins = (LatencyAnalysisWorstCaseLatency * LatencyAnalysisBinsPerMs);
+        public const int LatencyAnalysisNumberOfBins = ((int)(LatencyAnalysisWorstCaseLatency - LatencyAnalysisBestCaseLatency) * LatencyAnalysisBinsPerMs);
     }
 }

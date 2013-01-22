@@ -117,7 +117,7 @@ namespace PacketCaptureProcessingNamespace
         {
             bool TheResult = true;
 
-            int PacketsProcessed = 0;
+            long PacketsProcessed = 0;
 
             //Read the start time to allow later calculation of the duration of the processing
             System.DateTime TheStartTime = System.DateTime.Now;

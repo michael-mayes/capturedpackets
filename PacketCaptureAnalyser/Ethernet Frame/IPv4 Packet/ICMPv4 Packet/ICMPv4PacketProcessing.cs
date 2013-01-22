@@ -34,7 +34,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
             this.TheBinaryReader = TheBinaryReader;
         }
 
-        public bool Process(int TheICMPv4PacketLength)
+        public bool Process(ushort TheICMPv4PacketLength)
         {
             bool TheResult = true;
 
