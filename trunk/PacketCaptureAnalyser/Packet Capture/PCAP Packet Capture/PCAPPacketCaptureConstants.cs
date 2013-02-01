@@ -45,10 +45,6 @@ namespace PacketCaptureProcessingNamespace
         public const System.UInt16 PCAPPackageCaptureExpectedVersionMajor = 2;
         public const System.UInt16 PCAPPackageCaptureExpectedVersionMinor = 4;
 
-        //Network data link type
-
-        public const System.UInt32 PCAPPackageCaptureExpectedNetworkDataLinkType = 1; //Ethernet
-
         //
         //PCAP packet capture packet header - 16 bytes
         //

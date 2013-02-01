@@ -51,10 +51,6 @@ namespace PacketCaptureProcessingNamespace
 
         public const System.SByte SnifferPackageCaptureExpectedType = 4; //Sniffer type 2 data records
 
-        //Network encapsulation type
-
-        public const System.Byte SnifferPackageCaptureExpectedNetworkEncapsulationType = 1; //Ethernet
-
         //Format version number
 
         public const System.SByte SnifferPackageCaptureExpectedFormatVersion = 1; //Uncompressed
