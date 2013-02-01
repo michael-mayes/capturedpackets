@@ -38,7 +38,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
-        public bool Process(double TheTimestamp, long ThePayloadLength, ushort TheUDPDatagramLength)
+        public bool Process(ulong ThePacketNumber, double TheTimestamp, long ThePayloadLength, ushort TheUDPDatagramLength)
         {
             bool TheResult = true;
 
@@ -53,7 +53,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             if (TheResult)
             {
                 //Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheUDPDatagramPayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePayloadLength, TheUDPDatagramPayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
@@ -95,7 +95,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(double TheTimestamp, long ThePayloadLength, ushort TheUDPDatagramPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, long ThePayloadLength, ushort TheUDPDatagramPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
         {
             bool TheResult = true;
 

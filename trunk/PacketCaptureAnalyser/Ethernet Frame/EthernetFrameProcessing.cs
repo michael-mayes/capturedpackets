@@ -42,7 +42,7 @@ namespace EthernetFrameNamespace
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
-        public bool Process(long ThePayloadLength, double TheTimestamp)
+        public bool Process(ulong ThePacketNumber, long ThePayloadLength, double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -59,7 +59,7 @@ namespace EthernetFrameNamespace
 
                 if (TheResult)
                 {
-                    TheResult = ProcessPayload(TheTimestamp);
+                    TheResult = ProcessPayload(ThePacketNumber, TheTimestamp);
                 }
             }
 
@@ -93,7 +93,7 @@ namespace EthernetFrameNamespace
             return TheResult;
         }
 
-        public bool ProcessEtherType()
+        private bool ProcessEtherType()
         {
             bool TheResult = true;
 
@@ -135,7 +135,7 @@ namespace EthernetFrameNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(double TheTimestamp)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -159,7 +159,7 @@ namespace EthernetFrameNamespace
                         IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
-                        TheResult = TheIPv4PacketProcessing.Process(ThePayloadLength, TheTimestamp);
+                        TheResult = TheIPv4PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
 
                         break;
                     }

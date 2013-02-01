@@ -46,6 +46,7 @@ namespace AnalysisNamespace
         {
             //Add the required columns to the datatable to hold the timestamp and time values for time-supplying messages
             TheTimeValuesTable.Columns.Add("HostId", typeof(byte));
+            TheTimeValuesTable.Columns.Add("PacketNumber", typeof(ulong));
             TheTimeValuesTable.Columns.Add("Timestamp", typeof(double));
             TheTimeValuesTable.Columns.Add("Time", typeof(double));
 
@@ -61,7 +62,7 @@ namespace AnalysisNamespace
                 };
         }
 
-        public void RegisterTimeMessageReceipt(byte TheHostId, double TheTimestamp, double TheTime)
+        public void RegisterTimeMessageReceipt(byte TheHostId, ulong ThePacketNumber, double TheTimestamp, double TheTime)
         {
             //Add the supplied host Id to the set of those encountered during the time analysis if not already in there
             RegisterEncounteredHostId(TheHostId);
@@ -71,6 +72,7 @@ namespace AnalysisNamespace
             System.Data.DataRow TheTimeValuesRowToAdd = TheTimeValuesTable.NewRow();
 
             TheTimeValuesRowToAdd["HostId"] = TheHostId;
+            TheTimeValuesRowToAdd["PacketNumber"] = ThePacketNumber;
             TheTimeValuesRowToAdd["Timestamp"] = TheTimestamp;
             TheTimeValuesRowToAdd["Time"] = TheTime;
 
@@ -90,9 +92,9 @@ namespace AnalysisNamespace
             {
                 System.Diagnostics.Trace.WriteLine
                     (
-                    "Found a time-supplying message with a Host Id of value " +
+                    "Found a time-supplying message for a Host Id " +
                     string.Format("{0,3}", TheHostId) +
-                    " - adding that Host Id to the time analysis"
+                    " - adding this Host Id to the time analysis"
                     );
 
                 System.Data.DataRow TheHostIdRowToAdd = TheHostIdsTable.NewRow();
@@ -150,6 +152,12 @@ namespace AnalysisNamespace
                     TimeAnalysisConstants.TimeAnalysisMaxNegativeDifference,
                     TimeAnalysisConstants.TimeAnalysisMaxPositiveDifference);
 
+            ulong TheMinTimestampDifferencePacketNumber = 0;
+            ulong TheMaxTimestampDifferencePacketNumber = 0;
+
+            ulong TheMinTimeDifferencePacketNumber = 0;
+            ulong TheMaxTimeDifferencePacketNumber = 0;
+
             double TheMinTimestampDifference = double.MaxValue;
             double TheMaxTimestampDifference = double.MinValue;
 
@@ -189,11 +197,13 @@ namespace AnalysisNamespace
                     if (TheMinTimestampDifference > TheTimestampDifference)
                     {
                         TheMinTimestampDifference = TheTimestampDifference;
+                        TheMinTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
                     }
 
                     if (TheMaxTimestampDifference < TheTimestampDifference)
                     {
                         TheMaxTimestampDifference = TheTimestampDifference;
+                        TheMaxTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
                     }
 
                     TheLastTimestamp = (double)TheTimeValuesRow["Timestamp"];
@@ -208,11 +218,13 @@ namespace AnalysisNamespace
                     if (TheMinTimeDifference > TheTimeDifference)
                     {
                         TheMinTimeDifference = TheTimeDifference;
+                        TheMinTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
                     }
 
                     if (TheMaxTimeDifference < TheTimeDifference)
                     {
                         TheMaxTimeDifference = TheTimeDifference;
+                        TheMaxTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
                     }
 
                     TheLastTime = (double)TheTimeValuesRow["Time"];
@@ -223,14 +235,16 @@ namespace AnalysisNamespace
                 (
                 "The minimum timestamp difference was " +
                 TheMinTimestampDifference.ToString() +
-                " ms"
+                " ms for packet number " +
+                TheMinTimestampDifferencePacketNumber.ToString()
                 );
 
             System.Diagnostics.Trace.WriteLine
                 (
                 "The maximum timestamp difference was " +
                 TheMaxTimestampDifference.ToString() +
-                " ms"
+                " ms for packet number " +
+                TheMaxTimestampDifferencePacketNumber.ToString()
                 );
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
@@ -254,14 +268,16 @@ namespace AnalysisNamespace
                 (
                 "The minimum time difference was " +
                 TheMinTimeDifference.ToString() +
-                " ms"
+                " ms for packet number " +
+                TheMinTimeDifferencePacketNumber.ToString()
                 );
 
             System.Diagnostics.Trace.WriteLine
                 (
                 "The maximum time difference was " +
                 TheMaxTimeDifference.ToString() +
-                " ms"
+                " ms for packet number " +
+                TheMaxTimeDifferencePacketNumber.ToString()
                 );
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
