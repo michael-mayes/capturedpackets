@@ -38,22 +38,22 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
-        public bool Process(ulong ThePacketNumber, double TheTimestamp, long ThePayloadLength, ushort TheUDPDatagramLength)
+        public bool Process(ulong ThePacketNumber, double TheTimestamp, ushort TheLength)
         {
             bool TheResult = true;
 
-            ushort TheUDPDatagramPayloadLength = 0;
+            ushort ThePayloadLength = 0;
 
             ushort TheSourcePort = 0;
             ushort TheDestinationPort = 0;
 
             //Process the UDP datagram header
-            TheResult = ProcessHeader(TheUDPDatagramLength, out TheUDPDatagramPayloadLength, out TheSourcePort, out TheDestinationPort);
+            TheResult = ProcessHeader(TheLength, out ThePayloadLength, out TheSourcePort, out TheDestinationPort);
 
             if (TheResult)
             {
                 //Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePayloadLength, TheUDPDatagramPayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
@@ -80,12 +80,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             TheHeader.Checksum = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
 
             //Validate the UDP datagram header
-            TheResult = ValidateHeader(TheHeader, TheHeader.Length);
+            TheResult = ValidateHeader(TheHeader, TheLength, TheHeader.Length);
 
             if (TheResult)
             {
                 //Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
-                ThePayloadLength = (ushort)(TheHeader.Length - UDPDatagramConstants.UDPDatagramHeaderLength);
+                ThePayloadLength = (ushort)(TheLength - UDPDatagramConstants.UDPDatagramHeaderLength);
 
                 //Set up the output parameters for source port and destination port using the value read from the UDP datagram header
                 TheSourcePort = TheHeader.SourcePort;
@@ -95,7 +95,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, long ThePayloadLength, ushort TheUDPDatagramPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort TheUDPDatagramPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
         {
             bool TheResult = true;
 
@@ -119,9 +119,24 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ValidateHeader(UDPDatagramStructures.UDPDatagramHeaderStructure TheHeader, ushort TheHeaderLength)
+        private bool ValidateHeader(UDPDatagramStructures.UDPDatagramHeaderStructure TheHeader, ushort TheLength, ushort TheHeaderLength)
         {
             bool TheResult = true;
+
+            //The length in the UDP datagram header includes both the header itself and the payload so should equal the length of the UDP datagram payload in the IP packet
+            if (TheHeader.Length != TheLength)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The UDP datagram header indicates a total length " +
+                    TheHeader.Length.ToString() +
+                    " which is not equal to the length of the UDP datagram within the IP packet" +
+                    TheLength.ToString() +
+                    " !!!"
+                    );
+
+                TheResult = false;
+            }
 
             //The length in the UDP datagram header includes both the header itself and the payload so the minimum length is that of just the header
             if (TheHeaderLength < UDPDatagramConstants.UDPDatagramHeaderLength)
