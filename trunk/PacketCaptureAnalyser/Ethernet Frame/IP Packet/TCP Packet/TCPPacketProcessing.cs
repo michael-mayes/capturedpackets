@@ -118,12 +118,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort TheTCPPacketPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort ThePayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
         {
             bool TheResult = true;
 
             //Only process this TCP packet if the payload has a non-zero payload length i.e. it actually includes data so is not part of the three-way handshake or a plain acknowledgement
-            if (TheTCPPacketPayloadLength > 0)
+            if (ThePayloadLength > 0)
             {
                 //Change this logic statement to allow identification and processing of specific messages within the TCP packet
                 if (false)
@@ -134,7 +134,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
                 {
                     //Just read off the remaining bytes of the TCP packet from the packet capture so we can move on
                     //The remaining length is the supplied length of the TCP packet payload
-                    TheBinaryReader.ReadBytes(TheTCPPacketPayloadLength);
+                    TheBinaryReader.ReadBytes(ThePayloadLength);
                 }
             }
 
