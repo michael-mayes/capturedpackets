@@ -156,7 +156,7 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
                     {
-                        IPv4PacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPv4PacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
+                        IPPacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPPacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
                         TheResult = TheIPv4PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
@@ -166,15 +166,10 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
                     {
-                        //We've got an Ethernet frame containing an IPv6 packet
+                        IPPacketNamespace.IPv6PacketProcessing TheIPv6PacketProcessing = new IPPacketNamespace.IPv6PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
-                        //Processing of Ethernet frames containing an IPv6 packet is not currently supported!
-
-                        //Just record the event and fall through to the processing below that will read off the payload so we can move on
-                        System.Diagnostics.Trace.WriteLine
-                            (
-                            "The Ethernet frame contains an IPv6 packet which is not currently supported!!!"
-                            );
+                        //We've got an Ethernet frame containing an IPv6 packet so process it
+                        TheResult = TheIPv6PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
 
                         break;
                     }
