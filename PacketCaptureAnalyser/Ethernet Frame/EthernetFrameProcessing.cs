@@ -138,6 +138,7 @@ namespace EthernetFrameNamespace
         private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp)
         {
             bool TheResult = true;
+            bool ThePacketProcessingResult = true;
 
             //Record the position in the stream for the packet capture so we can later determine how far has been progressed
             long TheStartingStreamPosition = TheBinaryReader.BaseStream.Position;
@@ -149,7 +150,7 @@ namespace EthernetFrameNamespace
                         ARPPacketNamespace.ARPPacketProcessing TheARPPacketProcessing = new ARPPacketNamespace.ARPPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an ARP packet so process it
-                        TheResult = TheARPPacketProcessing.Process(ThePayloadLength);
+                        ThePacketProcessingResult = TheARPPacketProcessing.Process(ThePayloadLength);
 
                         break;
                     }
@@ -159,7 +160,7 @@ namespace EthernetFrameNamespace
                         IPPacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPPacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
-                        TheResult = TheIPv4PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
+                        ThePacketProcessingResult = TheIPv4PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
 
                         break;
                     }
@@ -169,7 +170,7 @@ namespace EthernetFrameNamespace
                         IPPacketNamespace.IPv6PacketProcessing TheIPv6PacketProcessing = new IPPacketNamespace.IPv6PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv6 packet so process it
-                        TheResult = TheIPv6PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
+                        ThePacketProcessingResult = TheIPv6PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
 
                         break;
                     }
@@ -179,7 +180,7 @@ namespace EthernetFrameNamespace
                         LLDPPacketNamespace.LLDPPacketProcessing TheLLDPPacketProcessing = new LLDPPacketNamespace.LLDPPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an LLDP packet so process it
-                        TheResult = TheLLDPPacketProcessing.Process(ThePayloadLength);
+                        ThePacketProcessingResult = TheLLDPPacketProcessing.Process(ThePayloadLength);
 
                         break;
                     }
@@ -189,7 +190,7 @@ namespace EthernetFrameNamespace
                         LoopbackPacketNamespace.LoopbackPacketProcessing TheLoopbackPacketProcessing = new LoopbackPacketNamespace.LoopbackPacketProcessing(TheBinaryReader);
 
                         //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
-                        TheResult = TheLoopbackPacketProcessing.Process(ThePayloadLength);
+                        ThePacketProcessingResult = TheLoopbackPacketProcessing.Process(ThePayloadLength);
 
                         break;
                     }
@@ -203,8 +204,12 @@ namespace EthernetFrameNamespace
                         //Just record the event and fall through to the processing below that will read off the payload so we can move on
                         System.Diagnostics.Trace.WriteLine
                             (
-                            "The Ethernet frame contains a second VLAN tag!!!"
+                            "The Ethernet frame in captured packet #" +
+                            ThePacketNumber.ToString() +
+                            " contains a second VLAN tag!!!"
                             );
+
+                        ThePacketProcessingResult = false;
 
                         break;
                     }
@@ -231,13 +236,26 @@ namespace EthernetFrameNamespace
                             //Just record the event and fall through to the processing below that will read off the payload so we can move on
                             System.Diagnostics.Trace.WriteLine
                                 (
-                                "The Ethernet frame contains an unexpected network data link type of " +
+                                "The Ethernet frame in captured packet #" +
+                                ThePacketNumber.ToString() +
+                                " contains an unexpected network data link type of " +
                                 string.Format("{0:X}", TheEtherType)
                                 );
                         }
 
                         break;
                     }
+            }
+
+            if (!ThePacketProcessingResult)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Processing of the Ethernet frame in captured packet #" +
+                    ThePacketNumber.ToString() +
+                    " encountered an error during processing of the payload!" +
+                    " - Attempt to recover and continue processing"
+                    );
             }
 
             //Calculate how far has been progressed through the stream by the actions above to read from the packet capture
@@ -263,7 +281,9 @@ namespace EthernetFrameNamespace
                         (
                         "The length " +
                         ThePayloadLength.ToString() +
-                        " of payload of Ethernet frame does not match the progression " +
+                        " of payload of Ethernet frame in captured packet #" +
+                        ThePacketNumber.ToString() +
+                        " does not match the progression " +
                         TheStreamPositionDifference.ToString() +
                         " through the stream!!!"
                         );

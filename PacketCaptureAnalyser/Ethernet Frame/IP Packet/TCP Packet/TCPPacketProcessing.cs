@@ -38,22 +38,22 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
-        public bool Process(ulong ThePacketNumber, double TheTimestamp, long ThePayloadLength, ushort TheTCPPacketLength)
+        public bool Process(ulong ThePacketNumber, double TheTimestamp, ushort TheLength)
         {
             bool TheResult = true;
 
-            ushort TheTCPPacketPayloadLength = 0;
+            ushort ThePayloadLength = 0;
 
             ushort TheSourcePort = 0;
             ushort TheDestinationPort = 0;
 
             //Process the TCP packet header
-            TheResult = ProcessHeader(TheTCPPacketLength, out TheTCPPacketPayloadLength, out TheSourcePort, out TheDestinationPort);
+            TheResult = ProcessHeader(TheLength, out ThePayloadLength, out TheSourcePort, out TheDestinationPort);
 
             if (TheResult)
             {
                 //Process the payload of the TCP packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the TCP packet header
-                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePayloadLength, TheTCPPacketPayloadLength, TheSourcePort, TheDestinationPort);
+                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePayloadLength, TheSourcePort, TheDestinationPort);
             }
 
             return TheResult;
@@ -118,7 +118,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, long ThePayloadLength, ushort TheTCPPacketPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort TheTCPPacketPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
         {
             bool TheResult = true;
 

@@ -109,19 +109,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             //Process the IPv6 packet based on the value indicated for the protocol in the the IPv6 packet header
             switch (TheIPv6PacketProtocol)
             {
-                case (byte)IPv6PacketConstants.IPv6PacketProtocol.ICMP:
-                    {
-                        System.Diagnostics.Trace.WriteLine
-                            (
-                            "The IPv6 packet contains an ICMP packet, which is not currently supported!"
-                            );
-
-                        //Just read off the bytes for the ICMP packet from the packet capture so we can move on
-                        TheBinaryReader.ReadBytes(TheIPv6PacketPayloadLength);
-
-                        break;
-                    }
-
                 case (byte)IPv6PacketConstants.IPv6PacketProtocol.IGMP:
                     {
                         System.Diagnostics.Trace.WriteLine
@@ -140,7 +127,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv6 packet containing an TCP packet so process it
-                        TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength, TheIPv6PacketPayloadLength);
+                        TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, TheIPv6PacketPayloadLength);
 
                         break;
                     }
@@ -150,7 +137,20 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv6 packet containing an UDP datagram so process it
-                        TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength, TheIPv6PacketPayloadLength);
+                        TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, TheIPv6PacketPayloadLength);
+
+                        break;
+                    }
+
+                case (byte)IPv6PacketConstants.IPv6PacketProtocol.ICMPv6:
+                    {
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The IPv6 packet contains an ICMPv6 packet, which is not currently supported!"
+                            );
+
+                        //Just read off the bytes for the ICMPv6 packet from the packet capture so we can move on
+                        TheBinaryReader.ReadBytes(TheIPv6PacketPayloadLength);
 
                         break;
                     }
