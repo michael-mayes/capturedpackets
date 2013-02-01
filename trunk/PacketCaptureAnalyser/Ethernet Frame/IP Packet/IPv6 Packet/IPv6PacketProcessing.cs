@@ -181,7 +181,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             bool TheResult = true;
 
             //Validate the version in the IPv4 packet header
-            if ((TheHeader.PayloadLength + IPv6PacketConstants.IPv6PacketHeaderLength) != ThePayloadLength)
+            if ((TheHeader.PayloadLength + IPv6PacketConstants.IPv6PacketHeaderLength) > ThePayloadLength)
             {
                 //We've got an IPv6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
 
@@ -189,7 +189,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                     (
                     "The IPv6 packet indicates a total length of " +
                     (TheHeader.PayloadLength + IPv6PacketConstants.IPv6PacketHeaderLength).ToString() +
-                    " bytes that does not match the length of the payload of " +
+                    " bytes that is greater than the length of the payload of " +
                     ThePayloadLength.ToString() +
                     " bytes in the Ethernet frame!!!"
                     );
