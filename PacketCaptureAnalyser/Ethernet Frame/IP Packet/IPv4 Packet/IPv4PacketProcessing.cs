@@ -201,7 +201,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                     (
                     "The IPv4 packet indicates a total length of " +
                     TheHeader.TotalLength.ToString() +
-                    " bytes does not match the length of the payload of " +
+                    " bytes that does not match the length of the payload of " +
                     ThePayloadLength.ToString() +
                     " bytes in the Ethernet frame!!!"
                     );
