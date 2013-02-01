@@ -144,6 +144,10 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
                 case (byte)IPv6PacketConstants.IPv6PacketProtocol.ICMPv6:
                     {
+                        //We've got an IPv6 packet containing an ICMPv6 packet
+
+                        //Processing of IPv6 packets containing an ICMPv6 packet is not currently supported!
+
                         System.Diagnostics.Trace.WriteLine
                             (
                             "The IPv6 packet contains an ICMPv6 packet, which is not currently supported!"
@@ -151,6 +155,21 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
                         //Just read off the bytes for the ICMPv6 packet from the packet capture so we can move on
                         TheBinaryReader.ReadBytes(ThePayloadLength);
+
+                        break;
+                    }
+
+                case (byte)IPv6PacketConstants.IPv6PacketProtocol.EIGRP:
+                    {
+                        //We've got an IPv6 packet containing a Cisco EIGRP packet
+
+                        //Processing of IPv6 packets containing a Cisco EIGRP packet is not currently supported!
+
+                        //Just record the event and fall through as later processing will read off the remaining payload so we can move on
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The IPv6 packet contains a Cisco EIGRP packet which is not currently supported!!!"
+                            );
 
                         break;
                     }
