@@ -95,12 +95,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort TheUDPDatagramPayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort ThePayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
         {
             bool TheResult = true;
 
             //Only process this UDP datagram if the payload has a non-zero payload length i.e. it actually includes data (unlikely to not include data, but retain check for consistency with TCP packet processing)
-            if (TheUDPDatagramPayloadLength > 0)
+            if (ThePayloadLength > 0)
             {
                 switch (TheSourcePort)
                 {
@@ -110,7 +110,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
                         {
                             //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
                             //The remaining length is the supplied length of the UDP datagram payload
-                            TheBinaryReader.ReadBytes(TheUDPDatagramPayloadLength);
+                            TheBinaryReader.ReadBytes(ThePayloadLength);
                             break;
                         }
                 }
