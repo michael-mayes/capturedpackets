@@ -167,6 +167,21 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
+                case (byte)IPv4PacketConstants.IPv4PacketProtocol.EIGRP:
+                    {
+                        //We've got an IPv4 packet containing a Cisco EIGRP packet
+
+                        //Processing of IPv4 packets containing a Cisco EIGRP packet is not currently supported!
+
+                        //Just record the event and fall through as later processing will read off the remaining payload so we can move on
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The IPv4 packet contains a Cisco EIGRP packet which is not currently supported!!!"
+                            );
+
+                        break;
+                    }
+
                 default:
                     {
                         //We've got an IPv4 packet containing an unknown protocol

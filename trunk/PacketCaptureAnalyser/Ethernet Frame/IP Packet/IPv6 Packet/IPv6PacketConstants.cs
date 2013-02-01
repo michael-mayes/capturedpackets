@@ -46,7 +46,8 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             IGMP = 0x02, //IGMP - Internet Group Management Protocol (RFC 1112)
             TCP = 0x06, //TCP - Transmission Control Protocol (RFC 793)
             UDP = 0x11, //UDP - User Datagram Protocol (RFC 768)
-            ICMPv6 = 0x3A //ICMPv6 - Internet Control Message Protocol version 6 for IPv6 (RFC 4443, RFC 4884)
+            ICMPv6 = 0x3A, //ICMPv6 - Internet Control Message Protocol version 6 for IPv6 (RFC 4443, RFC 4884)
+            EIGRP = 0x58 //EIGRP - Cisco Enhanced Interior Gateway Routing Protocol (Proprietary)
         }
     }
 }

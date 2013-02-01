@@ -48,7 +48,8 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             ICMPv4 = 0x01, //ICMPv4 - Internet Control Message Protocol version 4 for IPv4 (RFC 792)
             IGMP = 0x02, //IGMP - Internet Group Management Protocol (RFC 1112)
             TCP = 0x06, //TCP - Transmission Control Protocol (RFC 793)
-            UDP = 0x11 //UDP - User Datagram Protocol (RFC 768)
+            UDP = 0x11, //UDP - User Datagram Protocol (RFC 768)
+            EIGRP = 0x58 //EIGRP - Cisco Enhanced Interior Gateway Routing Protocol (Proprietary)
         }
     }
 }
