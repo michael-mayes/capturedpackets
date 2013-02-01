@@ -382,11 +382,19 @@ namespace AnalysisNamespace
             double TheMinTimestampDifference = double.MaxValue;
             double TheMaxTimestampDifference = double.MinValue;
 
+            ulong TheNumberOfTimestampDifferenceInstances = 0;
+            double TheTotalOfTimestampDifferences = 0;
+            double TheAverageTimestampDifference = 0;
+
             foreach (System.Data.DataRow TheLatencyValuesRow in TheLatencyValuesRows)
             {
                 double TheTimestampDifference = (double)TheLatencyValuesRow["TimestampDifference"];
 
                 TheHistogram.AddValue(TheTimestampDifference);
+
+                //Keep a running total to allow for averaging
+                ++TheNumberOfTimestampDifferenceInstances;
+                TheTotalOfTimestampDifferences += TheTimestampDifference;
 
                 if (TheMinTimestampDifference > TheTimestampDifference)
                 {
@@ -403,54 +411,70 @@ namespace AnalysisNamespace
                 }
             }
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            if (TheNumberOfTimestampDifferenceInstances > 0)
+            {
+                TheAverageTimestampDifference = (TheTotalOfTimestampDifferences / TheNumberOfTimestampDifferenceInstances);
 
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The minimum latency for pairs of " +
-                TheProtocolString +
-                " messages with a Message Id of " +
-                TheMessageId.ToString() +
-                " was " +
-                TheMinTimestampDifference.ToString() +
-                " ms for packet number " +
-                TheMinTimestampPacketNumber.ToString() +
-                " and sequence number " +
-                TheMinTimestampSequenceNumber.ToString()
-                );
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The maximum latency for pairs of " +
-                TheProtocolString +
-                " messages with a Message Id of " +
-                TheMessageId.ToString() +
-                " was " +
-                TheMaxTimestampDifference.ToString() +
-                " ms for packet number " +
-                TheMaxTimestampPacketNumber.ToString() +
-                " and sequence number " +
-                TheMaxTimestampSequenceNumber.ToString()
-                );
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The minimum latency for pairs of " +
+                    TheProtocolString +
+                    " messages with a Message Id of " +
+                    TheMessageId.ToString() +
+                    " was " +
+                    TheMinTimestampDifference.ToString() +
+                    " ms for packet number " +
+                    TheMinTimestampPacketNumber.ToString() +
+                    " and sequence number " +
+                    TheMinTimestampSequenceNumber.ToString()
+                    );
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The maximum latency for pairs of " +
+                    TheProtocolString +
+                    " messages with a Message Id of " +
+                    TheMessageId.ToString() +
+                    " was " +
+                    TheMaxTimestampDifference.ToString() +
+                    " ms for packet number " +
+                    TheMaxTimestampPacketNumber.ToString() +
+                    " and sequence number " +
+                    TheMaxTimestampSequenceNumber.ToString()
+                    );
 
-            //Output the histogram
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The average latency for pairs of " +
+                    TheProtocolString +
+                    " messages with a Message Id of " +
+                    TheMessageId.ToString() +
+                    " was " +
+                    TheAverageTimestampDifference.ToString() +
+                    " ms"
+                    );
 
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The histogram (" +
-                LatencyAnalysisConstants.LatencyAnalysisBinsPerMs.ToString() +
-                " bins per ms) for latency values for " +
-                TheProtocolString +
-                " messages with a Message Id of " +
-                TheMessageId.ToString() +
-                " is:"
-                );
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                //Output the histogram
 
-            TheHistogram.OutputValues();
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The histogram (" +
+                    LatencyAnalysisConstants.LatencyAnalysisBinsPerMs.ToString() +
+                    " bins per ms) for latency values for " +
+                    TheProtocolString +
+                    " messages with a Message Id of " +
+                    TheMessageId.ToString() +
+                    " is:"
+                    );
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                TheHistogram.OutputValues();
+            }
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
