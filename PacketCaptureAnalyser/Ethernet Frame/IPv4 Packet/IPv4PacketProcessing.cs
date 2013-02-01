@@ -82,6 +82,11 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             TheHeader.SourceAddress = TheBinaryReader.ReadInt32();
             TheHeader.DestinationAddress = TheBinaryReader.ReadInt32();
 
+            //Determine the version of the IPv4 packet header
+            //Need to first extract the version value from the combined IP version/IP header length field
+            //We want the higher four bits from the combined IP version/IP header length field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
+            ushort TheHeaderVersion = (ushort)(((TheHeader.VersionAndHeaderLength & 0xF0) >> 4));
+
             //Determine the length of the IPv4 packet header
             //Need to first extract the length value from the combined IP version/IP header length field
             //We want the lower four bits from the combined IP version/IP header length field (as it's in a big endian representation) so do a bitwise OR with 0xF (i.e. 00001111 in binary)
@@ -89,7 +94,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             ushort TheHeaderLength = (ushort)((TheHeader.VersionAndHeaderLength & 0xF) * 4);
 
             //Validate the IPv4 packet header
-            TheResult = ValidateHeader(TheHeader, TheHeaderLength);
+            TheResult = ValidateHeader(TheHeader, TheHeaderVersion, TheHeaderLength);
 
             if (TheResult)
             {
@@ -179,14 +184,30 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ValidateHeader(IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader, ushort TheHeaderLength)
+        private bool ValidateHeader(IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader, ushort TheHeaderVersion, ushort TheHeaderLength)
         {
             bool TheResult = true;
 
-            //Validate length of the IPv4 packet header
+            //Validate the version in the IPv4 packet header
+            if (TheHeaderVersion != IPv4PacketConstants.IPv4PacketHeaderExpectedVersion)
+            {
+                //We've got an IPv4 packet header containing an unknown version
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The IPv4 packet contains an unexpected version of " +
+                    TheHeaderVersion.ToString()
+                    );
+
+                TheResult = false;
+            }
+
+            //Validate the length of the IPv4 packet header
             if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMaximumLength ||
                 TheHeaderLength < IPv4PacketConstants.IPv4PacketHeaderMinimumLength)
             {
+                //We've got an IPv4 packet header containing an out of range header length
+
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The IPv4 packet contains a header length " +

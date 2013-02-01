@@ -31,6 +31,10 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
         //IPv4 packet header - 20 bytes
         //
 
+        //Version
+
+        public const ushort IPv4PacketHeaderExpectedVersion = 4;
+
         //Length
 
         public const ushort IPv4PacketHeaderMinimumLength = 20;
