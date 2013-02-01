@@ -31,9 +31,9 @@ namespace PacketCaptureProcessingNamespace
         //Abstract methods - must be overridden with a concrete implementation by a derived class
         //
 
-        public abstract bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out double TheTimestampAccuracy);
+        public abstract bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy);
 
-        public abstract bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp);
+        public abstract bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp);
 
         //
         //Concrete methods - cannot be overridden by a derived class
@@ -86,13 +86,16 @@ namespace PacketCaptureProcessingNamespace
                             //Ensure that the position of the binary reader is set to the beginning of the memory stream
                             TheBinaryReader.BaseStream.Position = 0;
 
+                            //Declare an entity to be used for the network data link type extracted from the packet capture global header
+                            System.UInt32 TheNetworkDataLinkType = 0;
+
                             //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
                             double TheTimestampAccuracy = 0.0;
 
                             //Only continue reading from the packet capture if the packet capture global header was read successfully
-                            if (ProcessGlobalHeader(TheBinaryReader, out TheTimestampAccuracy))
+                            if (ProcessGlobalHeader(TheBinaryReader, out TheNetworkDataLinkType, out TheTimestampAccuracy))
                             {
-                                TheResult = ProcessPackets(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing, TheTimestampAccuracy);
+                                TheResult = ProcessPackets(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
                             }
                             else
                             {
@@ -150,7 +153,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, double TheTimestampAccuracy)
+        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -182,7 +185,7 @@ namespace PacketCaptureProcessingNamespace
                 //Cannot use the PeekChar method here as some characters in the packet capture may fall outside of the bounds of the character encoding - it is a binary format after all!
                 //Instead use the position of the binary reader within the stream, stopping once the length of stream has been reached
 
-                while (TheBinaryReader.BaseStream.Position < TheStreamLength)
+                while (TheBinaryReader.BaseStream.Position < TheStreamLength && TheResult)
                 {
                     ++PacketsProcessed;
 
@@ -199,29 +202,49 @@ namespace PacketCaptureProcessingNamespace
                     //Check whether the end of the packet capture has been reached
                     if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                     {
-                        if (ProcessPacketHeader(TheBinaryReader, TheTimestampAccuracy, out ThePayloadLength, out TheTimestamp))
+                        if (ProcessPacketHeader(TheBinaryReader, TheNetworkDataLinkType, TheTimestampAccuracy, out ThePayloadLength, out TheTimestamp))
                         {
                             //Check whether the end of the packet capture has been reached
                             if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                             {
-                                if (TheEthernetFrameProcessing.Process(PacketsProcessed, ThePayloadLength, TheTimestamp))
+                                switch (TheNetworkDataLinkType)
                                 {
-                                    //Start the next iteration of the loop
-                                    continue;
-                                }
-                                else
-                                {
-                                    TheResult = false;
+                                    case CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType:
+                                        {
+                                            TheBinaryReader.ReadBytes((int)ThePayloadLength);
+                                            break;
+                                        }
 
-                                    System.Diagnostics.Trace.WriteLine
-                                        (
-                                        "Processing of the captured packet #" +
-                                        PacketsProcessed.ToString() +
-                                        " failed during processing of packet header!!!"
-                                        );
+                                    case CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType:
+                                        {
+                                            if (!TheEthernetFrameProcessing.Process(PacketsProcessed, ThePayloadLength, TheTimestamp))
+                                            {
+                                                TheResult = false;
 
-                                    //Stop looping as there has been an error!!!
-                                    break;
+                                                System.Diagnostics.Trace.WriteLine
+                                                    (
+                                                    "Processing of the captured packet #" +
+                                                    PacketsProcessed.ToString() +
+                                                    " failed during processing of packet header for Ethernet frame!!!"
+                                                    );
+                                            }
+
+                                            break;
+                                        }
+
+                                    default:
+                                        {
+                                            TheResult = false;
+
+                                            System.Diagnostics.Trace.WriteLine
+                                                (
+                                                "Processing of the captured packet #" +
+                                                PacketsProcessed.ToString() +
+                                                " failed during processing of packet header with unknown datalink type!!!"
+                                                );
+
+                                            break;
+                                        }
                                 }
                             }
                             else

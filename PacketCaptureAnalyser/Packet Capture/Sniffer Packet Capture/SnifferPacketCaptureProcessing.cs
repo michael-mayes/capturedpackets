@@ -31,9 +31,12 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - override abstract methods on the base class
         //
 
-        public override bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out double TheTimestampAccuracy)
+        public override bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy)
         {
             bool TheResult = true;
+
+            //Provide a default value for the output parameter for the network datalink type
+            TheNetworkDataLinkType = CommonPackageCaptureConstants.CommonPackageCaptureInvalidNetworkDataLinkType;
 
             //Provide a default value to the output parameter for the timestamp accuracy
             TheTimestampAccuracy = 0.0;
@@ -64,6 +67,9 @@ namespace PacketCaptureProcessingNamespace
 
             if (TheResult)
             {
+                //Set up the output parameter for the network data link type
+                TheNetworkDataLinkType = TheGlobalHeader.NetworkEncapsulationType;
+
                 //Derive the output parameter for the timestamp accuracy (actually a timestamp slice for a Sniffer packet capture) from the timestamp units in the Sniffer packet capture global header
                 TheResult = CalculateTimestampAccuracy(TheGlobalHeader.TimestampUnits, out TheTimestampAccuracy);
             }
@@ -71,7 +77,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
+        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -254,14 +260,17 @@ namespace PacketCaptureProcessingNamespace
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.NetworkEncapsulationType != SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedNetworkEncapsulationType)
+            if (TheGlobalHeader.NetworkEncapsulationType != CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType &&
+                TheGlobalHeader.NetworkEncapsulationType != CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected network encapsulation type, is " +
                     TheGlobalHeader.NetworkEncapsulationType.ToString() +
                     " not " +
-                    SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedNetworkEncapsulationType.ToString()
+                    CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType.ToString() +
+                    " or " +
+                    CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType.ToString()
                     );
 
                 TheResult = false;
