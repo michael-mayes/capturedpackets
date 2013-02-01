@@ -55,6 +55,8 @@ namespace AnalysisNamespace
             TheLatencyValuesTable.Columns.Add("MessageId", typeof(ulong));
             TheLatencyValuesTable.Columns.Add("FirstInstanceFound", typeof(bool));
             TheLatencyValuesTable.Columns.Add("SecondInstanceFound", typeof(bool));
+            TheLatencyValuesTable.Columns.Add("FirstInstancePacketNumber", typeof(ulong));
+            TheLatencyValuesTable.Columns.Add("SecondInstancePacketNumber", typeof(ulong));
             TheLatencyValuesTable.Columns.Add("FirstInstanceTimestamp", typeof(double));
             TheLatencyValuesTable.Columns.Add("SecondInstanceTimestamp", typeof(double));
             TheLatencyValuesTable.Columns.Add("TimestampDifference", typeof(double));
@@ -95,7 +97,7 @@ namespace AnalysisNamespace
                 };
         }
 
-        public void RegisterMessageReceipt(byte TheHostId, LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber, ulong TheMessageId, double TheTimestamp)
+        public void RegisterMessageReceipt(byte TheHostId, LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber, ulong TheMessageId, ulong ThePacketNumber, double TheTimestamp)
         {
             //Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
             if (TheSequenceNumber == 0)
@@ -116,12 +118,6 @@ namespace AnalysisNamespace
             }
 
             byte TheProtocolAsByte = (byte)TheProtocol;
-
-            //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
-            RegisterEncounteredHostId(TheHostId);
-
-            //Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
-            RegisterEncounteredMessageId(TheHostId, TheMessageId);
 
             //Add the supplied sequence number and timestamp to latency values datatable
 
@@ -145,6 +141,8 @@ namespace AnalysisNamespace
                 TheLatencyValuesRowToAdd["MessageId"] = TheMessageId;
                 TheLatencyValuesRowToAdd["FirstInstanceFound"] = true;
                 TheLatencyValuesRowToAdd["SecondInstanceFound"] = false;
+                TheLatencyValuesRowToAdd["FirstInstancePacketNumber"] = ThePacketNumber;
+                TheLatencyValuesRowToAdd["SecondInstancePacketNumber"] = 0;
                 TheLatencyValuesRowToAdd["FirstInstanceTimestamp"] = TheTimestamp;
                 TheLatencyValuesRowToAdd["SecondInstanceTimestamp"] = 0.0;
                 TheLatencyValuesRowToAdd["TimestampDifference"] = 0.0;
@@ -160,9 +158,9 @@ namespace AnalysisNamespace
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
-                        "Found the row for Host Id of " +
+                        "Found the row for the Host Id " +
                         TheHostId.ToString() +
-                        " and Sequence Number " +
+                        " and the sequence number " +
                         TheSequenceNumber.ToString() +
                         " but the FirstInstanceFound flag is not set!!!"
                         );
@@ -174,9 +172,9 @@ namespace AnalysisNamespace
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
-                        "Found the row for Host Id of " +
+                        "Found the row for the Host Id " +
                         TheHostId.ToString() +
-                        " and Sequence Number "
+                        " and the sequence number "
                         + TheSequenceNumber.ToString() +
                         " but the SecondInstanceFound flag is already set!!!"
                         );
@@ -184,17 +182,18 @@ namespace AnalysisNamespace
                     return;
                 }
 
+                TheLatencyValuesRowFound["SecondInstanceFound"] = true;
+                TheLatencyValuesRowFound["SecondInstancePacketNumber"] = ThePacketNumber;
+
                 if (TheTimestamp > (double)TheLatencyValuesRowFound["FirstInstanceTimestamp"])
                 {
 
-                    TheLatencyValuesRowFound["SecondInstanceFound"] = true;
                     TheLatencyValuesRowFound["SecondInstanceTimestamp"] = TheTimestamp;
                     TheLatencyValuesRowFound["TimestampDifference"] = (TheTimestamp - (double)TheLatencyValuesRowFound["FirstInstanceTimestamp"]) * 1000.0; //Milliseconds
                     TheLatencyValuesRowFound["TimestampDifferenceCalculated"] = true;
                 }
                 else if (TheTimestamp == (double)TheLatencyValuesRowFound["FirstInstanceTimestamp"])
                 {
-                    TheLatencyValuesRowFound["SecondInstanceFound"] = true;
                     TheLatencyValuesRowFound["SecondInstanceTimestamp"] = 0.0;
                     TheLatencyValuesRowFound["TimestampDifference"] = 0.0;
                     TheLatencyValuesRowFound["TimestampDifferenceCalculated"] = true;
@@ -203,16 +202,21 @@ namespace AnalysisNamespace
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
-                        "Found the row for Host Id of " +
+                        "Found the row for the Host Id " +
                         TheHostId.ToString() +
-                        " and Sequence Number " +
+                        " and the sequence number " +
                         TheSequenceNumber.ToString() +
                         ", but the timestamp of the first message is higher than that of the second message!!!"
                         );
 
-                    TheLatencyValuesRowFound["SecondInstanceFound"] = true;
                     TheLatencyValuesRowFound["TimestampDifferenceCalculated"] = false;
                 }
+
+                //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
+                RegisterEncounteredHostId(TheHostId);
+
+                //Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
+                RegisterEncounteredMessageId(TheHostId, TheMessageId);
             }
         }
 
@@ -229,9 +233,9 @@ namespace AnalysisNamespace
             {
                 System.Diagnostics.Trace.WriteLine
                     (
-                    "Found a message with a Host Id of value " +
+                    "Found a pair of data-supplying messages for a Host Id " +
                     string.Format("{0,3}", TheHostId) +
-                    " - adding that Host Id to the latency analysis"
+                    " - adding this Host Id to the latency analysis"
                     );
 
                 System.Data.DataRow TheHostIdRowToAdd = TheHostIdsTable.NewRow();
@@ -256,11 +260,11 @@ namespace AnalysisNamespace
             {
                 System.Diagnostics.Trace.WriteLine
                     (
-                    "Found a message with a Message Id of value " +
+                    "Found a pair of data-supplying messages with a Message Id " +
                     string.Format("{0,5}", TheMessageId) +
-                    " for a Host Id of value " +
+                    " for a Host Id " +
                     string.Format("{0,3}", TheHostId) +
-                    " - adding that Message Id to the latency analysis"
+                    " - adding this Message Id/Host Id combination to the latency analysis"
                     );
 
                 System.Data.DataRow TheMessageIdRowToAdd = TheMessageIdsTable.NewRow();
@@ -369,6 +373,9 @@ namespace AnalysisNamespace
                     LatencyAnalysisConstants.LatencyAnalysisBestCaseLatency,
                     LatencyAnalysisConstants.LatencyAnalysisWorstCaseLatency);
 
+            ulong TheMinTimestampPacketNumber = 0;
+            ulong TheMaxTimestampPacketNumber = 0;
+
             ulong TheMinTimestampSequenceNumber = 0;
             ulong TheMaxTimestampSequenceNumber = 0;
 
@@ -384,12 +391,14 @@ namespace AnalysisNamespace
                 if (TheMinTimestampDifference > TheTimestampDifference)
                 {
                     TheMinTimestampDifference = TheTimestampDifference;
+                    TheMinTimestampPacketNumber = (ulong)TheLatencyValuesRow["FirstInstancePacketNumber"];
                     TheMinTimestampSequenceNumber = (ulong)TheLatencyValuesRow["SequenceNumber"];
                 }
 
                 if (TheMaxTimestampDifference < TheTimestampDifference)
                 {
                     TheMaxTimestampDifference = TheTimestampDifference;
+                    TheMaxTimestampPacketNumber = (ulong)TheLatencyValuesRow["FirstInstancePacketNumber"];
                     TheMaxTimestampSequenceNumber = (ulong)TheLatencyValuesRow["SequenceNumber"];
                 }
             }
@@ -404,7 +413,9 @@ namespace AnalysisNamespace
                 TheMessageId.ToString() +
                 " was " +
                 TheMinTimestampDifference.ToString() +
-                " ms for sequence number " +
+                " ms for packet number " +
+                TheMinTimestampPacketNumber.ToString() +
+                " and sequence number " +
                 TheMinTimestampSequenceNumber.ToString()
                 );
 
@@ -416,7 +427,9 @@ namespace AnalysisNamespace
                 TheMessageId.ToString() +
                 " was " +
                 TheMaxTimestampDifference.ToString() +
-                " ms for sequence number " +
+                " ms for packet number " +
+                TheMaxTimestampPacketNumber.ToString() +
+                " and sequence number " +
                 TheMaxTimestampSequenceNumber.ToString()
                 );
 
@@ -440,6 +453,37 @@ namespace AnalysisNamespace
             TheHistogram.OutputValues();
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+            //
+            //Restore the following lines if you want the first and second packet numbers, sequence numbers and latency values output to the file
+            //
+
+            //System.Diagnostics.Trace.WriteLine
+            //    (
+            //    "The first and second packet numbers, sequence numbers and latency values for " +
+            //    TheProtocolString +
+            //    " messages with a Message Id of " +
+            //    TheMessageId.ToString() +
+            //    " are:"
+            //    );
+
+            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+            //foreach (System.Data.DataRow TheLatencyValuesRow in TheLatencyValuesRows)
+            //{
+            //    System.Diagnostics.Trace.WriteLine
+            //        (
+            //        ((ulong)TheLatencyValuesRow["FirstInstancePacketNumber"]).ToString() +
+            //        "\t" +
+            //        ((ulong)TheLatencyValuesRow["SecondInstancePacketNumber"]).ToString() +
+            //        "\t" +
+            //        ((ulong)TheLatencyValuesRow["SequenceNumber"]).ToString() +
+            //        "\t" +
+            //        ((double)TheLatencyValuesRow["TimestampDifference"]).ToString()
+            //        );
+            //}
+
+            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
         }
     }
 }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.RunAnalysisOnPackageSelectedCaptureButton = new System.Windows.Forms.Button();
+            this.RunAnalysisOnSelectedPackageCaptureButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
             this.SelectedPacketCaptureForAnalysisDialog = new System.Windows.Forms.OpenFileDialog();
             this.SelectPacketCaptureButton = new System.Windows.Forms.Button();
@@ -48,16 +48,16 @@
             this.SelectedOutputFilePathTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // RunAnalysisOnPackageSelectedCaptureButton
+            // RunAnalysisOnSelectedPackageCaptureButton
             // 
-            this.RunAnalysisOnPackageSelectedCaptureButton.Enabled = false;
-            this.RunAnalysisOnPackageSelectedCaptureButton.Location = new System.Drawing.Point(12, 324);
-            this.RunAnalysisOnPackageSelectedCaptureButton.Name = "RunAnalysisOnPackageSelectedCaptureButton";
-            this.RunAnalysisOnPackageSelectedCaptureButton.Size = new System.Drawing.Size(241, 23);
-            this.RunAnalysisOnPackageSelectedCaptureButton.TabIndex = 1;
-            this.RunAnalysisOnPackageSelectedCaptureButton.Text = "Run Analysis On Selected Packet Capture";
-            this.RunAnalysisOnPackageSelectedCaptureButton.UseVisualStyleBackColor = true;
-            this.RunAnalysisOnPackageSelectedCaptureButton.Click += new System.EventHandler(this.RunAnalysisOnPacketCaptureButton_Click);
+            this.RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+            this.RunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 324);
+            this.RunAnalysisOnSelectedPackageCaptureButton.Name = "RunAnalysisOnSelectedPackageCaptureButton";
+            this.RunAnalysisOnSelectedPackageCaptureButton.Size = new System.Drawing.Size(241, 23);
+            this.RunAnalysisOnSelectedPackageCaptureButton.TabIndex = 1;
+            this.RunAnalysisOnSelectedPackageCaptureButton.Text = "Run Analysis On Selected Packet Capture";
+            this.RunAnalysisOnSelectedPackageCaptureButton.UseVisualStyleBackColor = true;
+            this.RunAnalysisOnSelectedPackageCaptureButton.Click += new System.EventHandler(this.RunAnalysisOnPacketCaptureButton_Click);
             // 
             // ExitButton
             // 
@@ -235,7 +235,7 @@
             this.Controls.Add(this.SelectedPacketCapturePathTextBox);
             this.Controls.Add(this.SelectPacketCaptureButton);
             this.Controls.Add(this.ExitButton);
-            this.Controls.Add(this.RunAnalysisOnPackageSelectedCaptureButton);
+            this.Controls.Add(this.RunAnalysisOnSelectedPackageCaptureButton);
             this.Name = "MainWindowForm";
             this.Text = "Packet Capture Analyser";
             this.ResumeLayout(false);
@@ -245,7 +245,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button RunAnalysisOnPackageSelectedCaptureButton;
+        private System.Windows.Forms.Button RunAnalysisOnSelectedPackageCaptureButton;
         private System.Windows.Forms.Button ExitButton;
         private System.Windows.Forms.OpenFileDialog SelectedPacketCaptureForAnalysisDialog;
         private System.Windows.Forms.Button SelectPacketCaptureButton;

@@ -38,7 +38,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
-        public bool Process(long ThePayloadLength, double TheTimestamp)
+        public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -51,7 +51,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             if (TheResult)
             {
                 //Process the payload of the IPv4 packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the IPv4 packet header
-                TheResult = ProcessPayload(TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength, TheIPv4PacketProtocol);
+                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength, TheIPv4PacketProtocol);
             }
 
             return TheResult;
@@ -111,7 +111,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(double TheTimestamp, long ThePayloadLength, ushort TheIPv4PacketPayloadLength, byte TheIPv4PacketProtocol)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, long ThePayloadLength, ushort TheIPv4PacketPayloadLength, byte TheIPv4PacketProtocol)
         {
             bool TheResult = true;
 
@@ -143,7 +143,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an TCP packet so process it
-                        TheResult = TheTCPPacketProcessing.Process(TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
+                        TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
 
                         break;
                     }
@@ -153,7 +153,7 @@ namespace EthernetFrameNamespace.IPv4PacketNamespace
                         UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an UDP datagram so process it
-                        TheResult = TheUDPDatagramProcessing.Process(TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
+                        TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength, TheIPv4PacketPayloadLength);
 
                         break;
                     }

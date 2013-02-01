@@ -53,7 +53,7 @@ namespace PacketCaptureProcessingNamespace
                     System.Diagnostics.Trace.WriteLine
                         (
                         "Starting read of all bytes from the " +
-                        ThePacketCapture +
+                        System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture"
                         );
 
@@ -69,17 +69,19 @@ namespace PacketCaptureProcessingNamespace
                     System.Diagnostics.Trace.WriteLine
                         (
                         "Finished read of all bytes from the " +
-                        ThePacketCapture +
+                        System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture in " +
                         TheDuration.Seconds.ToString() +
                         " seconds"
                         );
 
                     //Create a memory stream to read the packet capture from the byte array
-                    using (System.IO.MemoryStream TheMemoryStream = new System.IO.MemoryStream(TheBytes))
+                    using (System.IO.MemoryStream TheMemoryStream =
+                        new System.IO.MemoryStream(TheBytes))
                     {
                         //Open a binary reader for the memory stream for the packet capture
-                        using (System.IO.BinaryReader TheBinaryReader = new System.IO.BinaryReader(TheMemoryStream))
+                        using (System.IO.BinaryReader TheBinaryReader =
+                            new System.IO.BinaryReader(TheMemoryStream))
                         {
                             //Ensure that the position of the binary reader is set to the beginning of the memory stream
                             TheBinaryReader.BaseStream.Position = 0;
@@ -104,7 +106,7 @@ namespace PacketCaptureProcessingNamespace
                     System.Diagnostics.Trace.WriteLine
                         (
                         "The " +
-                        ThePacketCapture +
+                        System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture does not exist!!!"
                         );
 
@@ -122,7 +124,7 @@ namespace PacketCaptureProcessingNamespace
                     " with the following message: " +
                     e.Message +
                     " was raised as access to the " +
-                    ThePacketCapture +
+                    System.IO.Path.GetFileName(ThePacketCapture) +
                     " packet capture was denied because it is being used by another process!!!"
                     );
 
@@ -138,7 +140,7 @@ namespace PacketCaptureProcessingNamespace
                     " with the following message: " +
                     e.Message +
                     " was raised as access to the " +
-                    ThePacketCapture +
+                    System.IO.Path.GetFileName(ThePacketCapture) +
                     " packet capture was denied because this process was deemed as unauthorised by the OS!!!"
                     );
 
@@ -152,7 +154,7 @@ namespace PacketCaptureProcessingNamespace
         {
             bool TheResult = true;
 
-            long PacketsProcessed = 0;
+            ulong PacketsProcessed = 0;
 
             //Read the start time to allow later calculation of the duration of the processing
             System.DateTime TheStartTime = System.DateTime.Now;
@@ -202,7 +204,7 @@ namespace PacketCaptureProcessingNamespace
                             //Check whether the end of the packet capture has been reached
                             if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                             {
-                                if (TheEthernetFrameProcessing.Process(ThePayloadLength, TheTimestamp))
+                                if (TheEthernetFrameProcessing.Process(PacketsProcessed, ThePayloadLength, TheTimestamp))
                                 {
                                     //Start the next iteration of the loop
                                     continue;
