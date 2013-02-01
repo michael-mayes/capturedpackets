@@ -42,23 +42,23 @@ namespace EthernetFrameNamespace.IPPacketNamespace
         {
             bool TheResult = true;
 
-            ushort TheIPv4PacketHeaderLength;
-            ushort TheIPv4PacketPayloadLength;
-            byte TheIPv4PacketProtocol;
+            ushort TheHeaderLength;
+            ushort ThePacketPayloadLength;
+            byte TheProtocol;
 
             //Process the IPv4 packet header
-            TheResult = ProcessHeader(ThePayloadLength, out TheIPv4PacketHeaderLength, out TheIPv4PacketPayloadLength, out TheIPv4PacketProtocol);
+            TheResult = ProcessHeader(ThePayloadLength, out TheHeaderLength, out ThePacketPayloadLength, out TheProtocol);
 
             if (TheResult)
             {
                 //Process the payload of the IPv4 packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the IPv4 packet header
-                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, TheIPv4PacketPayloadLength, TheIPv4PacketProtocol);
+                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePacketPayloadLength, TheProtocol);
             }
 
             return TheResult;
         }
 
-        private bool ProcessHeader(long ThePayloadLength, out ushort TheHeaderLength, out ushort TheIPv4PacketPayloadLength, out byte TheProtocol)
+        private bool ProcessHeader(long ThePayloadLength, out ushort TheHeaderLength, out ushort ThePacketPayloadLength, out byte TheProtocol)
         {
             bool TheResult = true;
 
@@ -66,7 +66,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             TheHeaderLength = 0;
 
             //Provide a default value for the output parameter for the length of the IPv4 packet payload
-            TheIPv4PacketPayloadLength = 0;
+            ThePacketPayloadLength = 0;
 
             //Provide a default value for the output parameter for the protocol for the IPv4 packet
             TheProtocol = 0;
@@ -103,7 +103,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             if (TheResult)
             {
                 //Set up the output parameter for the length of the payload of the IPv4 packet (e.g. a TCP packet), which is the total length of the IPv4 packet minus the length of the IPv4 packet header just calculated
-                TheIPv4PacketPayloadLength = (ushort)(TheHeader.TotalLength - TheHeaderLength);
+                ThePacketPayloadLength = (ushort)(TheHeader.TotalLength - TheHeaderLength);
 
                 //Set up the output parameter for the protocol for the IPv4 packet
                 TheProtocol = TheHeader.Protocol;
@@ -120,19 +120,19 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             return TheResult;
         }
 
-        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort TheIPv4PacketPayloadLength, byte TheIPv4PacketProtocol)
+        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort ThePayloadLength, byte TheProtocol)
         {
             bool TheResult = true;
 
             //Process the IPv4 packet based on the value indicated for the protocol in the the IPv4 packet header
-            switch (TheIPv4PacketProtocol)
+            switch (TheProtocol)
             {
                 case (byte)IPv4PacketConstants.IPv4PacketProtocol.ICMPv4:
                     {
                         ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing(TheBinaryReader);
 
                         //We've got an IPv4 packet containing an ICMPv4 packet so process it
-                        TheResult = TheICMPv4PacketProcessing.Process(TheIPv4PacketPayloadLength);
+                        TheResult = TheICMPv4PacketProcessing.Process(ThePayloadLength);
 
                         break;
                     }
@@ -142,7 +142,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing(TheBinaryReader);
 
                         //We've got an IPv4 packet containing an IGMPv2 packet so process it
-                        TheResult = TheIGMPv2PacketProcessing.Process(TheIPv4PacketPayloadLength);
+                        TheResult = TheIGMPv2PacketProcessing.Process(ThePayloadLength);
 
                         break;
                     }
@@ -152,7 +152,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an TCP packet so process it
-                        TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, TheIPv4PacketPayloadLength);
+                        TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
 
                         break;
                     }
@@ -162,7 +162,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an IPv4 packet containing an UDP datagram so process it
-                        TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, TheIPv4PacketPayloadLength);
+                        TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
 
                         break;
                     }
@@ -176,7 +176,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         System.Diagnostics.Trace.WriteLine
                             (
                             "The IPv4 packet contains an unexpected protocol of " +
-                            string.Format("{0:X}", TheIPv4PacketProtocol)
+                            string.Format("{0:X}", TheProtocol)
                             );
 
                         TheResult = false;
