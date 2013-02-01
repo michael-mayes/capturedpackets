@@ -324,8 +324,8 @@ namespace PacketCaptureAnalyser
                 }
             }
 
-            //Clear the selected packet capture after analysis
-            ClearSelectedPacketCapture();
+            //Update the display after completion of the analysis
+            ReflectCompletionOfPacketCaptureAnalysis();
         }
 
         private void ExitButton_Click(object sender, System.EventArgs e)
@@ -439,6 +439,15 @@ namespace PacketCaptureAnalyser
                         break;
                     }
             }
+        }
+
+        private void ReflectCompletionOfPacketCaptureAnalysis()
+        {
+            SelectedOutputFilePathTextBox.Text = "<No Output File Selected>";
+            SelectedOutputFileNameTextBox.Text = "<No Output File Selected>";
+
+            //Disable the button to start the analysis on the packet capture
+            RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
         }
 
         private void OpenSelectedPackageCaptureButton_Click(object sender, System.EventArgs e)
