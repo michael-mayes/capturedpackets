@@ -197,19 +197,26 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
                     {
-                        //We've got an Ethernet frame containing an unknown network data link type
+                        //We've got an Ethernet frame containing a second VLAN tag!
 
-                        //Processing of Ethernet frames with two VLAN tags is not currently supported!
-
-                        //Just record the event and fall through to the processing below that will read off the payload so we can move on
                         System.Diagnostics.Trace.WriteLine
                             (
                             "The Ethernet frame in captured packet #" +
                             ThePacketNumber.ToString() +
-                            " contains a second VLAN tag!!!"
+                            " contains a second VLAN tag!" +
+                            " - Attempt to recover and continue processing"
                             );
 
-                        ThePacketProcessingResult = false;
+                        ThePacketProcessingResult = ProcessEtherType();
+
+                        if (ThePacketProcessingResult)
+                        {
+                            //Now that the second VLAN tag has been dealt with rerecord the position in the stream for the packet capture so we can later determine how far has been progressed
+                            TheStartingStreamPosition = TheBinaryReader.BaseStream.Position;
+
+                            //Call this method again recursively to process the Ethernet frame stripped of the second VLAN tag
+                            ThePacketProcessingResult = ProcessPayload(ThePacketNumber, TheTimestamp);
+                        }
 
                         break;
                     }

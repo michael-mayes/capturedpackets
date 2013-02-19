@@ -65,6 +65,7 @@ namespace PacketCaptureAnalyser
                 {
                     case ".pcap":
                     case ".libpcap":
+                    case ".cap":
                         {
                             //This is a libpcap/tcpdump packet capture
                             TheMainWindowFormPacketCaptureType =
@@ -72,7 +73,6 @@ namespace PacketCaptureAnalyser
                             break;
                         }
 
-                    case ".cap":
                     case ".enc":
                         {
                             //This is an NA Sniffer (DOS) packet capture
@@ -106,15 +106,13 @@ namespace PacketCaptureAnalyser
         {
             bool TheResult = true;
 
-            //Clear all text from the output window on starting the analysis for each packet capture to simplify examination of results on multiple successive runs
-            ClearOutputWindow();
-
             //Delete any existing output files with the selected name to ape the clearing of all text from the output window
             if (System.IO.File.Exists(SelectedOutputFileForAnalysisDialog.FileName))
             {
                 System.IO.File.Delete(SelectedOutputFileForAnalysisDialog.FileName);
             }
 
+            //Remove the output window from the list of listeners to debug output as all text will go to the output file
             System.Diagnostics.Debug.Listeners.Clear();
 
             //Redirect any text added to the output window to the output file
@@ -456,20 +454,6 @@ namespace PacketCaptureAnalyser
             {
                 System.Diagnostics.Process.Start(SelectedPacketCaptureForAnalysisDialog.FileName);
             }
-        }
-
-        //Clears all text from the output window
-        private void ClearOutputWindow()
-        {
-            //This is a bit of a version dependent dirty hack, but it works really nicely!
-
-            EnvDTE80.DTE2 IDE =
-                (EnvDTE80.DTE2)System.Runtime.InteropServices.Marshal.GetActiveObject
-                ("VisualStudio.DTE.10.0");
-
-            IDE.ExecuteCommand("Edit.ClearOutputWindow", "");
-
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(IDE);
         }
 
         private void SelectOuputFileButton_Click(object sender, System.EventArgs e)

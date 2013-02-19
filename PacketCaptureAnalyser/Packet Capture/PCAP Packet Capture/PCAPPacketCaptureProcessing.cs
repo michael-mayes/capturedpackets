@@ -146,6 +146,7 @@ namespace PacketCaptureProcessingNamespace
                         }
                 
                     case CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType:
+                    case CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType:
                     default:
                         {
                             ThePayloadLength = ThePacketHeader.SavedLength;
@@ -213,7 +214,8 @@ namespace PacketCaptureProcessingNamespace
             }
 
             if (TheGlobalHeader.NetworkDataLinkType != CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType &&
-                TheGlobalHeader.NetworkDataLinkType != CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType)
+                TheGlobalHeader.NetworkDataLinkType != CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType &&
+                TheGlobalHeader.NetworkDataLinkType != CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
@@ -222,7 +224,9 @@ namespace PacketCaptureProcessingNamespace
                     " not " +
                     CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType.ToString() +
                     " or " +
-                    CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType.ToString()
+                    CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType.ToString() +
+                    " or " +
+                    CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType.ToString()
                     );
 
                 TheResult = false;
