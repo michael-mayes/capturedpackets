@@ -210,7 +210,9 @@ namespace PacketCaptureProcessingNamespace
                                 switch (TheNetworkDataLinkType)
                                 {
                                     case CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType:
+                                    case CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType:
                                         {
+                                            //Just read the bytes off from the packet capture so we can continue
                                             TheBinaryReader.ReadBytes((int)ThePayloadLength);
                                             break;
                                         }
