@@ -49,6 +49,7 @@ namespace AnalysisNamespace
             TheTimeValuesTable.Columns.Add("PacketNumber", typeof(ulong));
             TheTimeValuesTable.Columns.Add("Timestamp", typeof(double));
             TheTimeValuesTable.Columns.Add("Time", typeof(double));
+            TheTimeValuesTable.Columns.Add("Processed", typeof(bool));
 
             //Add the required column to the datatable to hold the set of host Ids encountered during the time analysis
             TheHostIdsTable.Columns.Add("HostId", typeof(byte));
@@ -75,6 +76,7 @@ namespace AnalysisNamespace
             TheTimeValuesRowToAdd["PacketNumber"] = ThePacketNumber;
             TheTimeValuesRowToAdd["Timestamp"] = TheTimestamp;
             TheTimeValuesRowToAdd["Time"] = TheTime;
+            TheTimeValuesRowToAdd["Processed"] = false;
 
             TheTimeValuesTable.Rows.Add(TheTimeValuesRowToAdd);
         }
@@ -167,6 +169,14 @@ namespace AnalysisNamespace
             double TheLastTimestamp = 0.0;
             double TheLastTime = 0.0;
 
+            ulong TheNumberOfTimestampDifferenceInstances = 0;
+            double TheTotalOfTimestampDifferences = 0;
+            double TheAverageTimestampDifference = 0;
+
+            ulong TheNumberOfTimeDifferenceInstances = 0;
+            double TheTotalOfTimeDifferences = 0;
+            double TheAverageTimeDifference = 0;
+
             bool TheFirstRowProcessed = false;
 
             EnumerableRowCollection<System.Data.DataRow>
@@ -183,6 +193,9 @@ namespace AnalysisNamespace
                     TheLastTimestamp = (double)TheTimeValuesRow["Timestamp"];
                     TheLastTime = (double)TheTimeValuesRow["Time"];
 
+                    //The first row is always marked as processed
+                    TheTimeValuesRow["Processed"] = true;
+
                     TheFirstRowProcessed = true;
 
                     continue;
@@ -190,112 +203,180 @@ namespace AnalysisNamespace
 
                 //The timestamp
                 {
-                    double TheTimestampDifference = ((double)TheTimeValuesRow["Timestamp"] - TheLastTimestamp - 1.0) * 1000.0; //Milliseconds;
+                    double TheAbsoluteTimestampDifference = System.Math.Abs(((double)TheTimeValuesRow["Timestamp"] - TheLastTimestamp) * 1000.0);
+                    double TheTimestampDifference = (((double)TheTimeValuesRow["Timestamp"] - TheLastTimestamp) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
 
-                    TheTimestampHistogram.AddValue(TheTimestampDifference);
-
-                    if (TheMinTimestampDifference > TheTimestampDifference)
+                    if (TheAbsoluteTimestampDifference > TimeAnalysisConstants.TimeAnalysisMinTimestampDifference)
                     {
-                        TheMinTimestampDifference = TheTimestampDifference;
-                        TheMinTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                        //Only those time messages in the chosen range will be marked as processed
+                        //This should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
+                        TheTimeValuesRow["Processed"] = true;
+
+                        //Keep a running total to allow for averaging
+                        ++TheNumberOfTimestampDifferenceInstances;
+                        TheTotalOfTimestampDifferences += TheTimestampDifference;
+
+                        TheTimestampHistogram.AddValue(TheTimestampDifference);
+
+                        if (TheMinTimestampDifference > TheTimestampDifference)
+                        {
+                            TheMinTimestampDifference = TheTimestampDifference;
+                            TheMinTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                        }
+
+                        if (TheMaxTimestampDifference < TheTimestampDifference)
+                        {
+                            TheMaxTimestampDifference = TheTimestampDifference;
+                            TheMaxTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                        }
+
+                        TheLastTimestamp = (double)TheTimeValuesRow["Timestamp"];
+
+                        //The time
+
+                        double TheTimeDifference = (((double)TheTimeValuesRow["Time"] - TheLastTime) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
+
+                        ++TheNumberOfTimeDifferenceInstances;
+                        TheTotalOfTimeDifferences += TheTimeDifference;
+
+                        TheTimeHistogram.AddValue(TheTimeDifference);
+
+                        if (TheMinTimeDifference > TheTimeDifference)
+                        {
+                            TheMinTimeDifference = TheTimeDifference;
+                            TheMinTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                        }
+
+                        if (TheMaxTimeDifference < TheTimeDifference)
+                        {
+                            TheMaxTimeDifference = TheTimeDifference;
+                            TheMaxTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                        }
+
+                        TheLastTime = (double)TheTimeValuesRow["Time"];
                     }
-
-                    if (TheMaxTimestampDifference < TheTimestampDifference)
-                    {
-                        TheMaxTimestampDifference = TheTimestampDifference;
-                        TheMaxTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
-                    }
-
-                    TheLastTimestamp = (double)TheTimeValuesRow["Timestamp"];
-                }
-
-                //The time
-                {
-                    double TheTimeDifference = ((double)TheTimeValuesRow["Time"] - TheLastTime - 1.0) * 1000.0; //Milliseconds;
-
-                    TheTimeHistogram.AddValue(TheTimeDifference);
-
-                    if (TheMinTimeDifference > TheTimeDifference)
-                    {
-                        TheMinTimeDifference = TheTimeDifference;
-                        TheMinTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
-                    }
-
-                    if (TheMaxTimeDifference < TheTimeDifference)
-                    {
-                        TheMaxTimeDifference = TheTimeDifference;
-                        TheMaxTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
-                    }
-
-                    TheLastTime = (double)TheTimeValuesRow["Time"];
                 }
             }
 
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The minimum timestamp difference was " +
-                TheMinTimestampDifference.ToString() +
-                " ms for packet number " +
-                TheMinTimestampDifferencePacketNumber.ToString()
-                );
+            if (TheNumberOfTimestampDifferenceInstances > 0)
+            {
+                TheAverageTimestampDifference = (TheTotalOfTimestampDifferences / TheNumberOfTimestampDifferenceInstances);
+                TheAverageTimeDifference = (TheTotalOfTimeDifferences / TheNumberOfTimeDifferenceInstances);
 
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The maximum timestamp difference was " +
-                TheMaxTimestampDifference.ToString() +
-                " ms for packet number " +
-                TheMaxTimestampDifferencePacketNumber.ToString()
-                );
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The number of time messages was " +
+                    TheNumberOfTimestampDifferenceInstances.ToString()
+                    );
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The minimum timestamp difference was " +
+                    TheMinTimestampDifference.ToString() +
+                    " ms for packet number " +
+                    TheMinTimestampDifferencePacketNumber.ToString()
+                    );
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The maximum timestamp difference was " +
+                    TheMaxTimestampDifference.ToString() +
+                    " ms for packet number " +
+                    TheMaxTimestampDifferencePacketNumber.ToString()
+                    );
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The average timestamp difference was " +
+                    TheAverageTimestampDifference.ToString() +
+                    " ms"
+                    );
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                //Output the histogram
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The histogram (" +
+                    TimeAnalysisConstants.TimeAnalysisTimestampBinsPerMs.ToString() +
+                    " bins per ms) for timestamp values is:"
+                    );
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                TheTimestampHistogram.OutputValues();
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The minimum time difference was " +
+                    TheMinTimeDifference.ToString() +
+                    " ms for packet number " +
+                    TheMinTimeDifferencePacketNumber.ToString()
+                    );
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The maximum time difference was " +
+                    TheMaxTimeDifference.ToString() +
+                    " ms for packet number " +
+                    TheMaxTimeDifferencePacketNumber.ToString()
+                    );
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The average time difference was " +
+                    TheAverageTimeDifference.ToString() +
+                    " ms"
+                    );
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                //Output the histogram
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The histogram (" +
+                    TimeAnalysisConstants.TimeAnalysisTimeBinsPerMs.ToString() +
+                    " bins per ms) for time values is:"
+                    );
+
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                TheTimeHistogram.OutputValues();
+            }
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            //Output the histogram
+            //
+            //Restore the following lines if you want the timestamps and times output to the file
+            //
 
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The histogram (" +
-                TimeAnalysisConstants.TimeAnalysisTimestampBinsPerMs.ToString() +
-                " bins per ms) for timestamp values is:"
-                );
+            //System.Diagnostics.Trace.WriteLine
+            //    (
+            //    "The timestamps and times for the time messages are:"
+            //    );
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            TheTimestampHistogram.OutputValues();
+            //foreach (System.Data.DataRow TheTimeValuesRow in TheTimeValuesRowsFound)
+            //{
+            //    if ((bool)TheTimeValuesRow["Processed"])
+            //    {
+            //        System.Diagnostics.Trace.WriteLine
+            //            (
+            //            ((double)TheTimeValuesRow["Timestamp"]).ToString() +
+            //            "\t" +
+            //            ((double)TheTimeValuesRow["Time"]).ToString()
+            //            );
+            //    }
+            //}
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
-
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The minimum time difference was " +
-                TheMinTimeDifference.ToString() +
-                " ms for packet number " +
-                TheMinTimeDifferencePacketNumber.ToString()
-                );
-
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The maximum time difference was " +
-                TheMaxTimeDifference.ToString() +
-                " ms for packet number " +
-                TheMaxTimeDifferencePacketNumber.ToString()
-                );
-
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
-
-            //Output the histogram
-
-            System.Diagnostics.Trace.WriteLine
-                (
-                "The histogram (" +
-                TimeAnalysisConstants.TimeAnalysisTimeBinsPerMs.ToString() +
-                " bins per ms) for time values is:"
-                );
-
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
-
-            TheTimeHistogram.OutputValues();
-
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
         }
     }
 }
