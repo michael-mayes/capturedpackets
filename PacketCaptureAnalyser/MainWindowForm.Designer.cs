@@ -1,4 +1,4 @@
-﻿namespace PacketCaptureAnalyser
+namespace PacketCaptureAnalyser
 {
     partial class MainWindowForm
     {
