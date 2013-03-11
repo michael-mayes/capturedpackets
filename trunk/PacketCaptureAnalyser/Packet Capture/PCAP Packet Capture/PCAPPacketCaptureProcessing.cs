@@ -144,7 +144,7 @@ namespace PacketCaptureProcessingNamespace
 
                             break;
                         }
-                
+
                     case CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType:
                     case CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType:
                     default:

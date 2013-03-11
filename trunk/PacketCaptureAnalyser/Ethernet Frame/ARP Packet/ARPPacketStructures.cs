@@ -51,7 +51,7 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 
             [System.Runtime.InteropServices.FieldOffset(6)]
             public System.UInt16 Operation; //The operation that the sender is performing - 1 for request and 2 for reply
-            
+
             [System.Runtime.InteropServices.FieldOffset(8)]
             public System.UInt32 SenderHardwareAddressHigh; //The high bytes of the media address of the sender (four bytes)
 
@@ -60,7 +60,7 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 
             [System.Runtime.InteropServices.FieldOffset(14)]
             public System.UInt32 SenderProtocolAddress; //The internetwork address of the sender
-            
+
             [System.Runtime.InteropServices.FieldOffset(18)]
             public System.UInt32 TargetHardwareAddressHigh; //The high bytes of the media address of the intended receiver (four bytes) - ignored in requests
 

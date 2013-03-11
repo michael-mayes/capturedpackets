@@ -45,7 +45,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.IGMPv2PacketNamespace
 
             [System.Runtime.InteropServices.FieldOffset(2)]
             public System.UInt16 Checksum; //Checksum for the IGMPv2 packet
-            
+
             [System.Runtime.InteropServices.FieldOffset(4)]
             public System.UInt32 GroupAddress; //The multicast address being queried by the IGMPv2 packet
         }
