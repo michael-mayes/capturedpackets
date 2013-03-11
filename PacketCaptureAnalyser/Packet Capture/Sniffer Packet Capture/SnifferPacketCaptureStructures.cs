@@ -89,7 +89,7 @@ namespace PacketCaptureProcessingNamespace
         //
         //Sniffer packet capture record header - 6 bytes
         //
-        
+
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderLength)]

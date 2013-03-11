@@ -62,7 +62,7 @@ namespace PacketCaptureProcessingNamespace
         //
         //PCAP packet capture packet header - 16 bytes
         //
-        
+
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = PCAPPackageCaptureConstants.PCAPPackageCapturePacketHeaderLength)]
