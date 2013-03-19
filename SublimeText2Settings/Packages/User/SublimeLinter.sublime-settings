@@ -1,0 +1,11 @@
+{
+  "sublimelinter": true,
+  "sublimelinter_popup_errors_on_save": true,
+      /*
+        Selects the way the lines with errors or warnings are marked; "outline"
+        (default) draws outline boxes around the lines, "fill" fills the lines
+        with the outline color, and "none" disables all outline styles
+        (useful if "sublimelinter_gutter_marks" is set).
+    */
+    "sublimelinter_mark_style": "fills"
+}
