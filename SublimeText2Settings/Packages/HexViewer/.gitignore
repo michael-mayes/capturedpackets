@@ -1,0 +1,5 @@
+/*.pyc
+/*.tmLanguage.cache
+.DS_Store
+
+HexInspect.hidden-tmLanguage.cache
