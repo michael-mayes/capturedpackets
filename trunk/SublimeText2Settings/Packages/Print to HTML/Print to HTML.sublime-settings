@@ -1,0 +1,53 @@
+{
+    // If true, open browser's Print dialog when using Print as HTML via Browser
+    "auto_print_in_browser" : true,
+
+    // If true, close page in browser after Print dialog (when auto_print_in_browser=true)
+    "auto_close_in_browser" : false,
+
+    // If true, do not use colors in generated HTML (just black text on white)
+    "monochrome": false,
+
+    // Set the font used (CSS font-family syntax)
+    // "font_face": "'Lucida Console'",
+    "font_face": "monospace",
+
+    // Set the font size displayed in the browser
+    // CSS units: em, px, pt, %
+    // 1em = 12pt = 16px = 100%
+    "font_size": "90%",
+
+    // Set the height of each line; increase if the lines look too packed together
+    // "line_height": "1.25em",
+    "line_height": "normal",
+
+    // If true, long lines will be wrapped onto multiple lines
+    // If false, let the browser decide how to handle long lines
+    "word_wrap": true,
+
+    // If true, allow the browser to wrap long lines at any character.
+    // If false, only allow the browser to wrap long lines between complete words.
+    // Has no effect when word_wrap is false.
+    "word_wrap_break_anywhere": false,
+
+    // If true, output line numbers to the left of the code
+    "line_numbering": true,
+
+    // If true, output numbered HTML <A name=...> anchors at the start of each line
+    "line_anchors": false,
+
+    // If true, draw borders around words that the lexer doesn't recognize (can be noisy)
+    "draw_error_borders": false,
+
+    // If true, draw a light grey background behind code (probably not ideal for printing)
+    "draw_background": false,
+
+    // Style to use when formatting text
+    // Avaliable styles can be found under <Package Folder>/pygments/styles
+    "style": "default",
+
+    // Use this to add custom CSS rules to the output; note that using "monochrome": true may
+    // override color-related custom CSS styling used here
+    // "custom_css": "body { background-color: black; } .highlight * { color: white; }"
+    "custom_css": ""
+}
