@@ -1,0 +1,138 @@
+=== Description ===
+Clang plugin for Sublime Text 2 providing auto complete suggestions for C/C++/ObjC/ObjC++. It'll also optionally parse the code as it's typed and show errors and warnings.
+
+=== Known issues and feature requests ===
+Please go [[https://github.com/quarnster/SublimeClang/issues?sort=created&direction=desc&state=open|here]] to see the currently known issues and feature request, or to file a new.
+
+=== Prerequisites ===
+  # To use the clang static analyzer you need to have clang installed and in your path. The other functionality should work without having the clang binaries installed.
+
+=== Additional Prerequisites (Linux Only)===
+  # [[http://sublimetext.userecho.com/topic/85126-ctypes-cant-be-imported-in-linux/|ctypes can't be imported]] in the Linux version of Sublime Text 2 right now. This can however be worked around easily with the help of pythonbrew:
+  ## curl -kL http://xrl.us/pythonbrewinstall | bash
+  ## source "$HOME/.pythonbrew/etc/bashrc"
+  ## pythonbrew install --configure="--enable-unicode=ucs4" 2.6
+  ## ln -s $HOME/.pythonbrew/pythons/Python-2.6/lib/python2.6/ <your Sublime Text 2 folder>/lib/python2.6
+  # If you install SublimeClang via Package Control, it seems [[http://github.com/quarnster/SublimeClang/issues/97|libcache and libclang will be deleted]] when the package is updated, so it's recommended that you manually install the plugin by using the git commands listed in the Installation section.
+  # Once SublimeClang has been installed, libcache will have to be compiled:
+  ## cd src
+  ## mkdir build
+  ## cd build
+  ## cmake ..
+  ## make
+  * Note that if a usable libclang library isn't found, it will be downloaded and built as part of the build process.
+
+If you run into any issues, please have a look at issue [[https://github.com/quarnster/SublimeClang/issues/35|#35]] for additional notes or to ask for help.
+
+=== Installation ===
+    # The easiest way to install SublimeClang is via the excellent Package Control Plugin
+    ## See http://wbond.net/sublime_packages/package_control#Installation
+    ### Once package control has been installed, bring up the command palette (cmd+shift+P or ctrl+shift+P)
+    ### Type Install and select "Package Control: Install Package"
+    ### Select SublimeClang from the list. Package Control will keep it automatically updated for you
+    ## If you don't want to use package control, you can manually install it
+    ### Go to your packages directory and type:
+    ####        git clone --recursive https://github.com/quarnster/SublimeClang SublimeClang
+    ### To update run the following command:
+    ####        git pull && git submodule foreach --recursive git pull origin master
+    # Back in the editor, open up the command palette by pressing cmd+shift+P or ctrl+shift+P
+    # Type SublimeClang and open up the settings file you want to modify with any include directories or other options you want to provide to clang.
+
+=== Usage ===
+After installation, suggestions from clang should be provided when triggering the autocomplete operation in Sublime Text 2. By default it'll inhibit the Sublime Text 2 built in word completion, but the inhibition can be disabled by setting the configuration option "inhibit_sublime_completions" to false.
+
+If you modify a file that clang can compile and if there are any errors or warnings in that file, you should see the output in the output panel, as well as having the warnings and errors marked in the source file.
+
+There's also the following key-bindings (tweak Default.sublime-keymaps to change):
+
+      |alt+d,alt+d|Go to the parent reference of whatever is under the current cursor position|
+      |alt+d,alt+i|Go to the implementation|
+      |alt+d,alt+b|Go back to where you were before hitting alt+d,alt+d or alt+d,alt+i|
+      |alt+d,alt+c|Clear the cache. Will force all files to be reparsed when needed|
+      |alt+d,alt+w|Manually warm up the cache|
+      |alt+d,alt+r|Manually reparse the current file|
+      |alt+d,alt+t|Toggle whether Clang completion is enabled or not. Useful if the complete operation is slow and you only want to use it selectively|
+      |alt+d,alt+p|Toggle the Clang output panel|
+      |alt+d,alt+e|Go to next error or warning in the file|
+      |alt+shift+d,alt+shift+e|Go to the previous error or warning in the file|
+      |alt+d,alt+s|Run the Clang static analyzer on the current file|
+      |alt+d,alt+o|Run the Clang static analyzer on the current project|
+      |alt+d,alt+f|Toggle whether fast (but possibly inaccurate) completions are used or not|
+
+=== Show your support ===
+
+[[https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UPSEP2BHMLYEW|Donate]]
+
+=== License ===
+This plugin is using the zlib license
+
+{{{
+Copyright (c) 2011-2012 Fredrik Ehnbom
+
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+   1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+
+   2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+
+   3. This notice may not be removed or altered from any source
+   distribution.
+}}}
+
+---------------------------------------------------------
+
+And in addition to this, clang itself is using the following license:
+
+{{{
+University of Illinois/NCSA
+Open Source License
+
+Copyright (c) 2003-2012 University of Illinois at Urbana-Champaign.
+All rights reserved.
+
+Developed by:
+
+    LLVM Team
+
+    University of Illinois at Urbana-Champaign
+
+    http://llvm.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal with
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimers.
+
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimers in the
+      documentation and/or other materials provided with the distribution.
+
+    * Neither the names of the LLVM Team, University of Illinois at
+      Urbana-Champaign, nor the names of its contributors may be used to
+      endorse or promote products derived from this Software without specific
+      prior written permission.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
+SOFTWARE.
+}}}
+
