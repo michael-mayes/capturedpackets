@@ -1,0 +1,10 @@
+[
+	{ "caption": "-" },
+	{
+		"caption": "Sublimerge",
+		"children": [{
+			"caption": "Compare to...",
+			"command": "sublimerge"
+		}]
+	}
+]
