@@ -1,0 +1,15 @@
+[
+	{ "caption": "-" },
+	{
+		"caption": "Sublimerge",
+		"children": [{
+			"caption": "Compare to...",
+			"command": "sublimerge_from_sidebar",
+			"args": {"files": []}
+		}, {
+			"caption": "Compare selected files",
+			"command": "sublimerge_diff_selected_files",
+			"args": {"files": []}
+		}]
+	}
+]
