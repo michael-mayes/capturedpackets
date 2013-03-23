@@ -74,6 +74,14 @@ S.load()
 settings.add_on_change('reload', lambda: S.load())
 
 
+def isSaved(view):
+    if view.is_dirty():
+        sublime.error_message('File `' + os.path.split(view.file_name())[1] + '` must be saved in order to compare')
+        return False
+
+    return True
+
+
 def lookForVcs(path):
     if not S.get('vcs_support'):
         return False
@@ -835,6 +843,13 @@ class SublimergeCommand(sublime_plugin.WindowCommand):
     commits = []
     window = None
     view = None
+    
+    def is_enabled(self):
+        view = sublime.active_window().active_view();
+        if diffView and  diffView.left and diffView.right and view and (view.id() == diffView.left.id() or view.id() == diffView.right.id()):
+            return False
+
+        return True
 
     def getComparableFiles(self):
         self.viewsList = []
@@ -891,7 +906,7 @@ class SublimergeCommand(sublime_plugin.WindowCommand):
         self.window = sublime.active_window()
         self.active = self.window.active_view()
 
-        if not self.active or not self.saved(self.active):
+        if not self.active or not isSaved(self.active):
             return
 
         sp = os.path.split(self.active.file_name())
@@ -997,13 +1012,6 @@ class SublimergeCommand(sublime_plugin.WindowCommand):
         if d > 0:
             return 1
 
-    def saved(self, view):
-        if view.is_dirty():
-            sublime.error_message('File `' + os.path.split(view.file_name())[1] + '` must be saved in order to compare')
-            return False
-
-        return True
-
     def onListSelect(self, itemIndex):
         if itemIndex > -1:
             allViews = self.window.views()
@@ -1016,7 +1024,7 @@ class SublimergeCommand(sublime_plugin.WindowCommand):
             if compareTo != None:
                 global diffView
 
-                if self.saved(compareTo):
+                if isSaved(compareTo):
                     th = SublimergeDiffThread(self.window, self.window.active_view(), compareTo)
                     th.start()
 
@@ -1047,6 +1055,11 @@ class SublimergeMergeRightCommand(sublime_plugin.WindowCommand):
 
 class SublimergeDiffSelectedFiles(sublime_plugin.WindowCommand):
     def run(self, files):
+        allViews = self.window.views()
+        for view in allViews:
+            if (view.file_name() == files[0] or view.file_name() == files[1]) and not isSaved(view):
+                return
+
         th = SublimergeDiffThread(self.window, files[0], files[1])
         th.start()
 
