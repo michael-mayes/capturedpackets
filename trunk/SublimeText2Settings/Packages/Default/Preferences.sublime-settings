@@ -68,7 +68,7 @@
 
     // Trims white space added by auto_indent when moving the caret off the
     // line.
-    "trim_automatic_white_space": true,
+    "trim_automatic_white_space": false,
 
     // Disables horizontal scrolling if enabled.
     // May be set to true, false, or "auto", where it will be disabled for
