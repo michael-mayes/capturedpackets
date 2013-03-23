@@ -343,6 +343,115 @@
 				<string>#FFFFFF</string>
 			</dict>
 		</dict>
+<dict>
+    <key>name</key>
+    <string>Bracket quote</string>
+    <key>scope</key>
+    <string>brackethighlighter.quote</string>
+    <key>settings</key>
+    <dict>
+        <key>background</key>
+        <string>#FF0</string>
+        <key>foreground</key>
+        <string>#FF0</string>
+    </dict>
+</dict>
+<dict>
+    <key>name</key>
+    <string>Bracket curly</string>
+    <key>scope</key>
+    <string>brackethighlighter.curly</string>
+    <key>settings</key>
+    <dict>
+        <key>background</key>
+        <string>#FF0</string>
+        <key>foreground</key>
+        <string>#FF0</string>
+    </dict>
+</dict>
+<dict>
+    <key>name</key>
+    <string>Bracket round</string>
+    <key>scope</key>
+    <string>brackethighlighter.round</string>
+    <key>settings</key>
+    <dict>
+        <key>background</key>
+        <string>#FF0</string>
+        <key>foreground</key>
+        <string>#FF0</string>
+    </dict>
+</dict>
+<dict>
+    <key>name</key>
+    <string>Bracket square</string>
+    <key>scope</key>
+    <string>brackethighlighter.square</string>
+    <key>settings</key>
+    <dict>
+        <key>background</key>
+        <string>#FF0</string>
+        <key>foreground</key>
+        <string>#FF0</string>
+    </dict>
+</dict>
+<dict>
+    <key>name</key>
+    <string>Bracket angle</string>
+    <key>scope</key>
+    <string>brackethighlighter.angle</string>
+    <key>settings</key>
+    <dict>
+        <key>background</key>
+        <string>#FF0</string>
+        <key>foreground</key>
+        <string>#FF0</string>
+    </dict>
+</dict>
+<dict>
+    <key>name</key>
+    <string>Bracket tag</string>
+    <key>scope</key>
+    <string>brackethighlighter.tag</string>
+    <key>settings</key>
+    <dict>
+        <key>background</key>
+        <string>#FF0</string>
+    </dict>
+</dict>
+<dict>
+  <key>name</key>
+  <string>diff.deleted</string>
+  <key>scope</key>
+  <string>markup.deleted</string>
+  <key>settings</key>
+  <dict>
+    <key>foreground</key>
+    <string>#F92672</string>
+  </dict>
+</dict>
+<dict>
+  <key>name</key>
+  <string>diff.inserted</string>
+  <key>scope</key>
+  <string>markup.inserted</string>
+  <key>settings</key>
+  <dict>
+    <key>foreground</key>
+    <string>#A6E22E</string>
+  </dict>
+</dict>
+<dict>
+  <key>name</key>
+  <string>diff.changed</string>
+  <key>scope</key>
+  <string>markup.changed</string>
+  <key>settings</key>
+  <dict>
+    <key>foreground</key>
+    <string>#967EFB</string>
+  </dict>
+</dict>
 	</array>
 	<key>uuid</key>
 	<string>A2C6BAA7-90D0-4147-BBF5-96B0CD92D109</string>
