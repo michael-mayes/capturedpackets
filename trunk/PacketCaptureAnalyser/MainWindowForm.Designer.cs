@@ -48,12 +48,14 @@
             this.SelectedOutputFilePathTextBox = new System.Windows.Forms.TextBox();
             this.PerformLatencyAnalysisCheckBox = new System.Windows.Forms.CheckBox();
             this.PerformTimeAnalysisCheckBox = new System.Windows.Forms.CheckBox();
+            this.OutputLatencyAnalysisDebugCheckBox = new System.Windows.Forms.CheckBox();
+            this.OutputTimeAnalysisDebugCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // RunAnalysisOnSelectedPackageCaptureButton
             // 
             this.RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
-            this.RunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 368);
+            this.RunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 417);
             this.RunAnalysisOnSelectedPackageCaptureButton.Name = "RunAnalysisOnSelectedPackageCaptureButton";
             this.RunAnalysisOnSelectedPackageCaptureButton.Size = new System.Drawing.Size(241, 23);
             this.RunAnalysisOnSelectedPackageCaptureButton.TabIndex = 1;
@@ -63,7 +65,7 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(12, 397);
+            this.ExitButton.Location = new System.Drawing.Point(12, 446);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(241, 23);
             this.ExitButton.TabIndex = 2;
@@ -234,18 +236,44 @@
             // 
             this.PerformTimeAnalysisCheckBox.AutoSize = true;
             this.PerformTimeAnalysisCheckBox.Enabled = false;
-            this.PerformTimeAnalysisCheckBox.Location = new System.Drawing.Point(15, 348);
+            this.PerformTimeAnalysisCheckBox.Location = new System.Drawing.Point(15, 369);
             this.PerformTimeAnalysisCheckBox.Name = "PerformTimeAnalysisCheckBox";
             this.PerformTimeAnalysisCheckBox.Size = new System.Drawing.Size(129, 17);
             this.PerformTimeAnalysisCheckBox.TabIndex = 17;
             this.PerformTimeAnalysisCheckBox.Text = "Perform Time Analysis";
             this.PerformTimeAnalysisCheckBox.UseVisualStyleBackColor = true;
             // 
+            // OutputLatencyAnalysisDebugCheckBox
+            // 
+            this.OutputLatencyAnalysisDebugCheckBox.AutoSize = true;
+            this.OutputLatencyAnalysisDebugCheckBox.Enabled = false;
+            this.OutputLatencyAnalysisDebugCheckBox.Location = new System.Drawing.Point(15, 346);
+            this.OutputLatencyAnalysisDebugCheckBox.Name = "OutputLatencyAnalysisDebugCheckBox";
+            this.OutputLatencyAnalysisDebugCheckBox.Size = new System.Drawing.Size(227, 17);
+            this.OutputLatencyAnalysisDebugCheckBox.TabIndex = 18;
+            this.OutputLatencyAnalysisDebugCheckBox.Text = "Output Latency Analysis Debug Infomation";
+            this.OutputLatencyAnalysisDebugCheckBox.UseVisualStyleBackColor = true;
+            this.OutputLatencyAnalysisDebugCheckBox.CheckedChanged += new System.EventHandler(this.OutputLatencyAnalysisDebugCheckBox_CheckedChanged);
+            // 
+            // OutputTimeAnalysisDebugCheckBox
+            // 
+            this.OutputTimeAnalysisDebugCheckBox.AutoSize = true;
+            this.OutputTimeAnalysisDebugCheckBox.Enabled = false;
+            this.OutputTimeAnalysisDebugCheckBox.Location = new System.Drawing.Point(15, 393);
+            this.OutputTimeAnalysisDebugCheckBox.Name = "OutputTimeAnalysisDebugCheckBox";
+            this.OutputTimeAnalysisDebugCheckBox.Size = new System.Drawing.Size(212, 17);
+            this.OutputTimeAnalysisDebugCheckBox.TabIndex = 19;
+            this.OutputTimeAnalysisDebugCheckBox.Text = "Output Time Analysis Debug Infomation";
+            this.OutputTimeAnalysisDebugCheckBox.UseVisualStyleBackColor = true;
+            this.OutputTimeAnalysisDebugCheckBox.CheckedChanged += new System.EventHandler(this.OutputTimeAnalysisDebugCheckBox_CheckedChanged);
+            // 
             // MainWindowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(265, 432);
+            this.ClientSize = new System.Drawing.Size(265, 480);
+            this.Controls.Add(this.OutputTimeAnalysisDebugCheckBox);
+            this.Controls.Add(this.OutputLatencyAnalysisDebugCheckBox);
             this.Controls.Add(this.PerformTimeAnalysisCheckBox);
             this.Controls.Add(this.PerformLatencyAnalysisCheckBox);
             this.Controls.Add(this.SelectedOutputFileNameLabel);
@@ -293,5 +321,7 @@
         private System.Windows.Forms.TextBox SelectedOutputFilePathTextBox;
         private System.Windows.Forms.CheckBox PerformLatencyAnalysisCheckBox;
         private System.Windows.Forms.CheckBox PerformTimeAnalysisCheckBox;
+        private System.Windows.Forms.CheckBox OutputLatencyAnalysisDebugCheckBox;
+        private System.Windows.Forms.CheckBox OutputTimeAnalysisDebugCheckBox;
     }
 }

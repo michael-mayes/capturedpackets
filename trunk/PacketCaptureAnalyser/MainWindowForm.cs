@@ -135,7 +135,7 @@ namespace PacketCaptureAnalyser
                 //Only perform the latency analysis if the check box was selected for it on the main window form
                 if (PerformLatencyAnalysisCheckBox.Checked)
                 {
-                  TheLatencyAnalysisProcessing = new AnalysisNamespace.LatencyAnalysisProcessing();
+                  TheLatencyAnalysisProcessing = new AnalysisNamespace.LatencyAnalysisProcessing(OutputLatencyAnalysisDebugCheckBox.Checked);
 
                   //Initialise the functionality to perform latency analysis on the messages found
                   TheLatencyAnalysisProcessing.Create();
@@ -144,7 +144,7 @@ namespace PacketCaptureAnalyser
                 //Only perform the time analysis if the check box was selected for it on the main window form
                 if (PerformTimeAnalysisCheckBox.Checked)
                 {
-                  TheTimeAnalysisProcessing = new AnalysisNamespace.TimeAnalysisProcessing();
+                  TheTimeAnalysisProcessing = new AnalysisNamespace.TimeAnalysisProcessing(OutputTimeAnalysisDebugCheckBox.Checked);
 
                   //Initialise the functionality to perform time analysis on the messages found
                   TheTimeAnalysisProcessing.Create();
@@ -376,10 +376,15 @@ namespace PacketCaptureAnalyser
                         //2) Enable the button to open the package capture
                         //3) Enable the button to select the output file
                         //4) Disable the button to start the analysis on the packet capture - enabled on selection of the output file
+                        //5) Reset and disable the check boxes
                         ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = true;
                         SelectOutputFileButton.Enabled = true;
                         RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+
+                        ResetPacketCaptureAnalysisCheckBoxes();
+                        DisablePacketCaptureAnalysisCheckBoxes();
+
                         break;
                     }
 
@@ -393,10 +398,15 @@ namespace PacketCaptureAnalyser
                         //2) Enable the button to open the package capture
                         //3) Enable the button to select the output file
                         //4) Disable the button to start the analysis on the packet capture - enabled on selection of the output file
+                        //5) Reset and disable the check boxes
                         ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = true;
                         SelectOutputFileButton.Enabled = true;
                         RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+
+                        ResetPacketCaptureAnalysisCheckBoxes();
+                        DisablePacketCaptureAnalysisCheckBoxes();
+
                         break;
                     }
 
@@ -411,10 +421,15 @@ namespace PacketCaptureAnalyser
                         //2) Disable the button to open the package capture - not valid for opening
                         //3) Disable the button to select the output file - not needed if no analysis
                         //4) Disable the button to start the analysis on the packet capture - not needed if no analysis
+                        //5) Reset and disable the check boxes
                         ClearSelectedPacketCaptureButton.Enabled = true;
                         OpenSelectedPackageCaptureButton.Enabled = false;
                         SelectOutputFileButton.Enabled = false;
                         RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+
+                        ResetPacketCaptureAnalysisCheckBoxes();
+                        DisablePacketCaptureAnalysisCheckBoxes();
+
                         break;
                     }
             }
@@ -436,13 +451,14 @@ namespace PacketCaptureAnalyser
             //2) Disable the button to open the package capture
             //3) Disable the button to select the output file
             //4) Disable the button to start the analysis on the packet capture
-            //5) Disable the two check boxes
+            //5) Reset and disable the check boxes
             ClearSelectedPacketCaptureButton.Enabled = false;
             OpenSelectedPackageCaptureButton.Enabled = false;
             SelectOutputFileButton.Enabled = false;
             RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
-            PerformLatencyAnalysisCheckBox.Enabled = false;
-            PerformTimeAnalysisCheckBox.Enabled = false;
+
+            ResetPacketCaptureAnalysisCheckBoxes();
+            DisablePacketCaptureAnalysisCheckBoxes();
         }
 
         private void ReflectSelectedOutputFile()
@@ -455,9 +471,10 @@ namespace PacketCaptureAnalyser
                         //Analysis of a libpcap/tcpdump packet capture or an NA Sniffer (DOS) packet capture is supported so enable the button to start the analysis on it
                         RunAnalysisOnSelectedPackageCaptureButton.Enabled = true;
 
-                        //Enable the two check boxes
-                        PerformLatencyAnalysisCheckBox.Enabled = true;
-                        PerformTimeAnalysisCheckBox.Enabled = true;
+                        //Reset and enable the check boxes
+                        ResetPacketCaptureAnalysisCheckBoxes();
+                        EnablePacketCaptureAnalysisCheckBoxes();
+
                         break;
                     }
 
@@ -466,6 +483,11 @@ namespace PacketCaptureAnalyser
                     {
                         //Analysis of this packet capture is not supported so disable the button to start the analysis on it
                         RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+
+                        //Reset and disable the check boxes
+                        ResetPacketCaptureAnalysisCheckBoxes();
+                        DisablePacketCaptureAnalysisCheckBoxes();
+
                         break;
                     }
             }
@@ -479,9 +501,36 @@ namespace PacketCaptureAnalyser
             //Disable the button to start the analysis on the packet capture
             RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
 
-            //Disable the two check boxes
+            //Reset and disable the check boxes
+            ResetPacketCaptureAnalysisCheckBoxes();
+            DisablePacketCaptureAnalysisCheckBoxes();
+        }
+
+        private void ResetPacketCaptureAnalysisCheckBoxes()
+        {
+            //Reset the check boxes
+            PerformLatencyAnalysisCheckBox.Checked = true;
+            OutputLatencyAnalysisDebugCheckBox.Checked = false;
+            PerformTimeAnalysisCheckBox.Checked = false;
+            OutputTimeAnalysisDebugCheckBox.Checked = false;
+        }
+
+        private void EnablePacketCaptureAnalysisCheckBoxes()
+        {
+            //Enable the check boxes
+            PerformLatencyAnalysisCheckBox.Enabled = true;
+            OutputLatencyAnalysisDebugCheckBox.Enabled = true;
+            PerformTimeAnalysisCheckBox.Enabled = true;
+            OutputTimeAnalysisDebugCheckBox.Enabled = true;
+        }
+
+        private void DisablePacketCaptureAnalysisCheckBoxes()
+        {
+            //Disable the check boxes
             PerformLatencyAnalysisCheckBox.Enabled = false;
+            OutputLatencyAnalysisDebugCheckBox.Enabled = false;
             PerformTimeAnalysisCheckBox.Enabled = false;
+            OutputTimeAnalysisDebugCheckBox.Enabled = false;
         }
 
         private void OpenSelectedPackageCaptureButton_Click(object sender, System.EventArgs e)
@@ -520,6 +569,22 @@ namespace PacketCaptureAnalyser
                     System.IO.Path.GetFileName(SelectedOutputFileForAnalysisDialog.FileName) +
                     " output file"
                     );
+            }
+        }
+
+        private void OutputLatencyAnalysisDebugCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (OutputLatencyAnalysisDebugCheckBox.Checked)
+            {
+                PerformLatencyAnalysisCheckBox.Checked = true;
+            }
+        }
+
+        private void OutputTimeAnalysisDebugCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (OutputTimeAnalysisDebugCheckBox.Checked)
+            {
+                PerformTimeAnalysisCheckBox.Checked = true;
             }
         }
     }
