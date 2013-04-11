@@ -461,7 +461,7 @@ namespace PacketCaptureAnalyser
             //Open the packet capture selection dialog box - set the name to that of the packet capture, but without the file extension
 
             SelectedOutputFileForAnalysisDialog.FileName =
-                System.IO.Path.GetFileNameWithoutExtension(SelectedPacketCaptureForAnalysisDialog.FileName);
+                SelectedPacketCaptureForAnalysisDialog.FileName.ToString() + ".txt";
 
             System.Windows.Forms.DialogResult TheSelectOutputFileDialogResult =
                 SelectedOutputFileForAnalysisDialog.ShowDialog();
