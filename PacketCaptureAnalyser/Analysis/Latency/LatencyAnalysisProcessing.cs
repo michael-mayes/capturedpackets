@@ -30,12 +30,15 @@ namespace AnalysisNamespace
 
     class LatencyAnalysisProcessing
     {
+        private bool OutputLatencyAnalysisDebug;
         private System.Data.DataTable TheLatencyValuesTable;
         private System.Data.DataTable TheHostIdsTable;
         private System.Data.DataTable TheMessageIdsTable;
 
-        public LatencyAnalysisProcessing()
+        public LatencyAnalysisProcessing(bool OutputLatencyAnalysisDebug)
         {
+            this.OutputLatencyAnalysisDebug = OutputLatencyAnalysisDebug;
+
             //Create a datatable to hold the latency values for message pairings
             TheLatencyValuesTable = new System.Data.DataTable();
 
@@ -478,36 +481,35 @@ namespace AnalysisNamespace
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            //
-            //Restore the following lines if you want the first and second packet numbers, sequence numbers and latency values output to the file
-            //
+            if (OutputLatencyAnalysisDebug)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The first and second packet numbers, sequence numbers and latency values for " +
+                    TheProtocolString +
+                    " messages with a Message Id of " +
+                    TheMessageId.ToString() +
+                    " are:"
+                    );
 
-            //System.Diagnostics.Trace.WriteLine
-            //    (
-            //    "The first and second packet numbers, sequence numbers and latency values for " +
-            //    TheProtocolString +
-            //    " messages with a Message Id of " +
-            //    TheMessageId.ToString() +
-            //    " are:"
-            //    );
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                foreach (System.Data.DataRow TheLatencyValuesRow in TheLatencyValuesRows)
+                {
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        ((ulong)TheLatencyValuesRow["FirstInstancePacketNumber"]).ToString() +
+                        "\t" +
+                        ((ulong)TheLatencyValuesRow["SecondInstancePacketNumber"]).ToString() +
+                        "\t" +
+                        ((ulong)TheLatencyValuesRow["SequenceNumber"]).ToString() +
+                        "\t" +
+                        ((double)TheLatencyValuesRow["TimestampDifference"]).ToString()
+                        );
+                }
 
-            //foreach (System.Data.DataRow TheLatencyValuesRow in TheLatencyValuesRows)
-            //{
-            //    System.Diagnostics.Trace.WriteLine
-            //        (
-            //        ((ulong)TheLatencyValuesRow["FirstInstancePacketNumber"]).ToString() +
-            //        "\t" +
-            //        ((ulong)TheLatencyValuesRow["SecondInstancePacketNumber"]).ToString() +
-            //        "\t" +
-            //        ((ulong)TheLatencyValuesRow["SequenceNumber"]).ToString() +
-            //        "\t" +
-            //        ((double)TheLatencyValuesRow["TimestampDifference"]).ToString()
-            //        );
-            //}
-
-            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            }
         }
     }
 }

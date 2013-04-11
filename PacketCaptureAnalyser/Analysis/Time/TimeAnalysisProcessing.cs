@@ -30,11 +30,14 @@ namespace AnalysisNamespace
 
     class TimeAnalysisProcessing
     {
+        private bool OutputTimeAnalysisDebug;
         private System.Data.DataTable TheTimeValuesTable;
         private System.Data.DataTable TheHostIdsTable;
 
-        public TimeAnalysisProcessing()
+        public TimeAnalysisProcessing(bool OutputTimeAnalysisDebug)
         {
+            this.OutputTimeAnalysisDebug = OutputTimeAnalysisDebug;
+
             //Create a datatable to hold the timestamp and time values for time-supplying messages
             TheTimeValuesTable = new System.Data.DataTable();
 
@@ -352,31 +355,30 @@ namespace AnalysisNamespace
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            //
-            //Restore the following lines if you want the timestamps and times output to the file
-            //
+            if (OutputTimeAnalysisDebug)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "The timestamps and times for the time messages are:"
+                    );
 
-            //System.Diagnostics.Trace.WriteLine
-            //    (
-            //    "The timestamps and times for the time messages are:"
-            //    );
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                foreach (System.Data.DataRow TheTimeValuesRow in TheTimeValuesRowsFound)
+                {
+                    if ((bool)TheTimeValuesRow["Processed"])
+                    {
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            ((double)TheTimeValuesRow["Timestamp"]).ToString() +
+                            "\t" +
+                            ((double)TheTimeValuesRow["Time"]).ToString()
+                            );
+                    }
+                }
 
-            //foreach (System.Data.DataRow TheTimeValuesRow in TheTimeValuesRowsFound)
-            //{
-            //    if ((bool)TheTimeValuesRow["Processed"])
-            //    {
-            //        System.Diagnostics.Trace.WriteLine
-            //            (
-            //            ((double)TheTimeValuesRow["Timestamp"]).ToString() +
-            //            "\t" +
-            //            ((double)TheTimeValuesRow["Time"]).ToString()
-            //            );
-            //    }
-            //}
-
-            //System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            }
         }
     }
 }
