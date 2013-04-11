@@ -28,17 +28,21 @@ namespace EthernetFrameNamespace
     class EthernetFrameProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+        private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
         private long ThePayloadLength;
 
         private System.UInt16 TheEtherType;
 
-        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
+        public EthernetFrameProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+            this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+            this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
@@ -157,7 +161,7 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
                     {
-                        IPPacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPPacketNamespace.IPv4PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
+                        IPPacketNamespace.IPv4PacketProcessing TheIPv4PacketProcessing = new IPPacketNamespace.IPv4PacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv4 packet so process it
                         ThePacketProcessingResult = TheIPv4PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
@@ -167,7 +171,7 @@ namespace EthernetFrameNamespace
 
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
                     {
-                        IPPacketNamespace.IPv6PacketProcessing TheIPv6PacketProcessing = new IPPacketNamespace.IPv6PacketProcessing(TheBinaryReader, TheLatencyAnalysisProcessing, TheTimeAnalysisProcessing);
+                        IPPacketNamespace.IPv6PacketProcessing TheIPv6PacketProcessing = new IPPacketNamespace.IPv6PacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
 
                         //We've got an Ethernet frame containing an IPv6 packet so process it
                         ThePacketProcessingResult = TheIPv6PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
