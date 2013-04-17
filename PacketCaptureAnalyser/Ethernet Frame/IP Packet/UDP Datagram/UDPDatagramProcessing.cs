@@ -134,7 +134,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
                     (
                     "The UDP datagram header indicates a total length " +
                     TheHeader.Length.ToString() +
-                    " which is not equal to the length of the UDP datagram within the IP packet" +
+                    " which is not equal to the length of the UDP datagram within the IP packet of " +
                     TheLength.ToString() +
                     " !!!"
                     );
