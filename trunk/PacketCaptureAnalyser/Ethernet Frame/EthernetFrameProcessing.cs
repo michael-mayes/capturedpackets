@@ -286,7 +286,11 @@ namespace EthernetFrameNamespace
                 }
                 else
                 {
-                    //This is a strange error condition so indicate a failure
+                    //This is a strange error condition
+
+                    //Back up the stream position to where it "should be", warn about it having arisen and then move on
+
+                    TheBinaryReader.BaseStream.Position = TheBinaryReader.BaseStream.Position - (TheStreamPositionDifference - ThePayloadLength);
 
                     System.Diagnostics.Trace.WriteLine
                         (
@@ -296,10 +300,9 @@ namespace EthernetFrameNamespace
                         ThePacketNumber.ToString() +
                         " does not match the progression " +
                         TheStreamPositionDifference.ToString() +
-                        " through the stream!!!"
+                        " through the stream!!!" + 
+                        " - Attempt to recover and continue processing"
                         );
-
-                    TheResult = false;
                 }
             }
 
