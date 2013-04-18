@@ -29,9 +29,14 @@ namespace EthernetFrameNamespace.IPPacketNamespace.ICMPv4PacketNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
 
+        private ICMPv4PacketStructures.ICMPv4PacketHeaderStructure TheHeader;
+
         public ICMPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the ICMPv4 packet header
+            TheHeader = new ICMPv4PacketStructures.ICMPv4PacketHeaderStructure();
         }
 
         public bool Process(ushort TheICMPv4PacketLength)
@@ -51,9 +56,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace.ICMPv4PacketNamespace
         private bool ProcessHeader()
         {
             bool TheResult = true;
-
-            //Create an instance of the ICMPv4 packet header
-            ICMPv4PacketStructures.ICMPv4PacketHeaderStructure TheHeader = new ICMPv4PacketStructures.ICMPv4PacketHeaderStructure();
 
             //Read the values for the ICMPv4 packet header from the packet capture
             TheHeader.Type = TheBinaryReader.ReadByte();

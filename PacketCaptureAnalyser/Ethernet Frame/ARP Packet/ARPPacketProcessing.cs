@@ -29,9 +29,14 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
 
+        private ARPPacketStructures.ARPPacketStructure ThePacket;
+
         public ARPPacketProcessing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the ARP packet
+            ThePacket = new ARPPacketStructures.ARPPacketStructure();
         }
 
         public bool Process(long ThePayloadLength)
@@ -48,8 +53,7 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
                 return false;
             }
 
-            //Create an instance of the ARP packet
-            ARPPacketStructures.ARPPacketStructure ThePacket = new ARPPacketStructures.ARPPacketStructure();
+            //There is no separate header for the ARP packet
 
             //Just read off the bytes for the ARP packet from the packet capture so we can move on
             ThePacket.HardwareType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
