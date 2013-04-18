@@ -133,13 +133,13 @@ namespace AnalysisNamespace
                 System.Diagnostics.Trace.WriteLine
                     (
                     "Host Id " +
-                    string.Format("{0,3}", ((byte)TheHostIdRow["HostId"]).ToString())
+                    string.Format("{0,3}", (TheHostIdRow.Field<byte>("HostId")).ToString())
                     );
 
                 System.Diagnostics.Trace.WriteLine("===========");
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-                FinaliseTimeValuesForHostId((byte)TheHostIdRow["HostId"]);
+                FinaliseTimeValuesForHostId(TheHostIdRow.Field<byte>("HostId"));
             }
         }
 
@@ -193,8 +193,8 @@ namespace AnalysisNamespace
                 //Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
                 if (!TheFirstRowProcessed)
                 {
-                    TheLastTimestamp = (double)TheTimeValuesRow["Timestamp"];
-                    TheLastTime = (double)TheTimeValuesRow["Time"];
+                    TheLastTimestamp = TheTimeValuesRow.Field<double>("Timestamp");
+                    TheLastTime = TheTimeValuesRow.Field<double>("Time");
 
                     //The first row is always marked as processed
                     TheTimeValuesRow["Processed"] = true;
@@ -206,8 +206,8 @@ namespace AnalysisNamespace
 
                 //The timestamp
                 {
-                    double TheAbsoluteTimestampDifference = System.Math.Abs(((double)TheTimeValuesRow["Timestamp"] - TheLastTimestamp) * 1000.0);
-                    double TheTimestampDifference = (((double)TheTimeValuesRow["Timestamp"] - TheLastTimestamp) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
+                    double TheAbsoluteTimestampDifference = System.Math.Abs((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0);
+                    double TheTimestampDifference = ((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
 
                     if (TheAbsoluteTimestampDifference > TimeAnalysisConstants.TimeAnalysisMinTimestampDifference)
                     {
@@ -224,20 +224,20 @@ namespace AnalysisNamespace
                         if (TheMinTimestampDifference > TheTimestampDifference)
                         {
                             TheMinTimestampDifference = TheTimestampDifference;
-                            TheMinTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                            TheMinTimestampDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
                         if (TheMaxTimestampDifference < TheTimestampDifference)
                         {
                             TheMaxTimestampDifference = TheTimestampDifference;
-                            TheMaxTimestampDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                            TheMaxTimestampDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        TheLastTimestamp = (double)TheTimeValuesRow["Timestamp"];
+                        TheLastTimestamp = TheTimeValuesRow.Field<double>("Timestamp");
 
                         //The time
 
-                        double TheTimeDifference = (((double)TheTimeValuesRow["Time"] - TheLastTime) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
+                        double TheTimeDifference = ((TheTimeValuesRow.Field<double>("Time") - TheLastTime) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
 
                         ++TheNumberOfTimeDifferenceInstances;
                         TheTotalOfTimeDifferences += TheTimeDifference;
@@ -247,16 +247,16 @@ namespace AnalysisNamespace
                         if (TheMinTimeDifference > TheTimeDifference)
                         {
                             TheMinTimeDifference = TheTimeDifference;
-                            TheMinTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                            TheMinTimeDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
                         if (TheMaxTimeDifference < TheTimeDifference)
                         {
                             TheMaxTimeDifference = TheTimeDifference;
-                            TheMaxTimeDifferencePacketNumber = (ulong)TheTimeValuesRow["PacketNumber"];
+                            TheMaxTimeDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        TheLastTime = (double)TheTimeValuesRow["Time"];
+                        TheLastTime = TheTimeValuesRow.Field<double>("Time");
                     }
                 }
             }
@@ -366,13 +366,13 @@ namespace AnalysisNamespace
 
                 foreach (System.Data.DataRow TheTimeValuesRow in TheTimeValuesRowsFound)
                 {
-                    if ((bool)TheTimeValuesRow["Processed"])
+                    if (TheTimeValuesRow.Field<bool>("Processed"))
                     {
                         System.Diagnostics.Trace.WriteLine
                             (
-                            ((double)TheTimeValuesRow["Timestamp"]).ToString() +
+                            (TheTimeValuesRow.Field<double>("Timestamp")).ToString() +
                             "\t" +
-                            ((double)TheTimeValuesRow["Time"]).ToString()
+                            (TheTimeValuesRow.Field<double>("Time")).ToString()
                             );
                     }
                 }
