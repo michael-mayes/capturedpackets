@@ -28,16 +28,25 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
     class TCPPacketProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+
+        private TCPPacketStructures.TCPPacketHeaderStructure TheHeader;
+
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
         public TCPPacketProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the TCP packet header
+            TheHeader = new TCPPacketStructures.TCPPacketHeaderStructure();
+
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
@@ -73,9 +82,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
             //Provide default values for the output parameters for source port and destination port
             TheSourcePort = 0;
             TheDestinationPort = 0;
-
-            //Create an instance of the TCP packet header
-            TCPPacketStructures.TCPPacketHeaderStructure TheHeader = new TCPPacketStructures.TCPPacketHeaderStructure();
 
             //Read the values for the TCP packet header from the packet capture
             TheHeader.SourcePort = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());

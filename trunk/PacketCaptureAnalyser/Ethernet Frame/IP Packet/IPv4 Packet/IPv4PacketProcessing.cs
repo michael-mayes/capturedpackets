@@ -28,18 +28,37 @@ namespace EthernetFrameNamespace.IPPacketNamespace
     class IPv4PacketProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+
+        private IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader;
+
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
+
+        private ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing;
+        private IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing;
+        private TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing;
+        private UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing;
 
         public IPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the IPv4 packet header
+            TheHeader = new IPv4PacketStructures.IPv4PacketHeaderStructure();
+
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
+
+            TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing(TheBinaryReader);
+            TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing(TheBinaryReader);
+            TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
         }
 
         public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)
@@ -74,9 +93,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
             //Provide a default value for the output parameter for the protocol for the IPv4 packet
             TheProtocol = 0;
-
-            //Create an instance of the IPv4 packet header
-            IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader = new IPv4PacketStructures.IPv4PacketHeaderStructure();
 
             //Read the values for the IPv4 packet header from the packet capture
             TheHeader.VersionAndHeaderLength = TheBinaryReader.ReadByte();
@@ -133,8 +149,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             {
                 case (byte)IPv4PacketConstants.IPv4PacketProtocol.ICMPv4:
                     {
-                        ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing(TheBinaryReader);
-
                         //We've got an IPv4 packet containing an ICMPv4 packet so process it
                         TheResult = TheICMPv4PacketProcessing.Process(ThePayloadLength);
 
@@ -143,8 +157,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
                 case (byte)IPv4PacketConstants.IPv4PacketProtocol.IGMP:
                     {
-                        IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing(TheBinaryReader);
-
                         //We've got an IPv4 packet containing an IGMPv2 packet so process it
                         TheResult = TheIGMPv2PacketProcessing.Process(ThePayloadLength);
 
@@ -153,8 +165,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
                 case (byte)IPv4PacketConstants.IPv4PacketProtocol.TCP:
                     {
-                        TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-
                         //We've got an IPv4 packet containing an TCP packet so process it
                         TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
 
@@ -163,8 +173,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
                 case (byte)IPv4PacketConstants.IPv4PacketProtocol.UDP:
                     {
-                        UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-
                         //We've got an IPv4 packet containing an UDP datagram so process it
                         TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
 

@@ -29,9 +29,14 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
 
+        private LLDPPacketStructures.LLDPPacketStructure ThePacket;
+
         public LLDPPacketProcessing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the LLDP packet
+            ThePacket = new LLDPPacketStructures.LLDPPacketStructure();
         }
 
         public bool Process(long ThePayloadLength)
@@ -48,8 +53,7 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
                 return false;
             }
 
-            //Create an instance of the LLDP packet
-            LLDPPacketStructures.LLDPPacketStructure ThePacket = new LLDPPacketStructures.LLDPPacketStructure();
+            //There is no separate header for the LLDP packet
 
             //Just read off the bytes for the LLDP packet from the packet capture so we can move on
             ThePacket.UnusedField1 = TheBinaryReader.ReadUInt64();

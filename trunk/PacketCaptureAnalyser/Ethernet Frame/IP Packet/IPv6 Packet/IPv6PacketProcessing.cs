@@ -28,18 +28,33 @@ namespace EthernetFrameNamespace.IPPacketNamespace
     class IPv6PacketProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+
+        private IPv6PacketStructures.IPv6PacketHeaderStructure TheHeader;
+
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
+
+        private TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing;
+        private UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing;
 
         public IPv6PacketProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the IPv6 packet header
+            TheHeader = new IPv6PacketStructures.IPv6PacketHeaderStructure();
+
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
+
+            TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
         }
 
         public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)
@@ -70,9 +85,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
             //Provide a default value for the output parameter for the protocol for the IPv6 packet
             TheProtocol = 0;
-
-            //Create an instance of the IPv6 packet header
-            IPv6PacketStructures.IPv6PacketHeaderStructure TheHeader = new IPv6PacketStructures.IPv6PacketHeaderStructure();
 
             //Read the values for the IPv6 packet header from the packet capture
             TheHeader.VersionAndTrafficClass = TheBinaryReader.ReadByte();
@@ -128,8 +140,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
                 case (byte)IPv6PacketConstants.IPv6PacketProtocol.TCP:
                     {
-                        TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-
                         //We've got an IPv6 packet containing an TCP packet so process it
                         TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
 
@@ -138,8 +148,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
                 case (byte)IPv6PacketConstants.IPv6PacketProtocol.UDP:
                     {
-                        UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-
                         //We've got an IPv6 packet containing an UDP datagram so process it
                         TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
 

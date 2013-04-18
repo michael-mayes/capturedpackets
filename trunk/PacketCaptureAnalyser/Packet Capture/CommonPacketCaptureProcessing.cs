@@ -167,11 +167,11 @@ namespace PacketCaptureProcessingNamespace
                 "Started processing of the captured packets"
                 );
 
+            EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+
             //Attempt to process the packets in the packet capture
             try
             {
-                EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-
                 //Store the length of the stream locally - the .NET framework does not cache it so each query requires an expensive read - this is OK so long as not editing the file at the same time as analysing it
                 long TheStreamLength = TheBinaryReader.BaseStream.Length;
 
@@ -254,7 +254,6 @@ namespace PacketCaptureProcessingNamespace
                                 //Stop looping as have reached the end of the packet capture
                                 break;
                             }
-
                         }
                         else
                         {

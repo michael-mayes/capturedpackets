@@ -29,9 +29,14 @@ namespace EthernetFrameNamespace.LoopbackPacketNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
 
+        private LoopbackPacketStructures.LoopbackPacketHeaderStructure TheHeader;
+
         public LoopbackPacketProcessing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the Loopback packet header
+            TheHeader = new LoopbackPacketStructures.LoopbackPacketHeaderStructure();
         }
 
         public bool Process(long ThePayloadLength)
@@ -61,9 +66,6 @@ namespace EthernetFrameNamespace.LoopbackPacketNamespace
         private bool ProcessHeader()
         {
             bool TheResult = true;
-
-            //Create an instance of the Loopback packet header
-            LoopbackPacketStructures.LoopbackPacketHeaderStructure TheHeader = new LoopbackPacketStructures.LoopbackPacketHeaderStructure();
 
             //Read the values for the Loopback packet header from the packet capture
             TheHeader.SkipCount = TheBinaryReader.ReadUInt16();

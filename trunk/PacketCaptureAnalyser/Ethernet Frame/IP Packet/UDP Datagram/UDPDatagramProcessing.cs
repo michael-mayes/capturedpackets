@@ -28,16 +28,25 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
     class UDPDatagramProcessing
     {
         private System.IO.BinaryReader TheBinaryReader;
+
+        private UDPDatagramStructures.UDPDatagramHeaderStructure TheHeader;
+
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
         public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the UDP datagram header
+            TheHeader = new UDPDatagramStructures.UDPDatagramHeaderStructure();
+
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
+
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
@@ -73,9 +82,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             //Provide default values for the output parameters for source port and destination port
             TheSourcePort = 0;
             TheDestinationPort = 0;
-
-            //Create an instance of the UDP datagram header
-            UDPDatagramStructures.UDPDatagramHeaderStructure TheHeader = new UDPDatagramStructures.UDPDatagramHeaderStructure();
 
             //Read the values for the UDP datagram header from the packet capture
             TheHeader.SourcePort = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());

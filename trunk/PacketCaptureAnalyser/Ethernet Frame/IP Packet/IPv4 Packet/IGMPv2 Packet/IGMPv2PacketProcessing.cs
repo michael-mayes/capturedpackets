@@ -29,9 +29,14 @@ namespace EthernetFrameNamespace.IPPacketNamespace.IGMPv2PacketNamespace
     {
         private System.IO.BinaryReader TheBinaryReader;
 
+        private IGMPv2PacketStructures.IGMPv2PacketStructure ThePacket;
+
         public IGMPv2PacketProcessing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
+
+            //Create an instance of the IGMPv2 packet
+            ThePacket = new IGMPv2PacketStructures.IGMPv2PacketStructure();
         }
 
         public bool Process(ushort TheIGMPv2PacketLength)
@@ -39,9 +44,6 @@ namespace EthernetFrameNamespace.IPPacketNamespace.IGMPv2PacketNamespace
             bool TheResult = true;
 
             //There is no separate header for the IGMPv2 packet
-
-            //Create an instance of the IGMPv2 packet
-            IGMPv2PacketStructures.IGMPv2PacketStructure ThePacket = new IGMPv2PacketStructures.IGMPv2PacketStructure();
 
             //Just read off the bytes for the IGMPv2 packet from the packet capture so we can move on
             ThePacket.Type = TheBinaryReader.ReadByte();
