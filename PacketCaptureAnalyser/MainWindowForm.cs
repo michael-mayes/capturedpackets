@@ -106,10 +106,16 @@ namespace PacketCaptureAnalyser
         {
             bool TheResult = true;
 
+            string TheOutputFilePath = SelectedOutputFileForAnalysisDialog.FileName;
+            string TheOutputFileName = System.IO.Path.GetFileName(TheOutputFilePath);
+
+            string ThePacketCaptureFilePath = SelectedPacketCaptureForAnalysisDialog.FileName;
+            string ThePacketCaptureFileName = System.IO.Path.GetFileName(ThePacketCaptureFilePath);
+
             //Delete any existing output files with the selected name to ape the clearing of all text from the output window
-            if (System.IO.File.Exists(SelectedOutputFileForAnalysisDialog.FileName))
+            if (System.IO.File.Exists(TheOutputFilePath))
             {
-                System.IO.File.Delete(SelectedOutputFileForAnalysisDialog.FileName);
+                System.IO.File.Delete(TheOutputFilePath);
             }
 
             //Remove the output window from the list of listeners to debug output as all text will go to the output file
@@ -117,7 +123,7 @@ namespace PacketCaptureAnalyser
 
             //Redirect any text added to the output window to the output file
             using (System.Diagnostics.TextWriterTraceListener TheOutputWindowListener =
-                new System.Diagnostics.TextWriterTraceListener(SelectedOutputFileForAnalysisDialog.FileName))
+                new System.Diagnostics.TextWriterTraceListener(TheOutputFilePath))
             {
                 System.Diagnostics.Trace.Listeners.Add(TheOutputWindowListener);
 
@@ -125,7 +131,7 @@ namespace PacketCaptureAnalyser
                 System.Diagnostics.Trace.WriteLine
                     (
                     "Analysis of the " +
-                    System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                    ThePacketCaptureFileName +
                     " packet capture started"
                     );
 
@@ -186,7 +192,7 @@ namespace PacketCaptureAnalyser
                             System.Diagnostics.Trace.WriteLine
                                 (
                                 "The" +
-                                System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                                ThePacketCaptureFileName +
                                 " packet capture is of an unknown type!!!"
                                 );
 
@@ -203,7 +209,7 @@ namespace PacketCaptureAnalyser
                     System.Diagnostics.Trace.WriteLine
                         (
                         "Analysis of the " +
-                        System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                        ThePacketCaptureFileName +
                         " packet capture completed successfully!"
                         );
 
@@ -221,7 +227,7 @@ namespace PacketCaptureAnalyser
                         System.Diagnostics.Trace.WriteLine
                             (
                             "Latency analysis for the " +
-                            System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                            ThePacketCaptureFileName +
                             " packet capture started"
                             );
 
@@ -237,7 +243,7 @@ namespace PacketCaptureAnalyser
                         System.Diagnostics.Trace.WriteLine
                             (
                             "Latency analysis for the " +
-                            System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                            ThePacketCaptureFileName +
                             " packet capture completed in " +
                             TheLatencyAnalysisDuration.TotalSeconds.ToString() +
                             " seconds"
@@ -258,7 +264,7 @@ namespace PacketCaptureAnalyser
                         System.Diagnostics.Trace.WriteLine
                             (
                             "Time analysis for the " +
-                            System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                            ThePacketCaptureFileName +
                             " packet capture started"
                             );
 
@@ -274,7 +280,7 @@ namespace PacketCaptureAnalyser
                         System.Diagnostics.Trace.WriteLine
                             (
                             "Time analysis for the " +
-                            System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                            ThePacketCaptureFileName +
                             " packet capture completed in " +
                             TheTimeAnalysisDuration.TotalSeconds.ToString() +
                             " seconds"
@@ -287,7 +293,7 @@ namespace PacketCaptureAnalyser
                     System.Diagnostics.Trace.WriteLine
                         (
                         "Analysis of the " +
-                        System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                        ThePacketCaptureFileName +
                         " packet capture failed!!!"
                         );
                 }
@@ -298,6 +304,9 @@ namespace PacketCaptureAnalyser
 
                 System.Diagnostics.Debug.Listeners.Remove(TheOutputWindowListener);
             }
+
+            //Update the display after completion of the analysis
+            ReflectCompletionOfPacketCaptureAnalysis();
 
             //Dependent on the result of the processing above, display a message box to indicate success or otherwise
 
@@ -310,7 +319,7 @@ namespace PacketCaptureAnalyser
                     System.Windows.Forms.MessageBox.Show
                     (
                     "Analysis of the " +
-                    System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                    ThePacketCaptureFileName +
                     " packet capture completed successfully!" +
                     System.Environment.NewLine +
                     System.Environment.NewLine +
@@ -327,7 +336,7 @@ namespace PacketCaptureAnalyser
                     System.Windows.Forms.MessageBox.Show
                     (
                     "Analysis of the " +
-                    System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                    ThePacketCaptureFileName +
                     " packet capture failed!!!" +
                     System.Environment.NewLine +
                     System.Environment.NewLine +
@@ -341,14 +350,11 @@ namespace PacketCaptureAnalyser
             //Dependent on the button selection at the message box, open the output file
             if (TheMessageBoxResult == System.Windows.Forms.DialogResult.Yes)
             {
-                if (System.IO.File.Exists(SelectedOutputFileForAnalysisDialog.FileName))
+                if (System.IO.File.Exists(TheOutputFilePath))
                 {
-                    System.Diagnostics.Process.Start(SelectedOutputFileForAnalysisDialog.FileName);
+                    System.Diagnostics.Process.Start(TheOutputFilePath);
                 }
             }
-
-            //Update the display after completion of the analysis
-            ReflectCompletionOfPacketCaptureAnalysis();
         }
 
         private void ExitButton_Click(object sender, System.EventArgs e)
