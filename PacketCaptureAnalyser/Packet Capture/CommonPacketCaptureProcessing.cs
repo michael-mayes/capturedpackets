@@ -69,7 +69,7 @@ namespace PacketCaptureProcessingNamespace
 
                     TheProgressWindowForm.ReadingPacketCaptureTextBox.DeselectAll();
                     TheProgressWindowForm.ReadingPacketCaptureTextBox.Visible = true;
-                    
+
                     //Read all the bytes from the packet capture into an array
                     byte[] TheBytes = System.IO.File.ReadAllBytes(ThePacketCapture);
 
