@@ -105,16 +105,19 @@ namespace PacketCaptureProcessingNamespace
                             //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
                             double TheTimestampAccuracy = 0.0;
 
-                            //Hide the text box now the reading of the packet capture has completed
-                            TheProgressWindowForm.ReadingPacketCaptureTextBox.Visible = false;
-
                             //Only continue reading from the packet capture if the packet capture global header was read successfully
                             if (ProcessGlobalHeader(TheBinaryReader, out TheNetworkDataLinkType, out TheTimestampAccuracy))
                             {
-                                TheResult = ProcessPackets(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
+                                //Hide the text box now the reading of the packet capture has completed
+                                TheProgressWindowForm.ReadingPacketCaptureTextBox.Visible = false;
+
+                                TheResult = ProcessPackets(TheBinaryReader, TheProgressWindowForm, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
                             }
                             else
                             {
+                                //Hide the text box now the reading of the packet capture has completed
+                                TheProgressWindowForm.ReadingPacketCaptureTextBox.Visible = false;
+
                                 TheResult = false;
                             }
                         }
@@ -175,7 +178,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
+        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -189,11 +192,11 @@ namespace PacketCaptureProcessingNamespace
                 "Started processing of the captured packets"
                 );
 
-            //Look up the reference to the progress window form so that we can access the progress bar
-            var TheProgressWindowForm = System.Windows.Forms.Form.ActiveForm as PacketCaptureAnalyser.ProgressWindowForm;
-
-            //Show the progress bar now the analysis is starting
-            TheProgressWindowForm.AnalysisOfPackageCaptureProgressBar.Visible = true;
+            if (TheProgressWindowForm != null)
+            {
+                //Show the progress bar now the analysis is starting
+                TheProgressWindowForm.AnalysisOfPackageCaptureProgressBar.Visible = true;
+            }
 
             EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
 
