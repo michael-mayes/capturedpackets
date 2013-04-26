@@ -70,12 +70,13 @@ namespace PacketCaptureAnalyser
             // ReadingPacketCaptureTextBox
             //
             this.ReadingPacketCaptureTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ReadingPacketCaptureTextBox.Location = new System.Drawing.Point(22, 17);
+            this.ReadingPacketCaptureTextBox.Location = new System.Drawing.Point(0, 17);
             this.ReadingPacketCaptureTextBox.Name = "ReadingPacketCaptureTextBox";
             this.ReadingPacketCaptureTextBox.ReadOnly = true;
-            this.ReadingPacketCaptureTextBox.Size = new System.Drawing.Size(221, 13);
+            this.ReadingPacketCaptureTextBox.Size = new System.Drawing.Size(268, 13);
             this.ReadingPacketCaptureTextBox.TabIndex = 23;
             this.ReadingPacketCaptureTextBox.Text = "Reading Packet Capture Into System Memory";
+            this.ReadingPacketCaptureTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             //
             // ProgressWindowForm
             //
