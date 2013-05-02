@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\Latency\LatencyAnalysisStructures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\ARPPacketProcessing.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\ARPPacketStructures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\ARPPacketConstants.cs" />
