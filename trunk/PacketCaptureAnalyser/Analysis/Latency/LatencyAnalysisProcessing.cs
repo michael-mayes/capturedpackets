@@ -30,8 +30,9 @@ namespace AnalysisNamespace
 
     class LatencyAnalysisProcessing
     {
+        private System.Collections.Generic.Dictionary<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue> TheLatencyValuesDictionary;
+
         private bool OutputLatencyAnalysisDebug;
-        private System.Data.DataTable TheLatencyValuesTable;
         private System.Data.DataTable TheHostIdsTable;
         private System.Data.DataTable TheMessageIdsTable;
 
@@ -39,8 +40,9 @@ namespace AnalysisNamespace
         {
             this.OutputLatencyAnalysisDebug = OutputLatencyAnalysisDebug;
 
-            //Create a datatable to hold the latency values for message pairings
-            TheLatencyValuesTable = new System.Data.DataTable();
+            //Create a dictionary to hold the latency values for message pairings
+            TheLatencyValuesDictionary =
+                new System.Collections.Generic.Dictionary<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>();
 
             //Create a datatable to hold the set of host Ids encountered during the latency analysis
             TheHostIdsTable = new System.Data.DataTable();
@@ -51,30 +53,6 @@ namespace AnalysisNamespace
 
         public void Create()
         {
-            //Add the required columns to the datatable to hold the latency values for message pairings
-            TheLatencyValuesTable.Columns.Add("HostId", typeof(byte));
-            TheLatencyValuesTable.Columns.Add("Protocol", typeof(byte));
-            TheLatencyValuesTable.Columns.Add("SequenceNumber", typeof(ulong));
-            TheLatencyValuesTable.Columns.Add("MessageId", typeof(ulong));
-            TheLatencyValuesTable.Columns.Add("FirstInstanceFound", typeof(bool));
-            TheLatencyValuesTable.Columns.Add("SecondInstanceFound", typeof(bool));
-            TheLatencyValuesTable.Columns.Add("FirstInstancePacketNumber", typeof(ulong));
-            TheLatencyValuesTable.Columns.Add("SecondInstancePacketNumber", typeof(ulong));
-            TheLatencyValuesTable.Columns.Add("FirstInstanceTimestamp", typeof(double));
-            TheLatencyValuesTable.Columns.Add("SecondInstanceTimestamp", typeof(double));
-            TheLatencyValuesTable.Columns.Add("TimestampDifference", typeof(double));
-            TheLatencyValuesTable.Columns.Add("TimestampDifferenceCalculated", typeof(bool));
-
-            //Set a multi-column primary key as only a combination of host Id, protocol and the sequence number uniquely identify a message pairing
-            //The primary key is needed to allow for use of the Find method against the datatable
-            TheLatencyValuesTable.PrimaryKey =
-                new System.Data.DataColumn[]
-            {
-                TheLatencyValuesTable.Columns["HostId"],
-                TheLatencyValuesTable.Columns["Protocol"],
-                TheLatencyValuesTable.Columns["SequenceNumber"]
-            };
-
             //Add the required column to the datatable to hold the set of host Ids encountered during the latency analysis
             TheHostIdsTable.Columns.Add("HostId", typeof(byte));
 
@@ -122,42 +100,47 @@ namespace AnalysisNamespace
 
             byte TheProtocolAsByte = (byte)TheProtocol;
 
-            //Add the supplied sequence number and timestamp to latency values datatable
+            //Add the supplied sequence number and timestamp to latency values dictionary
 
-            object[] TheLatencyValuesRowFindObject = new object[3];
+            LatencyAnalysisStructures.LatencyAnalysisDictionaryKey TheLatencyAnalysisDictionaryKey =
+                new LatencyAnalysisStructures.LatencyAnalysisDictionaryKey
+                {
+                    HostId = TheHostId,
+                    Protocol = TheProtocolAsByte,
+                    SequenceNumber = TheSequenceNumber
+                };
 
-            TheLatencyValuesRowFindObject[0] = TheHostId.ToString(); //Primary key (part one)
-            TheLatencyValuesRowFindObject[1] = TheProtocolAsByte.ToString(); //Primary key (part two)
-            TheLatencyValuesRowFindObject[2] = TheSequenceNumber.ToString(); //Primary key (part three)
+            LatencyAnalysisStructures.LatencyAnalysisDictionaryValue TheLatencyAnalysisDictionaryValueFound;
 
-            System.Data.DataRow TheLatencyValuesRowFound = TheLatencyValuesTable.Rows.Find(TheLatencyValuesRowFindObject);
+            bool TheLatencyValuesEntryFound = TheLatencyValuesDictionary.TryGetValue
+                (TheLatencyAnalysisDictionaryKey, out TheLatencyAnalysisDictionaryValueFound);
 
-            if (TheLatencyValuesRowFound == null)
+            if (!TheLatencyValuesEntryFound)
             {
-                //If this is the first message of the pairing then create the row
+                //If this is the first message of the pairing then create the new entry
 
-                System.Data.DataRow TheLatencyValuesRowToAdd = TheLatencyValuesTable.NewRow();
+                LatencyAnalysisStructures.LatencyAnalysisDictionaryValue
+                    TheLatencyAnalysisDictionaryValueToAdd =
+                    new LatencyAnalysisStructures.LatencyAnalysisDictionaryValue { };
 
-                TheLatencyValuesRowToAdd["HostId"] = TheHostId;
-                TheLatencyValuesRowToAdd["Protocol"] = TheProtocolAsByte;
-                TheLatencyValuesRowToAdd["SequenceNumber"] = TheSequenceNumber;
-                TheLatencyValuesRowToAdd["MessageId"] = TheMessageId;
-                TheLatencyValuesRowToAdd["FirstInstanceFound"] = true;
-                TheLatencyValuesRowToAdd["SecondInstanceFound"] = false;
-                TheLatencyValuesRowToAdd["FirstInstancePacketNumber"] = ThePacketNumber;
-                TheLatencyValuesRowToAdd["SecondInstancePacketNumber"] = 0;
-                TheLatencyValuesRowToAdd["FirstInstanceTimestamp"] = TheTimestamp;
-                TheLatencyValuesRowToAdd["SecondInstanceTimestamp"] = 0.0;
-                TheLatencyValuesRowToAdd["TimestampDifference"] = 0.0;
-                TheLatencyValuesRowToAdd["TimestampDifferenceCalculated"] = false;
+                TheLatencyAnalysisDictionaryValueToAdd.MessageId = TheMessageId;
+                TheLatencyAnalysisDictionaryValueToAdd.FirstInstanceFound = true;
+                TheLatencyAnalysisDictionaryValueToAdd.SecondInstanceFound = false;
+                TheLatencyAnalysisDictionaryValueToAdd.FirstInstancePacketNumber = ThePacketNumber;
+                TheLatencyAnalysisDictionaryValueToAdd.SecondInstancePacketNumber = 0;
+                TheLatencyAnalysisDictionaryValueToAdd.FirstInstanceTimestamp = TheTimestamp;
+                TheLatencyAnalysisDictionaryValueToAdd.SecondInstanceTimestamp = 0.0;
+                TheLatencyAnalysisDictionaryValueToAdd.TimestampDifference = 0.0;
+                TheLatencyAnalysisDictionaryValueToAdd.TimestampDifferenceCalculated = false;
 
-                TheLatencyValuesTable.Rows.Add(TheLatencyValuesRowToAdd);
+                TheLatencyValuesDictionary.Add
+                    (TheLatencyAnalysisDictionaryKey, TheLatencyAnalysisDictionaryValueToAdd);
             }
             else
             {
                 //If this is the second message of the pairing then update the row and calculate the difference in timestamps i.e. the latency
 
-                if (!TheLatencyValuesRowFound.Field<bool>("FirstInstanceFound"))
+                if (!TheLatencyAnalysisDictionaryValueFound.FirstInstanceFound)
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
@@ -171,7 +154,7 @@ namespace AnalysisNamespace
                     return;
                 }
 
-                if (TheLatencyValuesRowFound.Field<bool>("SecondInstanceFound"))
+                if (TheLatencyAnalysisDictionaryValueFound.SecondInstanceFound)
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
@@ -185,21 +168,20 @@ namespace AnalysisNamespace
                     return;
                 }
 
-                TheLatencyValuesRowFound["SecondInstanceFound"] = true;
-                TheLatencyValuesRowFound["SecondInstancePacketNumber"] = ThePacketNumber;
+                TheLatencyAnalysisDictionaryValueFound.SecondInstanceFound = true;
+                TheLatencyAnalysisDictionaryValueFound.SecondInstancePacketNumber = ThePacketNumber;
 
-                if (TheTimestamp > TheLatencyValuesRowFound.Field<double>("FirstInstanceTimestamp"))
+                if (TheTimestamp > TheLatencyAnalysisDictionaryValueFound.FirstInstanceTimestamp)
                 {
-
-                    TheLatencyValuesRowFound["SecondInstanceTimestamp"] = TheTimestamp;
-                    TheLatencyValuesRowFound["TimestampDifference"] = (TheTimestamp - TheLatencyValuesRowFound.Field<double>("FirstInstanceTimestamp")) * 1000.0; //Milliseconds
-                    TheLatencyValuesRowFound["TimestampDifferenceCalculated"] = true;
+                    TheLatencyAnalysisDictionaryValueFound.SecondInstanceTimestamp = TheTimestamp;
+                    TheLatencyAnalysisDictionaryValueFound.TimestampDifference = (TheTimestamp - TheLatencyAnalysisDictionaryValueFound.FirstInstanceTimestamp) * 1000.0; //Milliseconds
+                    TheLatencyAnalysisDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
-                else if (TheTimestamp == TheLatencyValuesRowFound.Field<double>("FirstInstanceTimestamp"))
+                else if (TheTimestamp == TheLatencyAnalysisDictionaryValueFound.FirstInstanceTimestamp)
                 {
-                    TheLatencyValuesRowFound["SecondInstanceTimestamp"] = 0.0;
-                    TheLatencyValuesRowFound["TimestampDifference"] = 0.0;
-                    TheLatencyValuesRowFound["TimestampDifferenceCalculated"] = true;
+                    TheLatencyAnalysisDictionaryValueFound.SecondInstanceTimestamp = 0.0;
+                    TheLatencyAnalysisDictionaryValueFound.TimestampDifference = 0.0;
+                    TheLatencyAnalysisDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
                 else
                 {
@@ -212,7 +194,7 @@ namespace AnalysisNamespace
                         ", but the timestamp of the first message is higher than that of the second message!!!"
                         );
 
-                    TheLatencyValuesRowFound["TimestampDifferenceCalculated"] = false;
+                    TheLatencyAnalysisDictionaryValueFound.TimestampDifferenceCalculated = false;
                 }
 
                 //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
@@ -340,15 +322,15 @@ namespace AnalysisNamespace
 
                 foreach (System.Data.DataRow TheMessageIdRow in TheMessageIdRowsFound)
                 {
-                    EnumerableRowCollection<System.Data.DataRow>
-                        TheLatencyValuesRowsFound =
-                        from r in TheLatencyValuesTable.AsEnumerable()
-                        where r.Field<byte>("Protocol") == (byte)TheProtocol &&
-                              r.Field<ulong>("MessageId") == TheMessageIdRow.Field<ulong>("MessageId") &&
-                              r.Field<bool>("TimestampDifferenceCalculated")
-                        select r;
+                    System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>>
+                        TheLatencyValueEntriesFound =
+                        from s in TheLatencyValuesDictionary
+                        where s.Key.Protocol == (byte)TheProtocol &&
+                        s.Value.MessageId == TheMessageIdRow.Field<ulong>("MessageId") &&
+                        s.Value.TimestampDifferenceCalculated
+                        select s;
 
-                    int TheLatencyValuesRowsFoundCount = TheLatencyValuesRowsFound.Count();
+                    int TheLatencyValuesRowsFoundCount = TheLatencyValueEntriesFound.Count();
 
                     if (TheLatencyValuesRowsFoundCount > 0)
                     {
@@ -362,13 +344,13 @@ namespace AnalysisNamespace
                             TheLatencyValuesRowsFoundCount.ToString()
                             );
 
-                        FinaliseLatencyValuesForMessageId(TheProtocolString, TheMessageIdRow.Field<ulong>("MessageId"), TheLatencyValuesRowsFound);
+                        FinaliseLatencyValuesForMessageId(TheProtocolString, TheMessageIdRow.Field<ulong>("MessageId"), TheLatencyValueEntriesFound);
                     }
                 }
             }
         }
 
-        private void FinaliseLatencyValuesForMessageId(string TheProtocolString, ulong TheMessageId, EnumerableRowCollection<System.Data.DataRow> TheLatencyValuesRows)
+        private void FinaliseLatencyValuesForMessageId(string TheProtocolString, ulong TheMessageId, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>> TheLatencyValuesRows)
         {
             CommonAnalysisHistogram TheHistogram =
                 new CommonAnalysisHistogram
@@ -389,9 +371,9 @@ namespace AnalysisNamespace
             double TheTotalOfTimestampDifferences = 0;
             double TheAverageTimestampDifference = 0;
 
-            foreach (System.Data.DataRow TheLatencyValuesRow in TheLatencyValuesRows)
+            foreach (var TheLatencyValuesRow in TheLatencyValuesRows)
             {
-                double TheTimestampDifference = TheLatencyValuesRow.Field<double>("TimestampDifference");
+                double TheTimestampDifference = TheLatencyValuesRow.Value.TimestampDifference;
 
                 TheHistogram.AddValue(TheTimestampDifference);
 
@@ -402,15 +384,15 @@ namespace AnalysisNamespace
                 if (TheMinTimestampDifference > TheTimestampDifference)
                 {
                     TheMinTimestampDifference = TheTimestampDifference;
-                    TheMinTimestampPacketNumber = TheLatencyValuesRow.Field<ulong>("FirstInstancePacketNumber");
-                    TheMinTimestampSequenceNumber = TheLatencyValuesRow.Field<ulong>("SequenceNumber");
+                    TheMinTimestampPacketNumber = TheLatencyValuesRow.Value.FirstInstancePacketNumber;
+                    TheMinTimestampSequenceNumber = TheLatencyValuesRow.Key.SequenceNumber;
                 }
 
                 if (TheMaxTimestampDifference < TheTimestampDifference)
                 {
                     TheMaxTimestampDifference = TheTimestampDifference;
-                    TheMaxTimestampPacketNumber = TheLatencyValuesRow.Field<ulong>("FirstInstancePacketNumber");
-                    TheMaxTimestampSequenceNumber = TheLatencyValuesRow.Field<ulong>("SequenceNumber");
+                    TheMaxTimestampPacketNumber = TheLatencyValuesRow.Value.FirstInstancePacketNumber;
+                    TheMaxTimestampSequenceNumber = TheLatencyValuesRow.Key.SequenceNumber;
                 }
             }
 
@@ -494,17 +476,17 @@ namespace AnalysisNamespace
 
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-                foreach (System.Data.DataRow TheLatencyValuesRow in TheLatencyValuesRows)
+                foreach (var TheLatencyValuesRow in TheLatencyValuesRows)
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
-                        (TheLatencyValuesRow.Field<ulong>("FirstInstancePacketNumber")).ToString() +
+                        TheLatencyValuesRow.Value.FirstInstancePacketNumber.ToString() +
                         "\t" +
-                        (TheLatencyValuesRow.Field<ulong>("SecondInstancePacketNumber")).ToString() +
+                        TheLatencyValuesRow.Value.SecondInstancePacketNumber.ToString() +
                         "\t" +
-                        (TheLatencyValuesRow.Field<ulong>("SequenceNumber")).ToString() +
+                        TheLatencyValuesRow.Key.SequenceNumber.ToString() +
                         "\t" +
-                        (TheLatencyValuesRow.Field<ulong>("TimestampDifference")).ToString()
+                        TheLatencyValuesRow.Value.TimestampDifference.ToString()
                         );
                 }
 
