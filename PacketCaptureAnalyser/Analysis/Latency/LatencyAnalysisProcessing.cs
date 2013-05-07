@@ -33,6 +33,7 @@ namespace AnalysisNamespace
         private System.Collections.Generic.Dictionary<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue> TheLatencyValuesDictionary;
 
         private bool OutputLatencyAnalysisDebug;
+
         private System.Data.DataTable TheHostIdsTable;
         private System.Data.DataTable TheMessageIdsTable;
 
