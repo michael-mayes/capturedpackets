@@ -49,9 +49,11 @@ namespace AnalysisNamespace
                     LatencyAnalysisDictionaryKey Key = (LatencyAnalysisDictionaryKey)obj;
 
                     return
-                        (HostId == Key.HostId &&
+                        (
+                        HostId == Key.HostId &&
                         Protocol == Key.Protocol &&
-                        SequenceNumber == Key.SequenceNumber);
+                        SequenceNumber == Key.SequenceNumber
+                        );
                 }
                 else
                 {
@@ -89,7 +91,8 @@ namespace AnalysisNamespace
                     LatencyAnalysisDictionaryValue Value = (LatencyAnalysisDictionaryValue)obj;
 
                     return
-                        (MessageId == Value.MessageId &&
+                        (
+                        MessageId == Value.MessageId &&
                         FirstInstanceFound == Value.FirstInstanceFound &&
                         SecondInstanceFound == Value.SecondInstanceFound &&
                         FirstInstancePacketNumber == Value.FirstInstancePacketNumber &&
@@ -97,7 +100,8 @@ namespace AnalysisNamespace
                         FirstInstanceTimestamp == Value.FirstInstanceTimestamp &&
                         SecondInstanceTimestamp == Value.SecondInstanceTimestamp &&
                         TimestampDifference == Value.TimestampDifference &&
-                        TimestampDifferenceCalculated == Value.TimestampDifferenceCalculated);
+                        TimestampDifferenceCalculated == Value.TimestampDifferenceCalculated
+                        );
                 }
                 else
                 {
