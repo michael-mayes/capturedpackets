@@ -98,17 +98,17 @@ namespace AnalysisNamespace
                 return;
             }
 
-            byte TheProtocolAsByte = (byte)TheProtocol;
-
             //Add the supplied sequence number and timestamp to latency values dictionary
 
             LatencyAnalysisStructures.LatencyAnalysisDictionaryKey TheLatencyAnalysisDictionaryKey =
                 new LatencyAnalysisStructures.LatencyAnalysisDictionaryKey
-                {
-                    HostId = TheHostId,
-                    Protocol = TheProtocolAsByte,
-                    SequenceNumber = TheSequenceNumber
-                };
+                    (
+                    TheHostId,
+                    TheProtocol,
+                    TheSequenceNumber
+                    );
+
+            //Check whether there is a dictionary entry for this key i.e. is this the first message of the pair
 
             LatencyAnalysisStructures.LatencyAnalysisDictionaryValue TheLatencyAnalysisDictionaryValueFound;
 
@@ -117,24 +117,29 @@ namespace AnalysisNamespace
 
             if (!TheLatencyValuesEntryFound)
             {
-                //If this is the first message of the pairing then create the new entry
+                //If this is the first message of the pairing then create the new entry in the dictionary
 
                 LatencyAnalysisStructures.LatencyAnalysisDictionaryValue
                     TheLatencyAnalysisDictionaryValueToAdd =
-                    new LatencyAnalysisStructures.LatencyAnalysisDictionaryValue { };
+                    new LatencyAnalysisStructures.LatencyAnalysisDictionaryValue
+                    {
+                        MessageId = TheMessageId,
+                        FirstInstanceFound = true,
+                        SecondInstanceFound = false,
+                        FirstInstancePacketNumber = ThePacketNumber,
+                        SecondInstancePacketNumber = 0,
+                        FirstInstanceTimestamp = TheTimestamp,
+                        SecondInstanceTimestamp = 0.0,
+                        TimestampDifference = 0.0,
+                        TimestampDifferenceCalculated = false
+                    };
 
-                TheLatencyAnalysisDictionaryValueToAdd.MessageId = TheMessageId;
-                TheLatencyAnalysisDictionaryValueToAdd.FirstInstanceFound = true;
-                TheLatencyAnalysisDictionaryValueToAdd.SecondInstanceFound = false;
-                TheLatencyAnalysisDictionaryValueToAdd.FirstInstancePacketNumber = ThePacketNumber;
-                TheLatencyAnalysisDictionaryValueToAdd.SecondInstancePacketNumber = 0;
-                TheLatencyAnalysisDictionaryValueToAdd.FirstInstanceTimestamp = TheTimestamp;
-                TheLatencyAnalysisDictionaryValueToAdd.SecondInstanceTimestamp = 0.0;
-                TheLatencyAnalysisDictionaryValueToAdd.TimestampDifference = 0.0;
-                TheLatencyAnalysisDictionaryValueToAdd.TimestampDifferenceCalculated = false;
-
+                //Add the new entry to the dictionary
                 TheLatencyValuesDictionary.Add
-                    (TheLatencyAnalysisDictionaryKey, TheLatencyAnalysisDictionaryValueToAdd);
+                    (
+                    TheLatencyAnalysisDictionaryKey,
+                    TheLatencyAnalysisDictionaryValueToAdd
+                    );
             }
             else
             {
@@ -196,6 +201,9 @@ namespace AnalysisNamespace
 
                     TheLatencyAnalysisDictionaryValueFound.TimestampDifferenceCalculated = false;
                 }
+
+                //Update the values in the dictionary entry
+                TheLatencyValuesDictionary[TheLatencyAnalysisDictionaryKey] = TheLatencyAnalysisDictionaryValueFound;
 
                 //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
                 RegisterEncounteredHostId(TheHostId);
@@ -296,7 +304,8 @@ namespace AnalysisNamespace
 
         private void FinaliseProtocolsForHostId(byte TheHostId)
         {
-            foreach (byte TheProtocol in System.Enum.GetValues(typeof(LatencyAnalysisConstants.LatencyAnalysisProtocol)))
+            foreach (LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol in
+                System.Enum.GetValues(typeof(LatencyAnalysisConstants.LatencyAnalysisProtocol)))
             {
                 string TheProtocolString = ((LatencyAnalysisConstants.LatencyAnalysisProtocol)TheProtocol).ToString();
 
@@ -324,8 +333,8 @@ namespace AnalysisNamespace
                 {
                     System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>>
                         TheLatencyValueEntriesFound =
-                        from s in TheLatencyValuesDictionary
-                        where s.Key.Protocol == (byte)TheProtocol &&
+                        from s in TheLatencyValuesDictionary.AsEnumerable()
+                        where s.Key.Protocol == TheProtocol &&
                         s.Value.MessageId == TheMessageIdRow.Field<ulong>("MessageId") &&
                         s.Value.TimestampDifferenceCalculated
                         select s;
@@ -371,7 +380,7 @@ namespace AnalysisNamespace
             double TheTotalOfTimestampDifferences = 0;
             double TheAverageTimestampDifference = 0;
 
-            foreach (var TheLatencyValuesRow in TheLatencyValuesRows)
+            foreach (System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue> TheLatencyValuesRow in TheLatencyValuesRows)
             {
                 double TheTimestampDifference = TheLatencyValuesRow.Value.TimestampDifference;
 
@@ -476,7 +485,7 @@ namespace AnalysisNamespace
 
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-                foreach (var TheLatencyValuesRow in TheLatencyValuesRows)
+                foreach (System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue> TheLatencyValuesRow in TheLatencyValuesRows)
                 {
                     System.Diagnostics.Trace.WriteLine
                         (

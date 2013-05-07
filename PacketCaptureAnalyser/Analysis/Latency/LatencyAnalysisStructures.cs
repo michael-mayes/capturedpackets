@@ -32,8 +32,15 @@ namespace AnalysisNamespace
         public struct LatencyAnalysisDictionaryKey
         {
             public byte HostId;
-            public byte Protocol;
+            public LatencyAnalysisConstants.LatencyAnalysisProtocol Protocol;
             public ulong SequenceNumber;
+
+            public LatencyAnalysisDictionaryKey(byte TheHostId, LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber)
+            {
+                HostId = TheHostId;
+                Protocol = TheProtocol;
+                SequenceNumber = TheSequenceNumber;
+            }
 
             public override bool Equals(object obj)
             {
