@@ -543,7 +543,24 @@ namespace PacketCaptureAnalyser
         {
             if (System.IO.File.Exists(SelectedPacketCaptureForAnalysisDialog.FileName))
             {
-                System.Diagnostics.Process.Start(SelectedPacketCaptureForAnalysisDialog.FileName);
+                try
+                {
+                    System.Diagnostics.Process.Start(SelectedPacketCaptureForAnalysisDialog.FileName);
+                }
+
+                catch (System.ComponentModel.Win32Exception f)
+                {
+                    System.Diagnostics.Trace.WriteLine
+                        (
+                        "The exception " +
+                        f.GetType().Name +
+                        " with the following message: " +
+                        f.Message +
+                        " was raised as there is no application registered that can open the " +
+                        System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
+                        " packet capture!!!"
+                        );
+                }
             }
         }
 
