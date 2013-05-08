@@ -352,7 +352,24 @@ namespace PacketCaptureAnalyser
             {
                 if (System.IO.File.Exists(TheOutputFilePath))
                 {
-                    System.Diagnostics.Process.Start(TheOutputFilePath);
+                    try
+                    {
+                        System.Diagnostics.Process.Start(TheOutputFilePath);
+                    }
+
+                    catch (System.ComponentModel.Win32Exception e)
+                    {
+                        System.Diagnostics.Trace.WriteLine
+                            (
+                            "The exception " +
+                            e.GetType().Name +
+                            " with the following message: " +
+                            e.Message +
+                            " was raised as there is no application registered that can open the " +
+                            System.IO.Path.GetFileName(TheOutputFilePath) +
+                            " output file!!!"
+                            );
+                    }
                 }
             }
         }
