@@ -53,39 +53,36 @@ namespace PacketCaptureAnalyser
         /// </summary>
         private void InitializeComponent()
         {
-            this.AnalysisOfPackageCaptureProgressBar = new System.Windows.Forms.ProgressBar();
-            this.ReadingPacketCaptureTextBox = new System.Windows.Forms.TextBox();
+            this.AnalysingPacketCaptureProgressBar = new System.Windows.Forms.ProgressBar();
+            this.AnalysingPacketCaptureLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            //
-            // AnalysisOfPackageCaptureProgressBar
-            //
-            this.AnalysisOfPackageCaptureProgressBar.Enabled = false;
-            this.AnalysisOfPackageCaptureProgressBar.Location = new System.Drawing.Point(12, 12);
-            this.AnalysisOfPackageCaptureProgressBar.Name = "AnalysisOfPackageCaptureProgressBar";
-            this.AnalysisOfPackageCaptureProgressBar.Size = new System.Drawing.Size(240, 23);
-            this.AnalysisOfPackageCaptureProgressBar.TabIndex = 21;
-            this.AnalysisOfPackageCaptureProgressBar.Tag = "";
-            this.AnalysisOfPackageCaptureProgressBar.Visible = false;
-            //
-            // ReadingPacketCaptureTextBox
-            //
-            this.ReadingPacketCaptureTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.ReadingPacketCaptureTextBox.Location = new System.Drawing.Point(0, 17);
-            this.ReadingPacketCaptureTextBox.Name = "ReadingPacketCaptureTextBox";
-            this.ReadingPacketCaptureTextBox.ReadOnly = true;
-            this.ReadingPacketCaptureTextBox.Size = new System.Drawing.Size(268, 13);
-            this.ReadingPacketCaptureTextBox.TabIndex = 23;
-            this.ReadingPacketCaptureTextBox.Text = "Reading Packet Capture Into System Memory";
-            this.ReadingPacketCaptureTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            //
+            // 
+            // AnalysingPacketCaptureProgressBar
+            // 
+            this.AnalysingPacketCaptureProgressBar.Enabled = false;
+            this.AnalysingPacketCaptureProgressBar.Location = new System.Drawing.Point(13, 28);
+            this.AnalysingPacketCaptureProgressBar.Name = "AnalysingPacketCaptureProgressBar";
+            this.AnalysingPacketCaptureProgressBar.Size = new System.Drawing.Size(240, 23);
+            this.AnalysingPacketCaptureProgressBar.TabIndex = 21;
+            this.AnalysingPacketCaptureProgressBar.Tag = "";
+            // 
+            // AnalysingPacketCaptureLabel
+            // 
+            this.AnalysingPacketCaptureLabel.Location = new System.Drawing.Point(-3, 4);
+            this.AnalysingPacketCaptureLabel.Name = "AnalysingPacketCaptureLabel";
+            this.AnalysingPacketCaptureLabel.Size = new System.Drawing.Size(271, 18);
+            this.AnalysingPacketCaptureLabel.TabIndex = 25;
+            this.AnalysingPacketCaptureLabel.Text = "<Default Text>";
+            this.AnalysingPacketCaptureLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // ProgressWindowForm
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 48);
+            this.ClientSize = new System.Drawing.Size(267, 58);
             this.ControlBox = false;
-            this.Controls.Add(this.ReadingPacketCaptureTextBox);
-            this.Controls.Add(this.AnalysisOfPackageCaptureProgressBar);
+            this.Controls.Add(this.AnalysingPacketCaptureLabel);
+            this.Controls.Add(this.AnalysingPacketCaptureProgressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -96,13 +93,12 @@ namespace PacketCaptureAnalyser
             this.Text = "Analysis Progress";
             this.TopMost = true;
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        public System.Windows.Forms.ProgressBar AnalysisOfPackageCaptureProgressBar;
-        public System.Windows.Forms.TextBox ReadingPacketCaptureTextBox;
+        public System.Windows.Forms.ProgressBar AnalysingPacketCaptureProgressBar;
+        public System.Windows.Forms.Label AnalysingPacketCaptureLabel;
     }
 }

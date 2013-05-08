@@ -39,21 +39,17 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - cannot be overridden by a derived class
         //
 
-        public bool Process(bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, string ThePacketCapture)
+        public bool Process(PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, string ThePacketCapture)
         {
             bool TheResult = true;
 
             try
             {
+                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 55;
+
                 if (System.IO.File.Exists(ThePacketCapture))
                 {
-                    //Create an instance of the progress window form
-                    var TheProgressWindowForm = new PacketCaptureAnalyser.ProgressWindowForm();
-
-                    //Show the progress window form now the analysis has started
-                    TheProgressWindowForm.Show();
-
-                    TheProgressWindowForm.Focus();
+                    TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 60;
 
                     //Read the start time to allow later calculation of the duration of the processing
                     System.DateTime TheStartTime = System.DateTime.Now;
@@ -65,13 +61,12 @@ namespace PacketCaptureProcessingNamespace
                         " packet capture"
                         );
 
-                    //Show the text box now the reading of the packet capture has started
-
-                    TheProgressWindowForm.ReadingPacketCaptureTextBox.DeselectAll();
-                    TheProgressWindowForm.ReadingPacketCaptureTextBox.Visible = true;
+                    TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 65;
 
                     //Read all the bytes from the packet capture into an array
                     byte[] TheBytes = System.IO.File.ReadAllBytes(ThePacketCapture);
+
+                    TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 70;
 
                     //Compute the duration between the start and the end times
 
@@ -88,14 +83,20 @@ namespace PacketCaptureProcessingNamespace
                         " seconds"
                         );
 
+                    TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 75;
+
                     //Create a memory stream to read the packet capture from the byte array
                     using (System.IO.MemoryStream TheMemoryStream =
                         new System.IO.MemoryStream(TheBytes))
                     {
+                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 80;
+
                         //Open a binary reader for the memory stream for the packet capture
                         using (System.IO.BinaryReader TheBinaryReader =
                             new System.IO.BinaryReader(TheMemoryStream))
                         {
+                            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 90;
+
                             //Ensure that the position of the binary reader is set to the beginning of the memory stream
                             TheBinaryReader.BaseStream.Position = 0;
 
@@ -105,28 +106,20 @@ namespace PacketCaptureProcessingNamespace
                             //Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
                             double TheTimestampAccuracy = 0.0;
 
+                            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 95;
+
                             //Only continue reading from the packet capture if the packet capture global header was read successfully
                             if (ProcessGlobalHeader(TheBinaryReader, out TheNetworkDataLinkType, out TheTimestampAccuracy))
                             {
-                                //Hide the text box now the reading of the packet capture has completed
-                                TheProgressWindowForm.ReadingPacketCaptureTextBox.Visible = false;
+                                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 100;
 
                                 TheResult = ProcessPackets(TheBinaryReader, TheProgressWindowForm, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
                             }
                             else
                             {
-                                //Hide the text box now the reading of the packet capture has completed
-                                TheProgressWindowForm.ReadingPacketCaptureTextBox.Visible = false;
-
                                 TheResult = false;
                             }
                         }
-                    }
-
-                    if (TheProgressWindowForm != null)
-                    {
-                        //Hide the progress window form now the analysis has completed
-                        TheProgressWindowForm.Hide();
                     }
                 }
                 else
@@ -153,7 +146,7 @@ namespace PacketCaptureProcessingNamespace
                     e.Message +
                     " was raised as access to the " +
                     System.IO.Path.GetFileName(ThePacketCapture) +
-                    " packet capture was denied because it is being used by another process!!!"
+                    " packet capture was denied because it is being used by another process or because of insufficient resources!!!"
                     );
 
                 TheResult = false;
@@ -194,8 +187,10 @@ namespace PacketCaptureProcessingNamespace
 
             if (TheProgressWindowForm != null)
             {
-                //Show the progress bar now the analysis is starting
-                TheProgressWindowForm.AnalysisOfPackageCaptureProgressBar.Visible = true;
+                //Update the label and progress bar now the parsing of the packet capture has started
+                TheProgressWindowForm.AnalysingPacketCaptureLabel.Text = "Performing Parsing Of Packet Capture";
+                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 0;
+                TheProgressWindowForm.Refresh();
             }
 
             EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
@@ -310,7 +305,7 @@ namespace PacketCaptureProcessingNamespace
                     if (TheProgressWindowForm != null)
                     {
                         //Update the progress bar to reflect the completion of this iteration of the loop
-                        TheProgressWindowForm.AnalysisOfPackageCaptureProgressBar.Value = (int)((TheBinaryReader.BaseStream.Position * 100) / TheStreamLength);
+                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = (int)((TheBinaryReader.BaseStream.Position * 100) / TheStreamLength);
                     }
                 }
             }
@@ -350,8 +345,10 @@ namespace PacketCaptureProcessingNamespace
 
             if (TheProgressWindowForm != null)
             {
-                //Hide the progress bar now the analysis has completed
-                TheProgressWindowForm.AnalysisOfPackageCaptureProgressBar.Visible = false;
+                //Update the label and progress bar now the parsing of the packet capture has completed
+                TheProgressWindowForm.AnalysingPacketCaptureLabel.Text = "Completed Parsing Of Packet Capture";
+                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 100;
+                TheProgressWindowForm.Refresh();
             }
 
             return TheResult;
