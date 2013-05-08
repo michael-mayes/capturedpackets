@@ -357,14 +357,14 @@ namespace PacketCaptureAnalyser
                         System.Diagnostics.Process.Start(TheOutputFilePath);
                     }
 
-                    catch (System.ComponentModel.Win32Exception e)
+                    catch (System.ComponentModel.Win32Exception f)
                     {
                         System.Diagnostics.Trace.WriteLine
                             (
                             "The exception " +
-                            e.GetType().Name +
+                            f.GetType().Name +
                             " with the following message: " +
-                            e.Message +
+                            f.Message +
                             " was raised as there is no application registered that can open the " +
                             System.IO.Path.GetFileName(TheOutputFilePath) +
                             " output file!!!"
