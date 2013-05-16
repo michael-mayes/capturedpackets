@@ -1,4 +1,0 @@
-[
-    {"command": "run_macro_file", "args": {"file": "Packages/Default/Delete to Hard BOL.sublime-macro"} },
-    {"command": "insert", "args": {"characters": "#"} }
-]
