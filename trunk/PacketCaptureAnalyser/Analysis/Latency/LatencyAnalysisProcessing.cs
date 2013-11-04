@@ -35,7 +35,8 @@ namespace AnalysisNamespace
     //Cannot nest using declarations so must use the declaration of the key value pair type in full again
     using LatencyAnalysisDictionaryEnumerableType = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>>;
 
-    class LatencyAnalysisProcessing
+    //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
+    class LatencyAnalysisProcessing : System.IDisposable
     {
         private System.Collections.Generic.Dictionary
             <
@@ -88,6 +89,23 @@ namespace AnalysisNamespace
                     TheMessageIdsTable.Columns["HostId"],
                     TheMessageIdsTable.Columns["MessageId"]
                 };
+        }
+
+        protected virtual void Dispose(bool Disposing)
+        {
+            if (Disposing)
+            {
+                //Dispose any resources allocated to the datatables if instructed
+                TheHostIdsTable.Dispose();
+                TheMessageIdsTable.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+
+            System.GC.SuppressFinalize(this);
         }
 
         public void RegisterMessageReceipt(byte TheHostId, LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber, ulong TheMessageId, ulong ThePacketNumber, double TheTimestamp)
