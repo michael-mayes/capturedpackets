@@ -28,9 +28,20 @@ namespace AnalysisNamespace
     using System.Data; //Required to be able to use AsEnumerable method
     using System.Linq; //Required to be able to use Count method
 
+    //Create an alias for the key value pair for the dictionary to improve clarity of later code that uses it
+    using LatencyAnalysisDictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>;
+
+    //Create an alias for the enumerable for the dictionary to improve clarity of later code that uses it
+    //Cannot nest using declarations so must use the declaration of the key value pair type in full again
+    using LatencyAnalysisDictionaryEnumerableType = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>>;
+
     class LatencyAnalysisProcessing
     {
-        private System.Collections.Generic.Dictionary<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue> TheLatencyValuesDictionary;
+        private System.Collections.Generic.Dictionary
+            <
+            LatencyAnalysisStructures.LatencyAnalysisDictionaryKey,
+            LatencyAnalysisStructures.LatencyAnalysisDictionaryValue
+            > TheLatencyValuesDictionary;
 
         private bool OutputLatencyAnalysisDebug;
 
@@ -332,7 +343,7 @@ namespace AnalysisNamespace
 
                 foreach (System.Data.DataRow TheMessageIdRow in TheMessageIdRowsFound)
                 {
-                    System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>>
+                    LatencyAnalysisDictionaryEnumerableType
                         TheLatencyValueEntriesFound =
                         from s in TheLatencyValuesDictionary.AsEnumerable()
                         where s.Key.Protocol == TheProtocol &&
@@ -360,13 +371,15 @@ namespace AnalysisNamespace
             }
         }
 
-        private void FinaliseLatencyValuesForMessageId(string TheProtocolString, ulong TheMessageId, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>> TheLatencyValuesRows)
+        private void FinaliseLatencyValuesForMessageId(string TheProtocolString, ulong TheMessageId, LatencyAnalysisDictionaryEnumerableType TheLatencyValuesRows)
         {
             CommonAnalysisHistogram TheHistogram =
                 new CommonAnalysisHistogram
-                    (LatencyAnalysisConstants.LatencyAnalysisNumberOfBins,
+                    (
+                    LatencyAnalysisConstants.LatencyAnalysisNumberOfBins,
                     LatencyAnalysisConstants.LatencyAnalysisBestCaseLatency,
-                    LatencyAnalysisConstants.LatencyAnalysisWorstCaseLatency);
+                    LatencyAnalysisConstants.LatencyAnalysisWorstCaseLatency
+                    );
 
             ulong TheMinTimestampPacketNumber = 0;
             ulong TheMaxTimestampPacketNumber = 0;
@@ -381,7 +394,7 @@ namespace AnalysisNamespace
             double TheTotalOfTimestampDifferences = 0;
             double TheAverageTimestampDifference = 0;
 
-            foreach (System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue> TheLatencyValuesRow in TheLatencyValuesRows)
+            foreach (LatencyAnalysisDictionaryKeyValuePairType TheLatencyValuesRow in TheLatencyValuesRows)
             {
                 double TheTimestampDifference = TheLatencyValuesRow.Value.TimestampDifference;
 
@@ -486,7 +499,7 @@ namespace AnalysisNamespace
 
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-                foreach (System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue> TheLatencyValuesRow in TheLatencyValuesRows)
+                foreach (LatencyAnalysisDictionaryKeyValuePairType TheLatencyValuesRow in TheLatencyValuesRows)
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
