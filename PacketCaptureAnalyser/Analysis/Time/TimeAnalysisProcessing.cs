@@ -28,7 +28,8 @@ namespace AnalysisNamespace
     using System.Data; //Required to be able to use AsEnumerable method
     using System.Linq; //Required to be able to use Count method
 
-    class TimeAnalysisProcessing
+    //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
+    class TimeAnalysisProcessing : System.IDisposable
     {
         private bool OutputTimeAnalysisDebug;
         private System.Data.DataTable TheTimeValuesTable;
@@ -64,6 +65,23 @@ namespace AnalysisNamespace
                 {
                     TheHostIdsTable.Columns["HostId"]
                 };
+        }
+
+        protected virtual void Dispose(bool Disposing)
+        {
+            if (Disposing)
+            {
+                //Dispose any resources allocated to the datatables if instructed
+                TheTimeValuesTable.Dispose();
+                TheHostIdsTable.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+
+            System.GC.SuppressFinalize(this);
         }
 
         public void RegisterTimeMessageReceipt(byte TheHostId, ulong ThePacketNumber, double TheTimestamp, double TheTime)
