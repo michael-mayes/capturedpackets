@@ -147,15 +147,19 @@ namespace AnalysisNamespace
         {
             CommonAnalysisHistogram TheTimestampHistogram =
                 new CommonAnalysisHistogram
-                    (TimeAnalysisConstants.TimeAnalysisTimestampNumberOfBins,
+                    (
+                    TimeAnalysisConstants.TimeAnalysisTimestampNumberOfBins,
                     TimeAnalysisConstants.TimeAnalysisMaxNegativeDifference,
-                    TimeAnalysisConstants.TimeAnalysisMaxPositiveDifference);
+                    TimeAnalysisConstants.TimeAnalysisMaxPositiveDifference
+                    );
 
             CommonAnalysisHistogram TheTimeHistogram =
                 new CommonAnalysisHistogram
-                    (TimeAnalysisConstants.TimeAnalysisTimeNumberOfBins,
+                    (
+                    TimeAnalysisConstants.TimeAnalysisTimeNumberOfBins,
                     TimeAnalysisConstants.TimeAnalysisMaxNegativeDifference,
-                    TimeAnalysisConstants.TimeAnalysisMaxPositiveDifference);
+                    TimeAnalysisConstants.TimeAnalysisMaxPositiveDifference
+                    );
 
             ulong TheMinTimestampDifferencePacketNumber = 0;
             ulong TheMaxTimestampDifferencePacketNumber = 0;
