@@ -287,7 +287,7 @@ namespace EthernetFrameNamespace
                         ThePacketNumber.ToString() +
                         " does not match the progression " +
                         TheStreamPositionDifference.ToString() +
-                        " through the stream!!!" + 
+                        " through the stream!!!" +
                         " - Attempt to recover and continue processing"
                         );
                 }

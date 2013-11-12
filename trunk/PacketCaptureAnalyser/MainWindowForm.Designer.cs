@@ -54,12 +54,13 @@ namespace PacketCaptureAnalyser
             this.PerformTimeAnalysisCheckBox = new System.Windows.Forms.CheckBox();
             this.OutputLatencyAnalysisDebugCheckBox = new System.Windows.Forms.CheckBox();
             this.OutputTimeAnalysisDebugCheckBox = new System.Windows.Forms.CheckBox();
+            this.MinimiseMemoryUsageCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // RunAnalysisOnSelectedPackageCaptureButton
             // 
             this.RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
-            this.RunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 417);
+            this.RunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 439);
             this.RunAnalysisOnSelectedPackageCaptureButton.Name = "RunAnalysisOnSelectedPackageCaptureButton";
             this.RunAnalysisOnSelectedPackageCaptureButton.Size = new System.Drawing.Size(340, 23);
             this.RunAnalysisOnSelectedPackageCaptureButton.TabIndex = 1;
@@ -69,7 +70,7 @@ namespace PacketCaptureAnalyser
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(12, 446);
+            this.ExitButton.Location = new System.Drawing.Point(12, 469);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(340, 23);
             this.ExitButton.TabIndex = 2;
@@ -271,11 +272,23 @@ namespace PacketCaptureAnalyser
             this.OutputTimeAnalysisDebugCheckBox.UseVisualStyleBackColor = true;
             this.OutputTimeAnalysisDebugCheckBox.CheckedChanged += new System.EventHandler(this.OutputTimeAnalysisDebugCheckBox_CheckedChanged);
             // 
+            // MinimiseMemoryUsageCheckBox
+            // 
+            this.MinimiseMemoryUsageCheckBox.AutoSize = true;
+            this.MinimiseMemoryUsageCheckBox.Enabled = false;
+            this.MinimiseMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 417);
+            this.MinimiseMemoryUsageCheckBox.Name = "MinimiseMemoryUsageCheckBox";
+            this.MinimiseMemoryUsageCheckBox.Size = new System.Drawing.Size(346, 17);
+            this.MinimiseMemoryUsageCheckBox.TabIndex = 20;
+            this.MinimiseMemoryUsageCheckBox.Text = "Minimise Memory Usage (Potentially Necessary For Very Large Files)";
+            this.MinimiseMemoryUsageCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MainWindowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(364, 480);
+            this.ClientSize = new System.Drawing.Size(364, 501);
+            this.Controls.Add(this.MinimiseMemoryUsageCheckBox);
             this.Controls.Add(this.OutputTimeAnalysisDebugCheckBox);
             this.Controls.Add(this.OutputLatencyAnalysisDebugCheckBox);
             this.Controls.Add(this.PerformTimeAnalysisCheckBox);
@@ -328,5 +341,6 @@ namespace PacketCaptureAnalyser
         private System.Windows.Forms.CheckBox PerformTimeAnalysisCheckBox;
         private System.Windows.Forms.CheckBox OutputLatencyAnalysisDebugCheckBox;
         private System.Windows.Forms.CheckBox OutputTimeAnalysisDebugCheckBox;
+        private System.Windows.Forms.CheckBox MinimiseMemoryUsageCheckBox;
     }
 }
