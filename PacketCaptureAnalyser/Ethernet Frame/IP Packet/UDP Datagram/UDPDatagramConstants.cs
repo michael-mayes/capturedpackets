@@ -18,8 +18,8 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
 
         public enum UDPDatagramPortNumberEnumeration : ushort
         {
-          DummyValueMin = 0,
-          DummyValueMax = 65535
+            DummyValueMin = 0,
+            DummyValueMax = 65535
         }
     }
 }

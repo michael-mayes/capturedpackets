@@ -146,10 +146,10 @@ namespace PacketCaptureAnalyser
                 //Only perform the latency analysis if the check box was selected for it on the main window form
                 if (PerformLatencyAnalysisCheckBox.Checked)
                 {
-                  TheLatencyAnalysisProcessing = new AnalysisNamespace.LatencyAnalysisProcessing(OutputLatencyAnalysisDebugCheckBox.Checked);
+                    TheLatencyAnalysisProcessing = new AnalysisNamespace.LatencyAnalysisProcessing(OutputLatencyAnalysisDebugCheckBox.Checked);
 
-                  //Initialise the functionality to perform latency analysis on the messages found
-                  TheLatencyAnalysisProcessing.Create();
+                    //Initialise the functionality to perform latency analysis on the messages found
+                    TheLatencyAnalysisProcessing.Create();
                 }
 
                 TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 40;
@@ -157,10 +157,10 @@ namespace PacketCaptureAnalyser
                 //Only perform the time analysis if the check box was selected for it on the main window form
                 if (PerformTimeAnalysisCheckBox.Checked)
                 {
-                  TheTimeAnalysisProcessing = new AnalysisNamespace.TimeAnalysisProcessing(OutputTimeAnalysisDebugCheckBox.Checked);
+                    TheTimeAnalysisProcessing = new AnalysisNamespace.TimeAnalysisProcessing(OutputTimeAnalysisDebugCheckBox.Checked);
 
-                  //Initialise the functionality to perform time analysis on the messages found
-                  TheTimeAnalysisProcessing.Create();
+                    //Initialise the functionality to perform time analysis on the messages found
+                    TheTimeAnalysisProcessing.Create();
                 }
 
                 TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 45;
@@ -179,7 +179,8 @@ namespace PacketCaptureAnalyser
                                                                                 TheLatencyAnalysisProcessing,
                                                                                 PerformTimeAnalysisCheckBox.Checked,
                                                                                 TheTimeAnalysisProcessing,
-                                                                                SelectedPacketCaptureForAnalysisDialog.FileName);
+                                                                                SelectedPacketCaptureForAnalysisDialog.FileName,
+                                                                                MinimiseMemoryUsageCheckBox.Checked);
 
                             break;
                         }
@@ -196,7 +197,8 @@ namespace PacketCaptureAnalyser
                                                                                    TheLatencyAnalysisProcessing,
                                                                                    PerformTimeAnalysisCheckBox.Checked,
                                                                                    TheTimeAnalysisProcessing,
-                                                                                   SelectedPacketCaptureForAnalysisDialog.FileName);
+                                                                                   SelectedPacketCaptureForAnalysisDialog.FileName,
+                                                                                   MinimiseMemoryUsageCheckBox.Checked);
 
                             break;
                         }
@@ -598,6 +600,7 @@ namespace PacketCaptureAnalyser
             OutputLatencyAnalysisDebugCheckBox.Checked = false;
             PerformTimeAnalysisCheckBox.Checked = false;
             OutputTimeAnalysisDebugCheckBox.Checked = false;
+            MinimiseMemoryUsageCheckBox.Checked = false;
         }
 
         private void EnablePacketCaptureAnalysisCheckBoxes()
@@ -607,6 +610,7 @@ namespace PacketCaptureAnalyser
             OutputLatencyAnalysisDebugCheckBox.Enabled = true;
             PerformTimeAnalysisCheckBox.Enabled = true;
             OutputTimeAnalysisDebugCheckBox.Enabled = true;
+            MinimiseMemoryUsageCheckBox.Enabled = true;
         }
 
         private void DisablePacketCaptureAnalysisCheckBoxes()
@@ -616,6 +620,7 @@ namespace PacketCaptureAnalyser
             OutputLatencyAnalysisDebugCheckBox.Enabled = false;
             PerformTimeAnalysisCheckBox.Enabled = false;
             OutputTimeAnalysisDebugCheckBox.Enabled = false;
+            MinimiseMemoryUsageCheckBox.Enabled = false;
         }
 
         private void OpenSelectedPackageCaptureButton_Click(object sender, System.EventArgs e)

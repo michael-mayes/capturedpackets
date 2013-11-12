@@ -7,7 +7,7 @@ namespace AnalysisNamespace
     class LatencyAnalysisStructures
     {
         //Dictionary Key
-        
+
         public struct LatencyAnalysisDictionaryKey
         {
             public byte HostId;
@@ -50,7 +50,7 @@ namespace AnalysisNamespace
         }
 
         //Dictionary Value
-        
+
         public struct LatencyAnalysisDictionaryValue
         {
             public ulong MessageId;

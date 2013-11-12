@@ -19,8 +19,8 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
 
         public enum TCPPacketPortNumberEnumeration : ushort
         {
-          DummyValueMin = 0,
-          DummyValueMax = 65535
+            DummyValueMin = 0,
+            DummyValueMax = 65535
         }
 
         //Flags
