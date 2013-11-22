@@ -30,17 +30,46 @@ namespace PacketCaptureProcessingNamespace
 
             [System.Runtime.InteropServices.FieldOffset(14)]
             public System.UInt16 MinorVersion; //Minor version number
+
+            [System.Runtime.InteropServices.FieldOffset(16)]
+            public System.UInt64 SectionLength; //Section Length
         }
 
         //
-        //PCAP Next Generation packet capture block header - 8 bytes
+        //PCAP Next Generation packet capture interface description block - 16 bytes
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockHeaderLength)]
+            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceDescriptionBlockLength)]
 
-        public struct PCAPNGPackageCaptureBlockHeaderStructure
+        public struct PCAPNGPackageCaptureInterfaceDescriptionBlockStructure
+        {
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public System.UInt32 BlockType; //Block type
+
+            [System.Runtime.InteropServices.FieldOffset(4)]
+            public System.UInt32 BlockTotalLength; //Block total length
+
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public System.UInt16 Reserved; //Reserved field
+
+            [System.Runtime.InteropServices.FieldOffset(10)]
+            public System.UInt16 LinkType; //Network data link type
+
+            [System.Runtime.InteropServices.FieldOffset(12)]
+            public System.UInt32 SnapLen; //Snap length
+        }
+
+        //
+        //PCAP Next Generation packet capture enhanced packet block - 8 bytes
+        //
+
+        [System.Runtime.InteropServices.StructLayout
+            (System.Runtime.InteropServices.LayoutKind.Explicit,
+            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureEnhancedPacketBlockLength)]
+
+        public struct PCAPNGPackageCaptureEnhancedPacketBlockStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 BlockType; //Block type
