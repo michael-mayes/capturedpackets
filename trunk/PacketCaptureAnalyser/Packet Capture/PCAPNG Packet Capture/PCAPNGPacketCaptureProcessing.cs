@@ -102,6 +102,10 @@ namespace PacketCaptureProcessingNamespace
             //Just read the bytes off the remaining bytes from the section header block so we can continue
             TheBinaryReader.ReadBytes((int)(TheBlockHeader.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockHeaderLength));
 
+            //Set up the output parameter for the length of the PCAP packet capture packet payload
+            //Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
+            ThePayloadLength = TheBlockHeader.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockHeaderLength - 12;
+
             return TheResult;
         }
 
