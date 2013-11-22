@@ -23,7 +23,8 @@ namespace PacketCaptureProcessingNamespace
             TheTimestampAccuracy = 0.0;
 
             //Create the single instance of the PCAP packet capture global header
-            PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure TheGlobalHeader = new PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure();
+            PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure TheGlobalHeader =
+                new PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure();
 
             //Read the magic number of the PCAP packet capture global header from the packet capture
             TheGlobalHeader.MagicNumber = TheBinaryReader.ReadUInt32();
@@ -91,7 +92,8 @@ namespace PacketCaptureProcessingNamespace
             TheTimestamp = 0.0;
 
             //Create an instance of the PCAP packet capture packet header
-            PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure ThePacketHeader = new PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure();
+            PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure ThePacketHeader =
+                new PCAPPackageCaptureStructures.PCAPPackageCapturePacketHeaderStructure();
 
             //Populate the PCAP packet capture packet header from the packet capture
             if (IsTheGlobalHeaderLittleEndian)
@@ -141,7 +143,7 @@ namespace PacketCaptureProcessingNamespace
         }
 
         //
-        //Private methods - provide methods specific to Sniffer packet captures, not required to derive from the abstract base class
+        //Private methods - provide methods specific to PCAP packet captures, not required to derive from the abstract base class
         //
 
         private bool ValidateGlobalHeader(PCAPPackageCaptureStructures.PCAPPackageCaptureGlobalHeaderStructure TheGlobalHeader)

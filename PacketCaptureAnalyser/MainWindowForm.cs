@@ -9,9 +9,10 @@ namespace PacketCaptureAnalyser
         //Enumerated list of the types of packet captures supported by the main window form
         private enum MainWindowFormPacketCaptureTypeEnumeration
         {
-            LibpcapTcpdump = 0,
-            NASnifferDOS = 1,
-            Unknown = 2
+            PcapNG = 0,
+            LibpcapTcpdump = 1,
+            NASnifferDOS = 2,
+            Unknown = 3
         }
 
         private static MainWindowFormPacketCaptureTypeEnumeration TheMainWindowFormPacketCaptureType;
@@ -42,6 +43,14 @@ namespace PacketCaptureAnalyser
                 //Determine the type of the packet capture from the extension
                 switch (System.IO.Path.GetExtension(SelectedPacketCaptureForAnalysisDialog.FileName))
                 {
+                    case ".pcapng":
+                        {
+                            //This is a PCAP Next Generation capture
+                            TheMainWindowFormPacketCaptureType =
+                                MainWindowFormPacketCaptureTypeEnumeration.PcapNG;
+                            break;
+                        }
+
                     case ".pcap":
                     case ".libpcap":
                     case ".cap":
@@ -167,6 +176,24 @@ namespace PacketCaptureAnalyser
 
                 switch (TheMainWindowFormPacketCaptureType)
                 {
+                    case MainWindowFormPacketCaptureTypeEnumeration.PcapNG:
+                        {
+                            PacketCaptureProcessingNamespace.PCAPNGPackageCaptureProcessing ThePCAPNGPackageCaptureProcessing =
+                                new PacketCaptureProcessingNamespace.PCAPNGPackageCaptureProcessing();
+
+                            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 50;
+
+                            TheResult = ThePCAPNGPackageCaptureProcessing.Process(TheProgressWindowForm,
+                                                                                  PerformLatencyAnalysisCheckBox.Checked,
+                                                                                  TheLatencyAnalysisProcessing,
+                                                                                  PerformTimeAnalysisCheckBox.Checked,
+                                                                                  TheTimeAnalysisProcessing,
+                                                                                  SelectedPacketCaptureForAnalysisDialog.FileName,
+                                                                                  MinimiseMemoryUsageCheckBox.Checked);
+
+                            break;
+                        }
+
                     case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump:
                         {
                             PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing =
@@ -453,22 +480,34 @@ namespace PacketCaptureAnalyser
         {
             switch (TheMainWindowFormPacketCaptureType)
             {
+                case MainWindowFormPacketCaptureTypeEnumeration.PcapNG:
+                    {
+                        //This is a PCAP Next Generation packet capture
+                        SelectedPacketCaptureTypeTextBox.Text = "PCAP Next Generation";
+
+                        //Analysis of a PCAP Next Generation packet capture is supported
+
+                        //Enable the buttons
+                        EnablePacketCaptureAnalysisButtons();
+
+                        //Reset and disable the check boxes
+                        ResetPacketCaptureAnalysisCheckBoxes();
+                        DisablePacketCaptureAnalysisCheckBoxes();
+
+                        break;
+                    }
+
                 case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump:
                     {
                         //This is a libpcap/tcpdump packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "libpcap/tcpdump";
 
-                        //Analysis of a libpcap/tcpdump packet capture is supported:
-                        //1) Enable the button to clear the selected package capture
-                        //2) Enable the button to open the package capture
-                        //3) Enable the button to select the output file
-                        //4) Disable the button to start the analysis on the packet capture - enabled on selection of the output file
-                        //5) Reset and disable the check boxes
-                        ClearSelectedPacketCaptureButton.Enabled = true;
-                        OpenSelectedPackageCaptureButton.Enabled = true;
-                        SelectOutputFileButton.Enabled = true;
-                        RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+                        //Analysis of a libpcap/tcpdump packet capture is supported
 
+                        //Enable the buttons
+                        EnablePacketCaptureAnalysisButtons();
+
+                        //Reset and disable the check boxes
                         ResetPacketCaptureAnalysisCheckBoxes();
                         DisablePacketCaptureAnalysisCheckBoxes();
 
@@ -480,17 +519,12 @@ namespace PacketCaptureAnalyser
                         //This is an NA Sniffer (DOS) packet capture
                         SelectedPacketCaptureTypeTextBox.Text = "NA Sniffer (DOS)";
 
-                        //Analysis of an NA Sniffer (DOS) packet capture is supported:
-                        //1) Enable the button to clear the selected package capture
-                        //2) Enable the button to open the package capture
-                        //3) Enable the button to select the output file
-                        //4) Disable the button to start the analysis on the packet capture - enabled on selection of the output file
-                        //5) Reset and disable the check boxes
-                        ClearSelectedPacketCaptureButton.Enabled = true;
-                        OpenSelectedPackageCaptureButton.Enabled = true;
-                        SelectOutputFileButton.Enabled = true;
-                        RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+                        //Analysis of an NA Sniffer (DOS) packet capture is supported
 
+                        //Enable the buttons
+                        EnablePacketCaptureAnalysisButtons();
+
+                        //Reset and disable the check boxes
                         ResetPacketCaptureAnalysisCheckBoxes();
                         DisablePacketCaptureAnalysisCheckBoxes();
 
@@ -503,17 +537,12 @@ namespace PacketCaptureAnalyser
                         //This packet capture is either an unsupported form of packet capture or is another type of file
                         SelectedPacketCaptureTypeTextBox.Text = "<Unknown Packet Capture Type>";
 
-                        //Analysis of this packet capture is not supported:
-                        //1) Enable the button to clear the selected package capture
-                        //2) Disable the button to open the package capture - not valid for opening
-                        //3) Disable the button to select the output file - not needed if no analysis
-                        //4) Disable the button to start the analysis on the packet capture - not needed if no analysis
-                        //5) Reset and disable the check boxes
-                        ClearSelectedPacketCaptureButton.Enabled = true;
-                        OpenSelectedPackageCaptureButton.Enabled = false;
-                        SelectOutputFileButton.Enabled = false;
-                        RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+                        //Analysis of this packet capture is not supported
 
+                        //Reset the buttons
+                        ResetPacketCaptureAnalysisButtons();
+
+                        //Reset and disable the check boxes
                         ResetPacketCaptureAnalysisCheckBoxes();
                         DisablePacketCaptureAnalysisCheckBoxes();
 
@@ -538,12 +567,12 @@ namespace PacketCaptureAnalyser
             //2) Disable the button to open the package capture
             //3) Disable the button to select the output file
             //4) Disable the button to start the analysis on the packet capture
-            //5) Reset and disable the check boxes
             ClearSelectedPacketCaptureButton.Enabled = false;
             OpenSelectedPackageCaptureButton.Enabled = false;
             SelectOutputFileButton.Enabled = false;
             RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
 
+            //5) Reset and disable the check boxes
             ResetPacketCaptureAnalysisCheckBoxes();
             DisablePacketCaptureAnalysisCheckBoxes();
         }
@@ -552,10 +581,11 @@ namespace PacketCaptureAnalyser
         {
             switch (TheMainWindowFormPacketCaptureType)
             {
+                case MainWindowFormPacketCaptureTypeEnumeration.PcapNG:
                 case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump:
                 case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
                     {
-                        //Analysis of a libpcap/tcpdump packet capture or an NA Sniffer (DOS) packet capture is supported so enable the button to start the analysis on it
+                        //Analysis of a PCAP Next Generation, libpcap/tcpdump or NA Sniffer (DOS) packet capture is supported so enable the button to start the analysis on it
                         RunAnalysisOnSelectedPackageCaptureButton.Enabled = true;
 
                         //Reset and enable the check boxes
@@ -591,6 +621,30 @@ namespace PacketCaptureAnalyser
             //Reset and disable the check boxes
             ResetPacketCaptureAnalysisCheckBoxes();
             DisablePacketCaptureAnalysisCheckBoxes();
+        }
+
+        private void EnablePacketCaptureAnalysisButtons()
+        {
+            //Enable the buttons
+
+            //1) Enable the button to clear the selected package capture
+            //2) Enable the button to open the package capture
+            //3) Enable the button to select the output file
+            //4) Disable the button to start the analysis on the packet capture - enabled on selection of the output file
+
+            ClearSelectedPacketCaptureButton.Enabled = true;
+            OpenSelectedPackageCaptureButton.Enabled = true;
+            SelectOutputFileButton.Enabled = true;
+            RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+        }
+
+        private void ResetPacketCaptureAnalysisButtons()
+        {
+            //Reset the buttons
+            ClearSelectedPacketCaptureButton.Enabled = true;
+            OpenSelectedPackageCaptureButton.Enabled = false;
+            SelectOutputFileButton.Enabled = false;
+            RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
         }
 
         private void ResetPacketCaptureAnalysisCheckBoxes()

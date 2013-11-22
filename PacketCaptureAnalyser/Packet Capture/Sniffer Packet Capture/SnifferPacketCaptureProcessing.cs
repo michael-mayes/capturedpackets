@@ -21,7 +21,8 @@ namespace PacketCaptureProcessingNamespace
             TheTimestampAccuracy = 0.0;
 
             //Create the single instance of the Sniffer packet capture global header
-            SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure TheGlobalHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure();
+            SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure TheGlobalHeader =
+                new SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure();
 
             //Populate the Sniffer packet capture global header from the packet capture
             TheGlobalHeader.MagicNumberHigh = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
@@ -67,7 +68,8 @@ namespace PacketCaptureProcessingNamespace
             TheTimestamp = 0.0;
 
             //Create an instance of the Sniffer packet capture record header
-            SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure TheRecordHeader = new SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure();
+            SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure TheRecordHeader =
+                new SnifferPackageCaptureStructures.SnifferPackageCaptureRecordHeaderStructure();
 
             //Populate the Sniffer packet capture record header from the packet capture
             TheRecordHeader.RecordType = TheBinaryReader.ReadUInt16();
@@ -82,7 +84,8 @@ namespace PacketCaptureProcessingNamespace
                     case SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferType2RecordType:
                         {
                             //Create an instance of the Sniffer packet capture Sniffer type 2 data record
-                            SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure TheType2Record = new SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure();
+                            SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure TheType2Record =
+                                new SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure();
 
                             //Populate the Sniffer packet capture Sniffer type 2 data record from the packet capture
                             TheType2Record.TimestampLow = TheBinaryReader.ReadUInt16();
