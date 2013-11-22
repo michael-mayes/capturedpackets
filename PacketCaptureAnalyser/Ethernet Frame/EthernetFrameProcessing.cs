@@ -144,6 +144,7 @@ namespace EthernetFrameNamespace
             //Record the position in the stream for the packet capture so we can later determine how far has been progressed
             long TheStartingStreamPosition = TheBinaryReader.BaseStream.Position;
 
+            //Check the value of the Ether Type for this Ethernet frame
             switch (TheEtherType)
             {
                 case (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
@@ -226,19 +227,23 @@ namespace EthernetFrameNamespace
                             //Not going to process IEEE 802.3 Ethernet frames currently as they do not include any data of interest
                             //Just read off the bytes for the IEEE 802.3 Ethernet frame from the packet capture so we can move on
                             TheBinaryReader.ReadBytes(TheEtherType);
+
+                            ThePacketProcessingResult = true;
                         }
                         else
                         {
-                            //Processing of Ethernet frames with network data link types not enumerated above are obviously not currently supported!
+                            //Processing of Ethernet frames with Ether Types not enumerated above are obviously not currently supported!
 
                             //Just record the event and fall through to the processing below that will read off the payload so we can move on
                             System.Diagnostics.Trace.WriteLine
                                 (
                                 "The Ethernet frame in captured packet #" +
                                 ThePacketNumber.ToString() +
-                                " contains an unexpected network data link type of " +
+                                " contains an unexpected Ether Type of 0x" +
                                 string.Format("{0:X}", TheEtherType)
                                 );
+
+                            ThePacketProcessingResult = false;
                         }
 
                         break;
