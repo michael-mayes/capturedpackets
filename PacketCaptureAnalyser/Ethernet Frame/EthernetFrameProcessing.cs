@@ -50,20 +50,24 @@ namespace EthernetFrameNamespace
         {
             bool TheResult = true;
 
-            //Store the length of the payload of the Ethernet frame for use in further processing
-            this.ThePayloadLength = ThePayloadLength;
-
-            //Process the Ethernet frame header
-            TheResult = ProcessHeader();
-
-            if (TheResult)
+            //Only process the payload as an Ethernet frame if it has a positive length
+            if(ThePayloadLength > 0)
             {
-                //Read the Ether Type for the Ethernet frame from the packet capture and process it
-                TheResult = ProcessEtherType(ThePacketNumber);
+                //Store the length of the payload of the Ethernet frame for use in further processing
+                this.ThePayloadLength = ThePayloadLength;
+
+                //Process the Ethernet frame header
+                TheResult = ProcessHeader();
 
                 if (TheResult)
                 {
-                    TheResult = ProcessPayload(ThePacketNumber, TheTimestamp);
+                    //Read the Ether Type for the Ethernet frame from the packet capture and process it
+                    TheResult = ProcessEtherType(ThePacketNumber);
+
+                    if (TheResult)
+                    {
+                        TheResult = ProcessPayload(ThePacketNumber, TheTimestamp);
+                    }
                 }
             }
 
