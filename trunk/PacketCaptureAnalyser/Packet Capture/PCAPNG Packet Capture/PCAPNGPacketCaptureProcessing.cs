@@ -94,11 +94,15 @@ namespace PacketCaptureProcessingNamespace
             //Provide a default value to the output parameter for the timestamp
             TheTimestamp = 0.0;
 
-            int TheNextByte = TheBinaryReader.PeekChar();
+            //Peek a view at the block type for the PCAP Next Generation packet capture block
+            System.UInt32 TheBlockType = TheBinaryReader.ReadUInt32();
 
-            switch (TheNextByte)
+            //Wind back the binary stream by four to hide that we have just peeked a view at the block type
+            TheBinaryReader.BaseStream.Position -= 4;
+
+            switch (TheBlockType)
             {
-                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.InterfaceDescriptionBlock:
+                case (uint)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.InterfaceDescriptionBlock:
                     {
                         //We have got a PCAP Next Generation packet capture interface description block
 
@@ -107,7 +111,7 @@ namespace PacketCaptureProcessingNamespace
                         break;
                     }
 
-                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.PacketBlock:
+                case (uint)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.PacketBlock:
                     {
                        //We have got a PCAP Next Generation packet capture packet block
 
@@ -116,7 +120,7 @@ namespace PacketCaptureProcessingNamespace
                         break;
                     }
 
-                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.SimplePacketBlock:
+                case (uint)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.SimplePacketBlock:
                     {
                         //We have got a PCAP Next Generation packet capture simple packet block
 
@@ -125,7 +129,7 @@ namespace PacketCaptureProcessingNamespace
                         break;
                     }
 
-                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.EnhancedPacketBlock:
+                case (uint)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.EnhancedPacketBlock:
                     {
                         //We have got a PCAP Next Generation packet capture enhanced packet block
 
@@ -134,7 +138,7 @@ namespace PacketCaptureProcessingNamespace
                         break;
                     }
 
-                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.InterfaceStatisticsBlock:
+                case (uint)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.InterfaceStatisticsBlock:
                     {
                         //We have got a PCAP Next Generation packet capture interface statistics block
 
@@ -149,7 +153,7 @@ namespace PacketCaptureProcessingNamespace
                         System.Diagnostics.Trace.WriteLine
                         (
                         "The PCAP Next Generation packet capture block contains an unexpected Block Type of 0x" +
-                        string.Format("{0:X}", TheNextByte)
+                        string.Format("{0:X}", TheBlockType)
                         );
 
                         TheResult = false;
