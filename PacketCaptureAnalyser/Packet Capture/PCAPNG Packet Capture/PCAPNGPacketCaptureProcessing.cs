@@ -113,27 +113,111 @@ namespace PacketCaptureProcessingNamespace
         {
             bool TheResult = true;
 
-            //Provide a default value to the output parameter for the length of the PCAP Next Generation packet capture enhanced packet block payload
+            //Provide a default value to the output parameter for the length of the PCAP Next Generation packet capture block payload
             ThePayloadLength = 0;
 
             //Provide a default value to the output parameter for the timestamp
             TheTimestamp = 0.0;
 
-            //Create an instance of the PCAP Next Generation packet capture enhanced packet block
-            PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureEnhancedPacketBlockStructure TheEnhancedPacketBlock =
-                new PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureEnhancedPacketBlockStructure();
+            int TheNextByte = TheBinaryReader.PeekChar();
 
-            //Read the block type for the PCAP Next Generation packet capture enhanced packet block
-            TheEnhancedPacketBlock.BlockType = TheBinaryReader.ReadUInt32();
+            switch (TheNextByte)
+            {
+                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureEnhancedPacketBlockExpectedBlockType:
+                    {
+                        //We have got a PCAP Next Generation packet capture enhanced packet block
 
-            //Read the block total length for the PCAP Next Generation packet capture enhanced packet block
-            TheEnhancedPacketBlock.BlockTotalLength = TheBinaryReader.ReadUInt32();
+                        //Create an instance of the PCAP Next Generation packet capture enhanced packet block
+                        PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureEnhancedPacketBlockStructure TheEnhancedPacketBlock =
+                            new PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureEnhancedPacketBlockStructure();
 
-            //Just read the bytes off the remaining bytes from the enhanced packet block so we can continue
-            TheBinaryReader.ReadBytes((int)(TheEnhancedPacketBlock.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureEnhancedPacketBlockLength));
+                        //Read the block type for the PCAP Next Generation packet capture enhanced packet block
+                        TheEnhancedPacketBlock.BlockType = TheBinaryReader.ReadUInt32();
 
-            //Set up the output parameter for the length of the PCAP packet capture packet payload
-            ThePayloadLength = TheEnhancedPacketBlock.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureEnhancedPacketBlockLength;
+                        //Read the block total length for the PCAP Next Generation packet capture enhanced packet block
+                        TheEnhancedPacketBlock.BlockTotalLength = TheBinaryReader.ReadUInt32();
+
+                        //Read the interface Id for the PCAP Next Generation packet capture enhanced packet block
+                        TheEnhancedPacketBlock.InterfaceId = TheBinaryReader.ReadUInt32();
+
+                        //Read the high bytes of the timestamp for the PCAP Next Generation packet capture enhanced packet block
+                        TheEnhancedPacketBlock.TimestampHigh = TheBinaryReader.ReadUInt32();
+
+                        //Read the low bytes of the timestamp for the PCAP Next Generation packet capture enhanced packet block
+                        TheEnhancedPacketBlock.TimestampLow = TheBinaryReader.ReadUInt32();
+
+                        //Read the capture length for packet within the PCAP Next Generation packet capture enhanced packet block
+                        TheEnhancedPacketBlock.CapturedLength = TheBinaryReader.ReadUInt32();
+
+                        //Read the actual length for the packet within the PCAP Next Generation packet capture enhanced packet block
+                        TheEnhancedPacketBlock.PacketLength = TheBinaryReader.ReadUInt32();
+
+                        //Set up the output parameter for the length of the PCAP Next Generation packet capture packet payload
+                        //Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
+                        ThePayloadLength = TheEnhancedPacketBlock.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureEnhancedPacketBlockLength - 12;
+
+                        //Set up the output parameter for the timestamp based on the timestamp from the PCAP Next Generation packet capture packet payload
+                        TheTimestamp =
+                            ((TheEnhancedPacketBlock.TimestampHigh * 4294967296) +
+                            (TheEnhancedPacketBlock.TimestampLow));
+
+                        break;
+                    }
+
+                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceStatisticsBlockExpectedBlockType:
+                    {
+                        //We have got a PCAP Next Generation packet capture interface statistics block
+
+                        //Create an instance of the PCAP Next Generation packet capture interface statistics block
+                        PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureInterfaceStatisticsBlockStructure TheInterfaceStatisticsBlock =
+                            new PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureInterfaceStatisticsBlockStructure();
+
+                        //Read the block type for the PCAP Next Generation packet capture interface statistics block
+                        TheInterfaceStatisticsBlock.BlockType = TheBinaryReader.ReadUInt32();
+
+                        //Read the block total length for the PCAP Next Generation packet capture interface statistics block
+                        TheInterfaceStatisticsBlock.BlockTotalLength = TheBinaryReader.ReadUInt32();
+
+                        //Read the interface Id for the PCAP Next Generation packet capture interface statistics block
+                        TheInterfaceStatisticsBlock.InterfaceId = TheBinaryReader.ReadUInt32();
+
+                        //Read the high bytes of the timestamp for the PCAP Next Generation packet capture interface statistics block
+                        TheInterfaceStatisticsBlock.TimestampHigh = TheBinaryReader.ReadUInt32();
+
+                        //Read the low bytes of the timestamp for the PCAP Next Generation packet capture interface statistics block
+                        TheInterfaceStatisticsBlock.TimestampLow = TheBinaryReader.ReadUInt32();
+
+                        //The PCAP Next Generation packet capture interface statistics block does not contain an Ethernet frame
+                        //Just read the bytes off the remaining bytes from the PCAP Next Generation packet capture interface statistics block so we can continue
+                        TheBinaryReader.ReadBytes((int)(TheInterfaceStatisticsBlock.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceStatisticsBlockLength));
+
+                        //The PCAP Next Generation packet capture interface statistics block does not contain an Ethernet frame
+                        //Set up the output parameter for the length of the PCAP Next Generation packet capture packet payload
+                        //Set this output parameter to a value of zero to prevent any attempt to process an Ethernet frame from the PCAP Next Generation packet capture packet payload
+                        ThePayloadLength = 0;
+
+                        //Set up the output parameter for the timestamp based on the timestamp from the PCAP Next Generation packet capture packet payload
+                        TheTimestamp =
+                            ((TheInterfaceStatisticsBlock.TimestampHigh * 4294967296) +
+                            (TheInterfaceStatisticsBlock.TimestampLow));
+
+                        break;
+                    }
+
+                default:
+                    {
+                        //We have got an PCAP Next Generation packet capture packet containing an unknown Block Type
+                        System.Diagnostics.Trace.WriteLine
+                        (
+                        "The PCAP Next Generation packet capture block contains an unexpected Block Type of 0x" +
+                        string.Format("{0:X}", TheNextByte)
+                        );
+
+                        TheResult = false;
+
+                        break;
+                    }
+            }
 
             return TheResult;
         }
