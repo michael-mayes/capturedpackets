@@ -44,9 +44,12 @@ namespace PacketCaptureProcessingNamespace
 
         //Record type
 
-        public const System.UInt16 SnifferPackageCaptureRecordHeaderSnifferVersionRecordType = 1; //Sniffer version record type
-        public const System.UInt16 SnifferPackageCaptureRecordHeaderSnifferType2RecordType = 4; //Sniffer type 2 data record type
-        public const System.UInt16 SnifferPackageCaptureRecordHeaderSnifferEndOfFileRecordType = 3; //Sniffer end of file record type
+        public enum SnifferPackageCaptureRecordHeaderSnifferRecordType : ushort
+        {
+            VersionRecordType = 1, //Version record type
+            Type2RecordType = 4, //Type 2 data record type
+            EndOfFileRecordType = 3 //End of file record type
+        }
 
         //
         //Sniffer packet capture Sniffer type 2 data record - 14 bytes

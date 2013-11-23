@@ -81,7 +81,7 @@ namespace PacketCaptureProcessingNamespace
             {
                 switch (TheRecordHeader.RecordType)
                 {
-                    case SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferType2RecordType:
+                    case (ushort)SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferRecordType.Type2RecordType:
                         {
                             //Create an instance of the Sniffer packet capture Sniffer type 2 data record
                             SnifferPackageCaptureStructures.SnifferPackageCaptureSnifferType2RecordStructure TheType2Record =
@@ -113,7 +113,7 @@ namespace PacketCaptureProcessingNamespace
                             break;
                         }
 
-                    case SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferEndOfFileRecordType:
+                    case (ushort)SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferRecordType.EndOfFileRecordType:
                         {
                             //No further reading required for the Sniffer packet capture Sniffer end of file data record as it only consists of the Sniffer packet capture record header!
                             break;
@@ -190,14 +190,14 @@ namespace PacketCaptureProcessingNamespace
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferVersionRecordType)
+            if (TheGlobalHeader.RecordType != (ushort)SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferRecordType.VersionRecordType)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected record type, is " +
                     TheGlobalHeader.RecordType.ToString() +
                     " not " +
-                    SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferVersionRecordType.ToString()
+                    SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferRecordType.VersionRecordType.ToString()
                     );
 
                 TheResult = false;
@@ -279,8 +279,8 @@ namespace PacketCaptureProcessingNamespace
             bool TheResult = true;
 
             //Validate fields from the Sniffer packet capture record header
-            if (TheRecordHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferType2RecordType &&
-                TheRecordHeader.RecordType != SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferEndOfFileRecordType)
+            if (TheRecordHeader.RecordType != (ushort)SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferRecordType.Type2RecordType &&
+                TheRecordHeader.RecordType != (ushort)SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderSnifferRecordType.EndOfFileRecordType)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
