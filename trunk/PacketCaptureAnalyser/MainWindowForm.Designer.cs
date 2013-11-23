@@ -177,6 +177,7 @@ namespace PacketCaptureAnalyser
             // SelectedOutputFileForAnalysisDialog
             // 
             this.SelectedOutputFileForAnalysisDialog.Filter = "Text File (*.txt)|*.txt";
+            this.SelectedOutputFileForAnalysisDialog.OverwritePrompt = false;
             // 
             // SelectOutputFileButton
             // 
