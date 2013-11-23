@@ -81,8 +81,8 @@ namespace PacketCaptureAnalyser
             // 
             // SelectedPacketCaptureForAnalysisDialog
             // 
-            this.SelectedPacketCaptureForAnalysisDialog.Filter = "Packet Captures (*pcapng,*.pcap,*.libpcap,*.enc,*.cap)|*.pcapng;*.pcap;*.libpcap;" +
-    "*.enc;*.cap";
+            this.SelectedPacketCaptureForAnalysisDialog.Filter = "Packet Captures (*pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.l" +
+    "ibpcap;*.enc;*.cap;*.ntar";
             this.SelectedPacketCaptureForAnalysisDialog.Title = "Select Packet Capture For Analysis";
             // 
             // SelectPacketCaptureButton
