@@ -13,8 +13,7 @@ namespace PacketCaptureProcessingNamespace
             NullLoopBack = 0, //Null/Loopback
             Ethernet = 1, //Ethernet
             CiscoHDLC = 104, //Cisco HDLC (Proprietary)
+            Invalid = ushort.MaxValue //Invalid
         }
-
-        public const System.UInt32 CommonPackageCaptureInvalidNetworkDataLinkType = System.UInt32.MaxValue; //Invalid
     }
 }
