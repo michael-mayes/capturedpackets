@@ -40,7 +40,7 @@ namespace PacketCaptureProcessingNamespace
         public const ushort PCAPNGPackageCaptureInterfaceDescriptionBlockLength = 16;
 
         //
-        //PCAP Next Generation packet capture enhanced packet block - 8 bytes
+        //PCAP Next Generation packet capture enhanced packet block - 28 bytes
         //
 
         //Type
@@ -49,6 +49,18 @@ namespace PacketCaptureProcessingNamespace
 
         //Length
 
-        public const ushort PCAPNGPackageCaptureEnhancedPacketBlockLength = 8;
+        public const ushort PCAPNGPackageCaptureEnhancedPacketBlockLength = 28;
+
+        //
+        //PCAP Next Generation packet capture interface statistics block - 20 bytes
+        //
+
+        //Type
+
+        public const System.UInt32 PCAPNGPackageCaptureInterfaceStatisticsBlockExpectedBlockType = 0x00000005;
+
+        //Length
+
+        public const ushort PCAPNGPackageCaptureInterfaceStatisticsBlockLength = 20;
     }
 }
