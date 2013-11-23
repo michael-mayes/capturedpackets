@@ -15,7 +15,7 @@ namespace PacketCaptureProcessingNamespace
             bool TheResult = true;
 
             //Provide a default value for the output parameter for the network datalink type
-            TheNetworkDataLinkType = CommonPackageCaptureConstants.CommonPackageCaptureInvalidNetworkDataLinkType;
+            TheNetworkDataLinkType = (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Invalid;
 
             //Provide a default value to the output parameter for the timestamp accuracy
             TheTimestampAccuracy = 0.0;
