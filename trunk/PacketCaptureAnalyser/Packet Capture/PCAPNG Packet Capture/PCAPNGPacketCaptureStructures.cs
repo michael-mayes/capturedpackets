@@ -7,12 +7,12 @@ namespace PacketCaptureProcessingNamespace
     class PCAPNGPackageCaptureStructures
     {
         //
-        //PCAP Next Generation packet capture section header block - 24 bytes
+        //PCAP Next Generation packet capture section header block
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureSectionHeaderBlockLength)]
+            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.SectionHeaderBlock)]
 
         public struct PCAPNGPackageCaptureSectionHeaderBlockStructure
         {
@@ -36,12 +36,12 @@ namespace PacketCaptureProcessingNamespace
         }
 
         //
-        //PCAP Next Generation packet capture interface description block - 16 bytes
+        //PCAP Next Generation packet capture interface description block
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceDescriptionBlockLength)]
+            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.InterfaceDescriptionBlock)]
 
         public struct PCAPNGPackageCaptureInterfaceDescriptionBlockStructure
         {
@@ -62,12 +62,12 @@ namespace PacketCaptureProcessingNamespace
         }
 
         //
-        //PCAP Next Generation packet capture enhanced packet block - 28 bytes
+        //PCAP Next Generation packet capture enhanced packet block
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCapturePacketBlockLength)]
+            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.PacketBlock)]
 
         public struct PCAPNGPackageCapturePacketBlockStructure
         {
@@ -97,12 +97,12 @@ namespace PacketCaptureProcessingNamespace
         }
 
         //
-        //PCAP Next Generation packet capture simple packet block - 12 bytes
+        //PCAP Next Generation packet capture simple packet block
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureSimplePacketBlockLength)]
+            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.SimplePacketBlock)]
 
         public struct PCAPNGPackageCaptureSimplePacketBlockStructure
         {
@@ -117,12 +117,12 @@ namespace PacketCaptureProcessingNamespace
         }
 
         //
-        //PCAP Next Generation packet capture enhanced packet block - 28 bytes
+        //PCAP Next Generation packet capture enhanced packet block
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureEnhancedPacketBlockLength)]
+            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.EnhancedPacketBlock)]
 
         public struct PCAPNGPackageCaptureEnhancedPacketBlockStructure
         {
@@ -149,12 +149,12 @@ namespace PacketCaptureProcessingNamespace
         }
 
         //
-        //PCAP Next Generation packet capture interface statistics block - 20 bytes
+        //PCAP Next Generation packet capture interface statistics block
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceStatisticsBlockLength)]
+            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.InterfaceStatisticsBlock)]
 
         public struct PCAPNGPackageCaptureInterfaceStatisticsBlockStructure
         {
