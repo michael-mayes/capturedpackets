@@ -6,16 +6,31 @@ namespace PacketCaptureProcessingNamespace
 {
     class PCAPNGPackageCaptureConstants
     {
+        //PCAP Next Generation packet capture block type
+
+        public enum PCAPNGPackageCaptureBlockType : uint
+        {
+            SectionHeaderBlock = 0x0a0d0d0a,
+            InterfaceDescriptionBlock = 0x00000001,
+            PacketBlock = 0x00000002,
+            SimplePacketBlock = 0x00000003,
+            EnhancedPacketBlock = 0x00000006,
+            InterfaceStatisticsBlock = 0x00000005
+        }
+
+        public enum PCAPNGPackageCaptureBlockTotalLength : uint
+        {
+            SectionHeaderBlock = 24,
+            InterfaceDescriptionBlock = 16,
+            PacketBlock = 28,
+            SimplePacketBlock = 12,
+            EnhancedPacketBlock = 28,
+            InterfaceStatisticsBlock = 20
+        }
+
         //
-        //PCAP Next Generation packet capture section header block - 24 bytes
+        //PCAP Next Generation packet capture section header block
         //
-
-        //Type
-        public const System.UInt32 PCAPNGPackageCaptureSectionHeaderBlockExpectedBlockType = 0x0a0d0d0a;
-
-        //Length
-
-        public const ushort PCAPNGPackageCaptureSectionHeaderBlockLength = 24;
 
         //Magic number
 
@@ -26,65 +41,5 @@ namespace PacketCaptureProcessingNamespace
 
         public const System.UInt16 PCAPNGPackageCaptureExpectedMajorVersion = 1;
         public const System.UInt16 PCAPNGPackageCaptureExpectedMinorVersion = 0;
-
-        //
-        //PCAP Next Generation packet capture interface description block - 16 bytes
-        //
-
-        //Type
-
-        public const System.UInt32 PCAPNGPackageCaptureInterfaceDescriptionBlockExpectedBlockType = 0x00000001;
-
-        //Length
-
-        public const ushort PCAPNGPackageCaptureInterfaceDescriptionBlockLength = 16;
-
-        //
-        //PCAP Next Generation packet capture packet block - 28 bytes
-        //
-
-        //Type
-
-        public const System.UInt32 PCAPNGPackageCapturePacketBlockExpectedBlockType = 0x00000002;
-
-        //Length
-
-        public const ushort PCAPNGPackageCapturePacketBlockLength = 28;
-
-        //
-        //PCAP Next Generation packet capture simple packet block - 12 bytes
-        //
-
-        //Type
-
-        public const System.UInt32 PCAPNGPackageCaptureSimplePacketBlockExpectedBlockType = 0x00000003;
-
-        //Length
-
-        public const ushort PCAPNGPackageCaptureSimplePacketBlockLength = 12;
-
-        //
-        //PCAP Next Generation packet capture enhanced packet block - 28 bytes
-        //
-
-        //Type
-
-        public const System.UInt32 PCAPNGPackageCaptureEnhancedPacketBlockExpectedBlockType = 0x00000006;
-
-        //Length
-
-        public const ushort PCAPNGPackageCaptureEnhancedPacketBlockLength = 28;
-
-        //
-        //PCAP Next Generation packet capture interface statistics block - 20 bytes
-        //
-
-        //Type
-
-        public const System.UInt32 PCAPNGPackageCaptureInterfaceStatisticsBlockExpectedBlockType = 0x00000005;
-
-        //Length
-
-        public const ushort PCAPNGPackageCaptureInterfaceStatisticsBlockLength = 20;
     }
 }
