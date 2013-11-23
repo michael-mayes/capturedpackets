@@ -79,31 +79,6 @@ namespace PacketCaptureProcessingNamespace
             {
                 //Set up the output parameter for the network data link type to the default value as it is not supplied by the section header block
                 TheNetworkDataLinkType = CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType;
-
-                //Create the single instance of the PCAP Next Generation packet capture interface description block
-                PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureInterfaceDescriptionBlockStructure TheInterfaceDescriptionBlock =
-                    new PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureInterfaceDescriptionBlockStructure();
-
-                //Read the block type for the PCAP Next Generation packet capture interface description block
-                TheInterfaceDescriptionBlock.BlockType = TheBinaryReader.ReadUInt32();
-
-                //Read the block total length for the PCAP Next Generation packet capture interface description block
-                TheInterfaceDescriptionBlock.BlockTotalLength = TheBinaryReader.ReadUInt32();
-
-                //Read the reserved field for the PCAP Next Generation packet capture interface description block
-                TheInterfaceDescriptionBlock.Reserved = TheBinaryReader.ReadUInt16();
-
-                //Read the network data link type for the PCAP Next Generation packet capture interface description block
-                TheInterfaceDescriptionBlock.LinkType = TheBinaryReader.ReadUInt16();
-
-                //Read the snap length for the PCAP Next Generation packet capture interface description block
-                TheInterfaceDescriptionBlock.SnapLen = TheBinaryReader.ReadUInt32();
-
-                //Just read the bytes off the remaining bytes from the interface description block so we can continue
-                TheBinaryReader.ReadBytes((int)(TheInterfaceDescriptionBlock.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceDescriptionBlockLength));
-
-                //Validate fields from the PCAP Next Generation packet capture interface description block
-                TheResult = ValidateInterfaceDescriptionBlock(TheInterfaceDescriptionBlock);
             }
 
             return TheResult;
@@ -123,6 +98,39 @@ namespace PacketCaptureProcessingNamespace
 
             switch (TheNextByte)
             {
+                case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceDescriptionBlockExpectedBlockType:
+                    {
+                        //Create the single instance of the PCAP Next Generation packet capture interface description block
+                        PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureInterfaceDescriptionBlockStructure TheInterfaceDescriptionBlock =
+                            new PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureInterfaceDescriptionBlockStructure();
+
+                        //Read the block type for the PCAP Next Generation packet capture interface description block
+                        TheInterfaceDescriptionBlock.BlockType = TheBinaryReader.ReadUInt32();
+
+                        //Read the block total length for the PCAP Next Generation packet capture interface description block
+                        TheInterfaceDescriptionBlock.BlockTotalLength = TheBinaryReader.ReadUInt32();
+
+                        //Read the reserved field for the PCAP Next Generation packet capture interface description block
+                        TheInterfaceDescriptionBlock.Reserved = TheBinaryReader.ReadUInt16();
+
+                        //Read the network data link type for the PCAP Next Generation packet capture interface description block
+                        TheInterfaceDescriptionBlock.LinkType = TheBinaryReader.ReadUInt16();
+
+                        //Read the snap length for the PCAP Next Generation packet capture interface description block
+                        TheInterfaceDescriptionBlock.SnapLen = TheBinaryReader.ReadUInt32();
+
+                        //The PCAP Next Generation packet capture interface description block does not contain an Ethernet frame
+                        //Just read the bytes off the remaining bytes from the PCAP Next Generation packet capture interface description block so we can continue
+                        TheBinaryReader.ReadBytes((int)(TheInterfaceDescriptionBlock.BlockTotalLength - PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceDescriptionBlockLength));
+
+                        //The PCAP Next Generation packet capture interface description block does not contain an Ethernet frame
+                        //Set up the output parameter for the length of the PCAP Next Generation packet capture packet payload
+                        //Set this output parameter to a value of zero to prevent any attempt to process an Ethernet frame from the PCAP Next Generation packet capture packet payload
+                        ThePayloadLength = 0;
+
+                        break;
+                    }
+
                 case (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureEnhancedPacketBlockExpectedBlockType:
                     {
                         //We have got a PCAP Next Generation packet capture enhanced packet block
@@ -282,28 +290,6 @@ namespace PacketCaptureProcessingNamespace
                     TheSectionHeaderBlock.MinorVersion.ToString() +
                     " not " +
                     PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureExpectedMinorVersion.ToString()
-                    );
-
-                TheResult = false;
-            }
-
-            return TheResult;
-        }
-
-        private bool ValidateInterfaceDescriptionBlock(PCAPNGPackageCaptureStructures.PCAPNGPackageCaptureInterfaceDescriptionBlockStructure TheInterfaceDescriptionBlock)
-        {
-            bool TheResult = true;
-
-            //Validate fields from the PCAP Next Generation packet capture interface description block
-
-            if (TheInterfaceDescriptionBlock.BlockType != PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceDescriptionBlockExpectedBlockType)
-            {
-                System.Diagnostics.Trace.WriteLine
-                    (
-                    "The PCAP Next Generation packet capture interface description block does not contain the expected block type, is " +
-                    TheInterfaceDescriptionBlock.BlockType.ToString() +
-                    " not " +
-                    PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceDescriptionBlockExpectedBlockType.ToString()
                     );
 
                 TheResult = false;
