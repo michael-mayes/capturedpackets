@@ -40,6 +40,30 @@ namespace PacketCaptureProcessingNamespace
         public const ushort PCAPNGPackageCaptureInterfaceDescriptionBlockLength = 16;
 
         //
+        //PCAP Next Generation packet capture packet block - 28 bytes
+        //
+
+        //Type
+
+        public const System.UInt32 PCAPNGPackageCapturePacketBlockExpectedBlockType = 0x00000002;
+
+        //Length
+
+        public const ushort PCAPNGPackageCapturePacketBlockLength = 28;
+
+        //
+        //PCAP Next Generation packet capture simple packet block - 12 bytes
+        //
+
+        //Type
+
+        public const System.UInt32 PCAPNGPackageCaptureSimplePacketBlockExpectedBlockType = 0x00000003;
+
+        //Length
+
+        public const ushort PCAPNGPackageCaptureSimplePacketBlockLength = 12;
+
+        //
         //PCAP Next Generation packet capture enhanced packet block - 28 bytes
         //
 
