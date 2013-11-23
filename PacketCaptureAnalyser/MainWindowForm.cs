@@ -124,8 +124,11 @@ namespace PacketCaptureAnalyser
 
             TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 15;
 
-            //Remove the output window from the list of listeners to debug output as all text will go to the output file
-            System.Diagnostics.Debug.Listeners.Clear();
+            //Unless instructed otherwise, remove the output window from the list of listeners to debug output as all text will go to the output file
+            if (!OutputDebugToOutputWindowCheckBox.Checked)
+            {
+                System.Diagnostics.Debug.Listeners.Clear();
+            }
 
             TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 20;
 
@@ -655,6 +658,7 @@ namespace PacketCaptureAnalyser
             PerformTimeAnalysisCheckBox.Checked = false;
             OutputTimeAnalysisDebugCheckBox.Checked = false;
             MinimiseMemoryUsageCheckBox.Checked = false;
+            OutputDebugToOutputWindowCheckBox.Checked = false;
         }
 
         private void EnablePacketCaptureAnalysisCheckBoxes()
@@ -665,6 +669,7 @@ namespace PacketCaptureAnalyser
             PerformTimeAnalysisCheckBox.Enabled = true;
             OutputTimeAnalysisDebugCheckBox.Enabled = true;
             MinimiseMemoryUsageCheckBox.Enabled = true;
+            OutputDebugToOutputWindowCheckBox.Enabled = true;
         }
 
         private void DisablePacketCaptureAnalysisCheckBoxes()
@@ -675,6 +680,7 @@ namespace PacketCaptureAnalyser
             PerformTimeAnalysisCheckBox.Enabled = false;
             OutputTimeAnalysisDebugCheckBox.Enabled = false;
             MinimiseMemoryUsageCheckBox.Enabled = false;
+            OutputDebugToOutputWindowCheckBox.Enabled = false;
         }
 
         private void OpenSelectedPackageCaptureButton_Click(object sender, System.EventArgs e)
