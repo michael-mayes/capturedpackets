@@ -267,15 +267,15 @@ namespace PacketCaptureProcessingNamespace
                             {
                                 switch (TheNetworkDataLinkType)
                                 {
-                                    case CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType:
-                                    case CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType:
+                                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.NullLoopBack:
+                                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.CiscoHDLC:
                                         {
                                             //Just read the bytes off from the packet capture so we can continue
                                             TheBinaryReader.ReadBytes((int)ThePayloadLength);
                                             break;
                                         }
 
-                                    case CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType:
+                                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet:
                                         {
                                             if (!TheEthernetFrameProcessing.Process(PacketsProcessed, ThePayloadLength, TheTimestamp))
                                             {
