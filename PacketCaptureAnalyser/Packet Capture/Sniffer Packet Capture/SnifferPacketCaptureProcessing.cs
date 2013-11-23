@@ -242,17 +242,17 @@ namespace PacketCaptureProcessingNamespace
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.NetworkEncapsulationType != CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType &&
-                TheGlobalHeader.NetworkEncapsulationType != CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType)
+            if (TheGlobalHeader.NetworkEncapsulationType != (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.NullLoopBack &&
+                TheGlobalHeader.NetworkEncapsulationType != (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected network encapsulation type, is " +
                     TheGlobalHeader.NetworkEncapsulationType.ToString() +
                     " not " +
-                    CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType.ToString() +
+                    CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.NullLoopBack.ToString() +
                     " or " +
-                    CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType.ToString()
+                    CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet.ToString()
                     );
 
                 TheResult = false;

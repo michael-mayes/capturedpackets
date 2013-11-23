@@ -118,7 +118,7 @@ namespace PacketCaptureProcessingNamespace
 
                 switch (TheNetworkDataLinkType)
                 {
-                    case CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType:
+                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet:
                         {
                             //Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
                             ThePayloadLength = ThePacketHeader.SavedLength - 12;
@@ -126,8 +126,8 @@ namespace PacketCaptureProcessingNamespace
                             break;
                         }
 
-                    case CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType:
-                    case CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType:
+                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.NullLoopBack:
+                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.CiscoHDLC:
                     default:
                         {
                             ThePayloadLength = ThePacketHeader.SavedLength;
@@ -194,20 +194,20 @@ namespace PacketCaptureProcessingNamespace
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.NetworkDataLinkType != CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType &&
-                TheGlobalHeader.NetworkDataLinkType != CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType &&
-                TheGlobalHeader.NetworkDataLinkType != CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType)
+            if (TheGlobalHeader.NetworkDataLinkType != (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.NullLoopBack &&
+                TheGlobalHeader.NetworkDataLinkType != (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet &&
+                TheGlobalHeader.NetworkDataLinkType != (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.CiscoHDLC)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The PCAP packet capture global header does not contain the expected network data link type, is " +
                     TheGlobalHeader.NetworkDataLinkType.ToString() +
                     " not " +
-                    CommonPackageCaptureConstants.CommonPackageCaptureNullLoopBackNetworkDataLinkType.ToString() +
+                    CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.NullLoopBack.ToString() +
                     " or " +
-                    CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType.ToString() +
+                    CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet.ToString() +
                     " or " +
-                    CommonPackageCaptureConstants.CommonPackageCaptureCiscoHDLCNetworkDataLinkType.ToString()
+                    CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.CiscoHDLC.ToString()
                     );
 
                 TheResult = false;

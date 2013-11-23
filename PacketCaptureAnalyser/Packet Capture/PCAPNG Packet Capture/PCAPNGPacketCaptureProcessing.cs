@@ -78,7 +78,7 @@ namespace PacketCaptureProcessingNamespace
             if (TheResult)
             {
                 //Set up the output parameter for the network data link type to the default value as it is not supplied by the section header block
-                TheNetworkDataLinkType = CommonPackageCaptureConstants.CommonPackageCaptureEthernetNetworkDataLinkType;
+                TheNetworkDataLinkType = (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet;
             }
 
             return TheResult;
