@@ -6,7 +6,9 @@ namespace PacketCaptureProcessingNamespace
 {
     class PCAPNGPackageCaptureConstants
     {
+        //
         //PCAP Next Generation packet capture block type
+        //
 
         public enum PCAPNGPackageCaptureBlockType : uint
         {
@@ -17,6 +19,10 @@ namespace PacketCaptureProcessingNamespace
             EnhancedPacketBlock = 0x00000006,
             InterfaceStatisticsBlock = 0x00000005
         }
+
+        //
+        //PCAP Next Generation packet capture block total length
+        //
 
         public enum PCAPNGPackageCaptureBlockTotalLength : uint
         {
