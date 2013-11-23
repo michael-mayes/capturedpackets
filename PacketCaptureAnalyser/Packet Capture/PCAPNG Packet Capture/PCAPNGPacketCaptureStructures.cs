@@ -7,7 +7,7 @@ namespace PacketCaptureProcessingNamespace
     class PCAPNGPackageCaptureStructures
     {
         //
-        //PCAP Next Generation packet capture section header block - 8 bytes
+        //PCAP Next Generation packet capture section header block - 24 bytes
         //
 
         [System.Runtime.InteropServices.StructLayout
