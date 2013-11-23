@@ -62,7 +62,7 @@ namespace PacketCaptureProcessingNamespace
         }
 
         //
-        //PCAP Next Generation packet capture enhanced packet block - 8 bytes
+        //PCAP Next Generation packet capture enhanced packet block - 28 bytes
         //
 
         [System.Runtime.InteropServices.StructLayout
@@ -76,6 +76,47 @@ namespace PacketCaptureProcessingNamespace
 
             [System.Runtime.InteropServices.FieldOffset(4)]
             public System.UInt32 BlockTotalLength; //Block total length
+
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public System.UInt32 InterfaceId; //Interface Id
+
+            [System.Runtime.InteropServices.FieldOffset(12)]
+            public System.UInt32 TimestampHigh; //High bytes of the timestamp
+
+            [System.Runtime.InteropServices.FieldOffset(16)]
+            public System.UInt32 TimestampLow; //Low bytes of the timestamp
+
+            [System.Runtime.InteropServices.FieldOffset(20)]
+            public System.UInt32 CapturedLength; //Captured length for the packet
+
+            [System.Runtime.InteropServices.FieldOffset(24)]
+            public System.UInt32 PacketLength; //Actual length of the packet
+        }
+
+        //
+        //PCAP Next Generation packet capture interface statistics block - 20 bytes
+        //
+
+        [System.Runtime.InteropServices.StructLayout
+            (System.Runtime.InteropServices.LayoutKind.Explicit,
+            Size = PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureInterfaceStatisticsBlockLength)]
+
+        public struct PCAPNGPackageCaptureInterfaceStatisticsBlockStructure
+        {
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public System.UInt32 BlockType; //Block type
+
+            [System.Runtime.InteropServices.FieldOffset(4)]
+            public System.UInt32 BlockTotalLength; //Block total length
+
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public System.UInt32 InterfaceId; //Interface Id
+
+            [System.Runtime.InteropServices.FieldOffset(12)]
+            public System.UInt32 TimestampHigh; //High bytes of the timestamp
+
+            [System.Runtime.InteropServices.FieldOffset(16)]
+            public System.UInt32 TimestampLow; //Low bytes of the timestamp
         }
     }
 }
