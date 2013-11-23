@@ -14,10 +14,16 @@ namespace PacketCaptureProcessingNamespace
 
         public const ushort SnifferPackageCaptureGlobalHeaderLength = 41;
 
-        //Magic number - provided in little endian representation
+        //Magic numbers - provided in big endian (network) representation
 
-        public const System.UInt64 SnifferPackageCaptureExpectedMagicNumberHigh = 0x5452534E49464620; //High bytes containing ASCII characters "TRSNIFF " start the magic number
-        public const System.UInt64 SnifferPackageCaptureExpectedMagicNumberLow = 0x6461746120202020;  //Low bytes containing ASCII characters "data    " continue the magic number
+        //Highest four bytes containing ASCII characters "TRSN" to start the magic number (used for indentifying the packet capture type)
+        public const System.UInt32 SnifferPackageCaptureExpectedMagicNumberHighest = 0x4E535254;
+
+        //High eight bytes containing ASCII characters "TRSNIFF " to start the magic number
+        public const System.UInt64 SnifferPackageCaptureExpectedMagicNumberHigh = 0x204646494E535254;
+
+        //Low eight bytes containing ASCII characters "data    " to continue the magic number
+        public const System.UInt64 SnifferPackageCaptureExpectedMagicNumberLow = 0x2020202061746164;
 
         public const System.Byte SnifferPackageCaptureExpectedMagicNumberTerminator = 0x1A; //Terminating byte ASCII control character 'SUB' completes the magic number
 

@@ -25,8 +25,8 @@ namespace PacketCaptureProcessingNamespace
                 new SnifferPackageCaptureStructures.SnifferPackageCaptureGlobalHeaderStructure();
 
             //Populate the Sniffer packet capture global header from the packet capture
-            TheGlobalHeader.MagicNumberHigh = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
-            TheGlobalHeader.MagicNumberLow = (System.UInt64)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt64());
+            TheGlobalHeader.MagicNumberHigh = TheBinaryReader.ReadUInt64();
+            TheGlobalHeader.MagicNumberLow = TheBinaryReader.ReadUInt64();
             TheGlobalHeader.MagicNumberTerminator = TheBinaryReader.ReadByte();
             TheGlobalHeader.RecordType = TheBinaryReader.ReadUInt16();
             TheGlobalHeader.RecordLength = TheBinaryReader.ReadUInt32();
