@@ -59,7 +59,7 @@ namespace EthernetFrameNamespace
             if (TheResult)
             {
                 //Read the Ether Type for the Ethernet frame from the packet capture and process it
-                TheResult = ProcessEtherType();
+                TheResult = ProcessEtherType(ThePacketNumber);
 
                 if (TheResult)
                 {
@@ -94,7 +94,7 @@ namespace EthernetFrameNamespace
             return TheResult;
         }
 
-        private bool ProcessEtherType()
+        private bool ProcessEtherType(ulong ThePacketNumber)
         {
             bool TheResult = true;
 
@@ -129,6 +129,28 @@ namespace EthernetFrameNamespace
 
                 default:
                     {
+                        //We have got an Ethernet frame containing an unknown Ether Type
+
+                        //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
+                        if (TheEtherType < (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
+                        {
+                            //This Ethernet frame has a value for "Ether Type" lower than the minimum
+                            //This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame
+                            //This value is the length of the IEEE 802.3 Ethernet frame
+                        }
+                        else
+                        {
+                            System.Diagnostics.Trace.WriteLine
+                                (
+                                "The Ethernet frame in captured packet #" +
+                                ThePacketNumber.ToString() +
+                                " contains an unexpected Ether Type of 0x" +
+                                string.Format("{0:X}", TheEtherType)
+                                );
+
+                            TheResult = false;
+                        }
+
                         break;
                     }
             }
@@ -199,7 +221,7 @@ namespace EthernetFrameNamespace
                             " - Attempt to recover and continue processing"
                             );
 
-                        ThePacketProcessingResult = ProcessEtherType();
+                        ThePacketProcessingResult = ProcessEtherType(ThePacketNumber);
 
                         if (ThePacketProcessingResult)
                         {
@@ -215,7 +237,7 @@ namespace EthernetFrameNamespace
 
                 default:
                     {
-                        //We've got an Ethernet frame containing an unknown network data link type
+                        //We have got an Ethernet frame containing an unknown Ether Type
 
                         //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
                         if (TheEtherType < (System.UInt16)EthernetFrameConstants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
