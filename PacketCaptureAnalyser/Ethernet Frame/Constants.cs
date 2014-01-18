@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace
 {
-    class EthernetFrameConstants
+    class Constants
     {
         //
         //Ethernet frame header - 14 bytes
@@ -18,7 +18,7 @@ namespace EthernetFrameNamespace
 
         public enum EthernetFrameHeaderEtherTypeEnumeration : ushort
         {
-            MinimumValue = 0x0600, //Minimum value for Ether Type - lower values indicate length of the Ethernet frame
+            MinimumValue = 0x0600, //Minimum value for Ether Type - lower values indicate length for an IEEE 802.3 Ethernet frame
             ARP = 0x0806, //Ethernet frame containing an ARP packet
             IPv4 = 0x0800, //Ethernet frame containing an IPv4 packet
             IPv6 = 0x86DD, //Ethernet frame containing an IPv6 packet
