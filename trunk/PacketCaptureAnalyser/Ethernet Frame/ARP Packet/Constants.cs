@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.ARPPacketNamespace
 {
-    class ARPPacketConstants
+    class Constants
     {
         //
         //ARP packet - 28 bytes
