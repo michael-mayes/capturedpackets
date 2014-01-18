@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace
 {
-    class EthernetFrameStructures
+    class Structures
     {
         //
         //Ethernet frame header - 14 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = EthernetFrameConstants.EthernetFrameHeaderLength)]
+            Size = Constants.EthernetFrameHeaderLength)]
 
         public struct EthernetFrameHeaderStructure
         {
