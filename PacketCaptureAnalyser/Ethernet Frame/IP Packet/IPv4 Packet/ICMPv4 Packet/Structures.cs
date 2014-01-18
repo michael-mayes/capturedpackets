@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.ICMPv4PacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
 {
-    class ICMPv4PacketStructures
+    class Structures
     {
         //
         //ICMPv4 packet header - 4 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.ICMPv4PacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = ICMPv4PacketConstants.ICMPv4PacketHeaderLength)]
+            Size = Constants.ICMPv4PacketHeaderLength)]
 
         public struct ICMPv4PacketHeaderStructure
         {

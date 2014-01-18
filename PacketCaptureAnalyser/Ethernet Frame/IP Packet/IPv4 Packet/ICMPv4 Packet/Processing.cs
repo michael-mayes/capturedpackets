@@ -2,20 +2,20 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.ICMPv4PacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
 {
-    class ICMPv4PacketProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private ICMPv4PacketStructures.ICMPv4PacketHeaderStructure TheHeader;
+        private Structures.ICMPv4PacketHeaderStructure TheHeader;
 
-        public ICMPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the ICMPv4 packet header
-            TheHeader = new ICMPv4PacketStructures.ICMPv4PacketHeaderStructure();
+            TheHeader = new Structures.ICMPv4PacketHeaderStructure();
         }
 
         public bool Process(ushort TheICMPv4PacketLength)
@@ -27,7 +27,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.ICMPv4PacketNamespace
 
             //Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
             //The remaining length is the supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
-            TheBinaryReader.ReadBytes(TheICMPv4PacketLength - ICMPv4PacketConstants.ICMPv4PacketHeaderLength);
+            TheBinaryReader.ReadBytes(TheICMPv4PacketLength - Constants.ICMPv4PacketHeaderLength);
 
             return TheResult;
         }

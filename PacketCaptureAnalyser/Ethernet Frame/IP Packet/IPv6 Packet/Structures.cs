@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv6PacketNamespace
 {
-    class IPv6PacketStructures
+    class Structures
     {
         //
         //IPv6 packet header - 40 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = IPv6PacketConstants.IPv6PacketHeaderLength)]
+            Size = Constants.IPv6PacketHeaderLength)]
 
         public struct IPv6PacketHeaderStructure
         {
