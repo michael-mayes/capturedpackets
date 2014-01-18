@@ -4,7 +4,7 @@
 
 namespace AnalysisNamespace
 {
-    public class CommonAnalysisHistogram
+    public class CommonHistogram
     {
         //
         //Private entities
@@ -23,7 +23,7 @@ namespace AnalysisNamespace
         //Public constructor method
         //
 
-        public CommonAnalysisHistogram(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
+        public CommonHistogram(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
         {
             if (TheMinAllowedValue == TheMaxAllowedValue)
             {

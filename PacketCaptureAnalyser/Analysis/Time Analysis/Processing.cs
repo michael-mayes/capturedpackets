@@ -2,19 +2,19 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace AnalysisNamespace
+namespace AnalysisNamespace.TimeAnalysisNamespace
 {
     using System.Data; //Required to be able to use AsEnumerable method
     using System.Linq; //Required to be able to use Count method
 
     //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
-    class TimeAnalysisProcessing : System.IDisposable
+    class Processing : System.IDisposable
     {
         private bool OutputTimeAnalysisDebug;
         private System.Data.DataTable TheTimeValuesTable;
         private System.Data.DataTable TheHostIdsTable;
 
-        public TimeAnalysisProcessing(bool OutputTimeAnalysisDebug)
+        public Processing(bool OutputTimeAnalysisDebug)
         {
             this.OutputTimeAnalysisDebug = OutputTimeAnalysisDebug;
 
@@ -142,20 +142,20 @@ namespace AnalysisNamespace
 
         private void FinaliseTimeValuesForHostId(byte TheHostId)
         {
-            CommonAnalysisHistogram TheTimestampHistogram =
-                new CommonAnalysisHistogram
+            CommonHistogram TheTimestampHistogram =
+                new CommonHistogram
                     (
-                    TimeAnalysisConstants.TimeAnalysisTimestampNumberOfBins,
-                    TimeAnalysisConstants.TimeAnalysisMaxNegativeDifference,
-                    TimeAnalysisConstants.TimeAnalysisMaxPositiveDifference
+                    Constants.TimeAnalysisTimestampNumberOfBins,
+                    Constants.TimeAnalysisMaxNegativeDifference,
+                    Constants.TimeAnalysisMaxPositiveDifference
                     );
 
-            CommonAnalysisHistogram TheTimeHistogram =
-                new CommonAnalysisHistogram
+            CommonHistogram TheTimeHistogram =
+                new CommonHistogram
                     (
-                    TimeAnalysisConstants.TimeAnalysisTimeNumberOfBins,
-                    TimeAnalysisConstants.TimeAnalysisMaxNegativeDifference,
-                    TimeAnalysisConstants.TimeAnalysisMaxPositiveDifference
+                    Constants.TimeAnalysisTimeNumberOfBins,
+                    Constants.TimeAnalysisMaxNegativeDifference,
+                    Constants.TimeAnalysisMaxPositiveDifference
                     );
 
             ulong TheMinTimestampDifferencePacketNumber = 0;
@@ -208,9 +208,9 @@ namespace AnalysisNamespace
                 //The timestamp
                 {
                     double TheAbsoluteTimestampDifference = System.Math.Abs((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0);
-                    double TheTimestampDifference = ((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
+                    double TheTimestampDifference = ((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0) - Constants.TimeAnalysisExpectedDifference; //Milliseconds;
 
-                    if (TheAbsoluteTimestampDifference > TimeAnalysisConstants.TimeAnalysisMinTimestampDifference)
+                    if (TheAbsoluteTimestampDifference > Constants.TimeAnalysisMinTimestampDifference)
                     {
                         //Only those time messages in the chosen range will be marked as processed
                         //This should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
@@ -238,7 +238,7 @@ namespace AnalysisNamespace
 
                         //The time
 
-                        double TheTimeDifference = ((TheTimeValuesRow.Field<double>("Time") - TheLastTime) * 1000.0) - TimeAnalysisConstants.TimeAnalysisExpectedDifference; //Milliseconds;
+                        double TheTimeDifference = ((TheTimeValuesRow.Field<double>("Time") - TheLastTime) * 1000.0) - Constants.TimeAnalysisExpectedDifference; //Milliseconds;
 
                         ++TheNumberOfTimeDifferenceInstances;
                         TheTotalOfTimeDifferences += TheTimeDifference;
@@ -305,7 +305,7 @@ namespace AnalysisNamespace
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The histogram (" +
-                    TimeAnalysisConstants.TimeAnalysisTimestampBinsPerMs.ToString() +
+                    Constants.TimeAnalysisTimestampBinsPerMs.ToString() +
                     " bins per ms) for timestamp values is:"
                     );
 
@@ -345,7 +345,7 @@ namespace AnalysisNamespace
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The histogram (" +
-                    TimeAnalysisConstants.TimeAnalysisTimeBinsPerMs.ToString() +
+                    Constants.TimeAnalysisTimeBinsPerMs.ToString() +
                     " bins per ms) for time values is:"
                     );
 
