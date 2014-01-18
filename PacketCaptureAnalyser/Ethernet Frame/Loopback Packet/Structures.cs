@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.LoopbackPacketNamespace
 {
-    class LoopbackPacketStructures
+    class Structures
     {
         //
         //Loopback packet header - 6 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.LoopbackPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = LoopbackPacketConstants.LoopbackPacketHeaderLength)]
+            Size = Constants.LoopbackPacketHeaderLength)]
 
         public struct LoopbackPacketHeaderStructure
         {
