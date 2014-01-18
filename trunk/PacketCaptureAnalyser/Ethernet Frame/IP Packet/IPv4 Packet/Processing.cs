@@ -2,7 +2,7 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace
+namespace EthernetFrame.IPPacket.IPv4Packet
 {
     class Processing
     {
@@ -11,17 +11,17 @@ namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace
         private Structures.IPv4PacketHeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
-        private AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing;
+        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
 
         private bool PerformTimeAnalysisProcessing;
-        private AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing;
+        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
 
-        private ICMPv4PacketNamespace.Processing TheICMPv4PacketProcessing;
-        private IGMPv2PacketNamespace.Processing TheIGMPv2PacketProcessing;
-        private TCPPacketNamespace.Processing TheTCPPacketProcessing;
-        private UDPDatagramNamespace.Processing TheUDPDatagramProcessing;
+        private ICMPv4Packet.Processing TheICMPv4PacketProcessing;
+        private IGMPv2Packet.Processing TheIGMPv2PacketProcessing;
+        private TCPPacket.Processing TheTCPPacketProcessing;
+        private UDPDatagram.Processing TheUDPDatagramProcessing;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
@@ -34,10 +34,10 @@ namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
 
-            TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.Processing(TheBinaryReader);
-            TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.Processing(TheBinaryReader);
-            TheTCPPacketProcessing = new TCPPacketNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheUDPDatagramProcessing = new UDPDatagramNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheICMPv4PacketProcessing = new ICMPv4Packet.Processing(TheBinaryReader);
+            TheIGMPv2PacketProcessing = new IGMPv2Packet.Processing(TheBinaryReader);
+            TheTCPPacketProcessing = new TCPPacket.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheUDPDatagramProcessing = new UDPDatagram.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
         }
 
         public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)

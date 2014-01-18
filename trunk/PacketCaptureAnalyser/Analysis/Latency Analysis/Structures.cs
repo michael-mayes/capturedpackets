@@ -2,7 +2,7 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace AnalysisNamespace.LatencyAnalysisNamespace
+namespace Analysis.LatencyAnalysis
 {
     class Structures
     {

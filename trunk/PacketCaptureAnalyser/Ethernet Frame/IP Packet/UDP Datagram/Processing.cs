@@ -2,7 +2,7 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
+namespace EthernetFrame.IPPacket.UDPDatagram
 {
     class Processing
     {
@@ -11,12 +11,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
         private Structures.UDPDatagramHeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
-        private AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing;
+        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
 
         private bool PerformTimeAnalysisProcessing;
-        private AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing;
+        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 

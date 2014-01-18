@@ -73,7 +73,7 @@ namespace PacketCaptureAnalyser
                 {
                     switch (TheBinaryReader.ReadUInt32())
                     {
-                        case (uint)PacketCaptureProcessingNamespace.PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.SectionHeaderBlock:
+                        case (uint)PacketCaptureProcessing.PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockType.SectionHeaderBlock:
                             {
                                 //This is a PCAP Next Generation capture
                                 TheMainWindowFormPacketCaptureType =
@@ -82,8 +82,8 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case (uint)PacketCaptureProcessingNamespace.PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber:
-                        case (uint)PacketCaptureProcessingNamespace.PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber:
+                        case (uint)PacketCaptureProcessing.PCAPPackageCaptureConstants.PCAPPackageCaptureLittleEndianMagicNumber:
+                        case (uint)PacketCaptureProcessing.PCAPPackageCaptureConstants.PCAPPackageCaptureBigEndianMagicNumber:
                             {
                                 //This is a libpcap/tcpdump packet capture
                                 TheMainWindowFormPacketCaptureType =
@@ -92,7 +92,7 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case (uint)PacketCaptureProcessingNamespace.SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberHighest:
+                        case (uint)PacketCaptureProcessing.SnifferPackageCaptureConstants.SnifferPackageCaptureExpectedMagicNumberHighest:
                             {
                                 //This is a NA Sniffer (DOS) packet capture
                                 TheMainWindowFormPacketCaptureType =
@@ -254,15 +254,15 @@ namespace PacketCaptureAnalyser
                     " packet capture started"
                     );
 
-                AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing = null;
-                AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing = null;
+                Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing = null;
+                Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing = null;
 
                 TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 35;
 
                 //Only perform the latency analysis if the check box was selected for it on the main window form
                 if (PerformLatencyAnalysisCheckBox.Checked)
                 {
-                    TheLatencyAnalysisProcessing = new AnalysisNamespace.LatencyAnalysisNamespace.Processing(OutputLatencyAnalysisDebugCheckBox.Checked);
+                    TheLatencyAnalysisProcessing = new Analysis.LatencyAnalysis.Processing(OutputLatencyAnalysisDebugCheckBox.Checked);
 
                     //Initialise the functionality to perform latency analysis on the messages found
                     TheLatencyAnalysisProcessing.Create();
@@ -273,7 +273,7 @@ namespace PacketCaptureAnalyser
                 //Only perform the time analysis if the check box was selected for it on the main window form
                 if (PerformTimeAnalysisCheckBox.Checked)
                 {
-                    TheTimeAnalysisProcessing = new AnalysisNamespace.TimeAnalysisNamespace.Processing(OutputTimeAnalysisDebugCheckBox.Checked);
+                    TheTimeAnalysisProcessing = new Analysis.TimeAnalysis.Processing(OutputTimeAnalysisDebugCheckBox.Checked);
 
                     //Initialise the functionality to perform time analysis on the messages found
                     TheTimeAnalysisProcessing.Create();
@@ -285,8 +285,8 @@ namespace PacketCaptureAnalyser
                 {
                     case MainWindowFormPacketCaptureTypeEnumeration.PcapNG:
                         {
-                            PacketCaptureProcessingNamespace.PCAPNGPackageCaptureProcessing ThePCAPNGPackageCaptureProcessing =
-                                new PacketCaptureProcessingNamespace.PCAPNGPackageCaptureProcessing();
+                            PacketCaptureProcessing.PCAPNGPackageCaptureProcessing ThePCAPNGPackageCaptureProcessing =
+                                new PacketCaptureProcessing.PCAPNGPackageCaptureProcessing();
 
                             TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 50;
 
@@ -303,8 +303,8 @@ namespace PacketCaptureAnalyser
 
                     case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump:
                         {
-                            PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing =
-                                new PacketCaptureProcessingNamespace.PCAPPackageCaptureProcessing();
+                            PacketCaptureProcessing.PCAPPackageCaptureProcessing ThePCAPPackageCaptureProcessing =
+                                new PacketCaptureProcessing.PCAPPackageCaptureProcessing();
 
                             TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 50;
 
@@ -321,8 +321,8 @@ namespace PacketCaptureAnalyser
 
                     case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
                         {
-                            PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing =
-                                new PacketCaptureProcessingNamespace.SnifferPackageCaptureProcessing();
+                            PacketCaptureProcessing.SnifferPackageCaptureProcessing TheSnifferPackageCaptureProcessing =
+                                new PacketCaptureProcessing.SnifferPackageCaptureProcessing();
 
                             TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 50;
 

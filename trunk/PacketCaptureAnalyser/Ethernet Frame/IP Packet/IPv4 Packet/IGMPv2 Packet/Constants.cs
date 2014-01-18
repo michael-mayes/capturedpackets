@@ -2,7 +2,7 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
+namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
 {
     class Constants
     {
