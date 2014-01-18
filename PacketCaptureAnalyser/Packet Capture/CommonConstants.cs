@@ -2,13 +2,13 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessing
+namespace PacketCapture
 {
-    class CommonPackageCaptureConstants
+    class CommonConstants
     {
         //Network data link type/Network encapsulation type
 
-        public enum CommonPackageCaptureNetworkDataLinkType : ushort
+        public enum CommonNetworkDataLinkType : ushort
         {
             NullLoopBack = 0, //Null/Loopback
             Ethernet = 1, //Ethernet

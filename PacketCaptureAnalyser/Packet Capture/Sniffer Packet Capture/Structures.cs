@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessing
+namespace PacketCapture.SnifferPackageCapture
 {
-    class SnifferPackageCaptureStructures
+    class Structures
     {
         //
         //Sniffer packet capture global header - 41 bytes
@@ -12,7 +12,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = SnifferPackageCaptureConstants.SnifferPackageCaptureGlobalHeaderLength)]
+            Size = Constants.SnifferPackageCaptureGlobalHeaderLength)]
 
         public struct SnifferPackageCaptureGlobalHeaderStructure
         {
@@ -71,7 +71,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = SnifferPackageCaptureConstants.SnifferPackageCaptureRecordHeaderLength)]
+            Size = Constants.SnifferPackageCaptureRecordHeaderLength)]
 
         public struct SnifferPackageCaptureRecordHeaderStructure
         {
@@ -88,7 +88,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = SnifferPackageCaptureConstants.SnifferPackageCaptureSnifferType2RecordLength)]
+            Size = Constants.SnifferPackageCaptureSnifferType2RecordLength)]
 
         public struct SnifferPackageCaptureSnifferType2RecordStructure
         {

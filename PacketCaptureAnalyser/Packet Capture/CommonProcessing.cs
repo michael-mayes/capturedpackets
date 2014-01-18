@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessing
+namespace PacketCapture
 {
-    abstract class CommonPacketCaptureProcessing
+    abstract class CommonProcessing
     {
         //
         //Abstract methods - must be overridden with a concrete implementation by a derived class
@@ -267,15 +267,15 @@ namespace PacketCaptureProcessing
                             {
                                 switch (TheNetworkDataLinkType)
                                 {
-                                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.NullLoopBack:
-                                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.CiscoHDLC:
+                                    case (uint)CommonConstants.CommonNetworkDataLinkType.NullLoopBack:
+                                    case (uint)CommonConstants.CommonNetworkDataLinkType.CiscoHDLC:
                                         {
                                             //Just read the bytes off from the packet capture so we can continue
                                             TheBinaryReader.ReadBytes((int)ThePayloadLength);
                                             break;
                                         }
 
-                                    case (uint)CommonPackageCaptureConstants.CommonPackageCaptureNetworkDataLinkType.Ethernet:
+                                    case (uint)CommonConstants.CommonNetworkDataLinkType.Ethernet:
                                         {
                                             if (!TheEthernetFrameProcessing.Process(PacketsProcessed, ThePayloadLength, TheTimestamp))
                                             {

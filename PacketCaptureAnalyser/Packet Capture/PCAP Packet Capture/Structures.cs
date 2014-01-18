@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessing
+namespace PacketCapture.PCAPPackageCapture
 {
-    class PCAPPackageCaptureStructures
+    class Structures
     {
         //
         //PCAP packet capture global header - 24 bytes
@@ -12,7 +12,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPPackageCaptureConstants.PCAPPackageCaptureGlobalHeaderLength)]
+            Size = Constants.PCAPPackageCaptureGlobalHeaderLength)]
 
         public struct PCAPPackageCaptureGlobalHeaderStructure
         {
@@ -44,7 +44,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = PCAPPackageCaptureConstants.PCAPPackageCapturePacketHeaderLength)]
+            Size = Constants.PCAPPackageCapturePacketHeaderLength)]
 
         public struct PCAPPackageCapturePacketHeaderStructure
         {
