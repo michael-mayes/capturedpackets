@@ -12,9 +12,9 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.IPv6PacketHeaderLength)]
+            Size = Constants.HeaderLength)]
 
-        public struct IPv6PacketHeaderStructure
+        public struct HeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.Byte VersionAndTrafficClass; //IP packet version and traffic class

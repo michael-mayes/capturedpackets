@@ -12,9 +12,9 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.ICMPv4PacketHeaderLength)]
+            Size = Constants.HeaderLength)]
 
-        public struct ICMPv4PacketHeaderStructure
+        public struct HeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.Byte Type; //Type of ICMPv4 packet

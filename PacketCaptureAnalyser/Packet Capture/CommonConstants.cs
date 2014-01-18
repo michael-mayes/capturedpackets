@@ -8,7 +8,7 @@ namespace PacketCapture
     {
         //Network data link type/Network encapsulation type
 
-        public enum CommonNetworkDataLinkType : ushort
+        public enum NetworkDataLinkType : ushort
         {
             NullLoopBack = 0, //Null/Loopback
             Ethernet = 1, //Ethernet

@@ -8,14 +8,14 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.ICMPv4PacketHeaderStructure TheHeader;
+        private Structures.HeaderStructure TheHeader;
 
         public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the ICMPv4 packet header
-            TheHeader = new Structures.ICMPv4PacketHeaderStructure();
+            TheHeader = new Structures.HeaderStructure();
         }
 
         public bool Process(ushort TheICMPv4PacketLength)
@@ -27,7 +27,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 
             //Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
             //The remaining length is the supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
-            TheBinaryReader.ReadBytes(TheICMPv4PacketLength - Constants.ICMPv4PacketHeaderLength);
+            TheBinaryReader.ReadBytes(TheICMPv4PacketLength - Constants.HeaderLength);
 
             return TheResult;
         }

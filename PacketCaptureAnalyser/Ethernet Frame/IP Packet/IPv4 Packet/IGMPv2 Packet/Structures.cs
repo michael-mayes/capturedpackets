@@ -7,14 +7,14 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
     class Structures
     {
         //
-        //IGMPv2 packet header - 8 bytes
+        //IGMPv2 packet - 8 bytes
         //
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.IGMPv2PacketHeaderLength)]
+            Size = Constants.PacketLength)]
 
-        public struct IGMPv2PacketStructure
+        public struct PacketStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.Byte Type; //Type of IGMPv2 packet

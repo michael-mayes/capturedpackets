@@ -12,9 +12,9 @@ namespace EthernetFrame.LLDPPacket
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.LLDPPacketLength)]
+            Size = Constants.PacketLength)]
 
-        public struct LLDPPacketStructure
+        public struct PacketStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt64 UnusedField1;

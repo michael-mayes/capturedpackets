@@ -8,21 +8,21 @@ namespace EthernetFrame.LLDPPacket
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.LLDPPacketStructure ThePacket;
+        private Structures.PacketStructure ThePacket;
 
         public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the LLDP packet
-            ThePacket = new Structures.LLDPPacketStructure();
+            ThePacket = new Structures.PacketStructure();
         }
 
         public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
 
-            if (ThePayloadLength < Constants.LLDPPacketLength)
+            if (ThePayloadLength < Constants.PacketLength)
             {
                 System.Diagnostics.Trace.WriteLine
                     (

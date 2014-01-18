@@ -12,17 +12,17 @@ namespace PacketCapture.PCAPPackageCapture
 
         //Length
 
-        public const ushort PCAPPackageCaptureGlobalHeaderLength = 24;
+        public const ushort GlobalHeaderLength = 24;
 
         //Magic number
 
-        public const System.UInt32 PCAPPackageCaptureLittleEndianMagicNumber = 0xa1b2c3d4;
-        public const System.UInt32 PCAPPackageCaptureBigEndianMagicNumber = 0xd4c3b2a1;
+        public const System.UInt32 LittleEndianMagicNumber = 0xa1b2c3d4;
+        public const System.UInt32 BigEndianMagicNumber = 0xd4c3b2a1;
 
         //Version numbers
 
-        public const System.UInt16 PCAPPackageCaptureExpectedVersionMajor = 2;
-        public const System.UInt16 PCAPPackageCaptureExpectedVersionMinor = 4;
+        public const System.UInt16 ExpectedVersionMajor = 2;
+        public const System.UInt16 ExpectedVersionMinor = 4;
 
         //
         //PCAP packet capture packet header - 16 bytes
@@ -30,6 +30,6 @@ namespace PacketCapture.PCAPPackageCapture
 
         //Length
 
-        public const ushort PCAPPackageCapturePacketHeaderLength = 16;
+        public const ushort HeaderLength = 16;
     }
 }

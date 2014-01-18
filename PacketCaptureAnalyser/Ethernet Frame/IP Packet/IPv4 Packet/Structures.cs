@@ -12,9 +12,9 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.IPv4PacketHeaderMinimumLength)]
+            Size = Constants.HeaderMinimumLength)]
 
-        public struct IPv4PacketHeaderStructure
+        public struct HeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.Byte VersionAndHeaderLength; //IP version and IPv4 packet header length

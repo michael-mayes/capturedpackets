@@ -8,7 +8,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.TCPPacketHeaderStructure TheHeader;
+        private Structures.HeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
@@ -21,7 +21,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the TCP packet header
-            TheHeader = new Structures.TCPPacketHeaderStructure();
+            TheHeader = new Structures.HeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -91,12 +91,12 @@ namespace EthernetFrame.IPPacket.TCPPacket
                 TheSourcePort = TheHeader.SourcePort;
                 TheDestinationPort = TheHeader.DestinationPort;
 
-                if (TheHeaderLength > Constants.TCPPacketHeaderMinimumLength)
+                if (TheHeaderLength > Constants.HeaderMinimumLength)
                 {
                     //The TCP packet contains a header length which is greater than the minimum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
 
                     //Just read off these remaining Options bytes of the TCP packet header from the packet capture so we can move on
-                    TheBinaryReader.ReadBytes(TheHeaderLength - Constants.TCPPacketHeaderMinimumLength);
+                    TheBinaryReader.ReadBytes(TheHeaderLength - Constants.HeaderMinimumLength);
                 }
             }
             else
@@ -130,21 +130,21 @@ namespace EthernetFrame.IPPacket.TCPPacket
             return TheResult;
         }
 
-        private bool ValidateHeader(Structures.TCPPacketHeaderStructure TheHeader, ushort TheHeaderLength)
+        private bool ValidateHeader(Structures.HeaderStructure TheHeader, ushort TheHeaderLength)
         {
             bool TheResult = true;
 
-            if (TheHeaderLength > Constants.TCPPacketHeaderMaximumLength ||
-                TheHeaderLength < Constants.TCPPacketHeaderMinimumLength)
+            if (TheHeaderLength > Constants.HeaderMaximumLength ||
+                TheHeaderLength < Constants.HeaderMinimumLength)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The TCP packet contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +
-                    Constants.TCPPacketHeaderMinimumLength.ToString() +
+                    Constants.HeaderMinimumLength.ToString() +
                     " to " +
-                    Constants.TCPPacketHeaderMaximumLength.ToString()
+                    Constants.HeaderMaximumLength.ToString()
                     );
 
                 TheResult = false;

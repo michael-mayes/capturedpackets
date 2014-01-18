@@ -15,14 +15,14 @@ namespace PacketCapture.SnifferPackageCapture
             bool TheResult = true;
 
             //Provide a default value for the output parameter for the network datalink type
-            TheNetworkDataLinkType = (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.Invalid;
+            TheNetworkDataLinkType = (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
 
             //Provide a default value to the output parameter for the timestamp accuracy
             TheTimestampAccuracy = 0.0;
 
             //Create the single instance of the Sniffer packet capture global header
-            Structures.SnifferPackageCaptureGlobalHeaderStructure TheGlobalHeader =
-                new Structures.SnifferPackageCaptureGlobalHeaderStructure();
+            Structures.GlobalHeaderStructure TheGlobalHeader =
+                new Structures.GlobalHeaderStructure();
 
             //Populate the Sniffer packet capture global header from the packet capture
             TheGlobalHeader.MagicNumberHigh = TheBinaryReader.ReadUInt64();
@@ -68,8 +68,8 @@ namespace PacketCapture.SnifferPackageCapture
             TheTimestamp = 0.0;
 
             //Create an instance of the Sniffer packet capture record header
-            Structures.SnifferPackageCaptureRecordHeaderStructure TheRecordHeader =
-                new Structures.SnifferPackageCaptureRecordHeaderStructure();
+            Structures.RecordHeaderStructure TheRecordHeader =
+                new Structures.RecordHeaderStructure();
 
             //Populate the Sniffer packet capture record header from the packet capture
             TheRecordHeader.RecordType = TheBinaryReader.ReadUInt16();
@@ -81,11 +81,11 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 switch (TheRecordHeader.RecordType)
                 {
-                    case (ushort)Constants.SnifferPackageCaptureRecordHeaderSnifferRecordType.Type2RecordType:
+                    case (ushort)Constants.RecordHeaderSnifferRecordType.Type2RecordType:
                         {
                             //Create an instance of the Sniffer packet capture Sniffer type 2 data record
-                            Structures.SnifferPackageCaptureSnifferType2RecordStructure TheType2Record =
-                                new Structures.SnifferPackageCaptureSnifferType2RecordStructure();
+                            Structures.SnifferType2RecordStructure TheType2Record =
+                                new Structures.SnifferType2RecordStructure();
 
                             //Populate the Sniffer packet capture Sniffer type 2 data record from the packet capture
                             TheType2Record.TimestampLow = TheBinaryReader.ReadUInt16();
@@ -113,7 +113,7 @@ namespace PacketCapture.SnifferPackageCapture
                             break;
                         }
 
-                    case (ushort)Constants.SnifferPackageCaptureRecordHeaderSnifferRecordType.EndOfFileRecordType:
+                    case (ushort)Constants.RecordHeaderSnifferRecordType.EndOfFileRecordType:
                         {
                             //No further reading required for the Sniffer packet capture Sniffer end of file data record as it only consists of the Sniffer packet capture record header!
                             break;
@@ -145,127 +145,127 @@ namespace PacketCapture.SnifferPackageCapture
         //Private methods - provide methods specific to Sniffer packet captures, not required to derive from the abstract base class
         //
 
-        private bool ValidateGlobalHeader(Structures.SnifferPackageCaptureGlobalHeaderStructure TheGlobalHeader)
+        private bool ValidateGlobalHeader(Structures.GlobalHeaderStructure TheGlobalHeader)
         {
             bool TheResult = true;
 
             //Validate fields from the Sniffer packet capture global header
 
-            if (TheGlobalHeader.MagicNumberHigh != Constants.SnifferPackageCaptureExpectedMagicNumberHigh)
+            if (TheGlobalHeader.MagicNumberHigh != Constants.ExpectedMagicNumberHigh)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected high bytes for the magic number, is " +
                     string.Format("{0:X}", TheGlobalHeader.MagicNumberHigh.ToString()) +
                     " not " +
-                    string.Format("{0:X}", Constants.SnifferPackageCaptureExpectedMagicNumberHigh.ToString())
+                    string.Format("{0:X}", Constants.ExpectedMagicNumberHigh.ToString())
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.MagicNumberLow != Constants.SnifferPackageCaptureExpectedMagicNumberLow)
+            if (TheGlobalHeader.MagicNumberLow != Constants.ExpectedMagicNumberLow)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected low bytes for the magic number, is " +
                     string.Format("{0:X}", TheGlobalHeader.MagicNumberLow.ToString()) +
                     " not " +
-                    string.Format("{0:X}", Constants.SnifferPackageCaptureExpectedMagicNumberLow.ToString())
+                    string.Format("{0:X}", Constants.ExpectedMagicNumberLow.ToString())
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.MagicNumberTerminator != Constants.SnifferPackageCaptureExpectedMagicNumberTerminator)
+            if (TheGlobalHeader.MagicNumberTerminator != Constants.ExpectedMagicNumberTerminator)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected magic number terminating character, is " +
                     TheGlobalHeader.MagicNumberTerminator.ToString() +
                     " not " +
-                    Constants.SnifferPackageCaptureExpectedMagicNumberTerminator.ToString()
+                    Constants.ExpectedMagicNumberTerminator.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.RecordType != (ushort)Constants.SnifferPackageCaptureRecordHeaderSnifferRecordType.VersionRecordType)
+            if (TheGlobalHeader.RecordType != (ushort)Constants.RecordHeaderSnifferRecordType.VersionRecordType)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected record type, is " +
                     TheGlobalHeader.RecordType.ToString() +
                     " not " +
-                    Constants.SnifferPackageCaptureRecordHeaderSnifferRecordType.VersionRecordType.ToString()
+                    Constants.RecordHeaderSnifferRecordType.VersionRecordType.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.VersionMajor != Constants.SnifferPackageCaptureExpectedVersionMajor)
+            if (TheGlobalHeader.VersionMajor != Constants.ExpectedVersionMajor)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected major version number, is " +
                     TheGlobalHeader.VersionMajor.ToString() +
                     " not " +
-                    Constants.SnifferPackageCaptureExpectedVersionMajor.ToString()
+                    Constants.ExpectedVersionMajor.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.VersionMinor != Constants.SnifferPackageCaptureExpectedVersionMinor)
+            if (TheGlobalHeader.VersionMinor != Constants.ExpectedVersionMinor)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected minor version number, is " +
                     TheGlobalHeader.VersionMinor.ToString() +
                     " not " +
-                    Constants.SnifferPackageCaptureExpectedVersionMinor.ToString()
+                    Constants.ExpectedVersionMinor.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.Type != Constants.SnifferPackageCaptureExpectedType)
+            if (TheGlobalHeader.Type != Constants.ExpectedType)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected record type, is " +
                     TheGlobalHeader.Type.ToString() +
                     " not " +
-                    Constants.SnifferPackageCaptureExpectedType.ToString()
+                    Constants.ExpectedType.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.NetworkEncapsulationType != (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.NullLoopBack &&
-                TheGlobalHeader.NetworkEncapsulationType != (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.Ethernet)
+            if (TheGlobalHeader.NetworkEncapsulationType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack &&
+                TheGlobalHeader.NetworkEncapsulationType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected network encapsulation type, is " +
                     TheGlobalHeader.NetworkEncapsulationType.ToString() +
                     " not " +
-                    PacketCapture.CommonConstants.CommonNetworkDataLinkType.NullLoopBack.ToString() +
+                    PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack.ToString() +
                     " or " +
-                    PacketCapture.CommonConstants.CommonNetworkDataLinkType.Ethernet.ToString()
+                    PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.FormatVersion != Constants.SnifferPackageCaptureExpectedFormatVersion)
+            if (TheGlobalHeader.FormatVersion != Constants.ExpectedFormatVersion)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The Sniffer packet capture global header does not contain the expected format version, is " +
                     TheGlobalHeader.FormatVersion.ToString() +
                     " not " +
-                    Constants.SnifferPackageCaptureExpectedFormatVersion.ToString()
+                    Constants.ExpectedFormatVersion.ToString()
                     );
 
                 TheResult = false;
@@ -274,13 +274,13 @@ namespace PacketCapture.SnifferPackageCapture
             return TheResult;
         }
 
-        private bool ValidateRecordHeader(Structures.SnifferPackageCaptureRecordHeaderStructure TheRecordHeader)
+        private bool ValidateRecordHeader(Structures.RecordHeaderStructure TheRecordHeader)
         {
             bool TheResult = true;
 
             //Validate fields from the Sniffer packet capture record header
-            if (TheRecordHeader.RecordType != (ushort)Constants.SnifferPackageCaptureRecordHeaderSnifferRecordType.Type2RecordType &&
-                TheRecordHeader.RecordType != (ushort)Constants.SnifferPackageCaptureRecordHeaderSnifferRecordType.EndOfFileRecordType)
+            if (TheRecordHeader.RecordType != (ushort)Constants.RecordHeaderSnifferRecordType.Type2RecordType &&
+                TheRecordHeader.RecordType != (ushort)Constants.RecordHeaderSnifferRecordType.EndOfFileRecordType)
             {
                 System.Diagnostics.Trace.WriteLine
                     (

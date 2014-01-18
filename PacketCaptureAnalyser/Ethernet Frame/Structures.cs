@@ -12,9 +12,9 @@ namespace EthernetFrame
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.EthernetFrameHeaderLength)]
+            Size = Constants.HeaderLength)]
 
-        public struct EthernetFrameHeaderStructure
+        public struct HeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 DestinationMACAddressHigh; //The high bytes of the media address of the intended receiver (four bytes)

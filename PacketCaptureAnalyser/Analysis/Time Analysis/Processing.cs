@@ -145,17 +145,17 @@ namespace Analysis.TimeAnalysis
             CommonHistogram TheTimestampHistogram =
                 new CommonHistogram
                     (
-                    Constants.TimeAnalysisTimestampNumberOfBins,
-                    Constants.TimeAnalysisMaxNegativeDifference,
-                    Constants.TimeAnalysisMaxPositiveDifference
+                    Constants.TimestampNumberOfBins,
+                    Constants.MaxNegativeTimeDifference,
+                    Constants.MaxPositiveTimeDifference
                     );
 
             CommonHistogram TheTimeHistogram =
                 new CommonHistogram
                     (
-                    Constants.TimeAnalysisTimeNumberOfBins,
-                    Constants.TimeAnalysisMaxNegativeDifference,
-                    Constants.TimeAnalysisMaxPositiveDifference
+                    Constants.TimeNumberOfBins,
+                    Constants.MaxNegativeTimeDifference,
+                    Constants.MaxPositiveTimeDifference
                     );
 
             ulong TheMinTimestampDifferencePacketNumber = 0;
@@ -208,9 +208,9 @@ namespace Analysis.TimeAnalysis
                 //The timestamp
                 {
                     double TheAbsoluteTimestampDifference = System.Math.Abs((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0);
-                    double TheTimestampDifference = ((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0) - Constants.TimeAnalysisExpectedDifference; //Milliseconds;
+                    double TheTimestampDifference = ((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; //Milliseconds;
 
-                    if (TheAbsoluteTimestampDifference > Constants.TimeAnalysisMinTimestampDifference)
+                    if (TheAbsoluteTimestampDifference > Constants.MinTimestampDifference)
                     {
                         //Only those time messages in the chosen range will be marked as processed
                         //This should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
@@ -238,7 +238,7 @@ namespace Analysis.TimeAnalysis
 
                         //The time
 
-                        double TheTimeDifference = ((TheTimeValuesRow.Field<double>("Time") - TheLastTime) * 1000.0) - Constants.TimeAnalysisExpectedDifference; //Milliseconds;
+                        double TheTimeDifference = ((TheTimeValuesRow.Field<double>("Time") - TheLastTime) * 1000.0) - Constants.ExpectedTimeDifference; //Milliseconds;
 
                         ++TheNumberOfTimeDifferenceInstances;
                         TheTotalOfTimeDifferences += TheTimeDifference;
@@ -305,8 +305,8 @@ namespace Analysis.TimeAnalysis
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The histogram (" +
-                    Constants.TimeAnalysisTimestampBinsPerMs.ToString() +
-                    " bins per ms) for timestamp values is:"
+                    Constants.TimestampBinsPerMillisecond.ToString() +
+                    " bins per millisecond) for timestamp values is:"
                     );
 
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
@@ -345,8 +345,8 @@ namespace Analysis.TimeAnalysis
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The histogram (" +
-                    Constants.TimeAnalysisTimeBinsPerMs.ToString() +
-                    " bins per ms) for time values is:"
+                    Constants.TimeBinsPerMillisecond.ToString() +
+                    " bins per millisecond) for time values is:"
                     );
 
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);

@@ -17,20 +17,20 @@ namespace PacketCapture.PCAPPackageCapture
             bool TheResult = true;
 
             //Provide a default value for the output parameter for the network datalink type
-            TheNetworkDataLinkType = (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.Invalid;
+            TheNetworkDataLinkType = (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
 
             //Set up the output parameter for the timestamp accuracy - not used for PCAP packet captures so default to zero
             TheTimestampAccuracy = 0.0;
 
             //Create the single instance of the PCAP packet capture global header
-            Structures.PCAPPackageCaptureGlobalHeaderStructure TheGlobalHeader =
-                new Structures.PCAPPackageCaptureGlobalHeaderStructure();
+            Structures.GlobalHeaderStructure TheGlobalHeader =
+                new Structures.GlobalHeaderStructure();
 
             //Read the magic number of the PCAP packet capture global header from the packet capture
             TheGlobalHeader.MagicNumber = TheBinaryReader.ReadUInt32();
 
             //The endianism of the remainder of the values in the PCAP packet capture global header will be corrected to little endian if the magic number indicates big endian representation
-            if (TheGlobalHeader.MagicNumber == Constants.PCAPPackageCaptureLittleEndianMagicNumber)
+            if (TheGlobalHeader.MagicNumber == Constants.LittleEndianMagicNumber)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
@@ -39,7 +39,7 @@ namespace PacketCapture.PCAPPackageCapture
 
                 IsTheGlobalHeaderLittleEndian = true;
             }
-            else if (TheGlobalHeader.MagicNumber == Constants.PCAPPackageCaptureBigEndianMagicNumber)
+            else if (TheGlobalHeader.MagicNumber == Constants.BigEndianMagicNumber)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
@@ -92,8 +92,8 @@ namespace PacketCapture.PCAPPackageCapture
             TheTimestamp = 0.0;
 
             //Create an instance of the PCAP packet capture packet header
-            Structures.PCAPPackageCapturePacketHeaderStructure ThePacketHeader =
-                new Structures.PCAPPackageCapturePacketHeaderStructure();
+            Structures.HeaderStructure ThePacketHeader =
+                new Structures.HeaderStructure();
 
             //Populate the PCAP packet capture packet header from the packet capture
             if (IsTheGlobalHeaderLittleEndian)
@@ -118,7 +118,7 @@ namespace PacketCapture.PCAPPackageCapture
 
                 switch (TheNetworkDataLinkType)
                 {
-                    case (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.Ethernet:
+                    case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet:
                         {
                             //Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
                             ThePayloadLength = ThePacketHeader.SavedLength - 12;
@@ -126,8 +126,8 @@ namespace PacketCapture.PCAPPackageCapture
                             break;
                         }
 
-                    case (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.NullLoopBack:
-                    case (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.CiscoHDLC:
+                    case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack:
+                    case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC:
                     default:
                         {
                             ThePayloadLength = ThePacketHeader.SavedLength;
@@ -146,68 +146,68 @@ namespace PacketCapture.PCAPPackageCapture
         //Private methods - provide methods specific to PCAP packet captures, not required to derive from the abstract base class
         //
 
-        private bool ValidateGlobalHeader(Structures.PCAPPackageCaptureGlobalHeaderStructure TheGlobalHeader)
+        private bool ValidateGlobalHeader(Structures.GlobalHeaderStructure TheGlobalHeader)
         {
             bool TheResult = true;
 
             //Validate fields from the PCAP packet capture global header
 
-            if (TheGlobalHeader.MagicNumber != Constants.PCAPPackageCaptureLittleEndianMagicNumber &&
-                TheGlobalHeader.MagicNumber != Constants.PCAPPackageCaptureBigEndianMagicNumber)
+            if (TheGlobalHeader.MagicNumber != Constants.LittleEndianMagicNumber &&
+                TheGlobalHeader.MagicNumber != Constants.BigEndianMagicNumber)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The PCAP packet capture global header does not contain the expected magic number, is " +
                     TheGlobalHeader.MagicNumber.ToString() +
                     " not " +
-                    Constants.PCAPPackageCaptureLittleEndianMagicNumber.ToString() +
+                    Constants.LittleEndianMagicNumber.ToString() +
                     " or " +
-                    Constants.PCAPPackageCaptureBigEndianMagicNumber.ToString()
+                    Constants.BigEndianMagicNumber.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.VersionMajor != Constants.PCAPPackageCaptureExpectedVersionMajor)
+            if (TheGlobalHeader.VersionMajor != Constants.ExpectedVersionMajor)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The PCAP packet capture global header does not contain the expected major version number, is " +
                     TheGlobalHeader.VersionMajor.ToString() +
                     " not " +
-                    Constants.PCAPPackageCaptureExpectedVersionMajor.ToString()
+                    Constants.ExpectedVersionMajor.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.VersionMinor != Constants.PCAPPackageCaptureExpectedVersionMinor)
+            if (TheGlobalHeader.VersionMinor != Constants.ExpectedVersionMinor)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The PCAP packet capture global header does not contain the expected minor version number, is " +
                     TheGlobalHeader.VersionMinor.ToString() +
                     " not " +
-                    Constants.PCAPPackageCaptureExpectedVersionMinor.ToString()
+                    Constants.ExpectedVersionMinor.ToString()
                     );
 
                 TheResult = false;
             }
 
-            if (TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.NullLoopBack &&
-                TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.Ethernet &&
-                TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.CommonNetworkDataLinkType.CiscoHDLC)
+            if (TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack &&
+                TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet &&
+                TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The PCAP packet capture global header does not contain the expected network data link type, is " +
                     TheGlobalHeader.NetworkDataLinkType.ToString() +
                     " not " +
-                    PacketCapture.CommonConstants.CommonNetworkDataLinkType.NullLoopBack.ToString() +
+                    PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack.ToString() +
                     " or " +
-                    PacketCapture.CommonConstants.CommonNetworkDataLinkType.Ethernet.ToString() +
+                    PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet.ToString() +
                     " or " +
-                    PacketCapture.CommonConstants.CommonNetworkDataLinkType.CiscoHDLC.ToString()
+                    PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC.ToString()
                     );
 
                 TheResult = false;

@@ -12,9 +12,9 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.SectionHeaderBlock)]
+            Size = (int)Constants.BlockTotalLength.SectionHeaderBlock)]
 
-        public struct PCAPNGPackageCaptureSectionHeaderBlockStructure
+        public struct SectionHeaderBlockStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 BlockType; //Block type
@@ -41,9 +41,9 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.InterfaceDescriptionBlock)]
+            Size = (int)Constants.BlockTotalLength.InterfaceDescriptionBlock)]
 
-        public struct PCAPNGPackageCaptureInterfaceDescriptionBlockStructure
+        public struct InterfaceDescriptionBlockStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 BlockType; //Block type
@@ -67,9 +67,9 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.PacketBlock)]
+            Size = (int)Constants.BlockTotalLength.PacketBlock)]
 
-        public struct PCAPNGPackageCapturePacketBlockStructure
+        public struct PacketBlockStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 BlockType; //Block type
@@ -102,9 +102,9 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.SimplePacketBlock)]
+            Size = (int)Constants.BlockTotalLength.SimplePacketBlock)]
 
-        public struct PCAPNGPackageCaptureSimplePacketBlockStructure
+        public struct SimplePacketBlockStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 BlockType; //Block type
@@ -122,9 +122,9 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.EnhancedPacketBlock)]
+            Size = (int)Constants.BlockTotalLength.EnhancedPacketBlock)]
 
-        public struct PCAPNGPackageCaptureEnhancedPacketBlockStructure
+        public struct EnhancedPacketBlockStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 BlockType; //Block type
@@ -154,9 +154,9 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.InterfaceStatisticsBlock)]
+            Size = (int)Constants.BlockTotalLength.InterfaceStatisticsBlock)]
 
-        public struct PCAPNGPackageCaptureInterfaceStatisticsBlockStructure
+        public struct InterfaceStatisticsBlockStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 BlockType; //Block type

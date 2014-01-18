@@ -8,21 +8,21 @@ namespace EthernetFrame.ARPPacket
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.ARPPacketStructure ThePacket;
+        private Structures.PacketStructure ThePacket;
 
         public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the ARP packet
-            ThePacket = new Structures.ARPPacketStructure();
+            ThePacket = new Structures.PacketStructure();
         }
 
         public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
 
-            if (ThePayloadLength < Constants.ARPPacketLength)
+            if (ThePayloadLength < Constants.PacketLength)
             {
                 System.Diagnostics.Trace.WriteLine
                     (

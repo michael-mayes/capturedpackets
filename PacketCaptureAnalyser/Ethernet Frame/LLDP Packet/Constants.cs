@@ -12,6 +12,6 @@ namespace EthernetFrame.LLDPPacket
 
         //Length
 
-        public const ushort LLDPPacketLength = 46;
+        public const ushort PacketLength = 46;
     }
 }

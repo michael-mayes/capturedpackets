@@ -12,16 +12,16 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
         //Version
 
-        public const ushort IPv4PacketHeaderVersion = 4;
+        public const ushort HeaderVersion = 4;
 
         //Length
 
-        public const ushort IPv4PacketHeaderMinimumLength = 20;
-        public const ushort IPv4PacketHeaderMaximumLength = 60;
+        public const ushort HeaderMinimumLength = 20;
+        public const ushort HeaderMaximumLength = 60;
 
         //Protocol
 
-        public enum IPv4PacketProtocol : byte
+        public enum Protocol : byte
         {
 
             ICMPv4 = 0x01, //ICMPv4 - Internet Control Message Protocol version 4 for IPv4 (RFC 792)

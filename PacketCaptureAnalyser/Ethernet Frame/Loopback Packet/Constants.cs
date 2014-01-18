@@ -12,7 +12,7 @@ namespace EthernetFrame.LoopbackPacket
 
         //Length
 
-        public const ushort LoopbackPacketHeaderLength = 6;
+        public const ushort HeaderLength = 6;
 
         //
         //Loopback packet payload
@@ -20,6 +20,6 @@ namespace EthernetFrame.LoopbackPacket
 
         //Length
 
-        public const ushort LoopbackPacketPayloadLength = 40;
+        public const ushort PayloadLength = 40;
     }
 }

@@ -10,7 +10,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         //PCAP Next Generation packet capture block type
         //
 
-        public enum PCAPNGPackageCaptureBlockType : uint
+        public enum BlockType : uint
         {
             SectionHeaderBlock = 0x0a0d0d0a,
             InterfaceDescriptionBlock = 0x00000001,
@@ -24,7 +24,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         //PCAP Next Generation packet capture block total length
         //
 
-        public enum PCAPNGPackageCaptureBlockTotalLength : uint
+        public enum BlockTotalLength : uint
         {
             SectionHeaderBlock = 24,
             InterfaceDescriptionBlock = 16,
@@ -40,12 +40,12 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         //Magic number
 
-        public const System.UInt32 PCAPNGPackageCaptureLittleEndianByteOrderMagic = 0x1a2b3c4d;
-        public const System.UInt32 PCAPNGPackageCaptureBigEndianByteOrderMagic = 0x4d3c2b1a;
+        public const System.UInt32 LittleEndianByteOrderMagic = 0x1a2b3c4d;
+        public const System.UInt32 BigEndianByteOrderMagic = 0x4d3c2b1a;
 
         //Version numbers
 
-        public const System.UInt16 PCAPNGPackageCaptureExpectedMajorVersion = 1;
-        public const System.UInt16 PCAPNGPackageCaptureExpectedMinorVersion = 0;
+        public const System.UInt16 ExpectedMajorVersion = 1;
+        public const System.UInt16 ExpectedMinorVersion = 0;
     }
 }

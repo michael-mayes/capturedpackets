@@ -8,21 +8,21 @@ namespace EthernetFrame.LoopbackPacket
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.LoopbackPacketHeaderStructure TheHeader;
+        private Structures.HeaderStructure TheHeader;
 
         public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the Loopback packet header
-            TheHeader = new Structures.LoopbackPacketHeaderStructure();
+            TheHeader = new Structures.HeaderStructure();
         }
 
         public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
 
-            if (ThePayloadLength < (Constants.LoopbackPacketHeaderLength + Constants.LoopbackPacketPayloadLength))
+            if (ThePayloadLength < (Constants.HeaderLength + Constants.PayloadLength))
             {
                 System.Diagnostics.Trace.WriteLine
                     (
@@ -37,7 +37,7 @@ namespace EthernetFrame.LoopbackPacket
 
             //Just read off the remaining bytes of the Loopback packet from the packet capture so we can move on
             //The remaining length is the length for the Loopback packet payload
-            TheBinaryReader.ReadBytes(Constants.LoopbackPacketPayloadLength);
+            TheBinaryReader.ReadBytes(Constants.PayloadLength);
 
             return TheResult;
         }

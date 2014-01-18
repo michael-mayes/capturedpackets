@@ -12,11 +12,11 @@ namespace EthernetFrame.IPPacket.UDPDatagram
 
         //Length
 
-        public const ushort UDPDatagramHeaderLength = 8;
+        public const ushort HeaderLength = 8;
 
         //Port number
 
-        public enum UDPDatagramPortNumberEnumeration : ushort
+        public enum PortNumber : ushort
         {
             DummyValueMin = 0,
             DummyValueMax = 65535
