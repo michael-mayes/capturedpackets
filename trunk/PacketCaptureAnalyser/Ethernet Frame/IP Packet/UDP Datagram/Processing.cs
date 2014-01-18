@@ -4,11 +4,11 @@
 
 namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
 {
-    class UDPDatagramProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private UDPDatagramStructures.UDPDatagramHeaderStructure TheHeader;
+        private Structures.UDPDatagramHeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
@@ -16,12 +16,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
-        public UDPDatagramProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the UDP datagram header
-            TheHeader = new UDPDatagramStructures.UDPDatagramHeaderStructure();
+            TheHeader = new Structures.UDPDatagramHeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -74,7 +74,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             if (TheResult)
             {
                 //Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
-                ThePayloadLength = (ushort)(TheLength - UDPDatagramConstants.UDPDatagramHeaderLength);
+                ThePayloadLength = (ushort)(TheLength - Constants.UDPDatagramHeaderLength);
 
                 //Set up the output parameters for source port and destination port using the value read from the UDP datagram header
                 TheSourcePort = TheHeader.SourcePort;
@@ -108,7 +108,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             return TheResult;
         }
 
-        private bool ValidateHeader(UDPDatagramStructures.UDPDatagramHeaderStructure TheHeader, ushort TheLength, ushort TheHeaderLength)
+        private bool ValidateHeader(Structures.UDPDatagramHeaderStructure TheHeader, ushort TheLength, ushort TheHeaderLength)
         {
             bool TheResult = true;
 
@@ -128,14 +128,14 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
             }
 
             //The length in the UDP datagram header includes both the header itself and the payload so the minimum length is that of just the header
-            if (TheHeaderLength < UDPDatagramConstants.UDPDatagramHeaderLength)
+            if (TheHeaderLength < Constants.UDPDatagramHeaderLength)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The UDP datagram contains an unexpected header length, is " +
                     TheHeaderLength.ToString() +
                     " not " +
-                    UDPDatagramConstants.UDPDatagramHeaderLength.ToString() +
+                    Constants.UDPDatagramHeaderLength.ToString() +
                     " or above"
                     );
 

@@ -4,11 +4,11 @@
 
 namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
 {
-    class TCPPacketProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private TCPPacketStructures.TCPPacketHeaderStructure TheHeader;
+        private Structures.TCPPacketHeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
@@ -16,12 +16,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
-        public TCPPacketProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the TCP packet header
-            TheHeader = new TCPPacketStructures.TCPPacketHeaderStructure();
+            TheHeader = new Structures.TCPPacketHeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -91,12 +91,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
                 TheSourcePort = TheHeader.SourcePort;
                 TheDestinationPort = TheHeader.DestinationPort;
 
-                if (TheHeaderLength > TCPPacketConstants.TCPPacketHeaderMinimumLength)
+                if (TheHeaderLength > Constants.TCPPacketHeaderMinimumLength)
                 {
                     //The TCP packet contains a header length which is greater than the minimum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
 
                     //Just read off these remaining Options bytes of the TCP packet header from the packet capture so we can move on
-                    TheBinaryReader.ReadBytes(TheHeaderLength - TCPPacketConstants.TCPPacketHeaderMinimumLength);
+                    TheBinaryReader.ReadBytes(TheHeaderLength - Constants.TCPPacketHeaderMinimumLength);
                 }
             }
             else
@@ -130,21 +130,21 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
             return TheResult;
         }
 
-        private bool ValidateHeader(TCPPacketStructures.TCPPacketHeaderStructure TheHeader, ushort TheHeaderLength)
+        private bool ValidateHeader(Structures.TCPPacketHeaderStructure TheHeader, ushort TheHeaderLength)
         {
             bool TheResult = true;
 
-            if (TheHeaderLength > TCPPacketConstants.TCPPacketHeaderMaximumLength ||
-                TheHeaderLength < TCPPacketConstants.TCPPacketHeaderMinimumLength)
+            if (TheHeaderLength > Constants.TCPPacketHeaderMaximumLength ||
+                TheHeaderLength < Constants.TCPPacketHeaderMinimumLength)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The TCP packet contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +
-                    TCPPacketConstants.TCPPacketHeaderMinimumLength.ToString() +
+                    Constants.TCPPacketHeaderMinimumLength.ToString() +
                     " to " +
-                    TCPPacketConstants.TCPPacketHeaderMaximumLength.ToString()
+                    Constants.TCPPacketHeaderMaximumLength.ToString()
                     );
 
                 TheResult = false;

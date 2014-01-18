@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
 {
-    class UDPDatagramConstants
+    class Constants
     {
         //
         //UDP datagram header - 8 bytes
