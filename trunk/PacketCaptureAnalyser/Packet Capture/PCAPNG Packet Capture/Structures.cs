@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessing
+namespace PacketCapture.PCAPNGPackageCapture
 {
-    class PCAPNGPackageCaptureStructures
+    class Structures
     {
         //
         //PCAP Next Generation packet capture section header block
@@ -12,7 +12,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.SectionHeaderBlock)]
+            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.SectionHeaderBlock)]
 
         public struct PCAPNGPackageCaptureSectionHeaderBlockStructure
         {
@@ -41,7 +41,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.InterfaceDescriptionBlock)]
+            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.InterfaceDescriptionBlock)]
 
         public struct PCAPNGPackageCaptureInterfaceDescriptionBlockStructure
         {
@@ -67,7 +67,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.PacketBlock)]
+            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.PacketBlock)]
 
         public struct PCAPNGPackageCapturePacketBlockStructure
         {
@@ -102,7 +102,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.SimplePacketBlock)]
+            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.SimplePacketBlock)]
 
         public struct PCAPNGPackageCaptureSimplePacketBlockStructure
         {
@@ -122,7 +122,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.EnhancedPacketBlock)]
+            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.EnhancedPacketBlock)]
 
         public struct PCAPNGPackageCaptureEnhancedPacketBlockStructure
         {
@@ -154,7 +154,7 @@ namespace PacketCaptureProcessing
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = (int)PCAPNGPackageCaptureConstants.PCAPNGPackageCaptureBlockTotalLength.InterfaceStatisticsBlock)]
+            Size = (int)Constants.PCAPNGPackageCaptureBlockTotalLength.InterfaceStatisticsBlock)]
 
         public struct PCAPNGPackageCaptureInterfaceStatisticsBlockStructure
         {

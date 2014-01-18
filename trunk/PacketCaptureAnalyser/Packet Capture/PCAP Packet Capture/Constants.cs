@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessing
+namespace PacketCapture.PCAPPackageCapture
 {
-    class PCAPPackageCaptureConstants
+    class Constants
     {
         //
         //PCAP packet capture global header - 24 bytes

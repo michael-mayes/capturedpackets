@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessing
+namespace PacketCapture.PCAPNGPackageCapture
 {
-    class PCAPNGPackageCaptureConstants
+    class Constants
     {
         //
         //PCAP Next Generation packet capture block type
