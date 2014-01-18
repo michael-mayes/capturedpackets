@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.LLDPPacketNamespace
 {
-    class LLDPPacketStructures
+    class Structures
     {
         //
         //LLDP packet - 46 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.LLDPPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = LLDPPacketConstants.LLDPPacketLength)]
+            Size = Constants.LLDPPacketLength)]
 
         public struct LLDPPacketStructure
         {

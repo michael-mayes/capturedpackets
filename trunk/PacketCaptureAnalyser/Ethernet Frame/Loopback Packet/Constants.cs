@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.LoopbackPacketNamespace
 {
-    class LoopbackPacketConstants
+    class Constants
     {
         //
         //Loopback packet header - 6 bytes

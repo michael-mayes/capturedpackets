@@ -4,25 +4,25 @@
 
 namespace EthernetFrameNamespace.LLDPPacketNamespace
 {
-    class LLDPPacketProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private LLDPPacketStructures.LLDPPacketStructure ThePacket;
+        private Structures.LLDPPacketStructure ThePacket;
 
-        public LLDPPacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the LLDP packet
-            ThePacket = new LLDPPacketStructures.LLDPPacketStructure();
+            ThePacket = new Structures.LLDPPacketStructure();
         }
 
         public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
 
-            if (ThePayloadLength < LLDPPacketConstants.LLDPPacketLength)
+            if (ThePayloadLength < Constants.LLDPPacketLength)
             {
                 System.Diagnostics.Trace.WriteLine
                     (

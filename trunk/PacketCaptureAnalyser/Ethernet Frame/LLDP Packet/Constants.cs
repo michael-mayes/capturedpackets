@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.LLDPPacketNamespace
 {
-    class LLDPPacketConstants
+    class Constants
     {
         //
         //LLDP packet - 46 bytes
