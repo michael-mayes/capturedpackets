@@ -2,13 +2,13 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace
 {
-    class IPv4PacketProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader;
+        private Structures.IPv4PacketHeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
@@ -16,17 +16,17 @@ namespace EthernetFrameNamespace.IPPacketNamespace
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
-        private ICMPv4PacketNamespace.ICMPv4PacketProcessing TheICMPv4PacketProcessing;
-        private IGMPv2PacketNamespace.IGMPv2PacketProcessing TheIGMPv2PacketProcessing;
-        private TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing;
-        private UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing;
+        private ICMPv4PacketNamespace.Processing TheICMPv4PacketProcessing;
+        private IGMPv2PacketNamespace.Processing TheIGMPv2PacketProcessing;
+        private TCPPacketNamespace.Processing TheTCPPacketProcessing;
+        private UDPDatagramNamespace.Processing TheUDPDatagramProcessing;
 
-        public IPv4PacketProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the IPv4 packet header
-            TheHeader = new IPv4PacketStructures.IPv4PacketHeaderStructure();
+            TheHeader = new Structures.IPv4PacketHeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -34,10 +34,10 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
 
-            TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.ICMPv4PacketProcessing(TheBinaryReader);
-            TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.IGMPv2PacketProcessing(TheBinaryReader);
-            TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheICMPv4PacketProcessing = new ICMPv4PacketNamespace.Processing(TheBinaryReader);
+            TheIGMPv2PacketProcessing = new IGMPv2PacketNamespace.Processing(TheBinaryReader);
+            TheTCPPacketProcessing = new TCPPacketNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheUDPDatagramProcessing = new UDPDatagramNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
         }
 
         public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)
@@ -107,12 +107,12 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                 //Set up the output parameter for the protocol for the IPv4 packet
                 TheProtocol = TheHeader.Protocol;
 
-                if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMinimumLength)
+                if (TheHeaderLength > Constants.IPv4PacketHeaderMinimumLength)
                 {
                     //The IPv4 packet contains a header length which is greater than the minimum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
 
                     //Just read off these remaining Options bytes of the IPv4 packet header from the packet capture so we can move on
-                    TheBinaryReader.ReadBytes(TheHeaderLength - IPv4PacketConstants.IPv4PacketHeaderMinimumLength);
+                    TheBinaryReader.ReadBytes(TheHeaderLength - Constants.IPv4PacketHeaderMinimumLength);
                 }
             }
 
@@ -126,7 +126,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             //Process the IPv4 packet based on the value indicated for the protocol in the the IPv4 packet header
             switch (TheProtocol)
             {
-                case (byte)IPv4PacketConstants.IPv4PacketProtocol.ICMPv4:
+                case (byte)Constants.IPv4PacketProtocol.ICMPv4:
                     {
                         //We've got an IPv4 packet containing an ICMPv4 packet so process it
                         TheResult = TheICMPv4PacketProcessing.Process(ThePayloadLength);
@@ -134,7 +134,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv4PacketConstants.IPv4PacketProtocol.IGMP:
+                case (byte)Constants.IPv4PacketProtocol.IGMP:
                     {
                         //We've got an IPv4 packet containing an IGMPv2 packet so process it
                         TheResult = TheIGMPv2PacketProcessing.Process(ThePayloadLength);
@@ -142,7 +142,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv4PacketConstants.IPv4PacketProtocol.TCP:
+                case (byte)Constants.IPv4PacketProtocol.TCP:
                     {
                         //We've got an IPv4 packet containing an TCP packet so process it
                         TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
@@ -150,7 +150,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv4PacketConstants.IPv4PacketProtocol.UDP:
+                case (byte)Constants.IPv4PacketProtocol.UDP:
                     {
                         //We've got an IPv4 packet containing an UDP datagram so process it
                         TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
@@ -158,7 +158,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv4PacketConstants.IPv4PacketProtocol.EIGRP:
+                case (byte)Constants.IPv4PacketProtocol.EIGRP:
                     {
                         //We've got an IPv4 packet containing a Cisco EIGRP packet
 
@@ -194,7 +194,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             return TheResult;
         }
 
-        private bool ValidateHeader(IPv4PacketStructures.IPv4PacketHeaderStructure TheHeader, long ThePayloadLength, ushort TheHeaderVersion, ushort TheHeaderLength)
+        private bool ValidateHeader(Structures.IPv4PacketHeaderStructure TheHeader, long ThePayloadLength, ushort TheHeaderVersion, ushort TheHeaderLength)
         {
             bool TheResult = true;
 
@@ -216,7 +216,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             }
 
             //Validate the version in the IPv4 packet header
-            if (TheHeaderVersion != IPv4PacketConstants.IPv4PacketHeaderVersion)
+            if (TheHeaderVersion != Constants.IPv4PacketHeaderVersion)
             {
                 //We've got an IPv4 packet header containing an unknown version
 
@@ -230,8 +230,8 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             }
 
             //Validate the length of the IPv4 packet header
-            if (TheHeaderLength > IPv4PacketConstants.IPv4PacketHeaderMaximumLength ||
-                TheHeaderLength < IPv4PacketConstants.IPv4PacketHeaderMinimumLength)
+            if (TheHeaderLength > Constants.IPv4PacketHeaderMaximumLength ||
+                TheHeaderLength < Constants.IPv4PacketHeaderMinimumLength)
             {
                 //We've got an IPv4 packet header containing an out of range header length
 
@@ -240,9 +240,9 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                     "The IPv4 packet header contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +
-                    IPv4PacketConstants.IPv4PacketHeaderMinimumLength.ToString() +
+                    Constants.IPv4PacketHeaderMinimumLength.ToString() +
                     " to " +
-                    IPv4PacketConstants.IPv4PacketHeaderMaximumLength.ToString()
+                    Constants.IPv4PacketHeaderMaximumLength.ToString()
                     );
 
                 TheResult = false;

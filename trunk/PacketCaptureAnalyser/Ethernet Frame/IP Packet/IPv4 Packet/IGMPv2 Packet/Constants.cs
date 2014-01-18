@@ -2,16 +2,16 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.ICMPv4PacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
 {
-    class ICMPv4PacketConstants
+    class Constants
     {
         //
-        //ICMPv4 packet header - 4 bytes
+        //IGMPv2 packet header - 8 bytes
         //
 
         //Length
 
-        public const ushort ICMPv4PacketHeaderLength = 4;
+        public const ushort IGMPv2PacketHeaderLength = 8;
     }
 }

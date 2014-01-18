@@ -2,20 +2,20 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.IGMPv2PacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
 {
-    class IGMPv2PacketProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private IGMPv2PacketStructures.IGMPv2PacketStructure ThePacket;
+        private Structures.IGMPv2PacketStructure ThePacket;
 
-        public IGMPv2PacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the IGMPv2 packet
-            ThePacket = new IGMPv2PacketStructures.IGMPv2PacketStructure();
+            ThePacket = new Structures.IGMPv2PacketStructure();
         }
 
         public bool Process(ushort TheIGMPv2PacketLength)

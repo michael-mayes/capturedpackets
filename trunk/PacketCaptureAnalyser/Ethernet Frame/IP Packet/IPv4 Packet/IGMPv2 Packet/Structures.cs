@@ -2,9 +2,9 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.IGMPv2PacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace.IGMPv2PacketNamespace
 {
-    class IGMPv2PacketStructures
+    class Structures
     {
         //
         //IGMPv2 packet header - 8 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.IGMPv2PacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = IGMPv2PacketConstants.IGMPv2PacketHeaderLength)]
+            Size = Constants.IGMPv2PacketHeaderLength)]
 
         public struct IGMPv2PacketStructure
         {

@@ -2,13 +2,13 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace
+namespace EthernetFrameNamespace.IPPacketNamespace.IPv6PacketNamespace
 {
-    class IPv6PacketProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private IPv6PacketStructures.IPv6PacketHeaderStructure TheHeader;
+        private Structures.IPv6PacketHeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
@@ -16,15 +16,15 @@ namespace EthernetFrameNamespace.IPPacketNamespace
         private bool PerformTimeAnalysisProcessing;
         private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
 
-        private TCPPacketNamespace.TCPPacketProcessing TheTCPPacketProcessing;
-        private UDPDatagramNamespace.UDPDatagramProcessing TheUDPDatagramProcessing;
+        private TCPPacketNamespace.Processing TheTCPPacketProcessing;
+        private UDPDatagramNamespace.Processing TheUDPDatagramProcessing;
 
-        public IPv6PacketProcessing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the IPv6 packet header
-            TheHeader = new IPv6PacketStructures.IPv6PacketHeaderStructure();
+            TheHeader = new Structures.IPv6PacketHeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -32,8 +32,8 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
 
-            TheTCPPacketProcessing = new TCPPacketNamespace.TCPPacketProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheUDPDatagramProcessing = new UDPDatagramNamespace.UDPDatagramProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheTCPPacketProcessing = new TCPPacketNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheUDPDatagramProcessing = new UDPDatagramNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
         }
 
         public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)
@@ -104,7 +104,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             //Process the IPv6 packet based on the value indicated for the protocol in the the IPv6 packet header
             switch (TheProtocol)
             {
-                case (byte)IPv6PacketConstants.IPv6PacketProtocol.IGMP:
+                case (byte)Constants.IPv6PacketProtocol.IGMP:
                     {
                         System.Diagnostics.Trace.WriteLine
                             (
@@ -117,7 +117,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv6PacketConstants.IPv6PacketProtocol.TCP:
+                case (byte)Constants.IPv6PacketProtocol.TCP:
                     {
                         //We've got an IPv6 packet containing an TCP packet so process it
                         TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
@@ -125,7 +125,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv6PacketConstants.IPv6PacketProtocol.UDP:
+                case (byte)Constants.IPv6PacketProtocol.UDP:
                     {
                         //We've got an IPv6 packet containing an UDP datagram so process it
                         TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
@@ -133,7 +133,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv6PacketConstants.IPv6PacketProtocol.ICMPv6:
+                case (byte)Constants.IPv6PacketProtocol.ICMPv6:
                     {
                         //We've got an IPv6 packet containing an ICMPv6 packet
 
@@ -150,7 +150,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
                         break;
                     }
 
-                case (byte)IPv6PacketConstants.IPv6PacketProtocol.EIGRP:
+                case (byte)Constants.IPv6PacketProtocol.EIGRP:
                     {
                         //We've got an IPv6 packet containing a Cisco EIGRP packet
 
@@ -186,19 +186,19 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             return TheResult;
         }
 
-        private bool ValidateHeader(IPv6PacketStructures.IPv6PacketHeaderStructure TheHeader, long ThePayloadLength, ushort TheHeaderVersion)
+        private bool ValidateHeader(Structures.IPv6PacketHeaderStructure TheHeader, long ThePayloadLength, ushort TheHeaderVersion)
         {
             bool TheResult = true;
 
             //Validate the version in the IPv4 packet header
-            if ((TheHeader.PayloadLength + IPv6PacketConstants.IPv6PacketHeaderLength) > ThePayloadLength)
+            if ((TheHeader.PayloadLength + Constants.IPv6PacketHeaderLength) > ThePayloadLength)
             {
                 //We've got an IPv6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
 
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The IPv6 packet indicates a total length of " +
-                    (TheHeader.PayloadLength + IPv6PacketConstants.IPv6PacketHeaderLength).ToString() +
+                    (TheHeader.PayloadLength + Constants.IPv6PacketHeaderLength).ToString() +
                     " bytes that is greater than the length of the payload of " +
                     ThePayloadLength.ToString() +
                     " bytes in the Ethernet frame!!!"
@@ -208,7 +208,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace
             }
 
             //Validate the version in the IPv6 packet header
-            if (TheHeaderVersion != IPv6PacketConstants.IPv6PacketHeaderVersion)
+            if (TheHeaderVersion != Constants.IPv6PacketHeaderVersion)
             {
                 //We've got an IPv6 packet header containing an unknown version
 
