@@ -2,7 +2,7 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace.ICMPv4PacketNamespace
+namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 {
     class Structures
     {

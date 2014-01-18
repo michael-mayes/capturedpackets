@@ -2,7 +2,7 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrameNamespace
+namespace EthernetFrame
 {
     class Processing
     {
@@ -11,22 +11,22 @@ namespace EthernetFrameNamespace
         private Structures.EthernetFrameHeaderStructure TheEthernetFrameHeader;
 
         private bool PerformLatencyAnalysisProcessing;
-        private AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing;
+        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
 
         private bool PerformTimeAnalysisProcessing;
-        private AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing;
+        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
 
-        private ARPPacketNamespace.Processing TheARPPacketProcessing;
-        private IPPacketNamespace.IPv4PacketNamespace.Processing TheIPv4PacketProcessing;
-        private IPPacketNamespace.IPv6PacketNamespace.Processing TheIPv6PacketProcessing;
-        private LLDPPacketNamespace.Processing TheLLDPPacketProcessing;
-        private LoopbackPacketNamespace.Processing TheLoopbackPacketProcessing;
+        private ARPPacket.Processing TheARPPacketProcessing;
+        private IPPacket.IPv4Packet.Processing TheIPv4PacketProcessing;
+        private IPPacket.IPv6Packet.Processing TheIPv6PacketProcessing;
+        private LLDPPacket.Processing TheLLDPPacketProcessing;
+        private LoopbackPacket.Processing TheLoopbackPacketProcessing;
 
         private long ThePayloadLength;
 
         private System.UInt16 TheEtherType;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
@@ -39,11 +39,11 @@ namespace EthernetFrameNamespace
             this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
             this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
 
-            TheARPPacketProcessing = new ARPPacketNamespace.Processing(TheBinaryReader);
-            TheIPv4PacketProcessing = new IPPacketNamespace.IPv4PacketNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheIPv6PacketProcessing = new IPPacketNamespace.IPv6PacketNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheLLDPPacketProcessing = new LLDPPacketNamespace.Processing(TheBinaryReader);
-            TheLoopbackPacketProcessing = new LoopbackPacketNamespace.Processing(TheBinaryReader);
+            TheARPPacketProcessing = new ARPPacket.Processing(TheBinaryReader);
+            TheIPv4PacketProcessing = new IPPacket.IPv4Packet.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheIPv6PacketProcessing = new IPPacket.IPv6Packet.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheLLDPPacketProcessing = new LLDPPacket.Processing(TheBinaryReader);
+            TheLoopbackPacketProcessing = new LoopbackPacket.Processing(TheBinaryReader);
         }
 
         public bool Process(ulong ThePacketNumber, long ThePayloadLength, double TheTimestamp)

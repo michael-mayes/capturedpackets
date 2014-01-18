@@ -2,7 +2,7 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureProcessingNamespace
+namespace PacketCaptureProcessing
 {
     abstract class CommonPacketCaptureProcessing
     {
@@ -18,7 +18,7 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - cannot be overridden by a derived class
         //
 
-        public bool Process(PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing, string ThePacketCapture, bool MinimiseMemoryUsage)
+        public bool Process(PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing, string ThePacketCapture, bool MinimiseMemoryUsage)
         {
             bool TheResult = true;
 
@@ -203,7 +203,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
+        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -225,7 +225,7 @@ namespace PacketCaptureProcessingNamespace
                 TheProgressWindowForm.Refresh();
             }
 
-            EthernetFrameNamespace.Processing TheEthernetFrameProcessing = new EthernetFrameNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            EthernetFrame.Processing TheEthernetFrameProcessing = new EthernetFrame.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
 
             //Attempt to process the packets in the packet capture
             try
