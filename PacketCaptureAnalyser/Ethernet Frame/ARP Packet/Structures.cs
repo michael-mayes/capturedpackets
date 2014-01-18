@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.ARPPacketNamespace
 {
-    class ARPPacketStructures
+    class Structures
     {
         //
         //ARP packet - 28 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.ARPPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = ARPPacketConstants.ARPPacketLength)]
+            Size = Constants.ARPPacketLength)]
 
         public struct ARPPacketStructure
         {

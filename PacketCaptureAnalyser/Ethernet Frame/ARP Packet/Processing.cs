@@ -4,25 +4,25 @@
 
 namespace EthernetFrameNamespace.ARPPacketNamespace
 {
-    class ARPPacketProcessing
+    class Processing
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private ARPPacketStructures.ARPPacketStructure ThePacket;
+        private Structures.ARPPacketStructure ThePacket;
 
-        public ARPPacketProcessing(System.IO.BinaryReader TheBinaryReader)
+        public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the ARP packet
-            ThePacket = new ARPPacketStructures.ARPPacketStructure();
+            ThePacket = new Structures.ARPPacketStructure();
         }
 
         public bool Process(long ThePayloadLength)
         {
             bool TheResult = true;
 
-            if (ThePayloadLength < ARPPacketConstants.ARPPacketLength)
+            if (ThePayloadLength < Constants.ARPPacketLength)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
