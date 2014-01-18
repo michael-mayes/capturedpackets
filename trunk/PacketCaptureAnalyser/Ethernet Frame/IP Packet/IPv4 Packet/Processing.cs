@@ -11,17 +11,17 @@ namespace EthernetFrameNamespace.IPPacketNamespace.IPv4PacketNamespace
         private Structures.IPv4PacketHeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
-        private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing;
 
         private bool PerformTimeAnalysisProcessing;
-        private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
+        private AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing;
 
         private ICMPv4PacketNamespace.Processing TheICMPv4PacketProcessing;
         private IGMPv2PacketNamespace.Processing TheIGMPv2PacketProcessing;
         private TCPPacketNamespace.Processing TheTCPPacketProcessing;
         private UDPDatagramNamespace.Processing TheUDPDatagramProcessing;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 

@@ -18,7 +18,7 @@ namespace PacketCaptureProcessingNamespace
         //Concrete methods - cannot be overridden by a derived class
         //
 
-        public bool Process(PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, string ThePacketCapture, bool MinimiseMemoryUsage)
+        public bool Process(PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing, string ThePacketCapture, bool MinimiseMemoryUsage)
         {
             bool TheResult = true;
 
@@ -203,7 +203,7 @@ namespace PacketCaptureProcessingNamespace
             return TheResult;
         }
 
-        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
+        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -225,7 +225,7 @@ namespace PacketCaptureProcessingNamespace
                 TheProgressWindowForm.Refresh();
             }
 
-            EthernetFrameNamespace.EthernetFrameProcessing TheEthernetFrameProcessing = new EthernetFrameNamespace.EthernetFrameProcessing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            EthernetFrameNamespace.Processing TheEthernetFrameProcessing = new EthernetFrameNamespace.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
 
             //Attempt to process the packets in the packet capture
             try
