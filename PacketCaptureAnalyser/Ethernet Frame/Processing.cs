@@ -11,10 +11,10 @@ namespace EthernetFrameNamespace
         private Structures.EthernetFrameHeaderStructure TheEthernetFrameHeader;
 
         private bool PerformLatencyAnalysisProcessing;
-        private AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing;
+        private AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing;
 
         private bool PerformTimeAnalysisProcessing;
-        private AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing;
+        private AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing;
 
         private ARPPacketNamespace.Processing TheARPPacketProcessing;
         private IPPacketNamespace.IPv4PacketNamespace.Processing TheIPv4PacketProcessing;
@@ -26,7 +26,7 @@ namespace EthernetFrameNamespace
 
         private System.UInt16 TheEtherType;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing)
+        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 

@@ -254,15 +254,15 @@ namespace PacketCaptureAnalyser
                     " packet capture started"
                     );
 
-                AnalysisNamespace.LatencyAnalysisProcessing TheLatencyAnalysisProcessing = null;
-                AnalysisNamespace.TimeAnalysisProcessing TheTimeAnalysisProcessing = null;
+                AnalysisNamespace.LatencyAnalysisNamespace.Processing TheLatencyAnalysisProcessing = null;
+                AnalysisNamespace.TimeAnalysisNamespace.Processing TheTimeAnalysisProcessing = null;
 
                 TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 35;
 
                 //Only perform the latency analysis if the check box was selected for it on the main window form
                 if (PerformLatencyAnalysisCheckBox.Checked)
                 {
-                    TheLatencyAnalysisProcessing = new AnalysisNamespace.LatencyAnalysisProcessing(OutputLatencyAnalysisDebugCheckBox.Checked);
+                    TheLatencyAnalysisProcessing = new AnalysisNamespace.LatencyAnalysisNamespace.Processing(OutputLatencyAnalysisDebugCheckBox.Checked);
 
                     //Initialise the functionality to perform latency analysis on the messages found
                     TheLatencyAnalysisProcessing.Create();
@@ -273,7 +273,7 @@ namespace PacketCaptureAnalyser
                 //Only perform the time analysis if the check box was selected for it on the main window form
                 if (PerformTimeAnalysisCheckBox.Checked)
                 {
-                    TheTimeAnalysisProcessing = new AnalysisNamespace.TimeAnalysisProcessing(OutputTimeAnalysisDebugCheckBox.Checked);
+                    TheTimeAnalysisProcessing = new AnalysisNamespace.TimeAnalysisNamespace.Processing(OutputTimeAnalysisDebugCheckBox.Checked);
 
                     //Initialise the functionality to perform time analysis on the messages found
                     TheTimeAnalysisProcessing.Create();
