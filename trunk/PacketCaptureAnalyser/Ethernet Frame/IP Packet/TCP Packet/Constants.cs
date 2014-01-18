@@ -12,12 +12,12 @@ namespace EthernetFrame.IPPacket.TCPPacket
 
         //Length
 
-        public const ushort TCPPacketHeaderMinimumLength = 20;
-        public const ushort TCPPacketHeaderMaximumLength = 60;
+        public const ushort HeaderMinimumLength = 20;
+        public const ushort HeaderMaximumLength = 60;
 
         //Port number
 
-        public enum TCPPacketPortNumberEnumeration : ushort
+        public enum PortNumber : ushort
         {
             DummyValueMin = 0,
             DummyValueMax = 65535
@@ -25,7 +25,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
 
         //Flags
 
-        public enum TCPPacketFlags : byte
+        public enum Flags : byte
         {
             CWR = 0,
             ECE,
@@ -37,9 +37,9 @@ namespace EthernetFrame.IPPacket.TCPPacket
             FIN
         }
 
-        public bool IsTCPPacketFlagSet(System.Byte TheByte, TCPPacketFlags TheTCPPacketFlag)
+        public bool IsFlagSet(System.Byte TheByte, Flags TheFlag)
         {
-            int Shift = TCPPacketFlags.FIN - TheTCPPacketFlag;
+            int Shift = Flags.FIN - TheFlag;
 
             // Get a single bit in the proper position
             byte BitMask = (byte)(1 << Shift);

@@ -12,9 +12,9 @@ namespace EthernetFrame.ARPPacket
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.ARPPacketLength)]
+            Size = Constants.PacketLength)]
 
-        public struct ARPPacketStructure
+        public struct PacketStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt16 HardwareType; //The network protocol type (e.g. Ethernet is 1)

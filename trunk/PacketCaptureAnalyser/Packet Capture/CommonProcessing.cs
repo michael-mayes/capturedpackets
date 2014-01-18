@@ -267,15 +267,15 @@ namespace PacketCapture
                             {
                                 switch (TheNetworkDataLinkType)
                                 {
-                                    case (uint)CommonConstants.CommonNetworkDataLinkType.NullLoopBack:
-                                    case (uint)CommonConstants.CommonNetworkDataLinkType.CiscoHDLC:
+                                    case (uint)CommonConstants.NetworkDataLinkType.NullLoopBack:
+                                    case (uint)CommonConstants.NetworkDataLinkType.CiscoHDLC:
                                         {
                                             //Just read the bytes off from the packet capture so we can continue
                                             TheBinaryReader.ReadBytes((int)ThePayloadLength);
                                             break;
                                         }
 
-                                    case (uint)CommonConstants.CommonNetworkDataLinkType.Ethernet:
+                                    case (uint)CommonConstants.NetworkDataLinkType.Ethernet:
                                         {
                                             if (!TheEthernetFrameProcessing.Process(PacketsProcessed, ThePayloadLength, TheTimestamp))
                                             {

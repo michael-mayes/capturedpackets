@@ -12,6 +12,6 @@ namespace EthernetFrame.ARPPacket
 
         //Length
 
-        public const ushort ARPPacketLength = 28;
+        public const ushort PacketLength = 28;
     }
 }

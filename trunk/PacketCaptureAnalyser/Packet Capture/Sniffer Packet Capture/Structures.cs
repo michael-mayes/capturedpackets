@@ -12,9 +12,9 @@ namespace PacketCapture.SnifferPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.SnifferPackageCaptureGlobalHeaderLength)]
+            Size = Constants.GlobalHeaderLength)]
 
-        public struct SnifferPackageCaptureGlobalHeaderStructure
+        public struct GlobalHeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt64 MagicNumberHigh; //High bytes of the magic number (eight bytes)
@@ -71,9 +71,9 @@ namespace PacketCapture.SnifferPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.SnifferPackageCaptureRecordHeaderLength)]
+            Size = Constants.RecordHeaderLength)]
 
-        public struct SnifferPackageCaptureRecordHeaderStructure
+        public struct RecordHeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt16 RecordType;
@@ -88,9 +88,9 @@ namespace PacketCapture.SnifferPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.SnifferPackageCaptureSnifferType2RecordLength)]
+            Size = Constants.SnifferType2RecordLength)]
 
-        public struct SnifferPackageCaptureSnifferType2RecordStructure
+        public struct SnifferType2RecordStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt16 TimestampLow; //Low bytes of timestamp

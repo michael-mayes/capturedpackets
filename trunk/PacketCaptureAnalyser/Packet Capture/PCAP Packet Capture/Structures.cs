@@ -12,9 +12,9 @@ namespace PacketCapture.PCAPPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.PCAPPackageCaptureGlobalHeaderLength)]
+            Size = Constants.GlobalHeaderLength)]
 
-        public struct PCAPPackageCaptureGlobalHeaderStructure
+        public struct GlobalHeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 MagicNumber; //Magic number
@@ -44,9 +44,9 @@ namespace PacketCapture.PCAPPackageCapture
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.PCAPPackageCapturePacketHeaderLength)]
+            Size = Constants.HeaderLength)]
 
-        public struct PCAPPackageCapturePacketHeaderStructure
+        public struct HeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt32 TimestampSeconds; //Timestamp seconds

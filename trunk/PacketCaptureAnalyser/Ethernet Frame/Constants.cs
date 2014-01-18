@@ -12,11 +12,11 @@ namespace EthernetFrame
 
         //Length
 
-        public const ushort EthernetFrameHeaderLength = 14;
+        public const ushort HeaderLength = 14;
 
         //Ether Type - provided in little endian representation
 
-        public enum EthernetFrameHeaderEtherTypeEnumeration : ushort
+        public enum HeaderEtherType : ushort
         {
             MinimumValue = 0x0600, //Minimum value for Ether Type - lower values indicate length for an IEEE 802.3 Ethernet frame
             ARP = 0x0806, //Ethernet frame containing an ARP packet

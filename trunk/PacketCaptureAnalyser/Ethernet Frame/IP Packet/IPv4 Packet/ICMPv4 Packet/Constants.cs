@@ -12,6 +12,6 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 
         //Length
 
-        public const ushort ICMPv4PacketHeaderLength = 4;
+        public const ushort HeaderLength = 4;
     }
 }

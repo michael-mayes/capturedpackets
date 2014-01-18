@@ -8,13 +8,13 @@ namespace Analysis.LatencyAnalysis
     {
         //Dictionary Key
 
-        public struct LatencyAnalysisDictionaryKey
+        public struct DictionaryKey
         {
             public byte HostId;
-            public Constants.LatencyAnalysisProtocol Protocol;
+            public Constants.Protocol Protocol;
             public ulong SequenceNumber;
 
-            public LatencyAnalysisDictionaryKey(byte TheHostId, Constants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber)
+            public DictionaryKey(byte TheHostId, Constants.Protocol TheProtocol, ulong TheSequenceNumber)
             {
                 HostId = TheHostId;
                 Protocol = TheProtocol;
@@ -23,9 +23,9 @@ namespace Analysis.LatencyAnalysis
 
             public override bool Equals(object obj)
             {
-                if (obj is LatencyAnalysisDictionaryKey)
+                if (obj is DictionaryKey)
                 {
-                    LatencyAnalysisDictionaryKey Key = (LatencyAnalysisDictionaryKey)obj;
+                    DictionaryKey Key = (DictionaryKey)obj;
 
                     return
                         (
@@ -51,7 +51,7 @@ namespace Analysis.LatencyAnalysis
 
         //Dictionary Value
 
-        public struct LatencyAnalysisDictionaryValue
+        public struct DictionaryValue
         {
             public ulong MessageId;
             public bool FirstInstanceFound;
@@ -65,9 +65,9 @@ namespace Analysis.LatencyAnalysis
 
             public override bool Equals(object obj)
             {
-                if (obj is LatencyAnalysisDictionaryValue)
+                if (obj is DictionaryValue)
                 {
-                    LatencyAnalysisDictionaryValue Value = (LatencyAnalysisDictionaryValue)obj;
+                    DictionaryValue Value = (DictionaryValue)obj;
 
                     return
                         (

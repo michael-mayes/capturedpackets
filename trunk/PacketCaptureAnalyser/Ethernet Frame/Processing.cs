@@ -8,7 +8,7 @@ namespace EthernetFrame
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.EthernetFrameHeaderStructure TheEthernetFrameHeader;
+        private Structures.HeaderStructure TheEthernetFrameHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
@@ -31,7 +31,7 @@ namespace EthernetFrame
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the Ethernet frame header
-            TheEthernetFrameHeader = new Structures.EthernetFrameHeaderStructure();
+            TheEthernetFrameHeader = new Structures.HeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -104,16 +104,16 @@ namespace EthernetFrame
 
             switch (TheEtherType)
             {
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.LLDP:
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.Loopback:
+                case (System.UInt16)Constants.HeaderEtherType.ARP:
+                case (System.UInt16)Constants.HeaderEtherType.IPv4:
+                case (System.UInt16)Constants.HeaderEtherType.IPv6:
+                case (System.UInt16)Constants.HeaderEtherType.LLDP:
+                case (System.UInt16)Constants.HeaderEtherType.Loopback:
                     {
                         break;
                     }
 
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
+                case (System.UInt16)Constants.HeaderEtherType.VLANTagged:
                     {
                         //We've got an Ethernet frame with a VLAN tag (IEEE 802.1Q) so must advance and re-read the Ether Type
 
@@ -136,7 +136,7 @@ namespace EthernetFrame
                         //We have got an Ethernet frame containing an unknown Ether Type
 
                         //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
-                        if (TheEtherType < (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
+                        if (TheEtherType < (System.UInt16)Constants.HeaderEtherType.MinimumValue)
                         {
                             //This Ethernet frame has a value for "Ether Type" lower than the minimum
                             //This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame
@@ -173,7 +173,7 @@ namespace EthernetFrame
             //Check the value of the Ether Type for this Ethernet frame
             switch (TheEtherType)
             {
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.ARP:
+                case (System.UInt16)Constants.HeaderEtherType.ARP:
                     {
                         //We've got an Ethernet frame containing an ARP packet so process it
                         ThePacketProcessingResult = TheARPPacketProcessing.Process(ThePayloadLength);
@@ -181,7 +181,7 @@ namespace EthernetFrame
                         break;
                     }
 
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.IPv4:
+                case (System.UInt16)Constants.HeaderEtherType.IPv4:
                     {
                         //We've got an Ethernet frame containing an IPv4 packet so process it
                         ThePacketProcessingResult = TheIPv4PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
@@ -189,7 +189,7 @@ namespace EthernetFrame
                         break;
                     }
 
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.IPv6:
+                case (System.UInt16)Constants.HeaderEtherType.IPv6:
                     {
                         //We've got an Ethernet frame containing an IPv6 packet so process it
                         ThePacketProcessingResult = TheIPv6PacketProcessing.Process(ThePayloadLength, ThePacketNumber, TheTimestamp);
@@ -197,7 +197,7 @@ namespace EthernetFrame
                         break;
                     }
 
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.LLDP:
+                case (System.UInt16)Constants.HeaderEtherType.LLDP:
                     {
                         //We've got an Ethernet frame containing an LLDP packet so process it
                         ThePacketProcessingResult = TheLLDPPacketProcessing.Process(ThePayloadLength);
@@ -205,7 +205,7 @@ namespace EthernetFrame
                         break;
                     }
 
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.Loopback:
+                case (System.UInt16)Constants.HeaderEtherType.Loopback:
                     {
                         //We've got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
                         ThePacketProcessingResult = TheLoopbackPacketProcessing.Process(ThePayloadLength);
@@ -213,7 +213,7 @@ namespace EthernetFrame
                         break;
                     }
 
-                case (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.VLANTagged:
+                case (System.UInt16)Constants.HeaderEtherType.VLANTagged:
                     {
                         //We've got an Ethernet frame containing a second VLAN tag!
 
@@ -244,7 +244,7 @@ namespace EthernetFrame
                         //We have got an Ethernet frame containing an unknown Ether Type
 
                         //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
-                        if (TheEtherType < (System.UInt16)Constants.EthernetFrameHeaderEtherTypeEnumeration.MinimumValue)
+                        if (TheEtherType < (System.UInt16)Constants.HeaderEtherType.MinimumValue)
                         {
                             //This Ethernet frame has a value for "Ether Type" lower than the minimum
                             //This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame

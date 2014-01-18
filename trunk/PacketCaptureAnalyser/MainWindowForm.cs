@@ -73,7 +73,7 @@ namespace PacketCaptureAnalyser
                 {
                     switch (TheBinaryReader.ReadUInt32())
                     {
-                        case (uint)PacketCapture.PCAPNGPackageCapture.Constants.PCAPNGPackageCaptureBlockType.SectionHeaderBlock:
+                        case (uint)PacketCapture.PCAPNGPackageCapture.Constants.BlockType.SectionHeaderBlock:
                             {
                                 //This is a PCAP Next Generation capture
                                 TheMainWindowFormPacketCaptureType =
@@ -82,8 +82,8 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case (uint)PacketCapture.PCAPPackageCapture.Constants.PCAPPackageCaptureLittleEndianMagicNumber:
-                        case (uint)PacketCapture.PCAPPackageCapture.Constants.PCAPPackageCaptureBigEndianMagicNumber:
+                        case (uint)PacketCapture.PCAPPackageCapture.Constants.LittleEndianMagicNumber:
+                        case (uint)PacketCapture.PCAPPackageCapture.Constants.BigEndianMagicNumber:
                             {
                                 //This is a libpcap/tcpdump packet capture
                                 TheMainWindowFormPacketCaptureType =
@@ -92,7 +92,7 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case (uint)PacketCapture.SnifferPackageCapture.Constants.SnifferPackageCaptureExpectedMagicNumberHighest:
+                        case (uint)PacketCapture.SnifferPackageCapture.Constants.ExpectedMagicNumberHighest:
                             {
                                 //This is a NA Sniffer (DOS) packet capture
                                 TheMainWindowFormPacketCaptureType =

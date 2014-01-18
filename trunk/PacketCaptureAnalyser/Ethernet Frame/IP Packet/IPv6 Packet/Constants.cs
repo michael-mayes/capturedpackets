@@ -12,15 +12,15 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
         //Version
 
-        public const ushort IPv6PacketHeaderVersion = 6;
+        public const ushort HeaderVersion = 6;
 
         //Length
 
-        public const ushort IPv6PacketHeaderLength = 40;
+        public const ushort HeaderLength = 40;
 
         //Protocol
 
-        public enum IPv6PacketProtocol : byte
+        public enum Protocol : byte
         {
             IGMP = 0x02, //IGMP - Internet Group Management Protocol (RFC 1112)
             TCP = 0x06, //TCP - Transmission Control Protocol (RFC 793)

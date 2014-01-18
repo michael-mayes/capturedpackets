@@ -8,7 +8,7 @@ namespace Analysis.LatencyAnalysis
     {
         //Protocol
 
-        public enum LatencyAnalysisProtocol : byte
+        public enum Protocol : byte
         {
             TCP, //TCP - Transmission Control Protocol (RFC 793)
             UDP //UDP - User Datagram Protocol (RFC 768)
@@ -16,12 +16,12 @@ namespace Analysis.LatencyAnalysis
 
         //Latencies
 
-        public const double LatencyAnalysisBestCaseLatency = 0.0; //Milliseconds
-        public const double LatencyAnalysisWorstCaseLatency = 50.0; //Milliseconds
+        public const double BestCaseLatency = 0.0; //Milliseconds
+        public const double WorstCaseLatency = 50.0; //Milliseconds
 
         //Value bins
 
-        public const int LatencyAnalysisBinsPerMs = 10; //Ten value bins for every millisecond of latency
-        public const int LatencyAnalysisNumberOfBins = ((int)(LatencyAnalysisWorstCaseLatency - LatencyAnalysisBestCaseLatency) * LatencyAnalysisBinsPerMs);
+        public const int BinsPerMillisecond = 10; //Ten value bins for every millisecond of latency
+        public const int NumberOfBins = ((int)(WorstCaseLatency - BestCaseLatency) * BinsPerMillisecond);
     }
 }

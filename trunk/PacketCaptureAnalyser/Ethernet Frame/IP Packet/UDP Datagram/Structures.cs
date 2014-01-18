@@ -12,9 +12,9 @@ namespace EthernetFrame.IPPacket.UDPDatagram
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = Constants.UDPDatagramHeaderLength)]
+            Size = Constants.HeaderLength)]
 
-        public struct UDPDatagramHeaderStructure
+        public struct HeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
             public System.UInt16 SourcePort; //Source port number

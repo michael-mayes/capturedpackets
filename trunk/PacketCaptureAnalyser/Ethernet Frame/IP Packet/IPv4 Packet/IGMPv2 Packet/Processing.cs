@@ -8,14 +8,14 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.IGMPv2PacketStructure ThePacket;
+        private Structures.PacketStructure ThePacket;
 
         public Processing(System.IO.BinaryReader TheBinaryReader)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the IGMPv2 packet
-            ThePacket = new Structures.IGMPv2PacketStructure();
+            ThePacket = new Structures.PacketStructure();
         }
 
         public bool Process(ushort TheIGMPv2PacketLength)

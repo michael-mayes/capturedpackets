@@ -8,7 +8,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.IPv4PacketHeaderStructure TheHeader;
+        private Structures.HeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
@@ -26,7 +26,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the IPv4 packet header
-            TheHeader = new Structures.IPv4PacketHeaderStructure();
+            TheHeader = new Structures.HeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -107,12 +107,12 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                 //Set up the output parameter for the protocol for the IPv4 packet
                 TheProtocol = TheHeader.Protocol;
 
-                if (TheHeaderLength > Constants.IPv4PacketHeaderMinimumLength)
+                if (TheHeaderLength > Constants.HeaderMinimumLength)
                 {
                     //The IPv4 packet contains a header length which is greater than the minimum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
 
                     //Just read off these remaining Options bytes of the IPv4 packet header from the packet capture so we can move on
-                    TheBinaryReader.ReadBytes(TheHeaderLength - Constants.IPv4PacketHeaderMinimumLength);
+                    TheBinaryReader.ReadBytes(TheHeaderLength - Constants.HeaderMinimumLength);
                 }
             }
 
@@ -126,7 +126,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             //Process the IPv4 packet based on the value indicated for the protocol in the the IPv4 packet header
             switch (TheProtocol)
             {
-                case (byte)Constants.IPv4PacketProtocol.ICMPv4:
+                case (byte)Constants.Protocol.ICMPv4:
                     {
                         //We've got an IPv4 packet containing an ICMPv4 packet so process it
                         TheResult = TheICMPv4PacketProcessing.Process(ThePayloadLength);
@@ -134,7 +134,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                         break;
                     }
 
-                case (byte)Constants.IPv4PacketProtocol.IGMP:
+                case (byte)Constants.Protocol.IGMP:
                     {
                         //We've got an IPv4 packet containing an IGMPv2 packet so process it
                         TheResult = TheIGMPv2PacketProcessing.Process(ThePayloadLength);
@@ -142,7 +142,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                         break;
                     }
 
-                case (byte)Constants.IPv4PacketProtocol.TCP:
+                case (byte)Constants.Protocol.TCP:
                     {
                         //We've got an IPv4 packet containing an TCP packet so process it
                         TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
@@ -150,7 +150,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                         break;
                     }
 
-                case (byte)Constants.IPv4PacketProtocol.UDP:
+                case (byte)Constants.Protocol.UDP:
                     {
                         //We've got an IPv4 packet containing an UDP datagram so process it
                         TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
@@ -158,7 +158,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                         break;
                     }
 
-                case (byte)Constants.IPv4PacketProtocol.EIGRP:
+                case (byte)Constants.Protocol.EIGRP:
                     {
                         //We've got an IPv4 packet containing a Cisco EIGRP packet
 
@@ -194,7 +194,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             return TheResult;
         }
 
-        private bool ValidateHeader(Structures.IPv4PacketHeaderStructure TheHeader, long ThePayloadLength, ushort TheHeaderVersion, ushort TheHeaderLength)
+        private bool ValidateHeader(Structures.HeaderStructure TheHeader, long ThePayloadLength, ushort TheHeaderVersion, ushort TheHeaderLength)
         {
             bool TheResult = true;
 
@@ -216,7 +216,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             }
 
             //Validate the version in the IPv4 packet header
-            if (TheHeaderVersion != Constants.IPv4PacketHeaderVersion)
+            if (TheHeaderVersion != Constants.HeaderVersion)
             {
                 //We've got an IPv4 packet header containing an unknown version
 
@@ -230,8 +230,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             }
 
             //Validate the length of the IPv4 packet header
-            if (TheHeaderLength > Constants.IPv4PacketHeaderMaximumLength ||
-                TheHeaderLength < Constants.IPv4PacketHeaderMinimumLength)
+            if (TheHeaderLength > Constants.HeaderMaximumLength ||
+                TheHeaderLength < Constants.HeaderMinimumLength)
             {
                 //We've got an IPv4 packet header containing an out of range header length
 
@@ -240,9 +240,9 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                     "The IPv4 packet header contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +
-                    Constants.IPv4PacketHeaderMinimumLength.ToString() +
+                    Constants.HeaderMinimumLength.ToString() +
                     " to " +
-                    Constants.IPv4PacketHeaderMaximumLength.ToString()
+                    Constants.HeaderMaximumLength.ToString()
                     );
 
                 TheResult = false;
