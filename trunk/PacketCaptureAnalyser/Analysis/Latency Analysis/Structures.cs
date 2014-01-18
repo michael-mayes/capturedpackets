@@ -2,19 +2,19 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace AnalysisNamespace
+namespace AnalysisNamespace.LatencyAnalysisNamespace
 {
-    class LatencyAnalysisStructures
+    class Structures
     {
         //Dictionary Key
 
         public struct LatencyAnalysisDictionaryKey
         {
             public byte HostId;
-            public LatencyAnalysisConstants.LatencyAnalysisProtocol Protocol;
+            public Constants.LatencyAnalysisProtocol Protocol;
             public ulong SequenceNumber;
 
-            public LatencyAnalysisDictionaryKey(byte TheHostId, LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber)
+            public LatencyAnalysisDictionaryKey(byte TheHostId, Constants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber)
             {
                 HostId = TheHostId;
                 Protocol = TheProtocol;

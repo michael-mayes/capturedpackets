@@ -2,25 +2,25 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
-namespace AnalysisNamespace
+namespace AnalysisNamespace.LatencyAnalysisNamespace
 {
     using System.Data; //Required to be able to use AsEnumerable method
     using System.Linq; //Required to be able to use Count method
 
     //Create an alias for the key value pair for the dictionary to improve clarity of later code that uses it
-    using LatencyAnalysisDictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>;
+    using LatencyAnalysisDictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<Structures.LatencyAnalysisDictionaryKey, Structures.LatencyAnalysisDictionaryValue>;
 
     //Create an alias for the enumerable for the dictionary to improve clarity of later code that uses it
     //Cannot nest using declarations so must use the declaration of the key value pair type in full again
-    using LatencyAnalysisDictionaryEnumerableType = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>>;
+    using LatencyAnalysisDictionaryEnumerableType = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Structures.LatencyAnalysisDictionaryKey, Structures.LatencyAnalysisDictionaryValue>>;
 
     //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
-    class LatencyAnalysisProcessing : System.IDisposable
+    class Processing : System.IDisposable
     {
         private System.Collections.Generic.Dictionary
             <
-            LatencyAnalysisStructures.LatencyAnalysisDictionaryKey,
-            LatencyAnalysisStructures.LatencyAnalysisDictionaryValue
+            Structures.LatencyAnalysisDictionaryKey,
+            Structures.LatencyAnalysisDictionaryValue
             > TheLatencyValuesDictionary;
 
         private bool OutputLatencyAnalysisDebug;
@@ -28,13 +28,13 @@ namespace AnalysisNamespace
         private System.Data.DataTable TheHostIdsTable;
         private System.Data.DataTable TheMessageIdsTable;
 
-        public LatencyAnalysisProcessing(bool OutputLatencyAnalysisDebug)
+        public Processing(bool OutputLatencyAnalysisDebug)
         {
             this.OutputLatencyAnalysisDebug = OutputLatencyAnalysisDebug;
 
             //Create a dictionary to hold the latency values for message pairings
             TheLatencyValuesDictionary =
-                new System.Collections.Generic.Dictionary<LatencyAnalysisStructures.LatencyAnalysisDictionaryKey, LatencyAnalysisStructures.LatencyAnalysisDictionaryValue>();
+                new System.Collections.Generic.Dictionary<Structures.LatencyAnalysisDictionaryKey, Structures.LatencyAnalysisDictionaryValue>();
 
             //Create a datatable to hold the set of host Ids encountered during the latency analysis
             TheHostIdsTable = new System.Data.DataTable();
@@ -87,7 +87,7 @@ namespace AnalysisNamespace
             System.GC.SuppressFinalize(this);
         }
 
-        public void RegisterMessageReceipt(byte TheHostId, LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber, ulong TheMessageId, ulong ThePacketNumber, double TheTimestamp)
+        public void RegisterMessageReceipt(byte TheHostId, Constants.LatencyAnalysisProtocol TheProtocol, ulong TheSequenceNumber, ulong TheMessageId, ulong ThePacketNumber, double TheTimestamp)
         {
             //Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
             if (TheSequenceNumber == 0)
@@ -109,8 +109,8 @@ namespace AnalysisNamespace
 
             //Add the supplied sequence number and timestamp to latency values dictionary
 
-            LatencyAnalysisStructures.LatencyAnalysisDictionaryKey TheLatencyAnalysisDictionaryKey =
-                new LatencyAnalysisStructures.LatencyAnalysisDictionaryKey
+            Structures.LatencyAnalysisDictionaryKey TheLatencyAnalysisDictionaryKey =
+                new Structures.LatencyAnalysisDictionaryKey
                     (
                     TheHostId,
                     TheProtocol,
@@ -119,7 +119,7 @@ namespace AnalysisNamespace
 
             //Check whether there is a dictionary entry for this key i.e. is this the first message of the pair
 
-            LatencyAnalysisStructures.LatencyAnalysisDictionaryValue TheLatencyAnalysisDictionaryValueFound;
+            Structures.LatencyAnalysisDictionaryValue TheLatencyAnalysisDictionaryValueFound;
 
             bool TheLatencyValuesEntryFound = TheLatencyValuesDictionary.TryGetValue
                 (TheLatencyAnalysisDictionaryKey, out TheLatencyAnalysisDictionaryValueFound);
@@ -128,9 +128,9 @@ namespace AnalysisNamespace
             {
                 //If this is the first message of the pairing then create the new entry in the dictionary
 
-                LatencyAnalysisStructures.LatencyAnalysisDictionaryValue
+                Structures.LatencyAnalysisDictionaryValue
                     TheLatencyAnalysisDictionaryValueToAdd =
-                    new LatencyAnalysisStructures.LatencyAnalysisDictionaryValue
+                    new Structures.LatencyAnalysisDictionaryValue
                     {
                         MessageId = TheMessageId,
                         FirstInstanceFound = true,
@@ -313,10 +313,10 @@ namespace AnalysisNamespace
 
         private void FinaliseProtocolsForHostId(byte TheHostId)
         {
-            foreach (LatencyAnalysisConstants.LatencyAnalysisProtocol TheProtocol in
-                System.Enum.GetValues(typeof(LatencyAnalysisConstants.LatencyAnalysisProtocol)))
+            foreach (Constants.LatencyAnalysisProtocol TheProtocol in
+                System.Enum.GetValues(typeof(Constants.LatencyAnalysisProtocol)))
             {
-                string TheProtocolString = ((LatencyAnalysisConstants.LatencyAnalysisProtocol)TheProtocol).ToString();
+                string TheProtocolString = ((Constants.LatencyAnalysisProtocol)TheProtocol).ToString();
 
                 System.Diagnostics.Trace.WriteLine
                     (
@@ -370,12 +370,12 @@ namespace AnalysisNamespace
 
         private void FinaliseLatencyValuesForMessageId(string TheProtocolString, ulong TheMessageId, LatencyAnalysisDictionaryEnumerableType TheLatencyValuesRows)
         {
-            CommonAnalysisHistogram TheHistogram =
-                new CommonAnalysisHistogram
+            CommonHistogram TheHistogram =
+                new CommonHistogram
                     (
-                    LatencyAnalysisConstants.LatencyAnalysisNumberOfBins,
-                    LatencyAnalysisConstants.LatencyAnalysisBestCaseLatency,
-                    LatencyAnalysisConstants.LatencyAnalysisWorstCaseLatency
+                    Constants.LatencyAnalysisNumberOfBins,
+                    Constants.LatencyAnalysisBestCaseLatency,
+                    Constants.LatencyAnalysisWorstCaseLatency
                     );
 
             ulong TheMinTimestampPacketNumber = 0;
@@ -468,7 +468,7 @@ namespace AnalysisNamespace
                 System.Diagnostics.Trace.WriteLine
                     (
                     "The histogram (" +
-                    LatencyAnalysisConstants.LatencyAnalysisBinsPerMs.ToString() +
+                    Constants.LatencyAnalysisBinsPerMs.ToString() +
                     " bins per ms) for latency values for " +
                     TheProtocolString +
                     " messages with a Message Id of " +
