@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
 {
-    class TCPPacketConstants
+    class Constants
     {
         //
         //TCP packet header - 20 bytes

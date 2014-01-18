@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
 {
-    class UDPDatagramStructures
+    class Structures
     {
         //
         //UDP datagram header - 8 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.UDPDatagramNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = UDPDatagramConstants.UDPDatagramHeaderLength)]
+            Size = Constants.UDPDatagramHeaderLength)]
 
         public struct UDPDatagramHeaderStructure
         {

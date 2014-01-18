@@ -4,7 +4,7 @@
 
 namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
 {
-    class TCPPacketStructures
+    class Structures
     {
         //
         //TCP packet header - 20 bytes
@@ -12,7 +12,7 @@ namespace EthernetFrameNamespace.IPPacketNamespace.TCPPacketNamespace
 
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
-            Size = TCPPacketConstants.TCPPacketHeaderMinimumLength)]
+            Size = Constants.TCPPacketHeaderMinimumLength)]
 
         public struct TCPPacketHeaderStructure
         {
