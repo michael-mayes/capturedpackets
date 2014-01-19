@@ -206,19 +206,19 @@ namespace PacketCaptureAnalyser
             TheProgressWindowForm.Activate();
 
             //Update the label now the reading of the packet capture has started - the progress bar will stay at zero
-            TheProgressWindowForm.AnalysingPacketCaptureLabel.Text = "Reading Packet Capture Into System Memory";
-            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 0;
+            TheProgressWindowForm.ProgressBarLabel.Text = "Reading Packet Capture Into System Memory";
+            TheProgressWindowForm.ProgressBar.Value = 0;
             TheProgressWindowForm.Refresh();
 
             string TheOutputFilePath = SelectedOutputFileForAnalysisDialog.FileName;
             string TheOutputFileName = System.IO.Path.GetFileName(TheOutputFilePath);
 
-            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 5;
+            TheProgressWindowForm.ProgressBar.Value = 5;
 
             string ThePacketCaptureFilePath = SelectedPacketCaptureForAnalysisDialog.FileName;
             string ThePacketCaptureFileName = System.IO.Path.GetFileName(ThePacketCaptureFilePath);
 
-            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 10;
+            TheProgressWindowForm.ProgressBar.Value = 10;
 
             //Delete any existing output files with the selected name to ape the clearing of all text from the output window
             if (System.IO.File.Exists(TheOutputFilePath))
@@ -226,7 +226,7 @@ namespace PacketCaptureAnalyser
                 System.IO.File.Delete(TheOutputFilePath);
             }
 
-            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 15;
+            TheProgressWindowForm.ProgressBar.Value = 15;
 
             //Unless instructed otherwise, remove the output window from the list of listeners to debug output as all text will go to the output file
             if (!OutputDebugToOutputWindowCheckBox.Checked)
@@ -234,17 +234,17 @@ namespace PacketCaptureAnalyser
                 System.Diagnostics.Debug.Listeners.Clear();
             }
 
-            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 20;
+            TheProgressWindowForm.ProgressBar.Value = 20;
 
             //Redirect any text added to the output window to the output file
             using (System.Diagnostics.TextWriterTraceListener TheOutputWindowListener =
                 new System.Diagnostics.TextWriterTraceListener(TheOutputFilePath))
             {
-                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 25;
+                TheProgressWindowForm.ProgressBar.Value = 25;
 
                 System.Diagnostics.Trace.Listeners.Add(TheOutputWindowListener);
 
-                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 30;
+                TheProgressWindowForm.ProgressBar.Value = 30;
 
                 //Start the analysis of the packet capture
                 System.Diagnostics.Trace.WriteLine
@@ -257,7 +257,7 @@ namespace PacketCaptureAnalyser
                 Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing = null;
                 Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing = null;
 
-                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 35;
+                TheProgressWindowForm.ProgressBar.Value = 35;
 
                 //Only perform the latency analysis if the check box was selected for it on the main window form
                 if (PerformLatencyAnalysisCheckBox.Checked)
@@ -268,7 +268,7 @@ namespace PacketCaptureAnalyser
                     TheLatencyAnalysisProcessing.Create();
                 }
 
-                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 40;
+                TheProgressWindowForm.ProgressBar.Value = 40;
 
                 //Only perform the time analysis if the check box was selected for it on the main window form
                 if (PerformTimeAnalysisCheckBox.Checked)
@@ -279,7 +279,7 @@ namespace PacketCaptureAnalyser
                     TheTimeAnalysisProcessing.Create();
                 }
 
-                TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 45;
+                TheProgressWindowForm.ProgressBar.Value = 45;
 
                 switch (TheMainWindowFormPacketCaptureType)
                 {
@@ -288,7 +288,7 @@ namespace PacketCaptureAnalyser
                             PacketCapture.PCAPNGPackageCapture.Processing ThePCAPNGPackageCaptureProcessing =
                                 new PacketCapture.PCAPNGPackageCapture.Processing();
 
-                            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 50;
+                            TheProgressWindowForm.ProgressBar.Value = 50;
 
                             TheResult = ThePCAPNGPackageCaptureProcessing.Process(TheProgressWindowForm,
                                                                                   PerformLatencyAnalysisCheckBox.Checked,
@@ -306,7 +306,7 @@ namespace PacketCaptureAnalyser
                             PacketCapture.PCAPPackageCapture.Processing ThePCAPPackageCaptureProcessing =
                                 new PacketCapture.PCAPPackageCapture.Processing();
 
-                            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 50;
+                            TheProgressWindowForm.ProgressBar.Value = 50;
 
                             TheResult = ThePCAPPackageCaptureProcessing.Process(TheProgressWindowForm,
                                                                                 PerformLatencyAnalysisCheckBox.Checked,
@@ -324,7 +324,7 @@ namespace PacketCaptureAnalyser
                             PacketCapture.SnifferPackageCapture.Processing TheSnifferPackageCaptureProcessing =
                                 new PacketCapture.SnifferPackageCapture.Processing();
 
-                            TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 50;
+                            TheProgressWindowForm.ProgressBar.Value = 50;
 
                             TheResult = TheSnifferPackageCaptureProcessing.Process(TheProgressWindowForm,
                                                                                    PerformLatencyAnalysisCheckBox.Checked,
@@ -369,8 +369,8 @@ namespace PacketCaptureAnalyser
                     if (PerformLatencyAnalysisCheckBox.Checked || PerformTimeAnalysisCheckBox.Checked)
                     {
                         //Update the label now the analysis of the packet capture has started - the progress bar will stay at zero
-                        TheProgressWindowForm.AnalysingPacketCaptureLabel.Text = "Performing Analysis Of Packet Capture";
-                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value = 0;
+                        TheProgressWindowForm.ProgressBarLabel.Text = "Performing Analysis Of Packet Capture";
+                        TheProgressWindowForm.ProgressBar.Value = 0;
                         TheProgressWindowForm.Refresh();
 
                         //Calculate the scaling to use for the progress bar
@@ -410,11 +410,11 @@ namespace PacketCaptureAnalyser
                             " packet capture started"
                             );
 
-                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value += (20 / Scaling);
+                        TheProgressWindowForm.ProgressBar.Value += (20 / Scaling);
 
                         TheLatencyAnalysisProcessing.Finalise();
 
-                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value += (60 / Scaling);
+                        TheProgressWindowForm.ProgressBar.Value += (60 / Scaling);
 
                         //Compute the duration between the start and the end times
 
@@ -432,7 +432,7 @@ namespace PacketCaptureAnalyser
                             " seconds"
                             );
 
-                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value += (20 / Scaling);
+                        TheProgressWindowForm.ProgressBar.Value += (20 / Scaling);
                     }
 
                     //Only perform the time analysis if the check box was selected for it on the main window form
@@ -453,11 +453,11 @@ namespace PacketCaptureAnalyser
                             " packet capture started"
                             );
 
-                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value += (20 / Scaling);
+                        TheProgressWindowForm.ProgressBar.Value += (20 / Scaling);
 
                         TheTimeAnalysisProcessing.Finalise();
 
-                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value += (60 / Scaling);
+                        TheProgressWindowForm.ProgressBar.Value += (60 / Scaling);
 
                         //Compute the duration between the start and the end times
 
@@ -475,7 +475,7 @@ namespace PacketCaptureAnalyser
                             " seconds"
                             );
 
-                        TheProgressWindowForm.AnalysingPacketCaptureProgressBar.Value += (20 / Scaling);
+                        TheProgressWindowForm.ProgressBar.Value += (20 / Scaling);
                     }
                 }
                 else

@@ -8,7 +8,7 @@ namespace EthernetFrame
     {
         private System.IO.BinaryReader TheBinaryReader;
 
-        private Structures.HeaderStructure TheEthernetFrameHeader;
+        private Structures.HeaderStructure TheHeader;
 
         private bool PerformLatencyAnalysisProcessing;
         private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
@@ -31,7 +31,7 @@ namespace EthernetFrame
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the Ethernet frame header
-            TheEthernetFrameHeader = new Structures.HeaderStructure();
+            TheHeader = new Structures.HeaderStructure();
 
             this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
             this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
@@ -79,21 +79,21 @@ namespace EthernetFrame
             bool TheResult = true;
 
             //Read the Destination MAC Address for the Ethernet frame from the packet capture
-            TheEthernetFrameHeader.DestinationMACAddressHigh = TheBinaryReader.ReadUInt32();
-            TheEthernetFrameHeader.DestinationMACAddressLow = TheBinaryReader.ReadUInt16();
+            TheHeader.DestinationMACAddressHigh = TheBinaryReader.ReadUInt32();
+            TheHeader.DestinationMACAddressLow = TheBinaryReader.ReadUInt16();
 
             //Read the Source MAC Address for the Ethernet frame from the packet capture
-            TheEthernetFrameHeader.SourceMACAddressHigh = TheBinaryReader.ReadUInt32();
-            TheEthernetFrameHeader.SourceMACAddressLow = TheBinaryReader.ReadUInt16();
+            TheHeader.SourceMACAddressHigh = TheBinaryReader.ReadUInt32();
+            TheHeader.SourceMACAddressLow = TheBinaryReader.ReadUInt16();
 
             //Read the Ether Type for the Ethernet frame from the packet capture
-            TheEthernetFrameHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+            TheHeader.EtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
 
             //Reduce the length of the payload of the Ethernet frame to reflect that the Ether Type of two bytes would have been included
             ThePayloadLength -= 2;
 
             //Store the Ether Type for use in further processing
-            TheEtherType = TheEthernetFrameHeader.EtherType;
+            TheEtherType = TheHeader.EtherType;
 
             return TheResult;
         }
