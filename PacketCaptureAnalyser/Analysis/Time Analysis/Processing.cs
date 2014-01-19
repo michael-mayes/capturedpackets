@@ -10,13 +10,14 @@ namespace Analysis.TimeAnalysis
     //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
     class Processing : System.IDisposable
     {
-        private bool OutputTimeAnalysisDebug;
+        private bool OutputDebug;
+
         private System.Data.DataTable TheTimeValuesTable;
         private System.Data.DataTable TheHostIdsTable;
 
-        public Processing(bool OutputTimeAnalysisDebug)
+        public Processing(bool OutputDebug)
         {
-            this.OutputTimeAnalysisDebug = OutputTimeAnalysisDebug;
+            this.OutputDebug = OutputDebug;
 
             //Create a datatable to hold the timestamp and time values for time-supplying messages
             TheTimeValuesTable = new System.Data.DataTable();
@@ -356,7 +357,7 @@ namespace Analysis.TimeAnalysis
 
             System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-            if (OutputTimeAnalysisDebug)
+            if (OutputDebug)
             {
                 System.Diagnostics.Trace.WriteLine
                     (

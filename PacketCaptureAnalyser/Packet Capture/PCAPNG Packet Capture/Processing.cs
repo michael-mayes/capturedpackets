@@ -106,7 +106,7 @@ namespace PacketCapture.PCAPNGPackageCapture
                     {
                         //We have got a PCAP Next Generation packet capture interface description block
 
-                        TheResult = ProcessInterfaceDescriptionBlockExpectedBlock(TheBinaryReader, out ThePayloadLength);
+                        TheResult = ProcessInterfaceDescriptionBlock(TheBinaryReader, out ThePayloadLength);
 
                         break;
                     }
@@ -233,7 +233,7 @@ namespace PacketCapture.PCAPNGPackageCapture
             return TheResult;
         }
 
-        private bool ProcessInterfaceDescriptionBlockExpectedBlock(System.IO.BinaryReader TheBinaryReader, out long ThePayloadLength)
+        private bool ProcessInterfaceDescriptionBlock(System.IO.BinaryReader TheBinaryReader, out long ThePayloadLength)
         {
             bool TheResult = true;
 

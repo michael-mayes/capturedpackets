@@ -32,27 +32,27 @@ namespace PacketCaptureAnalyser
         /// </summary>
         private void InitializeComponent()
         {
-            this.AnalysingPacketCaptureProgressBar = new System.Windows.Forms.ProgressBar();
-            this.AnalysingPacketCaptureLabel = new System.Windows.Forms.Label();
+            this.ProgressBar = new System.Windows.Forms.ProgressBar();
+            this.ProgressBarLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // AnalysingPacketCaptureProgressBar
             // 
-            this.AnalysingPacketCaptureProgressBar.Enabled = false;
-            this.AnalysingPacketCaptureProgressBar.Location = new System.Drawing.Point(13, 28);
-            this.AnalysingPacketCaptureProgressBar.Name = "AnalysingPacketCaptureProgressBar";
-            this.AnalysingPacketCaptureProgressBar.Size = new System.Drawing.Size(240, 23);
-            this.AnalysingPacketCaptureProgressBar.TabIndex = 21;
-            this.AnalysingPacketCaptureProgressBar.Tag = "";
+            this.ProgressBar.Enabled = false;
+            this.ProgressBar.Location = new System.Drawing.Point(13, 28);
+            this.ProgressBar.Name = "AnalysingPacketCaptureProgressBar";
+            this.ProgressBar.Size = new System.Drawing.Size(240, 23);
+            this.ProgressBar.TabIndex = 21;
+            this.ProgressBar.Tag = "";
             // 
             // AnalysingPacketCaptureLabel
             // 
-            this.AnalysingPacketCaptureLabel.Location = new System.Drawing.Point(-3, 4);
-            this.AnalysingPacketCaptureLabel.Name = "AnalysingPacketCaptureLabel";
-            this.AnalysingPacketCaptureLabel.Size = new System.Drawing.Size(271, 18);
-            this.AnalysingPacketCaptureLabel.TabIndex = 25;
-            this.AnalysingPacketCaptureLabel.Text = "<Default Text>";
-            this.AnalysingPacketCaptureLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ProgressBarLabel.Location = new System.Drawing.Point(-3, 4);
+            this.ProgressBarLabel.Name = "AnalysingPacketCaptureLabel";
+            this.ProgressBarLabel.Size = new System.Drawing.Size(271, 18);
+            this.ProgressBarLabel.TabIndex = 25;
+            this.ProgressBarLabel.Text = "<Default Text>";
+            this.ProgressBarLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ProgressWindowForm
             // 
@@ -60,8 +60,8 @@ namespace PacketCaptureAnalyser
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(267, 58);
             this.ControlBox = false;
-            this.Controls.Add(this.AnalysingPacketCaptureLabel);
-            this.Controls.Add(this.AnalysingPacketCaptureProgressBar);
+            this.Controls.Add(this.ProgressBarLabel);
+            this.Controls.Add(this.ProgressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -77,7 +77,7 @@ namespace PacketCaptureAnalyser
 
         #endregion
 
-        public System.Windows.Forms.ProgressBar AnalysingPacketCaptureProgressBar;
-        public System.Windows.Forms.Label AnalysingPacketCaptureLabel;
+        public System.Windows.Forms.ProgressBar ProgressBar;
+        public System.Windows.Forms.Label ProgressBarLabel;
     }
 }
