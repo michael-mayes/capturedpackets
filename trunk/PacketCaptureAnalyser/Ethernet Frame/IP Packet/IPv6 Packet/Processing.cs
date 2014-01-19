@@ -104,19 +104,6 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             //Process the IPv6 packet based on the value indicated for the protocol in the the IPv6 packet header
             switch (TheProtocol)
             {
-                case (byte)Constants.Protocol.IGMP:
-                    {
-                        System.Diagnostics.Trace.WriteLine
-                            (
-                            "The IPv6 packet contains an IGMP packet, which is not currently supported!"
-                            );
-
-                        //Just read off the bytes for the IGMP packet from the packet capture so we can move on
-                        TheBinaryReader.ReadBytes(ThePayloadLength);
-
-                        break;
-                    }
-
                 case (byte)Constants.Protocol.TCP:
                     {
                         //We've got an IPv6 packet containing an TCP packet so process it
