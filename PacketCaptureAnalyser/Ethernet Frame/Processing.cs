@@ -51,7 +51,7 @@ namespace EthernetFrame
             bool TheResult = true;
 
             //Only process the payload as an Ethernet frame if it has a positive length
-            if(ThePayloadLength > 0)
+            if (ThePayloadLength > 0)
             {
                 //Store the length of the payload of the Ethernet frame for use in further processing
                 this.ThePayloadLength = ThePayloadLength;
