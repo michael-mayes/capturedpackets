@@ -127,8 +127,10 @@ namespace PacketCapture.SnifferPackageCapture
 
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "The Sniffer packet capture contains an unexpected record type of " +
-                                TheRecordHeader.RecordType.ToString()
+                                TheRecordHeader.RecordType.ToString() +
+                                "!!!"
                                 );
 
                             TheResult = false;
@@ -155,10 +157,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected high bytes for the magic number, is " +
                     string.Format("{0:X}", TheGlobalHeader.MagicNumberHigh.ToString()) +
                     " not " +
-                    string.Format("{0:X}", Constants.ExpectedMagicNumberHigh.ToString())
+                    string.Format("{0:X}", Constants.ExpectedMagicNumberHigh.ToString()) +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -168,10 +172,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected low bytes for the magic number, is " +
                     string.Format("{0:X}", TheGlobalHeader.MagicNumberLow.ToString()) +
                     " not " +
-                    string.Format("{0:X}", Constants.ExpectedMagicNumberLow.ToString())
+                    string.Format("{0:X}", Constants.ExpectedMagicNumberLow.ToString()) +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -181,10 +187,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected magic number terminating character, is " +
                     TheGlobalHeader.MagicNumberTerminator.ToString() +
                     " not " +
-                    Constants.ExpectedMagicNumberTerminator.ToString()
+                    Constants.ExpectedMagicNumberTerminator.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -194,10 +202,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected record type, is " +
                     TheGlobalHeader.RecordType.ToString() +
                     " not " +
-                    Constants.RecordHeaderSnifferRecordType.VersionRecordType.ToString()
+                    Constants.RecordHeaderSnifferRecordType.VersionRecordType.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -207,10 +217,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected major version number, is " +
                     TheGlobalHeader.VersionMajor.ToString() +
                     " not " +
-                    Constants.ExpectedVersionMajor.ToString()
+                    Constants.ExpectedVersionMajor.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -220,10 +232,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected minor version number, is " +
                     TheGlobalHeader.VersionMinor.ToString() +
                     " not " +
-                    Constants.ExpectedVersionMinor.ToString()
+                    Constants.ExpectedVersionMinor.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -233,10 +247,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected record type, is " +
                     TheGlobalHeader.Type.ToString() +
                     " not " +
-                    Constants.ExpectedType.ToString()
+                    Constants.ExpectedType.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -247,12 +263,14 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected network encapsulation type, is " +
                     TheGlobalHeader.NetworkEncapsulationType.ToString() +
                     " not " +
                     PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack.ToString() +
                     " or " +
-                    PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet.ToString()
+                    PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -262,10 +280,12 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture global header does not contain the expected format version, is " +
                     TheGlobalHeader.FormatVersion.ToString() +
                     " not " +
-                    Constants.ExpectedFormatVersion.ToString()
+                    Constants.ExpectedFormatVersion.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -284,8 +304,10 @@ namespace PacketCapture.SnifferPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The Sniffer packet capture record header does not contain the expected type, is " +
-                    TheRecordHeader.RecordType.ToString()
+                    TheRecordHeader.RecordType.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -353,6 +375,7 @@ namespace PacketCapture.SnifferPackageCapture
                     {
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Error: " +
                             "The Sniffer packet capture contains an unexpected timestamp unit " +
                             TheTimestampUnits.ToString() +
                             "!!!"

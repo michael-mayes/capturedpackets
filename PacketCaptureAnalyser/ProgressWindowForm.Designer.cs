@@ -36,19 +36,19 @@ namespace PacketCaptureAnalyser
             this.ProgressBarLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // AnalysingPacketCaptureProgressBar
+            // ProgressBar
             // 
             this.ProgressBar.Enabled = false;
             this.ProgressBar.Location = new System.Drawing.Point(13, 28);
-            this.ProgressBar.Name = "AnalysingPacketCaptureProgressBar";
+            this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(240, 23);
             this.ProgressBar.TabIndex = 21;
             this.ProgressBar.Tag = "";
             // 
-            // AnalysingPacketCaptureLabel
+            // ProgressBarLabel
             // 
             this.ProgressBarLabel.Location = new System.Drawing.Point(-3, 4);
-            this.ProgressBarLabel.Name = "AnalysingPacketCaptureLabel";
+            this.ProgressBarLabel.Name = "ProgressBarLabel";
             this.ProgressBarLabel.Size = new System.Drawing.Size(271, 18);
             this.ProgressBarLabel.TabIndex = 25;
             this.ProgressBarLabel.Text = "<Default Text>";

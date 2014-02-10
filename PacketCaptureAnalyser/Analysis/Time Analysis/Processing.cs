@@ -95,6 +95,7 @@ namespace Analysis.TimeAnalysis
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Found a time-supplying message for a Host Id " +
                     string.Format("{0,3}", TheHostId) +
                     " - adding this Host Id to the time analysis"

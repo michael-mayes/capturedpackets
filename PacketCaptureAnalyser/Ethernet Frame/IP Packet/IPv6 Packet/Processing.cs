@@ -10,12 +10,6 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
         private Structures.HeaderStructure TheHeader;
 
-        private bool PerformLatencyAnalysisProcessing;
-        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
-
-        private bool PerformTimeAnalysisProcessing;
-        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
-
         private TCPPacket.Processing TheTCPPacketProcessing;
         private UDPDatagram.Processing TheUDPDatagramProcessing;
 
@@ -26,12 +20,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             //Create an instance of the IPv6 packet header
             TheHeader = new Structures.HeaderStructure();
 
-            this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
-            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
-
-            this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
-            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
-
+            //Create instances of the processing classes for each protocol
             TheTCPPacketProcessing = new TCPPacket.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
             TheUDPDatagramProcessing = new UDPDatagram.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
         }
@@ -128,6 +117,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Info:  " +
                             "The IPv6 packet contains an ICMPv6 packet, which is not currently supported!"
                             );
 
@@ -146,7 +136,8 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                         //Just record the event and fall through as later processing will read off the remaining payload so we can move on
                         System.Diagnostics.Trace.WriteLine
                             (
-                            "The IPv6 packet contains a Cisco EIGRP packet which is not currently supported!!!"
+                            "Info:  " +
+                            "The IPv6 packet contains a Cisco EIGRP packet which is not currently supported!"
                             );
 
                         break;
@@ -160,8 +151,10 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Error: " +
                             "The IPv6 packet contains an unexpected protocol of " +
-                            string.Format("{0:X}", TheProtocol)
+                            string.Format("{0:X}", TheProtocol) +
+                            "!!!"
                             );
 
                         TheResult = false;
@@ -184,6 +177,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The IPv6 packet indicates a total length of " +
                     (TheHeader.PayloadLength + Constants.HeaderLength).ToString() +
                     " bytes that is greater than the length of the payload of " +
@@ -201,8 +195,10 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The IPv6 packet header contains an unexpected version of " +
-                    TheHeaderVersion.ToString()
+                    TheHeaderVersion.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;

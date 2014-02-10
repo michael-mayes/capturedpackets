@@ -10,12 +10,6 @@ namespace EthernetFrame
 
         private Structures.HeaderStructure TheHeader;
 
-        private bool PerformLatencyAnalysisProcessing;
-        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
-
-        private bool PerformTimeAnalysisProcessing;
-        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
-
         private ARPPacket.Processing TheARPPacketProcessing;
         private IPPacket.IPv4Packet.Processing TheIPv4PacketProcessing;
         private IPPacket.IPv6Packet.Processing TheIPv6PacketProcessing;
@@ -33,12 +27,7 @@ namespace EthernetFrame
             //Create an instance of the Ethernet frame header
             TheHeader = new Structures.HeaderStructure();
 
-            this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
-            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
-
-            this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
-            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
-
+            //Create instances of the processing classes for each Ether Type
             TheARPPacketProcessing = new ARPPacket.Processing(TheBinaryReader);
             TheIPv4PacketProcessing = new IPPacket.IPv4Packet.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
             TheIPv6PacketProcessing = new IPPacket.IPv6Packet.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
@@ -120,7 +109,7 @@ namespace EthernetFrame
                         //The "Ether Type" we've just read will actually be the IEEE 802.1Q Tag Protocol Identifier
 
                         //First just read off the IEEE 802.1Q Tag Control Identifier so we can move on
-                        System.UInt16 TheTagControlIdentifier = TheBinaryReader.ReadUInt16();
+                        TheBinaryReader.ReadUInt16();
 
                         //Then re-read the Ether Type, this time obtaining the real value (so long as there is only one VLAN tag of course!)
                         TheEtherType = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
@@ -135,7 +124,7 @@ namespace EthernetFrame
                     {
                         //We have got an Ethernet frame containing an unknown Ether Type
 
-                        //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
+                        //Check against the minimum value for Ether Type - lower values indicate length of an IEEE 802.3 Ethernet frame
                         if (TheEtherType < (System.UInt16)Constants.HeaderEtherType.MinimumValue)
                         {
                             //This Ethernet frame has a value for "Ether Type" lower than the minimum
@@ -146,10 +135,12 @@ namespace EthernetFrame
                         {
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "The Ethernet frame in captured packet #" +
                                 ThePacketNumber.ToString() +
                                 " contains an unexpected Ether Type of 0x" +
-                                string.Format("{0:X}", TheEtherType)
+                                string.Format("{0:X}", TheEtherType) +
+                                "!!!"
                                 );
 
                             TheResult = false;
@@ -219,6 +210,7 @@ namespace EthernetFrame
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Info:  " +
                             "The Ethernet frame in captured packet #" +
                             ThePacketNumber.ToString() +
                             " contains a second VLAN tag!" +
@@ -263,10 +255,12 @@ namespace EthernetFrame
                             //Just record the event and fall through to the processing below that will read off the payload so we can move on
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "The Ethernet frame in captured packet #" +
                                 ThePacketNumber.ToString() +
                                 " contains an unexpected Ether Type of 0x" +
-                                string.Format("{0:X}", TheEtherType)
+                                string.Format("{0:X}", TheEtherType) +
+                                "!!!"
                                 );
 
                             ThePacketProcessingResult = false;
@@ -280,6 +274,7 @@ namespace EthernetFrame
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Processing of the Ethernet frame in captured packet #" +
                     ThePacketNumber.ToString() +
                     " encountered an error during processing of the payload!" +
@@ -312,13 +307,14 @@ namespace EthernetFrame
 
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Info:  " +
                         "The length " +
                         ThePayloadLength.ToString() +
                         " of payload of Ethernet frame in captured packet #" +
                         ThePacketNumber.ToString() +
                         " does not match the progression " +
                         TheStreamPositionDifference.ToString() +
-                        " through the stream!!!" +
+                        " through the stream!" +
                         " - Attempt to recover and continue processing"
                         );
                 }

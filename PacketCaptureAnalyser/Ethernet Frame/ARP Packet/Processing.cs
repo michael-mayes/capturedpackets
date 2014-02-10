@@ -26,6 +26,7 @@ namespace EthernetFrame.ARPPacket
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The payload length of the Ethernet frame is lower than the length of the ARP packet!!!"
                     );
 
