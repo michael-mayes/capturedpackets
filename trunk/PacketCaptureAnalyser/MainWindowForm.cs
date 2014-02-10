@@ -52,6 +52,7 @@ namespace PacketCaptureAnalyser
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Selection of the " +
                     System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                     " packet capture"
@@ -130,6 +131,7 @@ namespace PacketCaptureAnalyser
                         {
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "The " +
                                 System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                                 " packet capture should be a PCAP Next Generation packet capture based on its file extension, but it is not!!!"
@@ -152,6 +154,7 @@ namespace PacketCaptureAnalyser
                         {
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "The " +
                                 System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                                 " packet capture should be a libpcap/tcpdump packet capture based on its file extension, but it is not!!!"
@@ -172,6 +175,7 @@ namespace PacketCaptureAnalyser
                         {
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "The " +
                                 System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                                 " packet capture should be a NA Sniffer (DOS) packet capture based on its file extension, but it is not!!!"
@@ -211,7 +215,6 @@ namespace PacketCaptureAnalyser
             TheProgressWindowForm.Refresh();
 
             string TheOutputFilePath = SelectedOutputFileForAnalysisDialog.FileName;
-            string TheOutputFileName = System.IO.Path.GetFileName(TheOutputFilePath);
 
             TheProgressWindowForm.ProgressBar.Value = 5;
 
@@ -249,6 +252,7 @@ namespace PacketCaptureAnalyser
                 //Start the analysis of the packet capture
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Analysis of the " +
                     ThePacketCaptureFileName +
                     " packet capture started"
@@ -342,6 +346,7 @@ namespace PacketCaptureAnalyser
                         {
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "The" +
                                 ThePacketCaptureFileName +
                                 " packet capture is of an unknown type!!!"
@@ -359,6 +364,7 @@ namespace PacketCaptureAnalyser
                     //Display a debug message to indicate analysis of the packet capture completed successfully
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Info:  " +
                         "Analysis of the " +
                         ThePacketCaptureFileName +
                         " packet capture completed successfully!"
@@ -405,6 +411,7 @@ namespace PacketCaptureAnalyser
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Info:  " +
                             "Latency analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture started"
@@ -425,6 +432,7 @@ namespace PacketCaptureAnalyser
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Info:  " +
                             "Latency analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture completed in " +
@@ -448,6 +456,7 @@ namespace PacketCaptureAnalyser
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Info:  " +
                             "Time analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture started"
@@ -468,6 +477,7 @@ namespace PacketCaptureAnalyser
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Info:  " +
                             "Time analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture completed in " +
@@ -483,6 +493,7 @@ namespace PacketCaptureAnalyser
                     //Display a debug message to indicate analysis of the packet capture failed
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         "Analysis of the " +
                         ThePacketCaptureFileName +
                         " packet capture failed!!!"
@@ -559,6 +570,7 @@ namespace PacketCaptureAnalyser
                     {
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Error: " +
                             "The exception " +
                             f.GetType().Name +
                             " with the following message: " +
@@ -817,6 +829,7 @@ namespace PacketCaptureAnalyser
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         "The exception " +
                         f.GetType().Name +
                         " with the following message: " +
@@ -853,6 +866,7 @@ namespace PacketCaptureAnalyser
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Selection of the " +
                     System.IO.Path.GetFileName(SelectedOutputFileForAnalysisDialog.FileName) +
                     " output file"

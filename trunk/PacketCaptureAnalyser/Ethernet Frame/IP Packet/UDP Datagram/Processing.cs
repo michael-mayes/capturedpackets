@@ -10,24 +10,12 @@ namespace EthernetFrame.IPPacket.UDPDatagram
 
         private Structures.HeaderStructure TheHeader;
 
-        private bool PerformLatencyAnalysisProcessing;
-        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
-
-        private bool PerformTimeAnalysisProcessing;
-        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
-
         public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the UDP datagram header
             TheHeader = new Structures.HeaderStructure();
-
-            this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
-            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
-
-            this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
-            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
         public bool Process(ulong ThePacketNumber, double TheTimestamp, ushort TheLength)
@@ -117,6 +105,7 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The UDP datagram header indicates a total length " +
                     TheHeader.Length.ToString() +
                     " which is not equal to the length of the UDP datagram within the IP packet of " +
@@ -132,11 +121,12 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The UDP datagram contains an unexpected header length, is " +
                     TheHeaderLength.ToString() +
                     " not " +
                     Constants.HeaderLength.ToString() +
-                    " or above"
+                    " or above!!!"
                     );
 
                 TheResult = false;

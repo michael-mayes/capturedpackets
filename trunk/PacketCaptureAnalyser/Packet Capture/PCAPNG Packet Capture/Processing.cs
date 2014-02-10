@@ -40,6 +40,7 @@ namespace PacketCapture.PCAPNGPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "The PCAP Next Generation packet capture contains the little endian byte-order magic"
                     );
 
@@ -49,6 +50,7 @@ namespace PacketCapture.PCAPNGPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "The PCAP Next Generation packet capture contains the big endian byte-order magic"
                     );
 
@@ -152,8 +154,10 @@ namespace PacketCapture.PCAPNGPackageCapture
                         //We have got an PCAP Next Generation packet capture packet containing an unknown Block Type
                         System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         "The PCAP Next Generation packet capture block contains an unexpected Block Type of 0x" +
-                        string.Format("{0:X}", TheBlockType)
+                        string.Format("{0:X}", TheBlockType) +
+                        "!!!"
                         );
 
                         TheResult = false;
@@ -179,10 +183,12 @@ namespace PacketCapture.PCAPNGPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected block type, is " +
                     TheSectionHeaderBlock.BlockType.ToString() +
                     " not " +
-                    Constants.BlockType.SectionHeaderBlock.ToString()
+                    Constants.BlockType.SectionHeaderBlock.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -193,12 +199,14 @@ namespace PacketCapture.PCAPNGPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected magic number, is " +
                     TheSectionHeaderBlock.ByteOrderMagic.ToString() +
                     " not " +
                     Constants.LittleEndianByteOrderMagic.ToString() +
                     " or " +
-                    Constants.BigEndianByteOrderMagic.ToString()
+                    Constants.BigEndianByteOrderMagic.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -208,10 +216,12 @@ namespace PacketCapture.PCAPNGPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected major version number, is " +
                     TheSectionHeaderBlock.MajorVersion.ToString() +
                     " not " +
-                    Constants.ExpectedMajorVersion.ToString()
+                    Constants.ExpectedMajorVersion.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -221,10 +231,12 @@ namespace PacketCapture.PCAPNGPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected minor version number, is " +
                     TheSectionHeaderBlock.MinorVersion.ToString() +
                     " not " +
-                    Constants.ExpectedMinorVersion.ToString()
+                    Constants.ExpectedMinorVersion.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;

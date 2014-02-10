@@ -122,10 +122,10 @@ namespace Analysis.LatencyAnalysis
 
             Structures.DictionaryValue TheDictionaryValueFound;
 
-            bool TheLatencyValuesEntryFound = TheDictionary.TryGetValue
+            bool TheEntryFound = TheDictionary.TryGetValue
                 (TheDictionaryKey, out TheDictionaryValueFound);
 
-            if (!TheLatencyValuesEntryFound)
+            if (!TheEntryFound)
             {
                 //If this is the first message of the pairing then create the new entry in the dictionary
 
@@ -159,6 +159,7 @@ namespace Analysis.LatencyAnalysis
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         "Found the row for the Host Id " +
                         TheHostId.ToString() +
                         " and the sequence number " +
@@ -173,6 +174,7 @@ namespace Analysis.LatencyAnalysis
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         "Found the row for the Host Id " +
                         TheHostId.ToString() +
                         " and the sequence number "
@@ -202,6 +204,7 @@ namespace Analysis.LatencyAnalysis
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         "Found the row for the Host Id " +
                         TheHostId.ToString() +
                         " and the sequence number " +
@@ -236,6 +239,7 @@ namespace Analysis.LatencyAnalysis
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Found a pair of data-supplying messages for a Host Id " +
                     string.Format("{0,3}", TheHostId) +
                     " - adding this Host Id to the latency analysis"
@@ -263,6 +267,7 @@ namespace Analysis.LatencyAnalysis
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Found a pair of data-supplying messages with a Message Id " +
                     string.Format("{0,5}", TheMessageId) +
                     " for a Host Id " +
@@ -349,9 +354,9 @@ namespace Analysis.LatencyAnalysis
                         s.Value.TimestampDifferenceCalculated
                         select s;
 
-                    int TheLatencyValuesRowsFoundCount = TheLatencyValueEntriesFound.Count();
+                    int TheRowsFoundCount = TheLatencyValueEntriesFound.Count();
 
-                    if (TheLatencyValuesRowsFoundCount > 0)
+                    if (TheRowsFoundCount > 0)
                     {
                         System.Diagnostics.Trace.WriteLine
                             (
@@ -360,16 +365,16 @@ namespace Analysis.LatencyAnalysis
                             " messages with a Message Id of " +
                             (TheMessageIdRow.Field<ulong>("MessageId")).ToString() +
                             " was " +
-                            TheLatencyValuesRowsFoundCount.ToString()
+                            TheRowsFoundCount.ToString()
                             );
 
-                        FinaliseLatencyValuesForMessageId(TheProtocolString, TheMessageIdRow.Field<ulong>("MessageId"), TheLatencyValueEntriesFound);
+                        FinaliseForMessageId(TheProtocolString, TheMessageIdRow.Field<ulong>("MessageId"), TheLatencyValueEntriesFound);
                     }
                 }
             }
         }
 
-        private void FinaliseLatencyValuesForMessageId(string TheProtocolString, ulong TheMessageId, DictionaryEnumerableType TheLatencyValuesRows)
+        private void FinaliseForMessageId(string TheProtocolString, ulong TheMessageId, DictionaryEnumerableType TheRows)
         {
             CommonHistogram TheHistogram =
                 new CommonHistogram
@@ -392,9 +397,9 @@ namespace Analysis.LatencyAnalysis
             double TheTotalOfTimestampDifferences = 0;
             double TheAverageTimestampDifference = 0;
 
-            foreach (DictionaryKeyValuePairType TheLatencyValuesRow in TheLatencyValuesRows)
+            foreach (DictionaryKeyValuePairType TheRow in TheRows)
             {
-                double TheTimestampDifference = TheLatencyValuesRow.Value.TimestampDifference;
+                double TheTimestampDifference = TheRow.Value.TimestampDifference;
 
                 TheHistogram.AddValue(TheTimestampDifference);
 
@@ -405,15 +410,15 @@ namespace Analysis.LatencyAnalysis
                 if (TheMinTimestampDifference > TheTimestampDifference)
                 {
                     TheMinTimestampDifference = TheTimestampDifference;
-                    TheMinTimestampPacketNumber = TheLatencyValuesRow.Value.FirstInstancePacketNumber;
-                    TheMinTimestampSequenceNumber = TheLatencyValuesRow.Key.SequenceNumber;
+                    TheMinTimestampPacketNumber = TheRow.Value.FirstInstancePacketNumber;
+                    TheMinTimestampSequenceNumber = TheRow.Key.SequenceNumber;
                 }
 
                 if (TheMaxTimestampDifference < TheTimestampDifference)
                 {
                     TheMaxTimestampDifference = TheTimestampDifference;
-                    TheMaxTimestampPacketNumber = TheLatencyValuesRow.Value.FirstInstancePacketNumber;
-                    TheMaxTimestampSequenceNumber = TheLatencyValuesRow.Key.SequenceNumber;
+                    TheMaxTimestampPacketNumber = TheRow.Value.FirstInstancePacketNumber;
+                    TheMaxTimestampSequenceNumber = TheRow.Key.SequenceNumber;
                 }
             }
 
@@ -497,17 +502,17 @@ namespace Analysis.LatencyAnalysis
 
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
 
-                foreach (DictionaryKeyValuePairType TheLatencyValuesRow in TheLatencyValuesRows)
+                foreach (DictionaryKeyValuePairType TheRow in TheRows)
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
-                        TheLatencyValuesRow.Value.FirstInstancePacketNumber.ToString() +
+                        TheRow.Value.FirstInstancePacketNumber.ToString() +
                         "\t" +
-                        TheLatencyValuesRow.Value.SecondInstancePacketNumber.ToString() +
+                        TheRow.Value.SecondInstancePacketNumber.ToString() +
                         "\t" +
-                        TheLatencyValuesRow.Key.SequenceNumber.ToString() +
+                        TheRow.Key.SequenceNumber.ToString() +
                         "\t" +
-                        TheLatencyValuesRow.Value.TimestampDifference.ToString()
+                        TheRow.Value.TimestampDifference.ToString()
                         );
                 }
 

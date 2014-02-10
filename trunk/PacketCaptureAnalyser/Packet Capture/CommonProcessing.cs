@@ -35,6 +35,7 @@ namespace PacketCapture
 
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Info:  " +
                         "Starting read of all bytes from the " +
                         System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture"
@@ -69,6 +70,7 @@ namespace PacketCapture
 
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Info:  " +
                         "Finished read of all bytes from the " +
                         System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture in " +
@@ -158,6 +160,7 @@ namespace PacketCapture
                 {
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         "The " +
                         System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture does not exist!!!"
@@ -172,6 +175,7 @@ namespace PacketCapture
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The exception " +
                     e.GetType().Name +
                     " with the following message: " +
@@ -188,6 +192,7 @@ namespace PacketCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The exception " +
                     e.GetType().Name +
                     " with the following message: " +
@@ -195,6 +200,29 @@ namespace PacketCapture
                     " was raised as access to the " +
                     System.IO.Path.GetFileName(ThePacketCapture) +
                     " packet capture was denied because this process was deemed as unauthorised by the OS!!!"
+                    );
+
+                TheResult = false;
+            }
+
+            catch (System.OutOfMemoryException e)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Error: " +
+                    "The exception " +
+                    e.GetType().Name +
+                    " with the following message: " +
+                    e.Message +
+                    " was raised as there was insufficient memory to read in all of the " +
+                    System.IO.Path.GetFileName(ThePacketCapture) +
+                    " packet capture!!!"
+                    );
+
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Info:  " +
+                    "It is suggested that the analysis is run again with the 'Minimise Memory Usage' check-box checked"
                     );
 
                 TheResult = false;
@@ -214,6 +242,7 @@ namespace PacketCapture
 
             System.Diagnostics.Trace.WriteLine
                 (
+                "Info:  " +
                 "Started processing of the captured packets"
                 );
 
@@ -253,6 +282,7 @@ namespace PacketCapture
 
                     //System.Diagnostics.Trace.WriteLine
                     //    (
+                    //    "Info:  " +
                     //    "Started processing of captured packet #" +
                     //    PacketsProcessed.ToString()
                     //    );
@@ -283,6 +313,7 @@ namespace PacketCapture
 
                                                 System.Diagnostics.Trace.WriteLine
                                                     (
+                                                    "Error: " +
                                                     "Processing of the captured packet #" +
                                                     PacketsProcessed.ToString() +
                                                     " failed during processing of packet header for Ethernet frame!!!"
@@ -298,6 +329,7 @@ namespace PacketCapture
 
                                             System.Diagnostics.Trace.WriteLine
                                                 (
+                                                "Error: " +
                                                 "Processing of the captured packet #" +
                                                 PacketsProcessed.ToString() +
                                                 " failed during processing of packet header with unknown datalink type!!!"
@@ -319,6 +351,7 @@ namespace PacketCapture
 
                             System.Diagnostics.Trace.WriteLine
                                 (
+                                "Error: " +
                                 "Processing of the captured packet #" +
                                 PacketsProcessed.ToString() +
                                 " failed during processing of Ethernet frame!!!"
@@ -347,6 +380,7 @@ namespace PacketCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The exception " +
                     e.GetType().Name +
                     " with the following message: " +
@@ -367,6 +401,7 @@ namespace PacketCapture
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "Finished processing of " +
                     PacketsProcessed.ToString() +
                     " captured packets in " +

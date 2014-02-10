@@ -34,6 +34,7 @@ namespace PacketCapture.PCAPPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "The PCAP packet capture contains the little endian magic number"
                     );
 
@@ -43,6 +44,7 @@ namespace PacketCapture.PCAPPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Info:  " +
                     "The PCAP packet capture contains the big endian magic number"
                     );
 
@@ -157,12 +159,14 @@ namespace PacketCapture.PCAPPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected magic number, is " +
                     TheGlobalHeader.MagicNumber.ToString() +
                     " not " +
                     Constants.LittleEndianMagicNumber.ToString() +
                     " or " +
-                    Constants.BigEndianMagicNumber.ToString()
+                    Constants.BigEndianMagicNumber.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -172,10 +176,12 @@ namespace PacketCapture.PCAPPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected major version number, is " +
                     TheGlobalHeader.VersionMajor.ToString() +
                     " not " +
-                    Constants.ExpectedVersionMajor.ToString()
+                    Constants.ExpectedVersionMajor.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -185,10 +191,12 @@ namespace PacketCapture.PCAPPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected minor version number, is " +
                     TheGlobalHeader.VersionMinor.ToString() +
                     " not " +
-                    Constants.ExpectedVersionMinor.ToString()
+                    Constants.ExpectedVersionMinor.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -200,6 +208,7 @@ namespace PacketCapture.PCAPPackageCapture
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected network data link type, is " +
                     TheGlobalHeader.NetworkDataLinkType.ToString() +
                     " not " +
@@ -207,7 +216,8 @@ namespace PacketCapture.PCAPPackageCapture
                     " or " +
                     PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet.ToString() +
                     " or " +
-                    PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC.ToString()
+                    PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;

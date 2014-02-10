@@ -10,12 +10,6 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
         private Structures.HeaderStructure TheHeader;
 
-        private bool PerformLatencyAnalysisProcessing;
-        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
-
-        private bool PerformTimeAnalysisProcessing;
-        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
-
         private ICMPv4Packet.Processing TheICMPv4PacketProcessing;
         private IGMPv2Packet.Processing TheIGMPv2PacketProcessing;
         private TCPPacket.Processing TheTCPPacketProcessing;
@@ -28,12 +22,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             //Create an instance of the IPv4 packet header
             TheHeader = new Structures.HeaderStructure();
 
-            this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
-            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
-
-            this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
-            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
-
+            //Create instances of the processing classes for each protocol
             TheICMPv4PacketProcessing = new ICMPv4Packet.Processing(TheBinaryReader);
             TheIGMPv2PacketProcessing = new IGMPv2Packet.Processing(TheBinaryReader);
             TheTCPPacketProcessing = new TCPPacket.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
@@ -167,7 +156,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                         //Just record the event and fall through as later processing will read off the remaining payload so we can move on
                         System.Diagnostics.Trace.WriteLine
                             (
-                            "The IPv4 packet contains a Cisco EIGRP packet which is not currently supported!!!"
+                            "Info:  " +
+                            "The IPv4 packet contains a Cisco EIGRP packet which is not currently supported!"
                             );
 
                         break;
@@ -181,8 +171,10 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
                         System.Diagnostics.Trace.WriteLine
                             (
+                            "Error: " +
                             "The IPv4 packet contains an unexpected protocol of " +
-                            string.Format("{0:X}", TheProtocol)
+                            string.Format("{0:X}", TheProtocol) +
+                            "!!!"
                             );
 
                         TheResult = false;
@@ -205,6 +197,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The IPv4 packet indicates a total length of " +
                     TheHeader.TotalLength.ToString() +
                     " bytes that is greater than the length of the payload of " +
@@ -222,8 +215,10 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The IPv4 packet header contains an unexpected version of " +
-                    TheHeaderVersion.ToString()
+                    TheHeaderVersion.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;
@@ -237,12 +232,14 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The IPv4 packet header contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +
                     Constants.HeaderMinimumLength.ToString() +
                     " to " +
-                    Constants.HeaderMaximumLength.ToString()
+                    Constants.HeaderMaximumLength.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;

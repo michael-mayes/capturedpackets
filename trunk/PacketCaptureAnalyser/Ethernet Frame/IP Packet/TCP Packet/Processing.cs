@@ -10,24 +10,12 @@ namespace EthernetFrame.IPPacket.TCPPacket
 
         private Structures.HeaderStructure TheHeader;
 
-        private bool PerformLatencyAnalysisProcessing;
-        private Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing;
-
-        private bool PerformTimeAnalysisProcessing;
-        private Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing;
-
         public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the TCP packet header
             TheHeader = new Structures.HeaderStructure();
-
-            this.PerformLatencyAnalysisProcessing = PerformLatencyAnalysisProcessing;
-            this.TheLatencyAnalysisProcessing = TheLatencyAnalysisProcessing;
-
-            this.PerformTimeAnalysisProcessing = PerformTimeAnalysisProcessing;
-            this.TheTimeAnalysisProcessing = TheTimeAnalysisProcessing;
         }
 
         public bool Process(ulong ThePacketNumber, double TheTimestamp, ushort TheLength)
@@ -139,12 +127,14 @@ namespace EthernetFrame.IPPacket.TCPPacket
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The TCP packet contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +
                     Constants.HeaderMinimumLength.ToString() +
                     " to " +
-                    Constants.HeaderMaximumLength.ToString()
+                    Constants.HeaderMaximumLength.ToString() +
+                    "!!!"
                     );
 
                 TheResult = false;

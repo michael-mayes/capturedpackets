@@ -13,6 +13,8 @@ namespace Analysis
         private double[] TheValueBinBoundaries;
         private int[] TheValueBinCounts;
 
+        private int TheNumberOfValuesAcrossAllBins = 0;
+
         private int TheNumberOfValuesLowerThanBins = 0;
         private int TheNumberOfValuesHigherThanBins = 0;
 
@@ -29,11 +31,13 @@ namespace Analysis
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The minimum and maximum allowed values for the histogram are equal!!!"
                     );
 
                 throw new System.ArgumentException
                     (
+                    "Error: " +
                     "The minimum and maximum allowed values for the histogram are equal!!!"
                     );
             }
@@ -48,6 +52,7 @@ namespace Analysis
             {
                 System.Diagnostics.Trace.WriteLine
                     (
+                    "Error: " +
                     "The minimum value is greater than the maximum value!"
                     );
 
@@ -87,6 +92,11 @@ namespace Analysis
         public double GetMaxAllowedValue()
         {
             return TheValueBinBoundaries[TheValueBinBoundaries.Length - 1];
+        }
+
+        public int GetTheNumberOfValuesAcrossAllBins()
+        {
+            return TheNumberOfValuesAcrossAllBins;
         }
 
         public int GetNumberOfValuesLowerThanBins()
@@ -138,6 +148,7 @@ namespace Analysis
 
                     System.Diagnostics.Trace.WriteLine
                         (
+                        "Error: " +
                         TheExceptionMessage
                         );
 
@@ -183,11 +194,16 @@ namespace Analysis
                         break;
                     }
                 }
+
+                //Increment the counter of the number of valid values encountered
+                ++TheNumberOfValuesAcrossAllBins;
             }
         }
 
         public void ResetValues()
         {
+            TheNumberOfValuesAcrossAllBins = 0;
+
             TheNumberOfValuesLowerThanBins = 0;
             TheNumberOfValuesHigherThanBins = 0;
 
@@ -203,8 +219,6 @@ namespace Analysis
         //Format the contents of the histogram and output it to the debug console
         public void OutputValues()
         {
-            int i, j;
-
             if (TheNumberOfValuesLowerThanBins > 0)
             {
                 System.Diagnostics.Trace.WriteLine
@@ -216,7 +230,7 @@ namespace Analysis
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
             }
 
-            for (i = 0; i < TheValueBinCounts.Length; ++i)
+            for (int i = 0; i < TheValueBinCounts.Length; ++i)
             {
                 //Do not start processing bins for the histogram until we've reached the minimum value encountered
                 if (TheValueBinBoundaries[i + 1] < TheMinValueEncountered)
@@ -249,35 +263,30 @@ namespace Analysis
 
                 System.Diagnostics.Trace.Write(" | ");
 
-                //Output a single ) character for each entry in this bin
-                for (j = 0; j <= TheValueBinCounts[i]; ++j)
-                {
-                    if (j < TheValueBinCounts[i])
-                    {
-                        //Truncate the output after 120 columns to ensure it fits on screen
-                        if (j < 120)
-                        {
-                            System.Diagnostics.Trace.Write(')');
-                        }
-                        else
-                        {
-                            //Leave a space after the last ) character for this bin for clarity
-                            System.Diagnostics.Trace.Write(" ");
-                            System.Diagnostics.Trace.Write(TheValueBinCounts[i]);
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        //Leave a space after the last ) character for this bin for clarity except if there are no entries
-                        if (j != 0)
-                        {
-                            System.Diagnostics.Trace.Write(" ");
-                        }
+                //Calculated a scaled count for this bin based on the percentage of the total number of values across all bins that is in this bin
+                //Truncate the output after 120 columns to ensure it fits on screen
+                //Perform the calculations using floating point values to prevent rounding to zero due to integer division
+                int ScaledBinCount = (int)(((float)TheValueBinCounts[i] / (float)TheNumberOfValuesAcrossAllBins) * 120.0);
 
-                        System.Diagnostics.Trace.Write(TheValueBinCounts[i]);
-                        break;
-                    }
+                //Make sure that at least a single ) character is always output for a bin with a non-zero count
+                if (TheValueBinCounts[i] > 0 && ScaledBinCount == 0)
+                {
+                    ScaledBinCount = 1;
+                }
+
+                //Output a number of ) characters for this bin based on the scaled count
+                System.Diagnostics.Trace.Write(new System.String(')', ScaledBinCount));
+
+                //Leave a space after the last ) character for this bin for clarity except if there are no entries
+                if (TheValueBinCounts[i] > 0)
+                {
+                    System.Diagnostics.Trace.Write(" ");
+                }
+
+                //Write out the number of entries in this bin (the real value, not the scaled value) if it is non-zero
+                if (TheValueBinCounts[i] > 0)
+                {
+                    System.Diagnostics.Trace.Write(TheValueBinCounts[i]);
                 }
 
                 //Complete the line for this bin
