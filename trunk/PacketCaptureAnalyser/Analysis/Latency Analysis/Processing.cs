@@ -25,12 +25,16 @@ namespace Analysis.LatencyAnalysis
 
         private bool OutputDebug;
 
+        private string SelectedPacketCaptureFile;
+
         private System.Data.DataTable TheHostIdsTable;
         private System.Data.DataTable TheMessageIdsTable;
 
-        public Processing(bool OutputDebug)
+        public Processing(bool OutputDebug, string SelectedPacketCaptureFile)
         {
             this.OutputDebug = OutputDebug;
+
+            this.SelectedPacketCaptureFile = SelectedPacketCaptureFile;
 
             //Create a dictionary to hold the latency values for message pairings
             TheDictionary =
@@ -491,32 +495,40 @@ namespace Analysis.LatencyAnalysis
 
             if (OutputDebug)
             {
-                System.Diagnostics.Trace.WriteLine
+                System.Text.StringBuilder OutputDebugLines = new System.Text.StringBuilder();
+
+                string OutputDebugTitleLine = string.Format
                     (
-                    "The first and second packet numbers, sequence numbers and latency values for " +
-                    TheProtocolString +
-                    " messages with a Message Id of " +
-                    TheMessageId.ToString() +
-                    " are:"
+                    "{0},{1},{2},{3}{4}",
+                    "First Packet Number",
+                    "Second Packet Number",
+                    "Sequence Number",
+                    "Latency",
+                    System.Environment.NewLine
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                OutputDebugLines.Append(OutputDebugTitleLine);
 
                 foreach (DictionaryKeyValuePairType TheRow in TheRows)
                 {
-                    System.Diagnostics.Trace.WriteLine
+                    string OutputDebugLine = string.Format
                         (
-                        TheRow.Value.FirstInstancePacketNumber.ToString() +
-                        "\t" +
-                        TheRow.Value.SecondInstancePacketNumber.ToString() +
-                        "\t" +
-                        TheRow.Key.SequenceNumber.ToString() +
-                        "\t" +
-                        TheRow.Value.TimestampDifference.ToString()
+                        "{0},{1},{2},{3}{4}",
+                        TheRow.Value.FirstInstancePacketNumber.ToString(),
+                        TheRow.Value.SecondInstancePacketNumber.ToString(),
+                        TheRow.Key.SequenceNumber.ToString(),
+                        TheRow.Value.TimestampDifference.ToString(),
+                        System.Environment.NewLine
                         );
+
+                    OutputDebugLines.Append(OutputDebugLine);
                 }
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                System.IO.File.WriteAllText
+                    (
+                    SelectedPacketCaptureFile + ".MessageId" + TheMessageId + ".LatencyAnalysis.csv",
+                    OutputDebugLines.ToString()
+                    );
             }
         }
     }

@@ -12,12 +12,16 @@ namespace Analysis.TimeAnalysis
     {
         private bool OutputDebug;
 
+        private string SelectedPacketCaptureFile;
+
         private System.Data.DataTable TheTimeValuesTable;
         private System.Data.DataTable TheHostIdsTable;
 
-        public Processing(bool OutputDebug)
+        public Processing(bool OutputDebug, string SelectedPacketCaptureFile)
         {
             this.OutputDebug = OutputDebug;
+
+            this.SelectedPacketCaptureFile = SelectedPacketCaptureFile;
 
             //Create a datatable to hold the timestamp and time values for time-supplying messages
             TheTimeValuesTable = new System.Data.DataTable();
@@ -360,27 +364,39 @@ namespace Analysis.TimeAnalysis
 
             if (OutputDebug)
             {
-                System.Diagnostics.Trace.WriteLine
+                System.Text.StringBuilder OutputDebugLines = new System.Text.StringBuilder();
+
+                string OutputDebugTitleLine = string.Format
                     (
-                    "The timestamps and times for the time messages are:"
+                    "{0},{1}{2}",
+                    "Timestamp",
+                    "Time",
+                    System.Environment.NewLine
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                OutputDebugLines.Append(OutputDebugTitleLine);
 
                 foreach (System.Data.DataRow TheTimeValuesRow in TheTimeValuesRowsFound)
                 {
                     if (TheTimeValuesRow.Field<bool>("Processed"))
                     {
-                        System.Diagnostics.Trace.WriteLine
+                        string OutputDebugLine = string.Format
                             (
-                            (TheTimeValuesRow.Field<double>("Timestamp")).ToString() +
-                            "\t" +
-                            (TheTimeValuesRow.Field<double>("Time")).ToString()
+                            "{0},{1}{2}",
+                            (TheTimeValuesRow.Field<double>("Timestamp")).ToString(),
+                            (TheTimeValuesRow.Field<double>("Time")).ToString(),
+                            System.Environment.NewLine
                             );
+
+                        OutputDebugLines.Append(OutputDebugLine);
                     }
                 }
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                System.IO.File.WriteAllText
+                    (
+                    SelectedPacketCaptureFile + ".HostId" + TheHostId + ".TimeAnalysis.csv",
+                    OutputDebugLines.ToString()
+                    );
             }
         }
     }

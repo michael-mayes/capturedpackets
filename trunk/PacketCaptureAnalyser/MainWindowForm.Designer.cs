@@ -44,12 +44,6 @@ namespace PacketCaptureAnalyser
             this.SelectedPacketCaptureTypeTextBox = new System.Windows.Forms.TextBox();
             this.ClearSelectedPacketCaptureButton = new System.Windows.Forms.Button();
             this.OpenSelectedPackageCaptureButton = new System.Windows.Forms.Button();
-            this.SelectedOutputFileForAnalysisDialog = new System.Windows.Forms.SaveFileDialog();
-            this.SelectOutputFileButton = new System.Windows.Forms.Button();
-            this.SelectedOutputFileNameLabel = new System.Windows.Forms.Label();
-            this.SelectedOutputFileNameTextBox = new System.Windows.Forms.TextBox();
-            this.SelectedOutputFilePathLabel = new System.Windows.Forms.Label();
-            this.SelectedOutputFilePathTextBox = new System.Windows.Forms.TextBox();
             this.PerformLatencyAnalysisCheckBox = new System.Windows.Forms.CheckBox();
             this.PerformTimeAnalysisCheckBox = new System.Windows.Forms.CheckBox();
             this.OutputLatencyAnalysisDebugCheckBox = new System.Windows.Forms.CheckBox();
@@ -61,7 +55,7 @@ namespace PacketCaptureAnalyser
             // RunAnalysisOnSelectedPackageCaptureButton
             // 
             this.RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
-            this.RunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 466);
+            this.RunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 361);
             this.RunAnalysisOnSelectedPackageCaptureButton.Name = "RunAnalysisOnSelectedPackageCaptureButton";
             this.RunAnalysisOnSelectedPackageCaptureButton.Size = new System.Drawing.Size(340, 23);
             this.RunAnalysisOnSelectedPackageCaptureButton.TabIndex = 1;
@@ -71,7 +65,7 @@ namespace PacketCaptureAnalyser
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(12, 497);
+            this.ExitButton.Location = new System.Drawing.Point(12, 390);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(340, 23);
             this.ExitButton.TabIndex = 2;
@@ -155,7 +149,7 @@ namespace PacketCaptureAnalyser
             // ClearSelectedPacketCaptureButton
             // 
             this.ClearSelectedPacketCaptureButton.Enabled = false;
-            this.ClearSelectedPacketCaptureButton.Location = new System.Drawing.Point(12, 158);
+            this.ClearSelectedPacketCaptureButton.Location = new System.Drawing.Point(12, 160);
             this.ClearSelectedPacketCaptureButton.Name = "ClearSelectedPacketCaptureButton";
             this.ClearSelectedPacketCaptureButton.Size = new System.Drawing.Size(340, 23);
             this.ClearSelectedPacketCaptureButton.TabIndex = 9;
@@ -166,7 +160,7 @@ namespace PacketCaptureAnalyser
             // OpenSelectedPackageCaptureButton
             // 
             this.OpenSelectedPackageCaptureButton.Enabled = false;
-            this.OpenSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 187);
+            this.OpenSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 189);
             this.OpenSelectedPackageCaptureButton.Name = "OpenSelectedPackageCaptureButton";
             this.OpenSelectedPackageCaptureButton.Size = new System.Drawing.Size(340, 23);
             this.OpenSelectedPackageCaptureButton.TabIndex = 10;
@@ -174,66 +168,13 @@ namespace PacketCaptureAnalyser
             this.OpenSelectedPackageCaptureButton.UseVisualStyleBackColor = true;
             this.OpenSelectedPackageCaptureButton.Click += new System.EventHandler(this.OpenSelectedPackageCaptureButton_Click);
             // 
-            // SelectedOutputFileForAnalysisDialog
-            // 
-            this.SelectedOutputFileForAnalysisDialog.Filter = "Text File (*.txt)|*.txt";
-            this.SelectedOutputFileForAnalysisDialog.OverwritePrompt = false;
-            // 
-            // SelectOutputFileButton
-            // 
-            this.SelectOutputFileButton.Location = new System.Drawing.Point(12, 216);
-            this.SelectOutputFileButton.Name = "SelectOutputFileButton";
-            this.SelectOutputFileButton.Size = new System.Drawing.Size(340, 23);
-            this.SelectOutputFileButton.TabIndex = 11;
-            this.SelectOutputFileButton.Text = "Select Output File";
-            this.SelectOutputFileButton.UseVisualStyleBackColor = true;
-            this.SelectOutputFileButton.Click += new System.EventHandler(this.SelectOuputFileButton_Click);
-            // 
-            // SelectedOutputFileNameLabel
-            // 
-            this.SelectedOutputFileNameLabel.AutoSize = true;
-            this.SelectedOutputFileNameLabel.Location = new System.Drawing.Point(12, 281);
-            this.SelectedOutputFileNameLabel.Name = "SelectedOutputFileNameLabel";
-            this.SelectedOutputFileNameLabel.Size = new System.Drawing.Size(151, 13);
-            this.SelectedOutputFileNameLabel.TabIndex = 15;
-            this.SelectedOutputFileNameLabel.Text = "Name Of Selected Output File:";
-            // 
-            // SelectedOutputFileNameTextBox
-            // 
-            this.SelectedOutputFileNameTextBox.Location = new System.Drawing.Point(12, 297);
-            this.SelectedOutputFileNameTextBox.Name = "SelectedOutputFileNameTextBox";
-            this.SelectedOutputFileNameTextBox.ReadOnly = true;
-            this.SelectedOutputFileNameTextBox.Size = new System.Drawing.Size(340, 20);
-            this.SelectedOutputFileNameTextBox.TabIndex = 14;
-            this.SelectedOutputFileNameTextBox.TabStop = false;
-            this.SelectedOutputFileNameTextBox.Text = "<No Output File Selected>";
-            // 
-            // SelectedOutputFilePathLabel
-            // 
-            this.SelectedOutputFilePathLabel.AutoSize = true;
-            this.SelectedOutputFilePathLabel.Location = new System.Drawing.Point(12, 242);
-            this.SelectedOutputFilePathLabel.Name = "SelectedOutputFilePathLabel";
-            this.SelectedOutputFilePathLabel.Size = new System.Drawing.Size(145, 13);
-            this.SelectedOutputFilePathLabel.TabIndex = 13;
-            this.SelectedOutputFilePathLabel.Text = "Path Of Selected Output File:";
-            // 
-            // SelectedOutputFilePathTextBox
-            // 
-            this.SelectedOutputFilePathTextBox.Location = new System.Drawing.Point(12, 258);
-            this.SelectedOutputFilePathTextBox.Name = "SelectedOutputFilePathTextBox";
-            this.SelectedOutputFilePathTextBox.ReadOnly = true;
-            this.SelectedOutputFilePathTextBox.Size = new System.Drawing.Size(340, 20);
-            this.SelectedOutputFilePathTextBox.TabIndex = 12;
-            this.SelectedOutputFilePathTextBox.TabStop = false;
-            this.SelectedOutputFilePathTextBox.Text = "<No Output File Selected>";
-            // 
             // PerformLatencyAnalysisCheckBox
             // 
             this.PerformLatencyAnalysisCheckBox.AutoSize = true;
             this.PerformLatencyAnalysisCheckBox.Checked = true;
             this.PerformLatencyAnalysisCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.PerformLatencyAnalysisCheckBox.Enabled = false;
-            this.PerformLatencyAnalysisCheckBox.Location = new System.Drawing.Point(12, 324);
+            this.PerformLatencyAnalysisCheckBox.Location = new System.Drawing.Point(12, 220);
             this.PerformLatencyAnalysisCheckBox.Name = "PerformLatencyAnalysisCheckBox";
             this.PerformLatencyAnalysisCheckBox.Size = new System.Drawing.Size(144, 17);
             this.PerformLatencyAnalysisCheckBox.TabIndex = 16;
@@ -244,7 +185,7 @@ namespace PacketCaptureAnalyser
             // 
             this.PerformTimeAnalysisCheckBox.AutoSize = true;
             this.PerformTimeAnalysisCheckBox.Enabled = false;
-            this.PerformTimeAnalysisCheckBox.Location = new System.Drawing.Point(12, 369);
+            this.PerformTimeAnalysisCheckBox.Location = new System.Drawing.Point(12, 265);
             this.PerformTimeAnalysisCheckBox.Name = "PerformTimeAnalysisCheckBox";
             this.PerformTimeAnalysisCheckBox.Size = new System.Drawing.Size(129, 17);
             this.PerformTimeAnalysisCheckBox.TabIndex = 17;
@@ -255,7 +196,7 @@ namespace PacketCaptureAnalyser
             // 
             this.OutputLatencyAnalysisDebugCheckBox.AutoSize = true;
             this.OutputLatencyAnalysisDebugCheckBox.Enabled = false;
-            this.OutputLatencyAnalysisDebugCheckBox.Location = new System.Drawing.Point(12, 346);
+            this.OutputLatencyAnalysisDebugCheckBox.Location = new System.Drawing.Point(12, 242);
             this.OutputLatencyAnalysisDebugCheckBox.Name = "OutputLatencyAnalysisDebugCheckBox";
             this.OutputLatencyAnalysisDebugCheckBox.Size = new System.Drawing.Size(227, 17);
             this.OutputLatencyAnalysisDebugCheckBox.TabIndex = 18;
@@ -267,7 +208,7 @@ namespace PacketCaptureAnalyser
             // 
             this.OutputTimeAnalysisDebugCheckBox.AutoSize = true;
             this.OutputTimeAnalysisDebugCheckBox.Enabled = false;
-            this.OutputTimeAnalysisDebugCheckBox.Location = new System.Drawing.Point(12, 393);
+            this.OutputTimeAnalysisDebugCheckBox.Location = new System.Drawing.Point(12, 289);
             this.OutputTimeAnalysisDebugCheckBox.Name = "OutputTimeAnalysisDebugCheckBox";
             this.OutputTimeAnalysisDebugCheckBox.Size = new System.Drawing.Size(212, 17);
             this.OutputTimeAnalysisDebugCheckBox.TabIndex = 19;
@@ -279,7 +220,7 @@ namespace PacketCaptureAnalyser
             // 
             this.MinimiseMemoryUsageCheckBox.AutoSize = true;
             this.MinimiseMemoryUsageCheckBox.Enabled = false;
-            this.MinimiseMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 417);
+            this.MinimiseMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 313);
             this.MinimiseMemoryUsageCheckBox.Name = "MinimiseMemoryUsageCheckBox";
             this.MinimiseMemoryUsageCheckBox.Size = new System.Drawing.Size(346, 17);
             this.MinimiseMemoryUsageCheckBox.TabIndex = 20;
@@ -290,7 +231,7 @@ namespace PacketCaptureAnalyser
             // 
             this.OutputDebugToOutputWindowCheckBox.AutoSize = true;
             this.OutputDebugToOutputWindowCheckBox.Enabled = false;
-            this.OutputDebugToOutputWindowCheckBox.Location = new System.Drawing.Point(12, 441);
+            this.OutputDebugToOutputWindowCheckBox.Location = new System.Drawing.Point(12, 337);
             this.OutputDebugToOutputWindowCheckBox.Name = "OutputDebugToOutputWindowCheckBox";
             this.OutputDebugToOutputWindowCheckBox.Size = new System.Drawing.Size(338, 17);
             this.OutputDebugToOutputWindowCheckBox.TabIndex = 21;
@@ -301,18 +242,13 @@ namespace PacketCaptureAnalyser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(364, 530);
+            this.ClientSize = new System.Drawing.Size(364, 421);
             this.Controls.Add(this.OutputDebugToOutputWindowCheckBox);
             this.Controls.Add(this.MinimiseMemoryUsageCheckBox);
             this.Controls.Add(this.OutputTimeAnalysisDebugCheckBox);
             this.Controls.Add(this.OutputLatencyAnalysisDebugCheckBox);
             this.Controls.Add(this.PerformTimeAnalysisCheckBox);
             this.Controls.Add(this.PerformLatencyAnalysisCheckBox);
-            this.Controls.Add(this.SelectedOutputFileNameLabel);
-            this.Controls.Add(this.SelectedOutputFileNameTextBox);
-            this.Controls.Add(this.SelectedOutputFilePathLabel);
-            this.Controls.Add(this.SelectedOutputFilePathTextBox);
-            this.Controls.Add(this.SelectOutputFileButton);
             this.Controls.Add(this.OpenSelectedPackageCaptureButton);
             this.Controls.Add(this.ClearSelectedPacketCaptureButton);
             this.Controls.Add(this.SelectedPacketCaptureTypeLabel);
@@ -346,12 +282,6 @@ namespace PacketCaptureAnalyser
         private System.Windows.Forms.TextBox SelectedPacketCaptureTypeTextBox;
         private System.Windows.Forms.Button ClearSelectedPacketCaptureButton;
         private System.Windows.Forms.Button OpenSelectedPackageCaptureButton;
-        private System.Windows.Forms.SaveFileDialog SelectedOutputFileForAnalysisDialog;
-        private System.Windows.Forms.Button SelectOutputFileButton;
-        private System.Windows.Forms.Label SelectedOutputFileNameLabel;
-        private System.Windows.Forms.TextBox SelectedOutputFileNameTextBox;
-        private System.Windows.Forms.Label SelectedOutputFilePathLabel;
-        private System.Windows.Forms.TextBox SelectedOutputFilePathTextBox;
         private System.Windows.Forms.CheckBox PerformLatencyAnalysisCheckBox;
         private System.Windows.Forms.CheckBox PerformTimeAnalysisCheckBox;
         private System.Windows.Forms.CheckBox OutputLatencyAnalysisDebugCheckBox;
