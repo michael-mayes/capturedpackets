@@ -11,12 +11,12 @@ namespace Analysis
         //
 
         private double[] TheValueBinBoundaries;
-        private int[] TheValueBinCounts;
+        private uint[] TheValueBinCounts;
 
-        private int TheNumberOfValuesAcrossAllBins = 0;
+        private uint TheNumberOfValuesAcrossAllBins = 0;
 
-        private int TheNumberOfValuesLowerThanBins = 0;
-        private int TheNumberOfValuesHigherThanBins = 0;
+        private uint TheNumberOfValuesLowerThanBins = 0;
+        private uint TheNumberOfValuesHigherThanBins = 0;
 
         private double TheMinValueEncountered = double.MaxValue;
         private double TheMaxValueEncountered = double.MinValue;
@@ -25,7 +25,7 @@ namespace Analysis
         //Public constructor method
         //
 
-        public CommonHistogram(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
+        public CommonHistogram(uint TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
         {
             if (TheMinAllowedValue == TheMaxAllowedValue)
             {
@@ -42,7 +42,7 @@ namespace Analysis
                     );
             }
 
-            TheValueBinCounts = new int[TheNumOfValueBins];
+            TheValueBinCounts = new uint[TheNumOfValueBins];
 
             if (TheMaxAllowedValue > TheMinAllowedValue)
             {
@@ -69,12 +69,12 @@ namespace Analysis
             return TheValueBinBoundaries;
         }
 
-        public int[] GetValueBinCounts()
+        public uint[] GetValueBinCounts()
         {
             return TheValueBinCounts;
         }
 
-        public int GetValueBinCount(int TheValueBinNumber)
+        public uint GetValueBinCount(uint TheValueBinNumber)
         {
             return TheValueBinCounts[TheValueBinNumber];
         }
@@ -94,17 +94,17 @@ namespace Analysis
             return TheValueBinBoundaries[TheValueBinBoundaries.Length - 1];
         }
 
-        public int GetTheNumberOfValuesAcrossAllBins()
+        public uint GetTheNumberOfValuesAcrossAllBins()
         {
             return TheNumberOfValuesAcrossAllBins;
         }
 
-        public int GetNumberOfValuesLowerThanBins()
+        public uint GetNumberOfValuesLowerThanBins()
         {
             return TheNumberOfValuesLowerThanBins;
         }
 
-        public int GetNumberOfValuesHigherThanBins()
+        public uint GetNumberOfValuesHigherThanBins()
         {
             return TheNumberOfValuesHigherThanBins;
         }
@@ -113,7 +113,7 @@ namespace Analysis
         //Private methods
         //
 
-        private void CalculateValueBinBoundaries(int TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
+        private void CalculateValueBinBoundaries(uint TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
         {
             TheValueBinBoundaries = new double[TheNumOfValueBins + 1];
 
@@ -219,6 +219,11 @@ namespace Analysis
         //Format the contents of the histogram and output it to the debug console
         public void OutputValues()
         {
+            uint TheNumberOfValuesProcessed = 0;
+
+            bool TheFirstPercentileFound = false;
+            bool TheNinetyNinthPercentileFound = false;
+
             if (TheNumberOfValuesLowerThanBins > 0)
             {
                 System.Diagnostics.Trace.WriteLine
@@ -236,6 +241,21 @@ namespace Analysis
                 if (TheValueBinBoundaries[i + 1] < TheMinValueEncountered)
                 {
                     continue;
+                }
+
+                //Update the running total of entries found so far
+                TheNumberOfValuesProcessed += TheValueBinCounts[i];
+
+                //Output an indication if the first percentile of all entries encountered has been reached
+                if (!TheFirstPercentileFound)
+                {
+                    if (TheNumberOfValuesProcessed >= (TheNumberOfValuesAcrossAllBins * 0.01))
+                    {
+                        TheFirstPercentileFound = true;
+
+                        System.Diagnostics.Trace.Write(new System.String('-', 144) + "  1%");
+                        System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                    }
                 }
 
                 //Correct the formatting for negative values
@@ -264,7 +284,7 @@ namespace Analysis
                 System.Diagnostics.Trace.Write(" | ");
 
                 //Calculated a scaled count for this bin based on the percentage of the total number of values across all bins that is in this bin
-                //Truncate the output after 120 columns to ensure it fits on screen
+                //The scaling of the count will the ensure that the output does not exceed 120 columns to ensure it fits on screen
                 //Perform the calculations using floating point values to prevent rounding to zero due to integer division
                 int ScaledBinCount = (int)(((float)TheValueBinCounts[i] / (float)TheNumberOfValuesAcrossAllBins) * 120.0);
 
@@ -277,20 +297,28 @@ namespace Analysis
                 //Output a number of ) characters for this bin based on the scaled count
                 System.Diagnostics.Trace.Write(new System.String(')', ScaledBinCount));
 
-                //Leave a space after the last ) character for this bin for clarity except if there are no entries
+                //Except if there are no entries, leave a space after the last ) character
+                //for this bin for clarity and then write out the number of entries in this
+                //bin (the real value, not the scaled value)
                 if (TheValueBinCounts[i] > 0)
                 {
-                    System.Diagnostics.Trace.Write(" ");
-                }
-
-                //Write out the number of entries in this bin (the real value, not the scaled value) if it is non-zero
-                if (TheValueBinCounts[i] > 0)
-                {
-                    System.Diagnostics.Trace.Write(TheValueBinCounts[i]);
+                    System.Diagnostics.Trace.Write(" " + TheValueBinCounts[i]);
                 }
 
                 //Complete the line for this bin
                 System.Diagnostics.Trace.Write(System.Environment.NewLine);
+
+                //Output an indication if the ninety ninth percentile of all entries encountered has been reached
+                if (!TheNinetyNinthPercentileFound)
+                {
+                    if (TheNumberOfValuesProcessed >= (TheNumberOfValuesAcrossAllBins * 0.99))
+                    {
+                        TheNinetyNinthPercentileFound = true;
+
+                        System.Diagnostics.Trace.Write(new System.String('-', 144) + " 99%");
+                        System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                    }
+                }
 
                 //Do not continue processing further bins for the histogram if we've reached the maximum value encountered
                 if (TheValueBinBoundaries[i + 1] > TheMaxValueEncountered)
