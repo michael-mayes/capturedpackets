@@ -140,6 +140,10 @@ namespace PacketCaptureAnalyser
             //Delete any existing output files with the selected name to ape the clearing of all text from the output window
             if (System.IO.File.Exists(TheOutputFilePath))
             {
+                //Reset the attributes of the existing output file to ensure that it can be deleted
+                System.IO.File.SetAttributes(TheOutputFilePath, System.IO.FileAttributes.Normal);
+
+                //Then delete the existing output file
                 System.IO.File.Delete(TheOutputFilePath);
             }
 
