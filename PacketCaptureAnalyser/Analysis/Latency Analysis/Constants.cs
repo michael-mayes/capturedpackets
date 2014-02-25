@@ -21,7 +21,7 @@ namespace Analysis.LatencyAnalysis
 
         //Value bins
 
-        public const int BinsPerMillisecond = 10; //Ten value bins for every millisecond of latency
-        public const int NumberOfBins = ((int)(WorstCaseLatency - BestCaseLatency) * BinsPerMillisecond);
+        public const uint BinsPerMillisecond = 10; //Ten value bins for every millisecond of latency
+        public const uint NumberOfBins = ((uint)(WorstCaseLatency - BestCaseLatency) * BinsPerMillisecond);
     }
 }
