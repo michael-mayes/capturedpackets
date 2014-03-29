@@ -19,10 +19,10 @@ namespace Analysis.TimeAnalysis
 
         //Value bins
 
-        public const int TimestampBinsPerMillisecond = 40; //Forty value bins for every millisecond of latency
-        public const int TimestampNumberOfBins = ((int)(MaxPositiveTimeDifference - MaxNegativeTimeDifference) * TimestampBinsPerMillisecond);
+        public const uint TimestampBinsPerMillisecond = 40; //Forty value bins for every millisecond of latency
+        public const uint TimestampNumberOfBins = ((uint)(MaxPositiveTimeDifference - MaxNegativeTimeDifference) * TimestampBinsPerMillisecond);
 
-        public const int TimeBinsPerMillisecond = 40; //Forty value bins for every millisecond of latency
-        public const int TimeNumberOfBins = ((int)(MaxPositiveTimeDifference - MaxNegativeTimeDifference) * TimeBinsPerMillisecond);
+        public const uint TimeBinsPerMillisecond = 40; //Forty value bins for every millisecond of latency
+        public const uint TimeNumberOfBins = ((uint)(MaxPositiveTimeDifference - MaxNegativeTimeDifference) * TimeBinsPerMillisecond);
     }
 }
