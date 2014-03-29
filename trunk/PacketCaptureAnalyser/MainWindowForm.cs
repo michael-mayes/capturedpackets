@@ -128,8 +128,6 @@ namespace PacketCaptureAnalyser
             TheProgressWindowForm.ProgressBar.Value = 0;
             TheProgressWindowForm.Refresh();
 
-            string TheOutputFilePath = SelectedPacketCaptureForAnalysisDialog.FileName + ".txt";
-
             TheProgressWindowForm.ProgressBar.Value = 5;
 
             string ThePacketCaptureFilePath = SelectedPacketCaptureForAnalysisDialog.FileName;
@@ -137,44 +135,25 @@ namespace PacketCaptureAnalyser
 
             TheProgressWindowForm.ProgressBar.Value = 10;
 
-            //Delete any existing output files with the selected name to ape the clearing of all text from the output window
-            if (System.IO.File.Exists(TheOutputFilePath))
+            using (Analysis.DebugInformation TheDebugInformation =
+                new Analysis.DebugInformation
+                (
+                SelectedPacketCaptureForAnalysisDialog.FileName + ".txt",
+                EnableInformationEventsInDebugInformationCheckBox.Checked,
+                RedirectDebugInformationToOutputCheckBox.Checked
+                ))
             {
-                //Reset the attributes of the existing output file to ensure that it can be deleted
-                System.IO.File.SetAttributes(TheOutputFilePath, System.IO.FileAttributes.Normal);
-
-                //Then delete the existing output file
-                System.IO.File.Delete(TheOutputFilePath);
-            }
-
-            TheProgressWindowForm.ProgressBar.Value = 15;
-
-            //Unless instructed otherwise, remove the output window from the list of listeners to debug output as all text will go to the output file
-            if (!OutputDebugToOutputWindowCheckBox.Checked)
-            {
-                System.Diagnostics.Debug.Listeners.Clear();
-            }
-
-            TheProgressWindowForm.ProgressBar.Value = 20;
-
-            //Redirect any text added to the output window to the output file
-            using (System.Diagnostics.TextWriterTraceListener TheOutputWindowListener =
-                new System.Diagnostics.TextWriterTraceListener(TheOutputFilePath))
-            {
-                TheProgressWindowForm.ProgressBar.Value = 25;
-
-                System.Diagnostics.Trace.Listeners.Add(TheOutputWindowListener);
-
-                TheProgressWindowForm.ProgressBar.Value = 30;
+                TheProgressWindowForm.ProgressBar.Value = 20;
 
                 //Start the analysis of the packet capture
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "Analysis of the " +
                     ThePacketCaptureFileName +
                     " packet capture started"
                     );
+
+                TheProgressWindowForm.ProgressBar.Value = 30;
 
                 Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing = null;
                 Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing = null;
@@ -262,9 +241,8 @@ namespace PacketCaptureAnalyser
                     case MainWindowFormPacketCaptureTypeEnumeration.Unknown:
                     default:
                         {
-                            System.Diagnostics.Trace.WriteLine
+                            TheDebugInformation.WriteErrorEvent
                                 (
-                                "Error: " +
                                 "The" +
                                 ThePacketCaptureFileName +
                                 " packet capture is of an unknown type!!!"
@@ -280,9 +258,8 @@ namespace PacketCaptureAnalyser
                 if (TheResult)
                 {
                     //Display a debug message to indicate analysis of the packet capture completed successfully
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteInformationEvent
                         (
-                        "Info:  " +
                         "Analysis of the " +
                         ThePacketCaptureFileName +
                         " packet capture completed successfully!"
@@ -327,9 +304,8 @@ namespace PacketCaptureAnalyser
                         //Read the start time to allow later calculation of the duration of the latency analysis finalisation
                         System.DateTime TheLatencyAnalysisStartTime = System.DateTime.Now;
 
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteInformationEvent
                             (
-                            "Info:  " +
                             "Latency analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture started"
@@ -348,9 +324,8 @@ namespace PacketCaptureAnalyser
                         System.TimeSpan TheLatencyAnalysisDuration =
                             TheLatencyAnalysisEndTime - TheLatencyAnalysisStartTime;
 
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteInformationEvent
                             (
-                            "Info:  " +
                             "Latency analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture completed in " +
@@ -372,9 +347,8 @@ namespace PacketCaptureAnalyser
                         //Read the start time to allow later calculation of the duration of the time analysis finalisation
                         System.DateTime TheTimeAnalysisStartTime = System.DateTime.Now;
 
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteInformationEvent
                             (
-                            "Info:  " +
                             "Time analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture started"
@@ -393,9 +367,8 @@ namespace PacketCaptureAnalyser
                         System.TimeSpan TheTimeAnalysisDuration =
                             TheTimeAnalysisEndTime - TheTimeAnalysisStartTime;
 
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteInformationEvent
                             (
-                            "Info:  " +
                             "Time analysis for the " +
                             ThePacketCaptureFileName +
                             " packet capture completed in " +
@@ -409,92 +382,64 @@ namespace PacketCaptureAnalyser
                 else
                 {
                     //Display a debug message to indicate analysis of the packet capture failed
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteErrorEvent
                         (
-                        "Error: " +
                         "Analysis of the " +
                         ThePacketCaptureFileName +
                         " packet capture failed!!!"
                         );
                 }
 
-                //Flush output to the output file and then close it
-                TheOutputWindowListener.Flush();
-                TheOutputWindowListener.Close();
-
-                System.Diagnostics.Debug.Listeners.Remove(TheOutputWindowListener);
-            }
-
-            if (TheProgressWindowForm != null)
-            {
-                //Hide and close the progress window form now the analysis has completed
-                TheProgressWindowForm.Hide();
-                TheProgressWindowForm.Close();
-            }
-
-            //Dependent on the result of the processing above, display a message box to indicate success or otherwise
-
-            System.Windows.Forms.DialogResult TheMessageBoxResult;
-
-            if (TheResult)
-            {
-                //Display a message box to indicate analysis of the packet capture is complete and ask whether to open the output file
-                TheMessageBoxResult =
-                    System.Windows.Forms.MessageBox.Show
-                    (
-                    "Analysis of the " +
-                    ThePacketCaptureFileName +
-                    " packet capture completed successfully!" +
-                    System.Environment.NewLine +
-                    System.Environment.NewLine +
-                    "Do you want to open the output file?",
-                    "Run Analysis On Selected Packet Capture",
-                    System.Windows.Forms.MessageBoxButtons.YesNo,
-                    System.Windows.Forms.MessageBoxIcon.Question
-                    );
-            }
-            else
-            {
-                //Display a message box to indicate analysis of the packet capture failed and ask whether to open the output file
-                TheMessageBoxResult =
-                    System.Windows.Forms.MessageBox.Show
-                    (
-                    "Analysis of the " +
-                    ThePacketCaptureFileName +
-                    " packet capture failed!!!" +
-                    System.Environment.NewLine +
-                    System.Environment.NewLine +
-                    "Do you want to open the output file?",
-                    "Run Analysis On Selected Packet Capture",
-                    System.Windows.Forms.MessageBoxButtons.YesNo,
-                    System.Windows.Forms.MessageBoxIcon.Error
-                    );
-            }
-
-            //Dependent on the button selection at the message box, open the output file
-            if (TheMessageBoxResult == System.Windows.Forms.DialogResult.Yes)
-            {
-                if (System.IO.File.Exists(TheOutputFilePath))
+                if (TheProgressWindowForm != null)
                 {
-                    try
-                    {
-                        System.Diagnostics.Process.Start(TheOutputFilePath);
-                    }
+                    //Hide and close the progress window form now the analysis has completed
+                    TheProgressWindowForm.Hide();
+                    TheProgressWindowForm.Close();
+                }
 
-                    catch (System.ComponentModel.Win32Exception f)
-                    {
-                        System.Diagnostics.Trace.WriteLine
-                            (
-                            "Error: " +
-                            "The exception " +
-                            f.GetType().Name +
-                            " with the following message: " +
-                            f.Message +
-                            " was raised as there is no application registered that can open the " +
-                            System.IO.Path.GetFileName(TheOutputFilePath) +
-                            " output file!!!"
-                            );
-                    }
+                //Dependent on the result of the processing above, display a message box to indicate success or otherwise
+
+                System.Windows.Forms.DialogResult TheMessageBoxResult;
+
+                if (TheResult)
+                {
+                    //Display a message box to indicate analysis of the packet capture is complete and ask whether to open the output file
+                    TheMessageBoxResult =
+                        System.Windows.Forms.MessageBox.Show
+                        (
+                        "Analysis of the " +
+                        ThePacketCaptureFileName +
+                        " packet capture completed successfully!" +
+                        System.Environment.NewLine +
+                        System.Environment.NewLine +
+                        "Do you want to open the output file?",
+                        "Run Analysis On Selected Packet Capture",
+                        System.Windows.Forms.MessageBoxButtons.YesNo,
+                        System.Windows.Forms.MessageBoxIcon.Question
+                        );
+                }
+                else
+                {
+                    //Display a message box to indicate analysis of the packet capture failed and ask whether to open the output file
+                    TheMessageBoxResult =
+                        System.Windows.Forms.MessageBox.Show
+                        (
+                        "Analysis of the " +
+                        ThePacketCaptureFileName +
+                        " packet capture failed!!!" +
+                        System.Environment.NewLine +
+                        System.Environment.NewLine +
+                        "Do you want to open the output file?",
+                        "Run Analysis On Selected Packet Capture",
+                        System.Windows.Forms.MessageBoxButtons.YesNo,
+                        System.Windows.Forms.MessageBoxIcon.Error
+                        );
+                }
+
+                //Dependent on the button selection at the message box, open the output file
+                if (TheMessageBoxResult == System.Windows.Forms.DialogResult.Yes)
+                {
+                    TheDebugInformation.Open();
                 }
             }
         }
@@ -789,36 +734,39 @@ namespace PacketCaptureAnalyser
         {
             //Reset the check boxes
 
+            EnableInformationEventsInDebugInformationCheckBox.Checked = true;
+            RedirectDebugInformationToOutputCheckBox.Checked = false;
             PerformLatencyAnalysisCheckBox.Checked = false;
             OutputLatencyAnalysisDebugCheckBox.Checked = false;
             PerformTimeAnalysisCheckBox.Checked = false;
             OutputTimeAnalysisDebugCheckBox.Checked = false;
             MinimiseMemoryUsageCheckBox.Checked = false;
-            OutputDebugToOutputWindowCheckBox.Checked = false;
         }
 
         private void EnablePacketCaptureAnalysisCheckBoxes()
         {
             //Enable the check boxes
 
+            EnableInformationEventsInDebugInformationCheckBox.Enabled = true;
+            RedirectDebugInformationToOutputCheckBox.Enabled = true;
             PerformLatencyAnalysisCheckBox.Enabled = true;
             OutputLatencyAnalysisDebugCheckBox.Enabled = true;
             PerformTimeAnalysisCheckBox.Enabled = true;
             OutputTimeAnalysisDebugCheckBox.Enabled = true;
             MinimiseMemoryUsageCheckBox.Enabled = true;
-            OutputDebugToOutputWindowCheckBox.Enabled = true;
         }
 
         private void DisablePacketCaptureAnalysisCheckBoxes()
         {
             //Disable the check boxes
 
+            EnableInformationEventsInDebugInformationCheckBox.Enabled = false;
+            RedirectDebugInformationToOutputCheckBox.Enabled = false;
             PerformLatencyAnalysisCheckBox.Enabled = false;
             OutputLatencyAnalysisDebugCheckBox.Enabled = false;
             PerformTimeAnalysisCheckBox.Enabled = false;
             OutputTimeAnalysisDebugCheckBox.Enabled = false;
             MinimiseMemoryUsageCheckBox.Enabled = false;
-            OutputDebugToOutputWindowCheckBox.Enabled = false;
         }
     }
 }
