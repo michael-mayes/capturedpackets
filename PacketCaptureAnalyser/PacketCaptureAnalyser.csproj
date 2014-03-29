@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\DebugInformation.cs" />
     <Compile Include="Analysis\Latency Analysis\Structures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Structures.cs" />

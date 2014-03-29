@@ -122,7 +122,7 @@ namespace EthernetFrame
 
                 default:
                     {
-                        //We have got an Ethernet frame containing an unknown Ether Type
+                        //We have got an Ethernet frame containing an unrecognised Ether Type
 
                         //Check against the minimum value for Ether Type - lower values indicate length of an IEEE 802.3 Ethernet frame
                         if (TheEtherType < (System.UInt16)Constants.HeaderEtherType.MinimumValue)
@@ -133,17 +133,16 @@ namespace EthernetFrame
                         }
                         else
                         {
+                            //This Ethernet frame has an unknown value for Ether Type
                             System.Diagnostics.Trace.WriteLine
                                 (
-                                "Error: " +
+                                "Info:  " +
                                 "The Ethernet frame in captured packet #" +
                                 ThePacketNumber.ToString() +
                                 " contains an unexpected Ether Type of 0x" +
                                 string.Format("{0:X}", TheEtherType) +
-                                "!!!"
+                                "! - Attempt to recover and continue processing"
                                 );
-
-                            TheResult = false;
                         }
 
                         break;
@@ -233,7 +232,11 @@ namespace EthernetFrame
 
                 default:
                     {
-                        //We have got an Ethernet frame containing an unknown Ether Type
+                        //We have got an Ethernet frame containing an unrecognised Ether Type
+
+                        //This is not strictly an error as it may be that the Ether Type is just not supported yet
+                        //Debug information line will have been previously output to indicate this instance so just continue
+                        ThePacketProcessingResult = true;
 
                         //Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
                         if (TheEtherType < (System.UInt16)Constants.HeaderEtherType.MinimumValue)
@@ -245,25 +248,11 @@ namespace EthernetFrame
                             //Not going to process IEEE 802.3 Ethernet frames currently as they do not include any data of interest
                             //Just read off the bytes for the IEEE 802.3 Ethernet frame from the packet capture so we can move on
                             TheBinaryReader.ReadBytes(TheEtherType);
-
-                            ThePacketProcessingResult = true;
                         }
                         else
                         {
-                            //Processing of Ethernet frames with Ether Types not enumerated above are obviously not currently supported!
-
-                            //Just record the event and fall through to the processing below that will read off the payload so we can move on
-                            System.Diagnostics.Trace.WriteLine
-                                (
-                                "Error: " +
-                                "The Ethernet frame in captured packet #" +
-                                ThePacketNumber.ToString() +
-                                " contains an unexpected Ether Type of 0x" +
-                                string.Format("{0:X}", TheEtherType) +
-                                "!!!"
-                                );
-
-                            ThePacketProcessingResult = false;
+                            //Processing of Ethernet frames with Ether Types not enumerated above are obviously not currently recognised or supported!
+                            //Just fall through to the processing below that will read off the payload so we can move on
                         }
 
                         break;
@@ -288,13 +277,13 @@ namespace EthernetFrame
             //Check whether the Ethernet frame payload has extra trailer bytes
             //These would typically not be exposed in the packet capture by the recorder, but sometimes are for whatever reason!
 
-            //This processing would also read off the payload of the Ethernet frame in the event of an unknown or unsupported network datalink type
+            //This processing would also read off the payload of the Ethernet frame in the event of an unrecognised, unknown or unsupported Ether Type
 
             if (ThePayloadLength != TheStreamPositionDifference)
             {
                 if (ThePayloadLength > TheStreamPositionDifference)
                 {
-                    //Trim the extra trailer bytes
+                    //Trim the extra trailer bytes (or bytes for an unrecognised, unknown or unsupported message)
                     TheBinaryReader.ReadBytes((int)(ThePayloadLength - TheStreamPositionDifference));
                 }
                 else
