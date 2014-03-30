@@ -6,12 +6,16 @@ namespace EthernetFrame.IPPacket.TCPPacket
 {
     class Processing
     {
+        private Analysis.DebugInformation TheDebugInformation;
+
         private System.IO.BinaryReader TheBinaryReader;
 
         private Structures.HeaderStructure TheHeader;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
+        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the TCP packet header
@@ -125,9 +129,8 @@ namespace EthernetFrame.IPPacket.TCPPacket
             if (TheHeaderLength > Constants.HeaderMaximumLength ||
                 TheHeaderLength < Constants.HeaderMinimumLength)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The TCP packet contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +

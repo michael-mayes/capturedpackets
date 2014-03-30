@@ -6,12 +6,16 @@ namespace EthernetFrame.LLDPPacket
 {
     class Processing
     {
+        private Analysis.DebugInformation TheDebugInformation;
+
         private System.IO.BinaryReader TheBinaryReader;
 
         private Structures.PacketStructure ThePacket;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader)
+        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the LLDP packet
@@ -24,9 +28,8 @@ namespace EthernetFrame.LLDPPacket
 
             if (ThePayloadLength < Constants.PacketLength)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The payload length of the Ethernet frame is lower than the length of the LLDP packet!!!"
                     );
 

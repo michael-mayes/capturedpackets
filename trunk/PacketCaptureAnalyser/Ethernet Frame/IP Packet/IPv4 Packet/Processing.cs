@@ -6,6 +6,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 {
     class Processing
     {
+        private Analysis.DebugInformation TheDebugInformation;
+
         private System.IO.BinaryReader TheBinaryReader;
 
         private Structures.HeaderStructure TheHeader;
@@ -15,8 +17,10 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         private TCPPacket.Processing TheTCPPacketProcessing;
         private UDPDatagram.Processing TheUDPDatagramProcessing;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
+        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the IPv4 packet header
@@ -25,8 +29,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             //Create instances of the processing classes for each protocol
             TheICMPv4PacketProcessing = new ICMPv4Packet.Processing(TheBinaryReader);
             TheIGMPv2PacketProcessing = new IGMPv2Packet.Processing(TheBinaryReader);
-            TheTCPPacketProcessing = new TCPPacket.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheUDPDatagramProcessing = new UDPDatagram.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheTCPPacketProcessing = new TCPPacket.Processing(TheDebugInformation, TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheUDPDatagramProcessing = new UDPDatagram.Processing(TheDebugInformation, TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
         }
 
         public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)
@@ -154,9 +158,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                         //Processing of IPv4 packets containing a Cisco EIGRP packet is not currently supported!
 
                         //Just record the event and fall through as later processing will read off the remaining payload so we can move on
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteInformationEvent
                             (
-                            "Info:  " +
                             "The IPv4 packet contains a Cisco EIGRP packet which is not currently supported!"
                             );
 
@@ -169,9 +172,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 
                         //Processing of packets with network data link types not enumerated above are obviously not currently supported!
 
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteErrorEvent
                             (
-                            "Error: " +
                             "The IPv4 packet contains an unexpected protocol of " +
                             string.Format("{0:X}", TheProtocol) +
                             "!!!"
@@ -195,9 +197,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             {
                 //We've got an IPv4 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The IPv4 packet indicates a total length of " +
                     TheHeader.TotalLength.ToString() +
                     " bytes that is greater than the length of the payload of " +
@@ -213,9 +214,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             {
                 //We've got an IPv4 packet header containing an unknown version
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The IPv4 packet header contains an unexpected version of " +
                     TheHeaderVersion.ToString() +
                     "!!!"
@@ -230,9 +230,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             {
                 //We've got an IPv4 packet header containing an out of range header length
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The IPv4 packet header contains a header length " +
                     TheHeaderLength.ToString() +
                     " which is outside the range " +

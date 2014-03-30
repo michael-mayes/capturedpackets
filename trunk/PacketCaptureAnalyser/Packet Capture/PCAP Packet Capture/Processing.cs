@@ -12,7 +12,7 @@ namespace PacketCapture.PCAPPackageCapture
         //Concrete methods - override abstract methods on the base class
         //
 
-        public override bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy)
+        public override bool ProcessGlobalHeader(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -32,9 +32,8 @@ namespace PacketCapture.PCAPPackageCapture
             //The endianism of the remainder of the values in the PCAP packet capture global header will be corrected to little endian if the magic number indicates big endian representation
             if (TheGlobalHeader.MagicNumber == Constants.LittleEndianMagicNumber)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "The PCAP packet capture contains the little endian magic number"
                     );
 
@@ -42,9 +41,8 @@ namespace PacketCapture.PCAPPackageCapture
             }
             else if (TheGlobalHeader.MagicNumber == Constants.BigEndianMagicNumber)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "The PCAP packet capture contains the big endian magic number"
                     );
 
@@ -72,7 +70,7 @@ namespace PacketCapture.PCAPPackageCapture
             }
 
             //Validate fields from the PCAP packet capture global header
-            TheResult = ValidateGlobalHeader(TheGlobalHeader);
+            TheResult = ValidateGlobalHeader(TheDebugInformation, TheGlobalHeader);
 
             if (TheResult)
             {
@@ -83,7 +81,7 @@ namespace PacketCapture.PCAPPackageCapture
             return TheResult;
         }
 
-        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
+        public override bool ProcessPacketHeader(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -148,7 +146,7 @@ namespace PacketCapture.PCAPPackageCapture
         //Private methods - provide methods specific to PCAP packet captures, not required to derive from the abstract base class
         //
 
-        private bool ValidateGlobalHeader(Structures.GlobalHeaderStructure TheGlobalHeader)
+        private bool ValidateGlobalHeader(Analysis.DebugInformation TheDebugInformation, Structures.GlobalHeaderStructure TheGlobalHeader)
         {
             bool TheResult = true;
 
@@ -157,9 +155,8 @@ namespace PacketCapture.PCAPPackageCapture
             if (TheGlobalHeader.MagicNumber != Constants.LittleEndianMagicNumber &&
                 TheGlobalHeader.MagicNumber != Constants.BigEndianMagicNumber)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected magic number, is " +
                     TheGlobalHeader.MagicNumber.ToString() +
                     " not " +
@@ -174,9 +171,8 @@ namespace PacketCapture.PCAPPackageCapture
 
             if (TheGlobalHeader.VersionMajor != Constants.ExpectedVersionMajor)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected major version number, is " +
                     TheGlobalHeader.VersionMajor.ToString() +
                     " not " +
@@ -189,9 +185,8 @@ namespace PacketCapture.PCAPPackageCapture
 
             if (TheGlobalHeader.VersionMinor != Constants.ExpectedVersionMinor)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected minor version number, is " +
                     TheGlobalHeader.VersionMinor.ToString() +
                     " not " +
@@ -206,9 +201,8 @@ namespace PacketCapture.PCAPPackageCapture
                 TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet &&
                 TheGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP packet capture global header does not contain the expected network data link type, is " +
                     TheGlobalHeader.NetworkDataLinkType.ToString() +
                     " not " +

@@ -23,6 +23,8 @@ namespace Analysis.LatencyAnalysis
             Structures.DictionaryValue
             > TheDictionary;
 
+        private Analysis.DebugInformation TheDebugInformation;
+
         private bool OutputDebug;
 
         private string SelectedPacketCaptureFile;
@@ -30,8 +32,10 @@ namespace Analysis.LatencyAnalysis
         private System.Data.DataTable TheHostIdsTable;
         private System.Data.DataTable TheMessageIdsTable;
 
-        public Processing(bool OutputDebug, string SelectedPacketCaptureFile)
+        public Processing(Analysis.DebugInformation TheDebugInformation, bool OutputDebug, string SelectedPacketCaptureFile)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.OutputDebug = OutputDebug;
 
             this.SelectedPacketCaptureFile = SelectedPacketCaptureFile;
@@ -161,9 +165,8 @@ namespace Analysis.LatencyAnalysis
 
                 if (!TheDictionaryValueFound.FirstInstanceFound)
                 {
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteErrorEvent
                         (
-                        "Error: " +
                         "Found the row for the Host Id " +
                         TheHostId.ToString() +
                         " and the sequence number " +
@@ -176,9 +179,8 @@ namespace Analysis.LatencyAnalysis
 
                 if (TheDictionaryValueFound.SecondInstanceFound)
                 {
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteErrorEvent
                         (
-                        "Error: " +
                         "Found the row for the Host Id " +
                         TheHostId.ToString() +
                         " and the sequence number "
@@ -206,9 +208,8 @@ namespace Analysis.LatencyAnalysis
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteErrorEvent
                         (
-                        "Error: " +
                         "Found the row for the Host Id " +
                         TheHostId.ToString() +
                         " and the sequence number " +
@@ -241,9 +242,8 @@ namespace Analysis.LatencyAnalysis
 
             if (TheHostIdDataRowFound == null)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "Found a pair of data-supplying messages for a Host Id " +
                     string.Format("{0,3}", TheHostId) +
                     " - adding this Host Id to the latency analysis"
@@ -269,9 +269,8 @@ namespace Analysis.LatencyAnalysis
 
             if (TheMessageIdDataRowFound == null)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "Found a pair of data-supplying messages with a Message Id " +
                     string.Format("{0,5}", TheMessageId) +
                     " for a Host Id " +
@@ -300,22 +299,22 @@ namespace Analysis.LatencyAnalysis
 
             //Loop across all the latency values for the message pairings using each of these host Ids in turn
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
-            System.Diagnostics.Trace.WriteLine("======================");
-            System.Diagnostics.Trace.WriteLine("== Latency Analysis ==");
-            System.Diagnostics.Trace.WriteLine("======================");
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            TheDebugInformation.WriteBlankLine();
+            TheDebugInformation.WriteTextString("======================");
+            TheDebugInformation.WriteTextString("== Latency Analysis ==");
+            TheDebugInformation.WriteTextString("======================");
+            TheDebugInformation.WriteBlankLine();
 
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "Host Id " +
                     string.Format("{0,3}", (TheHostIdRow.Field<byte>("HostId")).ToString())
                     );
 
-                System.Diagnostics.Trace.WriteLine("===========");
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteTextString("===========");
+                TheDebugInformation.WriteBlankLine();
 
                 FinaliseProtocolsForHostId(TheHostIdRow.Field<byte>("HostId"));
             }
@@ -328,14 +327,14 @@ namespace Analysis.LatencyAnalysis
             {
                 string TheProtocolString = ((Constants.Protocol)TheProtocol).ToString();
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     TheProtocolString +
                     " messages"
                     );
 
-                System.Diagnostics.Trace.WriteLine("------------");
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteTextString("------------");
+                TheDebugInformation.WriteBlankLine();
 
                 //Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
 
@@ -362,7 +361,7 @@ namespace Analysis.LatencyAnalysis
 
                     if (TheRowsFoundCount > 0)
                     {
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteTextString
                             (
                             "The number of pairs of " +
                             TheProtocolString +
@@ -383,6 +382,7 @@ namespace Analysis.LatencyAnalysis
             CommonHistogram TheHistogram =
                 new CommonHistogram
                     (
+                    TheDebugInformation,
                     Constants.NumberOfBins,
                     Constants.BestCaseLatency,
                     Constants.WorstCaseLatency
@@ -430,9 +430,9 @@ namespace Analysis.LatencyAnalysis
             {
                 TheAverageTimestampDifference = (TheTotalOfTimestampDifferences / TheNumberOfTimestampDifferenceInstances);
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The minimum latency for pairs of " +
                     TheProtocolString +
@@ -446,7 +446,7 @@ namespace Analysis.LatencyAnalysis
                     TheMinTimestampSequenceNumber.ToString()
                     );
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The maximum latency for pairs of " +
                     TheProtocolString +
@@ -460,7 +460,7 @@ namespace Analysis.LatencyAnalysis
                     TheMaxTimestampSequenceNumber.ToString()
                     );
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The average latency for pairs of " +
                     TheProtocolString +
@@ -471,11 +471,11 @@ namespace Analysis.LatencyAnalysis
                     " ms"
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
                 //Output the histogram
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The histogram (" +
                     Constants.BinsPerMillisecond.ToString() +
@@ -486,12 +486,12 @@ namespace Analysis.LatencyAnalysis
                     " is:"
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
                 TheHistogram.OutputValues();
             }
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            TheDebugInformation.WriteBlankLine();
 
             if (OutputDebug)
             {

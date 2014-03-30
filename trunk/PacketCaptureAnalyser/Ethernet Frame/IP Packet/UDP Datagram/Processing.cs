@@ -6,12 +6,16 @@ namespace EthernetFrame.IPPacket.UDPDatagram
 {
     class Processing
     {
+        private Analysis.DebugInformation TheDebugInformation;
+
         private System.IO.BinaryReader TheBinaryReader;
 
         private Structures.HeaderStructure TheHeader;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
+        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the UDP datagram header
@@ -103,9 +107,8 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             //The length in the UDP datagram header includes both the header itself and the payload so should equal the length of the UDP datagram payload in the IP packet
             if (TheHeader.Length != TheLength)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The UDP datagram header indicates a total length " +
                     TheHeader.Length.ToString() +
                     " which is not equal to the length of the UDP datagram within the IP packet of " +
@@ -119,9 +122,8 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             //The length in the UDP datagram header includes both the header itself and the payload so the minimum length is that of just the header
             if (TheHeaderLength < Constants.HeaderLength)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The UDP datagram contains an unexpected header length, is " +
                     TheHeaderLength.ToString() +
                     " not " +

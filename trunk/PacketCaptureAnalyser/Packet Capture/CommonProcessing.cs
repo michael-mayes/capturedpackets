@@ -10,15 +10,15 @@ namespace PacketCapture
         //Abstract methods - must be overridden with a concrete implementation by a derived class
         //
 
-        public abstract bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy);
+        public abstract bool ProcessGlobalHeader(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy);
 
-        public abstract bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp);
+        public abstract bool ProcessPacketHeader(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp);
 
         //
         //Concrete methods - cannot be overridden by a derived class
         //
 
-        public bool Process(PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing, string ThePacketCapture, bool MinimiseMemoryUsage)
+        public bool Process(PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, Analysis.DebugInformation TheDebugInformation, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing, string ThePacketCapture, bool MinimiseMemoryUsage)
         {
             bool TheResult = true;
 
@@ -33,9 +33,8 @@ namespace PacketCapture
                     //Read the start time to allow later calculation of the duration of the processing
                     System.DateTime TheStartTime = System.DateTime.Now;
 
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteInformationEvent
                         (
-                        "Info:  " +
                         "Starting read of all bytes from the " +
                         System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture"
@@ -68,9 +67,8 @@ namespace PacketCapture
 
                     System.TimeSpan TheDuration = TheEndTime - TheStartTime;
 
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteInformationEvent
                         (
-                        "Info:  " +
                         "Finished read of all bytes from the " +
                         System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture in " +
@@ -104,11 +102,11 @@ namespace PacketCapture
                             TheProgressWindowForm.ProgressBar.Value = 95;
 
                             //Only continue reading from the packet capture if the packet capture global header was read successfully
-                            if (ProcessGlobalHeader(TheBinaryReader, out TheNetworkDataLinkType, out TheTimestampAccuracy))
+                            if (ProcessGlobalHeader(TheDebugInformation, TheBinaryReader, out TheNetworkDataLinkType, out TheTimestampAccuracy))
                             {
                                 TheProgressWindowForm.ProgressBar.Value = 100;
 
-                                TheResult = ProcessPackets(TheBinaryReader, TheProgressWindowForm, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
+                                TheResult = ProcessPackets(TheDebugInformation, TheBinaryReader, TheProgressWindowForm, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
                             }
                             else
                             {
@@ -142,11 +140,11 @@ namespace PacketCapture
                                 TheProgressWindowForm.ProgressBar.Value = 95;
 
                                 //Only continue reading from the packet capture if the packet capture global header was read successfully
-                                if (ProcessGlobalHeader(TheBinaryReader, out TheNetworkDataLinkType, out TheTimestampAccuracy))
+                                if (ProcessGlobalHeader(TheDebugInformation, TheBinaryReader, out TheNetworkDataLinkType, out TheTimestampAccuracy))
                                 {
                                     TheProgressWindowForm.ProgressBar.Value = 100;
 
-                                    TheResult = ProcessPackets(TheBinaryReader, TheProgressWindowForm, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
+                                    TheResult = ProcessPackets(TheDebugInformation, TheBinaryReader, TheProgressWindowForm, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing, TheNetworkDataLinkType, TheTimestampAccuracy);
                                 }
                                 else
                                 {
@@ -158,9 +156,8 @@ namespace PacketCapture
                 }
                 else
                 {
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteErrorEvent
                         (
-                        "Error: " +
                         "The " +
                         System.IO.Path.GetFileName(ThePacketCapture) +
                         " packet capture does not exist!!!"
@@ -173,9 +170,8 @@ namespace PacketCapture
             catch (System.IO.IOException e)
             {
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The exception " +
                     e.GetType().Name +
                     " with the following message: " +
@@ -190,9 +186,8 @@ namespace PacketCapture
 
             catch (System.UnauthorizedAccessException e)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The exception " +
                     e.GetType().Name +
                     " with the following message: " +
@@ -207,9 +202,8 @@ namespace PacketCapture
 
             catch (System.OutOfMemoryException e)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The exception " +
                     e.GetType().Name +
                     " with the following message: " +
@@ -219,9 +213,8 @@ namespace PacketCapture
                     " packet capture!!!"
                     );
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "It is suggested that the analysis is run again with the 'Minimise Memory Usage' check-box checked"
                     );
 
@@ -231,7 +224,7 @@ namespace PacketCapture
             return TheResult;
         }
 
-        private bool ProcessPackets(System.IO.BinaryReader TheBinaryReader, PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
+        private bool ProcessPackets(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, PacketCaptureAnalyser.ProgressWindowForm TheProgressWindowForm, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -240,9 +233,8 @@ namespace PacketCapture
             //Read the start time to allow later calculation of the duration of the processing
             System.DateTime TheStartTime = System.DateTime.Now;
 
-            System.Diagnostics.Trace.WriteLine
+            TheDebugInformation.WriteInformationEvent
                 (
-                "Info:  " +
                 "Started processing of the captured packets"
                 );
 
@@ -254,7 +246,7 @@ namespace PacketCapture
                 TheProgressWindowForm.Refresh();
             }
 
-            EthernetFrame.Processing TheEthernetFrameProcessing = new EthernetFrame.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            EthernetFrame.Processing TheEthernetFrameProcessing = new EthernetFrame.Processing(TheDebugInformation, TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
 
             //Attempt to process the packets in the packet capture
             try
@@ -280,9 +272,8 @@ namespace PacketCapture
                     //Restore the following lines if you want indication of progress through the packet capture or want to tie an error condition to a particular packet
                     //
 
-                    //System.Diagnostics.Trace.WriteLine
+                    //TheDebugInformation.WriteInformationEvent
                     //    (
-                    //    "Info:  " +
                     //    "Started processing of captured packet #" +
                     //    PacketsProcessed.ToString()
                     //    );
@@ -290,7 +281,7 @@ namespace PacketCapture
                     //Check whether the end of the packet capture has been reached
                     if (TheBinaryReader.BaseStream.Position < TheStreamLength)
                     {
-                        if (ProcessPacketHeader(TheBinaryReader, TheNetworkDataLinkType, TheTimestampAccuracy, out ThePayloadLength, out TheTimestamp))
+                        if (ProcessPacketHeader(TheDebugInformation, TheBinaryReader, TheNetworkDataLinkType, TheTimestampAccuracy, out ThePayloadLength, out TheTimestamp))
                         {
                             //Check whether the end of the packet capture has been reached
                             if (TheBinaryReader.BaseStream.Position < TheStreamLength)
@@ -311,9 +302,8 @@ namespace PacketCapture
                                             {
                                                 TheResult = false;
 
-                                                System.Diagnostics.Trace.WriteLine
+                                                TheDebugInformation.WriteErrorEvent
                                                     (
-                                                    "Error: " +
                                                     "Processing of the captured packet #" +
                                                     PacketsProcessed.ToString() +
                                                     " failed during processing of packet header for Ethernet frame!!!"
@@ -327,9 +317,8 @@ namespace PacketCapture
                                         {
                                             TheResult = false;
 
-                                            System.Diagnostics.Trace.WriteLine
+                                            TheDebugInformation.WriteErrorEvent
                                                 (
-                                                "Error: " +
                                                 "Processing of the captured packet #" +
                                                 PacketsProcessed.ToString() +
                                                 " failed during processing of packet header with unknown datalink type!!!"
@@ -349,9 +338,8 @@ namespace PacketCapture
                         {
                             TheResult = false;
 
-                            System.Diagnostics.Trace.WriteLine
+                            TheDebugInformation.WriteErrorEvent
                                 (
-                                "Error: " +
                                 "Processing of the captured packet #" +
                                 PacketsProcessed.ToString() +
                                 " failed during processing of Ethernet frame!!!"
@@ -378,9 +366,8 @@ namespace PacketCapture
             // If the end of the stream is reached while reading the packet capture, ignore the error as there is no more processing to conduct and we don't want to lose the data we have already processed
             catch (System.IO.EndOfStreamException e)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The exception " +
                     e.GetType().Name +
                     " with the following message: " +
@@ -399,9 +386,8 @@ namespace PacketCapture
 
                 System.TimeSpan TheDuration = TheEndTime - TheStartTime;
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "Finished processing of " +
                     PacketsProcessed.ToString() +
                     " captured packets in " +

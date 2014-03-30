@@ -54,9 +54,8 @@ namespace PacketCaptureAnalyser
                 //Update the window to reflect the selected packet capture
                 ReflectSelectedPacketCapture();
 
-                System.Diagnostics.Trace.WriteLine
+                System.Diagnostics.Debug.WriteLine
                     (
-                    "Info:  " +
                     "Selection of the " +
                     System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                     " packet capture"
@@ -81,9 +80,8 @@ namespace PacketCaptureAnalyser
 
                 catch (System.ComponentModel.Win32Exception f)
                 {
-                    System.Diagnostics.Trace.WriteLine
+                    System.Diagnostics.Debug.WriteLine
                         (
-                        "Error: " +
                         "The exception " +
                         f.GetType().Name +
                         " with the following message: " +
@@ -146,7 +144,7 @@ namespace PacketCaptureAnalyser
                 TheProgressWindowForm.ProgressBar.Value = 20;
 
                 //Start the analysis of the packet capture
-                TheDebugInformation.WriteInformationEvent
+                TheDebugInformation.WriteTestRunEvent
                     (
                     "Analysis of the " +
                     ThePacketCaptureFileName +
@@ -163,7 +161,7 @@ namespace PacketCaptureAnalyser
                 //Only perform the latency analysis if the check box was selected for it on the main window form
                 if (PerformLatencyAnalysisCheckBox.Checked)
                 {
-                    TheLatencyAnalysisProcessing = new Analysis.LatencyAnalysis.Processing(OutputLatencyAnalysisDebugCheckBox.Checked, SelectedPacketCaptureForAnalysisDialog.FileName);
+                    TheLatencyAnalysisProcessing = new Analysis.LatencyAnalysis.Processing(TheDebugInformation, OutputLatencyAnalysisDebugCheckBox.Checked, SelectedPacketCaptureForAnalysisDialog.FileName);
 
                     //Initialise the functionality to perform latency analysis on the messages found
                     TheLatencyAnalysisProcessing.Create();
@@ -174,7 +172,7 @@ namespace PacketCaptureAnalyser
                 //Only perform the time analysis if the check box was selected for it on the main window form
                 if (PerformTimeAnalysisCheckBox.Checked)
                 {
-                    TheTimeAnalysisProcessing = new Analysis.TimeAnalysis.Processing(OutputTimeAnalysisDebugCheckBox.Checked, SelectedPacketCaptureForAnalysisDialog.FileName);
+                    TheTimeAnalysisProcessing = new Analysis.TimeAnalysis.Processing(TheDebugInformation, OutputTimeAnalysisDebugCheckBox.Checked, SelectedPacketCaptureForAnalysisDialog.FileName);
 
                     //Initialise the functionality to perform time analysis on the messages found
                     TheTimeAnalysisProcessing.Create();
@@ -192,6 +190,7 @@ namespace PacketCaptureAnalyser
                             TheProgressWindowForm.ProgressBar.Value = 50;
 
                             TheResult = ThePCAPNGPackageCaptureProcessing.Process(TheProgressWindowForm,
+                                                                                  TheDebugInformation,
                                                                                   PerformLatencyAnalysisCheckBox.Checked,
                                                                                   TheLatencyAnalysisProcessing,
                                                                                   PerformTimeAnalysisCheckBox.Checked,
@@ -210,6 +209,7 @@ namespace PacketCaptureAnalyser
                             TheProgressWindowForm.ProgressBar.Value = 50;
 
                             TheResult = ThePCAPPackageCaptureProcessing.Process(TheProgressWindowForm,
+                                                                                TheDebugInformation,
                                                                                 PerformLatencyAnalysisCheckBox.Checked,
                                                                                 TheLatencyAnalysisProcessing,
                                                                                 PerformTimeAnalysisCheckBox.Checked,
@@ -228,6 +228,7 @@ namespace PacketCaptureAnalyser
                             TheProgressWindowForm.ProgressBar.Value = 50;
 
                             TheResult = TheSnifferPackageCaptureProcessing.Process(TheProgressWindowForm,
+                                                                                   TheDebugInformation,
                                                                                    PerformLatencyAnalysisCheckBox.Checked,
                                                                                    TheLatencyAnalysisProcessing,
                                                                                    PerformTimeAnalysisCheckBox.Checked,
@@ -258,7 +259,7 @@ namespace PacketCaptureAnalyser
                 if (TheResult)
                 {
                     //Display a debug message to indicate analysis of the packet capture completed successfully
-                    TheDebugInformation.WriteInformationEvent
+                    TheDebugInformation.WriteTestRunEvent
                         (
                         "Analysis of the " +
                         ThePacketCaptureFileName +
@@ -296,7 +297,7 @@ namespace PacketCaptureAnalyser
                     //Only perform the latency analysis if the check box was selected for it on the main window form
                     if (PerformLatencyAnalysisCheckBox.Checked)
                     {
-                        System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                        TheDebugInformation.WriteBlankLine();
 
                         //Finalise the latency analysis on the messages found including printing the results to debug output
                         //Only perform this action if the analysis of the packet capture completed successfully
@@ -304,7 +305,7 @@ namespace PacketCaptureAnalyser
                         //Read the start time to allow later calculation of the duration of the latency analysis finalisation
                         System.DateTime TheLatencyAnalysisStartTime = System.DateTime.Now;
 
-                        TheDebugInformation.WriteInformationEvent
+                        TheDebugInformation.WriteTestRunEvent
                             (
                             "Latency analysis for the " +
                             ThePacketCaptureFileName +
@@ -324,7 +325,7 @@ namespace PacketCaptureAnalyser
                         System.TimeSpan TheLatencyAnalysisDuration =
                             TheLatencyAnalysisEndTime - TheLatencyAnalysisStartTime;
 
-                        TheDebugInformation.WriteInformationEvent
+                        TheDebugInformation.WriteTestRunEvent
                             (
                             "Latency analysis for the " +
                             ThePacketCaptureFileName +
@@ -339,7 +340,7 @@ namespace PacketCaptureAnalyser
                     //Only perform the time analysis if the check box was selected for it on the main window form
                     if (PerformTimeAnalysisCheckBox.Checked)
                     {
-                        System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                        TheDebugInformation.WriteBlankLine();
 
                         //Finalise the time analysis on the messages found including printing the results to debug output
                         //Only perform this action if the analysis of the packet capture completed successfully
@@ -347,7 +348,7 @@ namespace PacketCaptureAnalyser
                         //Read the start time to allow later calculation of the duration of the time analysis finalisation
                         System.DateTime TheTimeAnalysisStartTime = System.DateTime.Now;
 
-                        TheDebugInformation.WriteInformationEvent
+                        TheDebugInformation.WriteTestRunEvent
                             (
                             "Time analysis for the " +
                             ThePacketCaptureFileName +
@@ -367,7 +368,7 @@ namespace PacketCaptureAnalyser
                         System.TimeSpan TheTimeAnalysisDuration =
                             TheTimeAnalysisEndTime - TheTimeAnalysisStartTime;
 
-                        TheDebugInformation.WriteInformationEvent
+                        TheDebugInformation.WriteTestRunEvent
                             (
                             "Time analysis for the " +
                             ThePacketCaptureFileName +
@@ -635,9 +636,8 @@ namespace PacketCaptureAnalyser
 
                         if (TheMainWindowFormPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PcapNG)
                         {
-                            System.Diagnostics.Trace.WriteLine
+                            System.Diagnostics.Debug.WriteLine
                                 (
-                                "Error: " +
                                 "The " +
                                 System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                                 " packet capture should be a PCAP Next Generation packet capture based on its file extension, but it is not!!!"
@@ -658,9 +658,8 @@ namespace PacketCaptureAnalyser
 
                         if (TheMainWindowFormPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump)
                         {
-                            System.Diagnostics.Trace.WriteLine
+                            System.Diagnostics.Debug.WriteLine
                                 (
-                                "Error: " +
                                 "The " +
                                 System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                                 " packet capture should be a libpcap/tcpdump packet capture based on its file extension, but it is not!!!"
@@ -679,9 +678,8 @@ namespace PacketCaptureAnalyser
 
                         if (TheMainWindowFormPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS)
                         {
-                            System.Diagnostics.Trace.WriteLine
+                            System.Diagnostics.Debug.WriteLine
                                 (
-                                "Error: " +
                                 "The " +
                                 System.IO.Path.GetFileName(SelectedPacketCaptureForAnalysisDialog.FileName) +
                                 " packet capture should be a NA Sniffer (DOS) packet capture based on its file extension, but it is not!!!"

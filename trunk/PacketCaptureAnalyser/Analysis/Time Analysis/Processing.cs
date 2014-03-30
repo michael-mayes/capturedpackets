@@ -10,6 +10,8 @@ namespace Analysis.TimeAnalysis
     //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
     class Processing : System.IDisposable
     {
+        private Analysis.DebugInformation TheDebugInformation;
+
         private bool OutputDebug;
 
         private string SelectedPacketCaptureFile;
@@ -17,8 +19,10 @@ namespace Analysis.TimeAnalysis
         private System.Data.DataTable TheTimeValuesTable;
         private System.Data.DataTable TheHostIdsTable;
 
-        public Processing(bool OutputDebug, string SelectedPacketCaptureFile)
+        public Processing(Analysis.DebugInformation TheDebugInformation, bool OutputDebug, string SelectedPacketCaptureFile)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.OutputDebug = OutputDebug;
 
             this.SelectedPacketCaptureFile = SelectedPacketCaptureFile;
@@ -97,9 +101,8 @@ namespace Analysis.TimeAnalysis
 
             if (TheHostIdDataRowFound == null)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "Found a time-supplying message for a Host Id " +
                     string.Format("{0,3}", TheHostId) +
                     " - adding this Host Id to the time analysis"
@@ -125,22 +128,22 @@ namespace Analysis.TimeAnalysis
 
             //Loop across all the time values for each of these host Ids in turn
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
-            System.Diagnostics.Trace.WriteLine("===================");
-            System.Diagnostics.Trace.WriteLine("== Time Analysis ==");
-            System.Diagnostics.Trace.WriteLine("===================");
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            TheDebugInformation.WriteBlankLine();
+            TheDebugInformation.WriteTextString("===================");
+            TheDebugInformation.WriteTextString("== Time Analysis ==");
+            TheDebugInformation.WriteTextString("===================");
+            TheDebugInformation.WriteBlankLine();
 
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "Host Id " +
                     string.Format("{0,3}", (TheHostIdRow.Field<byte>("HostId")).ToString())
                     );
 
-                System.Diagnostics.Trace.WriteLine("===========");
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteTextString("===========");
+                TheDebugInformation.WriteBlankLine();
 
                 FinaliseTimeValuesForHostId(TheHostIdRow.Field<byte>("HostId"));
             }
@@ -151,6 +154,7 @@ namespace Analysis.TimeAnalysis
             CommonHistogram TheTimestampHistogram =
                 new CommonHistogram
                     (
+                    TheDebugInformation,
                     Constants.TimestampNumberOfBins,
                     Constants.MaxNegativeTimeDifference,
                     Constants.MaxPositiveTimeDifference
@@ -159,6 +163,7 @@ namespace Analysis.TimeAnalysis
             CommonHistogram TheTimeHistogram =
                 new CommonHistogram
                     (
+                    TheDebugInformation,
                     Constants.TimeNumberOfBins,
                     Constants.MaxNegativeTimeDifference,
                     Constants.MaxPositiveTimeDifference
@@ -273,15 +278,15 @@ namespace Analysis.TimeAnalysis
                 TheAverageTimestampDifference = (TheTotalOfTimestampDifferences / TheNumberOfTimestampDifferenceInstances);
                 TheAverageTimeDifference = (TheTotalOfTimeDifferences / TheNumberOfTimeDifferenceInstances);
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The number of time messages was " +
                     TheNumberOfTimestampDifferenceInstances.ToString()
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The minimum timestamp difference was " +
                     TheMinTimestampDifference.ToString() +
@@ -289,7 +294,7 @@ namespace Analysis.TimeAnalysis
                     TheMinTimestampDifferencePacketNumber.ToString()
                     );
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The maximum timestamp difference was " +
                     TheMaxTimestampDifference.ToString() +
@@ -297,31 +302,31 @@ namespace Analysis.TimeAnalysis
                     TheMaxTimestampDifferencePacketNumber.ToString()
                     );
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The average timestamp difference was " +
                     TheAverageTimestampDifference.ToString() +
                     " ms"
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
                 //Output the histogram
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The histogram (" +
                     Constants.TimestampBinsPerMillisecond.ToString() +
                     " bins per millisecond) for timestamp values is:"
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
                 TheTimestampHistogram.OutputValues();
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The minimum time difference was " +
                     TheMinTimeDifference.ToString() +
@@ -329,7 +334,7 @@ namespace Analysis.TimeAnalysis
                     TheMinTimeDifferencePacketNumber.ToString()
                     );
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The maximum time difference was " +
                     TheMaxTimeDifference.ToString() +
@@ -337,30 +342,30 @@ namespace Analysis.TimeAnalysis
                     TheMaxTimeDifferencePacketNumber.ToString()
                     );
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The average time difference was " +
                     TheAverageTimeDifference.ToString() +
                     " ms"
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
                 //Output the histogram
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "The histogram (" +
                     Constants.TimeBinsPerMillisecond.ToString() +
                     " bins per millisecond) for time values is:"
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
                 TheTimeHistogram.OutputValues();
             }
 
-            System.Diagnostics.Trace.Write(System.Environment.NewLine);
+            TheDebugInformation.WriteBlankLine();
 
             if (OutputDebug)
             {
