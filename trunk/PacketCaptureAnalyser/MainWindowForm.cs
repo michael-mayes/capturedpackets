@@ -94,11 +94,57 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        private void EnableDebugInformationCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (EnableDebugInformationCheckBox.Checked)
+            {
+                ResetPacketCaptureAnalysisCheckBoxes(false);
+                EnablePacketCaptureAnalysisCheckBoxes();
+            }
+            else
+            {
+                ResetPacketCaptureAnalysisCheckBoxes(false);
+                DisablePacketCaptureAnalysisCheckBoxes(false);
+            }
+        }
+
+        private void EnableInformationEventsInDebugInformationCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (EnableInformationEventsInDebugInformationCheckBox.Checked)
+            {
+                EnableDebugInformationCheckBox.Checked = true;
+            }
+        }
+
+        private void RedirectDebugInformationToOutputCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (RedirectDebugInformationToOutputCheckBox.Checked)
+            {
+                EnableDebugInformationCheckBox.Checked = true;
+            }
+        }
+
+        private void PerformLatencyAnalysisCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (PerformLatencyAnalysisCheckBox.Checked)
+            {
+                EnableDebugInformationCheckBox.Checked = true;
+            }
+        }
+
         private void OutputLatencyAnalysisDebugCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (OutputLatencyAnalysisDebugCheckBox.Checked)
             {
                 PerformLatencyAnalysisCheckBox.Checked = true;
+            }
+        }
+
+        private void PerformTimeAnalysisCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (PerformTimeAnalysisCheckBox.Checked)
+            {
+                EnableDebugInformationCheckBox.Checked = true;
             }
         }
 
@@ -137,6 +183,7 @@ namespace PacketCaptureAnalyser
                 new Analysis.DebugInformation
                 (
                 SelectedPacketCaptureForAnalysisDialog.FileName + ".txt",
+                EnableDebugInformationCheckBox.Checked,
                 EnableInformationEventsInDebugInformationCheckBox.Checked,
                 RedirectDebugInformationToOutputCheckBox.Checked
                 ))
@@ -404,37 +451,71 @@ namespace PacketCaptureAnalyser
 
                 if (TheResult)
                 {
-                    //Display a message box to indicate analysis of the packet capture is complete and ask whether to open the output file
-                    TheMessageBoxResult =
-                        System.Windows.Forms.MessageBox.Show
-                        (
-                        "Analysis of the " +
-                        ThePacketCaptureFileName +
-                        " packet capture completed successfully!" +
-                        System.Environment.NewLine +
-                        System.Environment.NewLine +
-                        "Do you want to open the output file?",
-                        "Run Analysis On Selected Packet Capture",
-                        System.Windows.Forms.MessageBoxButtons.YesNo,
-                        System.Windows.Forms.MessageBoxIcon.Question
-                        );
+                    if (EnableDebugInformationCheckBox.Checked)
+                    {
+                        //Display a message box to indicate analysis of the packet capture completed successfully and ask whether to open the output file
+                        TheMessageBoxResult =
+                            System.Windows.Forms.MessageBox.Show
+                            (
+                            "Analysis of the " +
+                            ThePacketCaptureFileName +
+                            " packet capture completed successfully!" +
+                            System.Environment.NewLine +
+                            System.Environment.NewLine +
+                            "Do you want to open the output file?",
+                            "Run Analysis On Selected Packet Capture",
+                            System.Windows.Forms.MessageBoxButtons.YesNo,
+                            System.Windows.Forms.MessageBoxIcon.Question
+                            );
+                    }
+                    else
+                    {
+                        //Display a message box to indicate analysis of the packet capture completed successfully
+                        TheMessageBoxResult =
+                            System.Windows.Forms.MessageBox.Show
+                            (
+                            "Analysis of the " +
+                            ThePacketCaptureFileName +
+                            " packet capture completed successfully!",
+                            "Run Analysis On Selected Packet Capture",
+                            System.Windows.Forms.MessageBoxButtons.OK,
+                            System.Windows.Forms.MessageBoxIcon.Information
+                            );
+                    }
                 }
                 else
                 {
-                    //Display a message box to indicate analysis of the packet capture failed and ask whether to open the output file
-                    TheMessageBoxResult =
-                        System.Windows.Forms.MessageBox.Show
-                        (
-                        "Analysis of the " +
-                        ThePacketCaptureFileName +
-                        " packet capture failed!!!" +
-                        System.Environment.NewLine +
-                        System.Environment.NewLine +
-                        "Do you want to open the output file?",
-                        "Run Analysis On Selected Packet Capture",
-                        System.Windows.Forms.MessageBoxButtons.YesNo,
-                        System.Windows.Forms.MessageBoxIcon.Error
-                        );
+                    if (EnableDebugInformationCheckBox.Checked)
+                    {
+                        //Display a message box to indicate analysis of the packet capture failed and ask whether to open the output file
+                        TheMessageBoxResult =
+                            System.Windows.Forms.MessageBox.Show
+                            (
+                            "Analysis of the " +
+                            ThePacketCaptureFileName +
+                            " packet capture failed!!!" +
+                            System.Environment.NewLine +
+                            System.Environment.NewLine +
+                            "Do you want to open the output file?",
+                            "Run Analysis On Selected Packet Capture",
+                            System.Windows.Forms.MessageBoxButtons.YesNo,
+                            System.Windows.Forms.MessageBoxIcon.Error
+                            );
+                    }
+                    else
+                    {
+                        //Display a message box to indicate analysis of the packet capture failed
+                        TheMessageBoxResult =
+                            System.Windows.Forms.MessageBox.Show
+                            (
+                            "Analysis of the " +
+                            ThePacketCaptureFileName +
+                            " packet capture failed!!!",
+                            "Run Analysis On Selected Packet Capture",
+                            System.Windows.Forms.MessageBoxButtons.OK,
+                            System.Windows.Forms.MessageBoxIcon.Error
+                            );
+                    }
                 }
 
                 //Dependent on the button selection at the message box, open the output file
@@ -467,7 +548,7 @@ namespace PacketCaptureAnalyser
                         EnablePacketCaptureAnalysisButtons();
 
                         //Reset and enable the check boxes
-                        ResetPacketCaptureAnalysisCheckBoxes();
+                        ResetPacketCaptureAnalysisCheckBoxes(true);
                         EnablePacketCaptureAnalysisCheckBoxes();
 
                         break;
@@ -484,7 +565,7 @@ namespace PacketCaptureAnalyser
                         EnablePacketCaptureAnalysisButtons();
 
                         //Reset and enable the check boxes
-                        ResetPacketCaptureAnalysisCheckBoxes();
+                        ResetPacketCaptureAnalysisCheckBoxes(true);
                         EnablePacketCaptureAnalysisCheckBoxes();
 
                         break;
@@ -501,7 +582,7 @@ namespace PacketCaptureAnalyser
                         EnablePacketCaptureAnalysisButtons();
 
                         //Reset and enable the check boxes
-                        ResetPacketCaptureAnalysisCheckBoxes();
+                        ResetPacketCaptureAnalysisCheckBoxes(true);
                         EnablePacketCaptureAnalysisCheckBoxes();
 
                         break;
@@ -518,8 +599,8 @@ namespace PacketCaptureAnalyser
                         ResetPacketCaptureAnalysisButtons();
 
                         //Reset and disable the check boxes
-                        ResetPacketCaptureAnalysisCheckBoxes();
-                        DisablePacketCaptureAnalysisCheckBoxes();
+                        ResetPacketCaptureAnalysisCheckBoxes(true);
+                        DisablePacketCaptureAnalysisCheckBoxes(true);
 
                         break;
                     }
@@ -536,8 +617,8 @@ namespace PacketCaptureAnalyser
                         ResetPacketCaptureAnalysisButtons();
 
                         //Reset and disable the check boxes
-                        ResetPacketCaptureAnalysisCheckBoxes();
-                        DisablePacketCaptureAnalysisCheckBoxes();
+                        ResetPacketCaptureAnalysisCheckBoxes(true);
+                        DisablePacketCaptureAnalysisCheckBoxes(true);
 
                         break;
                     }
@@ -561,8 +642,8 @@ namespace PacketCaptureAnalyser
             RunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
 
             //4) Reset and disable the check boxes
-            ResetPacketCaptureAnalysisCheckBoxes();
-            DisablePacketCaptureAnalysisCheckBoxes();
+            ResetPacketCaptureAnalysisCheckBoxes(true);
+            DisablePacketCaptureAnalysisCheckBoxes(true);
         }
 
         //Packet capture type
@@ -728,23 +809,37 @@ namespace PacketCaptureAnalyser
 
         //Check box support functions
 
-        private void ResetPacketCaptureAnalysisCheckBoxes()
+        private void ResetPacketCaptureAnalysisCheckBoxes(bool ResetDebugInformationCheckBox)
         {
             //Reset the check boxes
 
-            EnableInformationEventsInDebugInformationCheckBox.Checked = true;
+            if (ResetDebugInformationCheckBox)
+            {
+                EnableDebugInformationCheckBox.Checked = true;
+                EnableInformationEventsInDebugInformationCheckBox.Checked = true;
+            }
+            else
+            {
+                EnableInformationEventsInDebugInformationCheckBox.Checked = false;
+            }
+
             RedirectDebugInformationToOutputCheckBox.Checked = false;
             PerformLatencyAnalysisCheckBox.Checked = false;
             OutputLatencyAnalysisDebugCheckBox.Checked = false;
             PerformTimeAnalysisCheckBox.Checked = false;
             OutputTimeAnalysisDebugCheckBox.Checked = false;
-            MinimiseMemoryUsageCheckBox.Checked = false;
+
+            if (ResetDebugInformationCheckBox)
+            {
+                MinimiseMemoryUsageCheckBox.Checked = false;
+            }
         }
 
         private void EnablePacketCaptureAnalysisCheckBoxes()
         {
             //Enable the check boxes
 
+            EnableDebugInformationCheckBox.Enabled = true;
             EnableInformationEventsInDebugInformationCheckBox.Enabled = true;
             RedirectDebugInformationToOutputCheckBox.Enabled = true;
             PerformLatencyAnalysisCheckBox.Enabled = true;
@@ -754,9 +849,14 @@ namespace PacketCaptureAnalyser
             MinimiseMemoryUsageCheckBox.Enabled = true;
         }
 
-        private void DisablePacketCaptureAnalysisCheckBoxes()
+        private void DisablePacketCaptureAnalysisCheckBoxes(bool DisableDebugInformationCheckBox)
         {
             //Disable the check boxes
+
+            if (DisableDebugInformationCheckBox)
+            {
+                EnableDebugInformationCheckBox.Enabled = false;
+            }
 
             EnableInformationEventsInDebugInformationCheckBox.Enabled = false;
             RedirectDebugInformationToOutputCheckBox.Enabled = false;
@@ -764,7 +864,11 @@ namespace PacketCaptureAnalyser
             OutputLatencyAnalysisDebugCheckBox.Enabled = false;
             PerformTimeAnalysisCheckBox.Enabled = false;
             OutputTimeAnalysisDebugCheckBox.Enabled = false;
-            MinimiseMemoryUsageCheckBox.Enabled = false;
+
+            if (DisableDebugInformationCheckBox)
+            {
+                MinimiseMemoryUsageCheckBox.Enabled = false;
+            }
         }
     }
 }

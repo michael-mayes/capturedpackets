@@ -11,9 +11,11 @@ namespace Analysis
 
         private string TheOutputFilePath;
 
+        private bool EnableDebugInformation;
+
         private bool EnableInformationEvents;
 
-        public DebugInformation(string TheOutputFilePath, bool EnableInformationEvents, bool RedirectDebugInformationToOutput)
+        public DebugInformation(string TheOutputFilePath, bool EnableDebugInformation, bool EnableInformationEvents, bool RedirectDebugInformationToOutput)
         {
             //Delete any existing output files with the selected name to ape the clearing of all text from the output window
             if (System.IO.File.Exists(TheOutputFilePath))
@@ -25,35 +27,44 @@ namespace Analysis
                 System.IO.File.Delete(TheOutputFilePath);
             }
 
-            TheOutputWindowListener =
-                new System.Diagnostics.TextWriterTraceListener(TheOutputFilePath);
-
             this.TheOutputFilePath = TheOutputFilePath;
+
+            this.EnableDebugInformation = EnableDebugInformation;
 
             this.EnableInformationEvents = EnableInformationEvents;
 
-            //Unless instructed otherwise, remove the output window from the list of listeners to debug output as all text will go to the output file
-            if (!RedirectDebugInformationToOutput)
+            if (EnableDebugInformation)
             {
-                System.Diagnostics.Debug.Listeners.Clear();
-            }
+                TheOutputWindowListener =
+                    new System.Diagnostics.TextWriterTraceListener(TheOutputFilePath);
 
-            //Redirect any text added to the output window to the output file
-            System.Diagnostics.Trace.Listeners.Add(TheOutputWindowListener);
+                //Unless instructed otherwise, remove the output window from the list of listeners to debug output as all text will go to the output file
+                if (EnableDebugInformation &&
+                    !RedirectDebugInformationToOutput)
+                {
+                    System.Diagnostics.Debug.Listeners.Clear();
+                }
+
+                //Redirect any text added to the output window to the output file
+                System.Diagnostics.Trace.Listeners.Add(TheOutputWindowListener);
+            }
         }
 
         public virtual void Dispose(bool Disposing)
         {
             if (Disposing)
             {
-                //Flush output to the output file and then close it
-                TheOutputWindowListener.Flush();
-                TheOutputWindowListener.Close();
+                if (EnableDebugInformation)
+                {
+                    //Flush output to the output file and then close it
+                    TheOutputWindowListener.Flush();
+                    TheOutputWindowListener.Close();
 
-                System.Diagnostics.Debug.Listeners.Remove(TheOutputWindowListener);
+                    System.Diagnostics.Debug.Listeners.Remove(TheOutputWindowListener);
 
-                //Dispose any resources allocated to the trace listener if instructed
-                TheOutputWindowListener.Dispose();
+                    //Dispose any resources allocated to the trace listener if instructed
+                    TheOutputWindowListener.Dispose();
+                }
             }
         }
 
@@ -66,16 +77,19 @@ namespace Analysis
 
         public void WriteTestRunEvent(string TheTestRunEvent)
         {
-            System.Diagnostics.Trace.WriteLine
-                (
-                "Test:  " +
-                TheTestRunEvent
-                );
+            if (EnableDebugInformation)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Test:  " +
+                    TheTestRunEvent
+                    );
+            }
         }
 
         public void WriteInformationEvent(string TheInformationEvent)
         {
-            if (EnableInformationEvents)
+            if (EnableDebugInformation && EnableInformationEvents)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
@@ -87,54 +101,65 @@ namespace Analysis
 
         public void WriteErrorEvent(string TheErrorEvent)
         {
-            System.Diagnostics.Trace.WriteLine
-                (
-                "Error: " +
-                TheErrorEvent
-                );
+            if (EnableDebugInformation)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    "Error: " +
+                    TheErrorEvent
+                    );
+            }
         }
 
         public void WriteTextString(string TheTextString)
         {
-            System.Diagnostics.Trace.WriteLine
-                (
-                TheTextString
-                );
+            if (EnableDebugInformation)
+            {
+                System.Diagnostics.Trace.WriteLine
+                    (
+                    TheTextString
+                    );
+            }
         }
 
         public void WriteBlankLine()
         {
-            System.Diagnostics.Trace.Write
-                (
-                System.Environment.NewLine
-                );
+            if (EnableDebugInformation)
+            {
+                System.Diagnostics.Trace.Write
+                    (
+                    System.Environment.NewLine
+                    );
+            }
         }
 
         public void Open()
         {
-            //Flush output to the output file and then close it
-            TheOutputWindowListener.Flush();
-
-            if (System.IO.File.Exists(TheOutputFilePath))
+            if (EnableDebugInformation)
             {
-                try
-                {
-                    System.Diagnostics.Process.Start(TheOutputFilePath);
-                }
+                //Flush output to the output file and then close it
+                TheOutputWindowListener.Flush();
 
-                catch (System.ComponentModel.Win32Exception f)
+                if (System.IO.File.Exists(TheOutputFilePath))
                 {
-                    System.Diagnostics.Trace.WriteLine
-                        (
-                        "Error: " +
-                        "The exception " +
-                        f.GetType().Name +
-                        " with the following message: " +
-                        f.Message +
-                        " was raised as there is no application registered that can open the " +
-                        System.IO.Path.GetFileName(TheOutputFilePath) +
-                        " output file!!!"
-                        );
+                    try
+                    {
+                        System.Diagnostics.Process.Start(TheOutputFilePath);
+                    }
+
+                    catch (System.ComponentModel.Win32Exception f)
+                    {
+                        WriteErrorEvent
+                            (
+                            "The exception " +
+                            f.GetType().Name +
+                            " with the following message: " +
+                            f.Message +
+                            " was raised as there is no application registered that can open the " +
+                            System.IO.Path.GetFileName(TheOutputFilePath) +
+                            " output file!!!"
+                            );
+                    }
                 }
             }
         }
