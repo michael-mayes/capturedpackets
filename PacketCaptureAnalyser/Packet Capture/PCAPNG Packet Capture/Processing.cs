@@ -12,7 +12,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         //Concrete methods - override abstract methods on the base class
         //
 
-        public override bool ProcessGlobalHeader(System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy)
+        public override bool ProcessGlobalHeader(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, out System.UInt32 TheNetworkDataLinkType, out double TheTimestampAccuracy)
         {
             bool TheResult = true;
 
@@ -38,9 +38,8 @@ namespace PacketCapture.PCAPNGPackageCapture
             //The endianism of the remainder of the values in the PCAP Next Generation packet capture section header block will be corrected to little endian if the magic number indicates big endian representation
             if (TheSectionHeaderBlock.ByteOrderMagic == Constants.LittleEndianByteOrderMagic)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "The PCAP Next Generation packet capture contains the little endian byte-order magic"
                     );
 
@@ -48,9 +47,8 @@ namespace PacketCapture.PCAPNGPackageCapture
             }
             else if (TheSectionHeaderBlock.ByteOrderMagic == Constants.BigEndianByteOrderMagic)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "The PCAP Next Generation packet capture contains the big endian byte-order magic"
                     );
 
@@ -75,7 +73,7 @@ namespace PacketCapture.PCAPNGPackageCapture
             TheBinaryReader.ReadBytes((int)(TheSectionHeaderBlock.BlockTotalLength - (uint)Constants.BlockTotalLength.SectionHeaderBlock));
 
             //Validate fields from the PCAP Next Generation packet capture section header block
-            TheResult = ValidateSectionHeaderBlock(TheSectionHeaderBlock);
+            TheResult = ValidateSectionHeaderBlock(TheDebugInformation, TheSectionHeaderBlock);
 
             if (TheResult)
             {
@@ -86,7 +84,7 @@ namespace PacketCapture.PCAPNGPackageCapture
             return TheResult;
         }
 
-        public override bool ProcessPacketHeader(System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
+        public override bool ProcessPacketHeader(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, System.UInt32 TheNetworkDataLinkType, double TheTimestampAccuracy, out long ThePayloadLength, out double TheTimestamp)
         {
             bool TheResult = true;
 
@@ -152,9 +150,8 @@ namespace PacketCapture.PCAPNGPackageCapture
                 default:
                     {
                         //We have got an PCAP Next Generation packet capture packet containing an unknown Block Type
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteErrorEvent
                         (
-                        "Error: " +
                         "The PCAP Next Generation packet capture block contains an unexpected Block Type of 0x" +
                         string.Format("{0:X}", TheBlockType) +
                         "!!!"
@@ -173,7 +170,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         //Private methods - provide methods specific to PCAP Next Generation packet captures, not required to derive from the abstract base class
         //
 
-        private bool ValidateSectionHeaderBlock(Structures.SectionHeaderBlockStructure TheSectionHeaderBlock)
+        private bool ValidateSectionHeaderBlock(Analysis.DebugInformation TheDebugInformation, Structures.SectionHeaderBlockStructure TheSectionHeaderBlock)
         {
             bool TheResult = true;
 
@@ -181,9 +178,8 @@ namespace PacketCapture.PCAPNGPackageCapture
 
             if (TheSectionHeaderBlock.BlockType != (uint)Constants.BlockType.SectionHeaderBlock)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected block type, is " +
                     TheSectionHeaderBlock.BlockType.ToString() +
                     " not " +
@@ -197,9 +193,8 @@ namespace PacketCapture.PCAPNGPackageCapture
             if (TheSectionHeaderBlock.ByteOrderMagic != Constants.LittleEndianByteOrderMagic &&
                 TheSectionHeaderBlock.ByteOrderMagic != Constants.BigEndianByteOrderMagic)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected magic number, is " +
                     TheSectionHeaderBlock.ByteOrderMagic.ToString() +
                     " not " +
@@ -214,9 +209,8 @@ namespace PacketCapture.PCAPNGPackageCapture
 
             if (TheSectionHeaderBlock.MajorVersion != Constants.ExpectedMajorVersion)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected major version number, is " +
                     TheSectionHeaderBlock.MajorVersion.ToString() +
                     " not " +
@@ -229,9 +223,8 @@ namespace PacketCapture.PCAPNGPackageCapture
 
             if (TheSectionHeaderBlock.MinorVersion != Constants.ExpectedMinorVersion)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The PCAP Next Generation packet capture section header block does not contain the expected minor version number, is " +
                     TheSectionHeaderBlock.MinorVersion.ToString() +
                     " not " +

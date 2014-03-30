@@ -4,11 +4,13 @@
 
 namespace Analysis
 {
-    public class CommonHistogram
+    class CommonHistogram
     {
         //
         //Private entities
         //
+
+        private Analysis.DebugInformation TheDebugInformation;
 
         private double[] TheValueBinBoundaries;
         private uint[] TheValueBinCounts;
@@ -25,13 +27,14 @@ namespace Analysis
         //Public constructor method
         //
 
-        public CommonHistogram(uint TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
+        public CommonHistogram(Analysis.DebugInformation TheDebugInformation, uint TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             if (TheMinAllowedValue == TheMaxAllowedValue)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The minimum and maximum allowed values for the histogram are equal!!!"
                     );
 
@@ -50,9 +53,8 @@ namespace Analysis
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The minimum value is greater than the maximum value!"
                     );
 
@@ -146,9 +148,8 @@ namespace Analysis
                         TheBinBoundaries[i + 1].ToString() +
                         "!!!";
 
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteErrorEvent
                         (
-                        "Error: " +
                         TheExceptionMessage
                         );
 
@@ -226,13 +227,13 @@ namespace Analysis
 
             if (TheNumberOfValuesLowerThanBins > 0)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "Number of values lower than bins: " +
                     TheNumberOfValuesLowerThanBins.ToString()
                     );
 
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
             }
 
             for (int i = 0; i < TheValueBinCounts.Length; ++i)
@@ -254,7 +255,7 @@ namespace Analysis
                         TheFirstPercentileFound = true;
 
                         System.Diagnostics.Trace.Write(new System.String('-', 144) + "  1%");
-                        System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                        TheDebugInformation.WriteBlankLine();
                     }
                 }
 
@@ -306,7 +307,7 @@ namespace Analysis
                 }
 
                 //Complete the line for this bin
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
                 //Output an indication if the ninety ninth percentile of all entries encountered has been reached
                 if (!TheNinetyNinthPercentileFound)
@@ -316,7 +317,7 @@ namespace Analysis
                         TheNinetyNinthPercentileFound = true;
 
                         System.Diagnostics.Trace.Write(new System.String('-', 144) + " 99%");
-                        System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                        TheDebugInformation.WriteBlankLine();
                     }
                 }
 
@@ -329,9 +330,9 @@ namespace Analysis
 
             if (TheNumberOfValuesHigherThanBins > 0)
             {
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                TheDebugInformation.WriteBlankLine();
 
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteTextString
                     (
                     "Number of values higher than bins: " +
                     TheNumberOfValuesHigherThanBins.ToString()

@@ -6,6 +6,8 @@ namespace EthernetFrame
 {
     class Processing
     {
+        private Analysis.DebugInformation TheDebugInformation;
+
         private System.IO.BinaryReader TheBinaryReader;
 
         private Structures.HeaderStructure TheHeader;
@@ -20,19 +22,21 @@ namespace EthernetFrame
 
         private System.UInt16 TheEtherType;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
+        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the Ethernet frame header
             TheHeader = new Structures.HeaderStructure();
 
             //Create instances of the processing classes for each Ether Type
-            TheARPPacketProcessing = new ARPPacket.Processing(TheBinaryReader);
-            TheIPv4PacketProcessing = new IPPacket.IPv4Packet.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheIPv6PacketProcessing = new IPPacket.IPv6Packet.Processing(TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheLLDPPacketProcessing = new LLDPPacket.Processing(TheBinaryReader);
-            TheLoopbackPacketProcessing = new LoopbackPacket.Processing(TheBinaryReader);
+            TheARPPacketProcessing = new ARPPacket.Processing(TheDebugInformation, TheBinaryReader);
+            TheIPv4PacketProcessing = new IPPacket.IPv4Packet.Processing(TheDebugInformation, TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheIPv6PacketProcessing = new IPPacket.IPv6Packet.Processing(TheDebugInformation, TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            TheLLDPPacketProcessing = new LLDPPacket.Processing(TheDebugInformation, TheBinaryReader);
+            TheLoopbackPacketProcessing = new LoopbackPacket.Processing(TheDebugInformation, TheBinaryReader);
         }
 
         public bool Process(ulong ThePacketNumber, long ThePayloadLength, double TheTimestamp)
@@ -134,9 +138,8 @@ namespace EthernetFrame
                         else
                         {
                             //This Ethernet frame has an unknown value for Ether Type
-                            System.Diagnostics.Trace.WriteLine
+                            TheDebugInformation.WriteInformationEvent
                                 (
-                                "Info:  " +
                                 "The Ethernet frame in captured packet #" +
                                 ThePacketNumber.ToString() +
                                 " contains an unexpected Ether Type of 0x" +
@@ -207,9 +210,8 @@ namespace EthernetFrame
                     {
                         //We've got an Ethernet frame containing a second VLAN tag!
 
-                        System.Diagnostics.Trace.WriteLine
+                        TheDebugInformation.WriteInformationEvent
                             (
-                            "Info:  " +
                             "The Ethernet frame in captured packet #" +
                             ThePacketNumber.ToString() +
                             " contains a second VLAN tag!" +
@@ -261,9 +263,8 @@ namespace EthernetFrame
 
             if (!ThePacketProcessingResult)
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteInformationEvent
                     (
-                    "Info:  " +
                     "Processing of the Ethernet frame in captured packet #" +
                     ThePacketNumber.ToString() +
                     " encountered an error during processing of the payload!" +
@@ -294,9 +295,8 @@ namespace EthernetFrame
 
                     TheBinaryReader.BaseStream.Position = TheBinaryReader.BaseStream.Position - (TheStreamPositionDifference - ThePayloadLength);
 
-                    System.Diagnostics.Trace.WriteLine
+                    TheDebugInformation.WriteInformationEvent
                         (
-                        "Info:  " +
                         "The length " +
                         ThePayloadLength.ToString() +
                         " of payload of Ethernet frame in captured packet #" +

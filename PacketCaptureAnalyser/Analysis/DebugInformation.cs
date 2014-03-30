@@ -64,6 +64,15 @@ namespace Analysis
             System.GC.SuppressFinalize(this);
         }
 
+        public void WriteTestRunEvent(string TheTestRunEvent)
+        {
+            System.Diagnostics.Trace.WriteLine
+                (
+                "Test:  " +
+                TheTestRunEvent
+                );
+        }
+
         public void WriteInformationEvent(string TheInformationEvent)
         {
             if (EnableInformationEvents)
@@ -82,6 +91,22 @@ namespace Analysis
                 (
                 "Error: " +
                 TheErrorEvent
+                );
+        }
+
+        public void WriteTextString(string TheTextString)
+        {
+            System.Diagnostics.Trace.WriteLine
+                (
+                TheTextString
+                );
+        }
+
+        public void WriteBlankLine()
+        {
+            System.Diagnostics.Trace.Write
+                (
+                System.Environment.NewLine
                 );
         }
 

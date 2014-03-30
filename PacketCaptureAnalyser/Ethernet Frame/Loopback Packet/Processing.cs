@@ -6,12 +6,16 @@ namespace EthernetFrame.LoopbackPacket
 {
     class Processing
     {
+        private Analysis.DebugInformation TheDebugInformation;
+
         private System.IO.BinaryReader TheBinaryReader;
 
         private Structures.HeaderStructure TheHeader;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader)
+        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader)
         {
+            this.TheDebugInformation = TheDebugInformation;
+
             this.TheBinaryReader = TheBinaryReader;
 
             //Create an instance of the Loopback packet header
@@ -24,9 +28,8 @@ namespace EthernetFrame.LoopbackPacket
 
             if (ThePayloadLength < (Constants.HeaderLength + Constants.PayloadLength))
             {
-                System.Diagnostics.Trace.WriteLine
+                TheDebugInformation.WriteErrorEvent
                     (
-                    "Error: " +
                     "The payload length of the Ethernet frame is lower than the length of the Loopback packet!!!"
                     );
 
