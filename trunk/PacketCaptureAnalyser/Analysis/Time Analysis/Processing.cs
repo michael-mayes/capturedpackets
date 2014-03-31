@@ -129,20 +129,20 @@ namespace Analysis.TimeAnalysis
             //Loop across all the time values for each of these host Ids in turn
 
             TheDebugInformation.WriteBlankLine();
-            TheDebugInformation.WriteTextString("===================");
-            TheDebugInformation.WriteTextString("== Time Analysis ==");
-            TheDebugInformation.WriteTextString("===================");
+            TheDebugInformation.WriteTextLine("===================");
+            TheDebugInformation.WriteTextLine("== Time Analysis ==");
+            TheDebugInformation.WriteTextLine("===================");
             TheDebugInformation.WriteBlankLine();
 
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "Host Id " +
                     string.Format("{0,3}", (TheHostIdRow.Field<byte>("HostId")).ToString())
                     );
 
-                TheDebugInformation.WriteTextString("===========");
+                TheDebugInformation.WriteTextLine("===========");
                 TheDebugInformation.WriteBlankLine();
 
                 FinaliseTimeValuesForHostId(TheHostIdRow.Field<byte>("HostId"));
@@ -278,7 +278,7 @@ namespace Analysis.TimeAnalysis
                 TheAverageTimestampDifference = (TheTotalOfTimestampDifferences / TheNumberOfTimestampDifferenceInstances);
                 TheAverageTimeDifference = (TheTotalOfTimeDifferences / TheNumberOfTimeDifferenceInstances);
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The number of time messages was " +
                     TheNumberOfTimestampDifferenceInstances.ToString()
@@ -286,7 +286,7 @@ namespace Analysis.TimeAnalysis
 
                 TheDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The minimum timestamp difference was " +
                     TheMinTimestampDifference.ToString() +
@@ -294,7 +294,7 @@ namespace Analysis.TimeAnalysis
                     TheMinTimestampDifferencePacketNumber.ToString()
                     );
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The maximum timestamp difference was " +
                     TheMaxTimestampDifference.ToString() +
@@ -302,7 +302,7 @@ namespace Analysis.TimeAnalysis
                     TheMaxTimestampDifferencePacketNumber.ToString()
                     );
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The average timestamp difference was " +
                     TheAverageTimestampDifference.ToString() +
@@ -313,7 +313,7 @@ namespace Analysis.TimeAnalysis
 
                 //Output the histogram
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The histogram (" +
                     Constants.TimestampBinsPerMillisecond.ToString() +
@@ -326,7 +326,7 @@ namespace Analysis.TimeAnalysis
 
                 TheDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The minimum time difference was " +
                     TheMinTimeDifference.ToString() +
@@ -334,7 +334,7 @@ namespace Analysis.TimeAnalysis
                     TheMinTimeDifferencePacketNumber.ToString()
                     );
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The maximum time difference was " +
                     TheMaxTimeDifference.ToString() +
@@ -342,7 +342,7 @@ namespace Analysis.TimeAnalysis
                     TheMaxTimeDifferencePacketNumber.ToString()
                     );
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The average time difference was " +
                     TheAverageTimeDifference.ToString() +
@@ -353,7 +353,7 @@ namespace Analysis.TimeAnalysis
 
                 //Output the histogram
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The histogram (" +
                     Constants.TimeBinsPerMillisecond.ToString() +

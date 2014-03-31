@@ -111,13 +111,24 @@ namespace Analysis
             }
         }
 
-        public void WriteTextString(string TheTextString)
+        public void WriteTextElement(string TheTextElement)
+        {
+            if (EnableDebugInformation)
+            {
+                System.Diagnostics.Trace.Write
+                    (
+                    TheTextElement
+                    );
+            }
+        }
+
+        public void WriteTextLine(string TheTextLine)
         {
             if (EnableDebugInformation)
             {
                 System.Diagnostics.Trace.WriteLine
                     (
-                    TheTextString
+                    TheTextLine
                     );
             }
         }
