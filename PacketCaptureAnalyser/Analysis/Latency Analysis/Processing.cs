@@ -300,20 +300,20 @@ namespace Analysis.LatencyAnalysis
             //Loop across all the latency values for the message pairings using each of these host Ids in turn
 
             TheDebugInformation.WriteBlankLine();
-            TheDebugInformation.WriteTextString("======================");
-            TheDebugInformation.WriteTextString("== Latency Analysis ==");
-            TheDebugInformation.WriteTextString("======================");
+            TheDebugInformation.WriteTextLine("======================");
+            TheDebugInformation.WriteTextLine("== Latency Analysis ==");
+            TheDebugInformation.WriteTextLine("======================");
             TheDebugInformation.WriteBlankLine();
 
             foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
             {
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "Host Id " +
                     string.Format("{0,3}", (TheHostIdRow.Field<byte>("HostId")).ToString())
                     );
 
-                TheDebugInformation.WriteTextString("===========");
+                TheDebugInformation.WriteTextLine("===========");
                 TheDebugInformation.WriteBlankLine();
 
                 FinaliseProtocolsForHostId(TheHostIdRow.Field<byte>("HostId"));
@@ -327,13 +327,13 @@ namespace Analysis.LatencyAnalysis
             {
                 string TheProtocolString = ((Constants.Protocol)TheProtocol).ToString();
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     TheProtocolString +
                     " messages"
                     );
 
-                TheDebugInformation.WriteTextString("------------");
+                TheDebugInformation.WriteTextLine("------------");
                 TheDebugInformation.WriteBlankLine();
 
                 //Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
@@ -361,7 +361,7 @@ namespace Analysis.LatencyAnalysis
 
                     if (TheRowsFoundCount > 0)
                     {
-                        TheDebugInformation.WriteTextString
+                        TheDebugInformation.WriteTextLine
                             (
                             "The number of pairs of " +
                             TheProtocolString +
@@ -432,7 +432,7 @@ namespace Analysis.LatencyAnalysis
 
                 TheDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The minimum latency for pairs of " +
                     TheProtocolString +
@@ -446,7 +446,7 @@ namespace Analysis.LatencyAnalysis
                     TheMinTimestampSequenceNumber.ToString()
                     );
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The maximum latency for pairs of " +
                     TheProtocolString +
@@ -460,7 +460,7 @@ namespace Analysis.LatencyAnalysis
                     TheMaxTimestampSequenceNumber.ToString()
                     );
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The average latency for pairs of " +
                     TheProtocolString +
@@ -475,7 +475,7 @@ namespace Analysis.LatencyAnalysis
 
                 //Output the histogram
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "The histogram (" +
                     Constants.BinsPerMillisecond.ToString() +

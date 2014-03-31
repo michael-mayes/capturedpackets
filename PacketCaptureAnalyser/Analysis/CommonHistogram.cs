@@ -227,7 +227,7 @@ namespace Analysis
 
             if (TheNumberOfValuesLowerThanBins > 0)
             {
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "Number of values lower than bins: " +
                     TheNumberOfValuesLowerThanBins.ToString()
@@ -254,8 +254,7 @@ namespace Analysis
                     {
                         TheFirstPercentileFound = true;
 
-                        System.Diagnostics.Trace.Write(new System.String('-', 144) + "  1%");
-                        TheDebugInformation.WriteBlankLine();
+                        TheDebugInformation.WriteTextLine(new System.String('-', 144) + "  1%");
                     }
                 }
 
@@ -263,26 +262,26 @@ namespace Analysis
 
                 if (TheValueBinBoundaries[i] >= 0.0)
                 {
-                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i].ToString(" 00.00000"));
+                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i].ToString(" 00.00000"));
 
                 }
                 else
                 {
-                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i].ToString("00.00000"));
+                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i].ToString("00.00000"));
                 }
 
-                System.Diagnostics.Trace.Write(" to ");
+                TheDebugInformation.WriteTextElement(" to ");
 
                 if (TheValueBinBoundaries[i + 1] >= 0.0)
                 {
-                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i + 1].ToString(" 00.00000"));
+                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i + 1].ToString(" 00.00000"));
                 }
                 else
                 {
-                    System.Diagnostics.Trace.Write(TheValueBinBoundaries[i + 1].ToString("00.00000"));
+                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i + 1].ToString("00.00000"));
                 }
 
-                System.Diagnostics.Trace.Write(" | ");
+                TheDebugInformation.WriteTextElement(" | ");
 
                 //Calculated a scaled count for this bin based on the percentage of the total number of values across all bins that is in this bin
                 //The scaling of the count will the ensure that the output does not exceed 120 columns to ensure it fits on screen
@@ -296,14 +295,14 @@ namespace Analysis
                 }
 
                 //Output a number of ) characters for this bin based on the scaled count
-                System.Diagnostics.Trace.Write(new System.String(')', ScaledBinCount));
+                TheDebugInformation.WriteTextElement(new System.String(')', ScaledBinCount));
 
                 //Except if there are no entries, leave a space after the last ) character
                 //for this bin for clarity and then write out the number of entries in this
                 //bin (the real value, not the scaled value)
                 if (TheValueBinCounts[i] > 0)
                 {
-                    System.Diagnostics.Trace.Write(" " + TheValueBinCounts[i]);
+                    TheDebugInformation.WriteTextElement(" " + TheValueBinCounts[i]);
                 }
 
                 //Complete the line for this bin
@@ -316,8 +315,7 @@ namespace Analysis
                     {
                         TheNinetyNinthPercentileFound = true;
 
-                        System.Diagnostics.Trace.Write(new System.String('-', 144) + " 99%");
-                        TheDebugInformation.WriteBlankLine();
+                        TheDebugInformation.WriteTextLine(new System.String('-', 144) + " 99%");
                     }
                 }
 
@@ -332,7 +330,7 @@ namespace Analysis
             {
                 TheDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextString
+                TheDebugInformation.WriteTextLine
                     (
                     "Number of values higher than bins: " +
                     TheNumberOfValuesHigherThanBins.ToString()
