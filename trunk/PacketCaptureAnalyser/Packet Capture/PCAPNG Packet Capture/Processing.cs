@@ -4,6 +4,12 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
+//SVN revision information:
+//File:    : $URL$
+//Revision : $Revision$
+//Date     : $Date$
+//Author   : $Author$
+
 namespace PacketCapture.PCAPNGPackageCapture
 {
     class Processing : CommonProcessing

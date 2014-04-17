@@ -4,6 +4,12 @@
 //unencumbered software released into the public domain as detailed in
 //the UNLICENSE file in the top level directory of this distribution
 
+//SVN revision information:
+//File:    : $URL$
+//Revision : $Revision$
+//Date     : $Date$
+//Author   : $Author$
+
 namespace Analysis
 {
     //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
