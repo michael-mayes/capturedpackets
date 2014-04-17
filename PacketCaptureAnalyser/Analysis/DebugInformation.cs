@@ -1,4 +1,4 @@
-﻿//$Header$
+﻿//$Header: https://svn.code.sf.net/p/capturedpackets/code/trunk/PacketCaptureAnalyser/Analysis/DebugInformation.cs 212 2014-04-17 18:01:00Z michaelmayes $
 
 //This file is part of the C# Packet Capture application. It is free and
 //unencumbered software released into the public domain as detailed in
