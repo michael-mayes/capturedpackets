@@ -3,10 +3,9 @@
 //the UNLICENSE file in the top level directory of this distribution
 
 //$Id$
-//$URL      : https://svn.code.sf.net/p/capturedpackets/code/trunk/PacketCaptureAnalyser/Ethernet%20Frame/ARP%20Packet/Processing.cs $
-//$Revision : 214 $
-//$Date     : 2014-04-17 19:11:24 +0100 (Thu, 17 Apr 2014) $
-//$Author   : michaelmayes $
+//$Revision$
+//$Date$
+//$Author$
 
 namespace EthernetFrame.ARPPacket
 {
