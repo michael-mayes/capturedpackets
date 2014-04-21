@@ -1,212 +1,209 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Processing.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace EthernetFrame.IPPacket.IPv6Packet
 {
     class Processing
     {
-        private Analysis.DebugInformation TheDebugInformation;
+        private Analysis.DebugInformation theDebugInformation;
 
-        private System.IO.BinaryReader TheBinaryReader;
+        private System.IO.BinaryReader theBinaryReader;
 
-        private Structures.HeaderStructure TheHeader;
+        private Structures.HeaderStructure theHeader;
 
-        private TCPPacket.Processing TheTCPPacketProcessing;
-        private UDPDatagram.Processing TheUDPDatagramProcessing;
+        private TCPPacket.Processing theTCPPacketProcessing;
+        private UDPDatagram.Processing theUDPDatagramProcessing;
 
-        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
+        /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theDebugInformation"></param>
+        /// <param name="theBinaryReader"></param>
+        /// <param name="performLatencyAnalysisProcessing"></param>
+        /// <param name="theLatencyAnalysisProcessing"></param>
+        /// <param name="performTimeAnalysisProcessing"></param>
+        /// <param name="theTimeAnalysisProcessing"></param>
+        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
         {
-            this.TheDebugInformation = TheDebugInformation;
+            this.theDebugInformation = theDebugInformation;
 
-            this.TheBinaryReader = TheBinaryReader;
+            this.theBinaryReader = theBinaryReader;
 
-            //Create an instance of the IPv6 packet header
-            TheHeader = new Structures.HeaderStructure();
+            // Create an instance of the IPv6 packet header
+            this.theHeader = new Structures.HeaderStructure();
 
-            //Create instances of the processing classes for each protocol
-            TheTCPPacketProcessing = new TCPPacket.Processing(TheDebugInformation, TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
-            TheUDPDatagramProcessing = new UDPDatagram.Processing(TheDebugInformation, TheBinaryReader, PerformLatencyAnalysisProcessing, TheLatencyAnalysisProcessing, PerformTimeAnalysisProcessing, TheTimeAnalysisProcessing);
+            // Create instances of the processing classes for each protocol
+            this.theTCPPacketProcessing = new TCPPacket.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
+            this.theUDPDatagramProcessing = new UDPDatagram.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
         }
 
-        public bool Process(long ThePayloadLength, ulong ThePacketNumber, double TheTimestamp)
+        public bool Process(long thePayloadLength, ulong thePacketNumber, double theTimestamp)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            ushort ThePacketPayloadLength;
-            byte TheProtocol;
+            ushort thePacketPayloadLength;
+            byte theProtocol;
 
-            //Process the IPv6 packet header
-            TheResult = ProcessHeader(ThePayloadLength, out ThePacketPayloadLength, out TheProtocol);
+            // Process the IPv6 packet header
+            theResult = this.ProcessHeader(thePayloadLength, out thePacketPayloadLength, out theProtocol);
 
-            if (TheResult)
+            if (theResult)
             {
-                //Process the payload of the IPv6 packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the IPv6 packet header
-                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePacketPayloadLength, TheProtocol);
+                // Process the payload of the IPv6 packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the IPv6 packet header
+                theResult = this.ProcessPayload(thePacketNumber, theTimestamp, thePacketPayloadLength, theProtocol);
             }
 
-            return TheResult;
+            return theResult;
         }
 
-        private bool ProcessHeader(long ThePayloadLength, out ushort ThePacketPayloadLength, out byte TheProtocol)
+        private bool ProcessHeader(long thePayloadLength, out ushort thePacketPayloadLength, out byte theProtocol)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Provide a default value for the output parameter for the length of the IPv6 packet payload
-            ThePacketPayloadLength = 0;
+            // Provide a default value for the output parameter for the length of the IPv6 packet payload
+            thePacketPayloadLength = 0;
 
-            //Provide a default value for the output parameter for the protocol for the IPv6 packet
-            TheProtocol = 0;
+            // Provide a default value for the output parameter for the protocol for the IPv6 packet
+            theProtocol = 0;
 
-            //Read the values for the IPv6 packet header from the packet capture
-            TheHeader.VersionAndTrafficClass = TheBinaryReader.ReadByte();
-            TheHeader.TrafficClassAndFlowLabel = TheBinaryReader.ReadByte();
-            TheHeader.FlowLabel = TheBinaryReader.ReadUInt16();
-            TheHeader.PayloadLength = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
-            TheHeader.NextHeader = TheBinaryReader.ReadByte();
-            TheHeader.HopLimit = TheBinaryReader.ReadByte();
-            TheHeader.SourceAddressHigh = TheBinaryReader.ReadInt64();
-            TheHeader.SourceAddressLow = TheBinaryReader.ReadInt64();
-            TheHeader.DestinationAddressHigh = TheBinaryReader.ReadInt64();
-            TheHeader.DestinationAddressLow = TheBinaryReader.ReadInt64();
+            // Read the values for the IPv6 packet header from the packet capture
+            this.theHeader.VersionAndTrafficClass = this.theBinaryReader.ReadByte();
+            this.theHeader.TrafficClassAndFlowLabel = this.theBinaryReader.ReadByte();
+            this.theHeader.FlowLabel = this.theBinaryReader.ReadUInt16();
+            this.theHeader.PayloadLength = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+            this.theHeader.NextHeader = this.theBinaryReader.ReadByte();
+            this.theHeader.HopLimit = this.theBinaryReader.ReadByte();
+            this.theHeader.SourceAddressHigh = this.theBinaryReader.ReadInt64();
+            this.theHeader.SourceAddressLow = this.theBinaryReader.ReadInt64();
+            this.theHeader.DestinationAddressHigh = this.theBinaryReader.ReadInt64();
+            this.theHeader.DestinationAddressLow = this.theBinaryReader.ReadInt64();
 
-            //Determine the version of the IPv6 packet header
-            //Need to first extract the version value from the combined IP packet version and traffic class field
-            //We want the higher four bits from the combined IP packet version and traffic class field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
-            ushort TheHeaderVersion = (ushort)(((TheHeader.VersionAndTrafficClass & 0xF0) >> 4));
+            // Determine the version of the IPv6 packet header
+            // Need to first extract the version value from the combined IP packet version and traffic class field
+            // We want the higher four bits from the combined IP packet version and traffic class field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
+            ushort theHeaderVersion = (ushort)((this.theHeader.VersionAndTrafficClass & 0xF0) >> 4);
 
-            //Validate the IPv6 packet header
-            TheResult = ValidateHeader(TheHeader, ThePayloadLength, TheHeaderVersion);
+            // Validate the IPv6 packet header
+            theResult = this.ValidateHeader(this.theHeader, thePayloadLength, theHeaderVersion);
 
-            if (TheResult)
+            if (theResult)
             {
-                //Set up the output parameter for the length of the payload of the IPv6 packet (e.g. a TCP packet), which is the total length of the IPv6 packet minus the length of the IPv6 packet header just calculated
-                ThePacketPayloadLength = TheHeader.PayloadLength;
+                // Set up the output parameter for the length of the payload of the IPv6 packet (e.g. a TCP packet), which is the total length of the IPv6 packet minus the length of the IPv6 packet header just calculated
+                thePacketPayloadLength = this.theHeader.PayloadLength;
 
-                //Set up the output parameter for the protocol for the IPv6 packet
-                TheProtocol = TheHeader.NextHeader;
+                // Set up the output parameter for the protocol for the IPv6 packet
+                theProtocol = this.theHeader.NextHeader;
             }
 
-            return TheResult;
+            return theResult;
         }
 
-        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort ThePayloadLength, byte TheProtocol)
+        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort thePayloadLength, byte theProtocol)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Process the IPv6 packet based on the value indicated for the protocol in the the IPv6 packet header
-            switch (TheProtocol)
+            // Process the IPv6 packet based on the value indicated for the protocol in the the IPv6 packet header
+            switch (theProtocol)
             {
                 case (byte)Constants.Protocol.TCP:
                     {
-                        //We've got an IPv6 packet containing an TCP packet so process it
-                        TheResult = TheTCPPacketProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
+                        // We have got an IPv6 packet containing an TCP packet so process it
+                        theResult = this.theTCPPacketProcessing.Process(thePacketNumber, theTimestamp, thePayloadLength);
 
                         break;
                     }
 
                 case (byte)Constants.Protocol.UDP:
                     {
-                        //We've got an IPv6 packet containing an UDP datagram so process it
-                        TheResult = TheUDPDatagramProcessing.Process(ThePacketNumber, TheTimestamp, ThePayloadLength);
+                        // We have got an IPv6 packet containing an UDP datagram so process it
+                        theResult = this.theUDPDatagramProcessing.Process(thePacketNumber, theTimestamp, thePayloadLength);
 
                         break;
                     }
 
                 case (byte)Constants.Protocol.ICMPv6:
                     {
-                        //We've got an IPv6 packet containing an ICMPv6 packet
+                        //// We have got an IPv6 packet containing an ICMPv6 packet
 
-                        //Processing of IPv6 packets containing an ICMPv6 packet is not currently supported!
+                        //// Processing of IPv6 packets containing an ICMPv6 packet is not currently supported!
 
-                        TheDebugInformation.WriteInformationEvent
-                            (
-                            "The IPv6 packet contains an ICMPv6 packet, which is not currently supported!"
-                            );
+                        this.theDebugInformation.WriteInformationEvent("The IPv6 packet contains an ICMPv6 packet, which is not currently supported!");
 
-                        //Just read off the bytes for the ICMPv6 packet from the packet capture so we can move on
-                        TheBinaryReader.ReadBytes(ThePayloadLength);
+                        // Just read off the bytes for the ICMPv6 packet from the packet capture so we can move on
+                        this.theBinaryReader.ReadBytes(thePayloadLength);
 
                         break;
                     }
 
                 case (byte)Constants.Protocol.EIGRP:
                     {
-                        //We've got an IPv6 packet containing a Cisco EIGRP packet
+                        // We have got an IPv6 packet containing a Cisco EIGRP packet
 
-                        //Processing of IPv6 packets containing a Cisco EIGRP packet is not currently supported!
+                        // Processing of IPv6 packets containing a Cisco EIGRP packet is not currently supported!
 
-                        //Just record the event and fall through as later processing will read off the remaining payload so we can move on
-                        TheDebugInformation.WriteInformationEvent
-                            (
-                            "The IPv6 packet contains a Cisco EIGRP packet which is not currently supported!"
-                            );
+                        // Just record the event and fall through as later processing will read off the remaining payload so we can move on
+                        this.theDebugInformation.WriteInformationEvent("The IPv6 packet contains a Cisco EIGRP packet which is not currently supported!");
 
                         break;
                     }
 
                 default:
                     {
-                        //We've got an IPv6 packet containing an unknown protocol
+                        //// We have got an IPv6 packet containing an unknown protocol
 
-                        //Processing of packets with network data link types not enumerated above are obviously not currently supported!
+                        //// Processing of packets with network data link types not enumerated above are obviously not currently supported!
 
-                        TheDebugInformation.WriteErrorEvent
-                            (
-                            "The IPv6 packet contains an unexpected protocol of " +
-                            string.Format("{0:X}", TheProtocol) +
-                            "!!!"
-                            );
+                        this.theDebugInformation.WriteErrorEvent("The IPv6 packet contains an unexpected protocol of " +
+                            string.Format("{0:X}", theProtocol) +
+                            "!!!");
 
-                        TheResult = false;
+                        theResult = false;
 
                         break;
                     }
             }
 
-            return TheResult;
+            return theResult;
         }
 
-        private bool ValidateHeader(Structures.HeaderStructure TheHeader, long ThePayloadLength, ushort TheHeaderVersion)
+        private bool ValidateHeader(Structures.HeaderStructure theHeader, long thePayloadLength, ushort theHeaderVersion)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Validate the version in the IPv4 packet header
-            if ((TheHeader.PayloadLength + Constants.HeaderLength) > ThePayloadLength)
+            // Validate the version in the IPv4 packet header
+            if ((this.theHeader.PayloadLength + Constants.HeaderLength) > thePayloadLength)
             {
-                //We've got an IPv6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
+                //// We have got an IPv6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
 
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The IPv6 packet indicates a total length of " +
-                    (TheHeader.PayloadLength + Constants.HeaderLength).ToString() +
+                this.theDebugInformation.WriteErrorEvent("The IPv6 packet indicates a total length of " +
+                    (this.theHeader.PayloadLength + Constants.HeaderLength).ToString() +
                     " bytes that is greater than the length of the payload of " +
-                    ThePayloadLength.ToString() +
-                    " bytes in the Ethernet frame!!!"
-                    );
+                    thePayloadLength.ToString() +
+                    " bytes in the Ethernet frame!!!");
 
-                TheResult = false;
+                theResult = false;
             }
 
-            //Validate the version in the IPv6 packet header
-            if (TheHeaderVersion != Constants.HeaderVersion)
+            // Validate the version in the IPv6 packet header
+            if (theHeaderVersion != Constants.HeaderVersion)
             {
-                //We've got an IPv6 packet header containing an unknown version
+                //// We have got an IPv6 packet header containing an unknown version
 
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The IPv6 packet header contains an unexpected version of " +
-                    TheHeaderVersion.ToString() +
-                    "!!!"
-                    );
+                this.theDebugInformation.WriteErrorEvent("The IPv6 packet header contains an unexpected version of " +
+                    theHeaderVersion.ToString() +
+                    "!!!");
 
-                TheResult = false;
+                theResult = false;
             }
 
-            return TheResult;
+            return theResult;
         }
     }
 }

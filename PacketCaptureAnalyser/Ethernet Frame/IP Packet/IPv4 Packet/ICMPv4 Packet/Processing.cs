@@ -1,50 +1,57 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Processing.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 {
     class Processing
     {
-        private System.IO.BinaryReader TheBinaryReader;
+        private System.IO.BinaryReader theBinaryReader;
 
-        private Structures.HeaderStructure TheHeader;
+        private Structures.HeaderStructure theHeader;
 
-        public Processing(System.IO.BinaryReader TheBinaryReader)
+        /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theBinaryReader"></param>
+        public Processing(System.IO.BinaryReader theBinaryReader)
         {
-            this.TheBinaryReader = TheBinaryReader;
+            this.theBinaryReader = theBinaryReader;
 
-            //Create an instance of the ICMPv4 packet header
-            TheHeader = new Structures.HeaderStructure();
+            // Create an instance of the ICMPv4 packet header
+            this.theHeader = new Structures.HeaderStructure();
         }
 
-        public bool Process(ushort TheICMPv4PacketLength)
+        public bool Process(ushort theICMPv4PacketLength)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Process the ICMPv4 packet header
-            TheResult = ProcessHeader();
+            // Process the ICMPv4 packet header
+            theResult = this.ProcessHeader();
 
-            //Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
-            //The remaining length is the supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
-            TheBinaryReader.ReadBytes(TheICMPv4PacketLength - Constants.HeaderLength);
+            // Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
+            // The remaining length is the supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
+            this.theBinaryReader.ReadBytes(theICMPv4PacketLength - Constants.HeaderLength);
 
-            return TheResult;
+            return theResult;
         }
 
         private bool ProcessHeader()
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Read the values for the ICMPv4 packet header from the packet capture
-            TheHeader.Type = TheBinaryReader.ReadByte();
-            TheHeader.Code = TheBinaryReader.ReadByte();
-            TheHeader.Checksum = TheBinaryReader.ReadUInt16();
+            // Read the values for the ICMPv4 packet header from the packet capture
+            this.theHeader.Type = this.theBinaryReader.ReadByte();
+            this.theHeader.Code = this.theBinaryReader.ReadByte();
+            this.theHeader.Checksum = this.theBinaryReader.ReadUInt16();
 
-            return TheResult;
+            return theResult;
         }
     }
 }

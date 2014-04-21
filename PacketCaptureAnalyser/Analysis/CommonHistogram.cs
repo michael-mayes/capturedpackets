@@ -1,343 +1,323 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="CommonHistogram.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace Analysis
 {
     class CommonHistogram
     {
-        //
-        //Private entities
-        //
+        //// Private entities 
 
-        private Analysis.DebugInformation TheDebugInformation;
+        private Analysis.DebugInformation theDebugInformation;
 
-        private double[] TheValueBinBoundaries;
-        private uint[] TheValueBinCounts;
+        private double[] theValueBinBoundaries;
+        private uint[] theValueBinCounts;
 
-        private uint TheNumberOfValuesAcrossAllBins = 0;
+        private uint theNumberOfValuesAcrossAllBins = 0;
 
-        private uint TheNumberOfValuesLowerThanBins = 0;
-        private uint TheNumberOfValuesHigherThanBins = 0;
+        private uint theNumberOfValuesLowerThanBins = 0;
+        private uint theNumberOfValuesHigherThanBins = 0;
 
-        private double TheMinValueEncountered = double.MaxValue;
-        private double TheMaxValueEncountered = double.MinValue;
+        private double theMinValueEncountered = double.MaxValue;
+        private double theMaxValueEncountered = double.MinValue;
 
-        //
-        //Public constructor method
-        //
-
-        public CommonHistogram(Analysis.DebugInformation TheDebugInformation, uint TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
+        /// <summary>
+        /// Initializes a new instance of the CommonHistogram class
+        /// </summary>
+        /// <param name="theDebugInformation"></param>
+        /// <param name="theNumOfValueBins"></param>
+        /// <param name="theMinAllowedValue"></param>
+        /// <param name="theMaxAllowedValue"></param>
+        public CommonHistogram(Analysis.DebugInformation theDebugInformation, uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
         {
-            this.TheDebugInformation = TheDebugInformation;
+            this.theDebugInformation = theDebugInformation;
 
-            if (TheMinAllowedValue == TheMaxAllowedValue)
+            if (theMinAllowedValue == theMaxAllowedValue)
             {
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The minimum and maximum allowed values for the histogram are equal!!!"
-                    );
+                theDebugInformation.WriteErrorEvent("The minimum and maximum allowed values for the histogram are equal!!!");
 
-                throw new System.ArgumentException
-                    (
-                    "Error: " +
-                    "The minimum and maximum allowed values for the histogram are equal!!!"
-                    );
+                throw new System.ArgumentException("Error: The minimum and maximum allowed values for the histogram are equal!!!");
             }
 
-            TheValueBinCounts = new uint[TheNumOfValueBins];
+            this.theValueBinCounts = new uint[theNumOfValueBins];
 
-            if (TheMaxAllowedValue > TheMinAllowedValue)
+            if (theMaxAllowedValue > theMinAllowedValue)
             {
-                CalculateValueBinBoundaries(TheNumOfValueBins, TheMinAllowedValue, TheMaxAllowedValue);
+                this.CalculateValueBinBoundaries(theNumOfValueBins, theMinAllowedValue, theMaxAllowedValue);
             }
             else
             {
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The minimum value is greater than the maximum value!"
-                    );
+                theDebugInformation.WriteErrorEvent("The minimum value is greater than the maximum value!");
 
-                CalculateValueBinBoundaries(TheNumOfValueBins, TheMaxAllowedValue, TheMinAllowedValue);
+                this.CalculateValueBinBoundaries(theNumOfValueBins, theMaxAllowedValue, theMinAllowedValue);
             }
         }
 
-        //
-        //Public accessor methods
-        //
+        //// Public accessor methods
 
         public double[] GetValueBinBoundaries()
         {
-            return TheValueBinBoundaries;
+            return this.theValueBinBoundaries;
         }
 
         public uint[] GetValueBinCounts()
         {
-            return TheValueBinCounts;
+            return this.theValueBinCounts;
         }
 
-        public uint GetValueBinCount(uint TheValueBinNumber)
+        public uint GetValueBinCount(uint theValueBinNumber)
         {
-            return TheValueBinCounts[TheValueBinNumber];
+            return this.theValueBinCounts[theValueBinNumber];
         }
 
         public int GetNumberOfValueBins()
         {
-            return TheValueBinCounts.Length;
+            return this.theValueBinCounts.Length;
         }
 
         public double GetMinAllowedValue()
         {
-            return TheValueBinBoundaries[0];
+            return this.theValueBinBoundaries[0];
         }
 
         public double GetMaxAllowedValue()
         {
-            return TheValueBinBoundaries[TheValueBinBoundaries.Length - 1];
+            return this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1];
         }
 
         public uint GetTheNumberOfValuesAcrossAllBins()
         {
-            return TheNumberOfValuesAcrossAllBins;
+            return this.theNumberOfValuesAcrossAllBins;
         }
 
         public uint GetNumberOfValuesLowerThanBins()
         {
-            return TheNumberOfValuesLowerThanBins;
+            return this.theNumberOfValuesLowerThanBins;
         }
 
         public uint GetNumberOfValuesHigherThanBins()
         {
-            return TheNumberOfValuesHigherThanBins;
+            return this.theNumberOfValuesHigherThanBins;
         }
 
-        //
-        //Private methods
-        //
+        //// Private methods
 
-        private void CalculateValueBinBoundaries(uint TheNumOfValueBins, double TheMinAllowedValue, double TheMaxAllowedValue)
+        private void CalculateValueBinBoundaries(uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
         {
-            TheValueBinBoundaries = new double[TheNumOfValueBins + 1];
+            this.theValueBinBoundaries = new double[theNumOfValueBins + 1];
 
-            TheValueBinBoundaries[0] = TheMinAllowedValue;
+            this.theValueBinBoundaries[0] = theMinAllowedValue;
 
-            TheValueBinBoundaries[TheValueBinBoundaries.Length - 1] = TheMaxAllowedValue;
+            this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1] = theMaxAllowedValue;
 
-            double TheSizeOfValueBins = (TheMaxAllowedValue - TheMinAllowedValue) / TheNumOfValueBins;
+            double theSizeOfValueBins = (theMaxAllowedValue - theMinAllowedValue) / theNumOfValueBins;
 
-            for (int i = 1; i < TheValueBinBoundaries.Length - 1; ++i)
+            for (int i = 1; i < this.theValueBinBoundaries.Length - 1; ++i)
             {
-                TheValueBinBoundaries[i] = TheValueBinBoundaries[0] + i * TheSizeOfValueBins;
+                this.theValueBinBoundaries[i] = this.theValueBinBoundaries[0] + (i * theSizeOfValueBins);
             }
 
-            //Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values
-            CheckBinBoundaries(this.TheValueBinBoundaries);
+            // Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values
+            this.CheckBinBoundaries(this.theValueBinBoundaries);
         }
 
-        //Check that the supplied bin boundaries are a strictly monotonically increasing sequence of values
-        private void CheckBinBoundaries(double[] TheBinBoundaries)
+        // Check that the supplied bin boundaries are a strictly monotonically increasing sequence of values
+        private void CheckBinBoundaries(double[] theBinBoundaries)
         {
-            for (int i = 0; i < TheBinBoundaries.Length - 1; ++i)
+            for (int i = 0; i < theBinBoundaries.Length - 1; ++i)
             {
-                if (TheBinBoundaries[i] >= TheBinBoundaries[i + 1])
+                if (theBinBoundaries[i] >= theBinBoundaries[i + 1])
                 {
-                    string TheExceptionMessage =
+                    string theExceptionMessage =
                         "Bin boundary " +
-                        TheBinBoundaries[i].ToString() +
+                        theBinBoundaries[i].ToString() +
                         " is >= Bin boundary " +
-                        TheBinBoundaries[i + 1].ToString() +
+                        theBinBoundaries[i + 1].ToString() +
                         "!!!";
 
-                    TheDebugInformation.WriteErrorEvent
-                        (
-                        TheExceptionMessage
-                        );
+                    this.theDebugInformation.WriteErrorEvent(theExceptionMessage);
 
-                    throw new System.ArgumentException(TheExceptionMessage);
+                    throw new System.ArgumentException(theExceptionMessage);
                 }
             }
         }
 
-        public void AddValue(double TheValue)
+        public void AddValue(double theValue)
         {
-            //Check if the value is the lowest valid value encountered since the creation or reset of the histogram
-            if (TheMinValueEncountered > TheValue &&
-                TheValue >= GetMinAllowedValue())
+            // Check if the value is the lowest valid value encountered since the creation or reset of the histogram
+            if (this.theMinValueEncountered > theValue &&
+                theValue >= this.GetMinAllowedValue())
             {
-                TheMinValueEncountered = TheValue;
+                this.theMinValueEncountered = theValue;
             }
 
-            //Check if the value is the highest valid value encountered since the creation or reset of the histogram
-            if (TheMaxValueEncountered < TheValue &&
-                TheValue <= GetMaxAllowedValue())
+            // Check if the value is the highest valid value encountered since the creation or reset of the histogram
+            if (this.theMaxValueEncountered < theValue &&
+                theValue <= this.GetMaxAllowedValue())
             {
-                TheMaxValueEncountered = TheValue;
+                this.theMaxValueEncountered = theValue;
             }
 
-            if (TheValue < GetMinAllowedValue())
+            if (theValue < this.GetMinAllowedValue())
             {
-                ++TheNumberOfValuesLowerThanBins;
+                ++this.theNumberOfValuesLowerThanBins;
             }
-            else if (TheValue > GetMaxAllowedValue())
+            else if (theValue > this.GetMaxAllowedValue())
             {
-                ++TheNumberOfValuesHigherThanBins;
+                ++this.theNumberOfValuesHigherThanBins;
             }
             else
             {
-                //Loop while the supplied value is smaller than the next bin boundary
-                //Once the supplied value is no longer smaller than the next bin boundary then we've found our bin
-                //This ordering is more efficient when most supplied values are towards the lower end of the range
-                for (int i = 0; i < TheValueBinBoundaries.Length; ++i)
+                // Loop while the supplied value is smaller than the next bin boundary
+                // Once the supplied value is no longer smaller than the next bin boundary then we've found our bin
+                // This ordering is more efficient when most supplied values are towards the lower end of the range
+                for (int i = 0; i < this.theValueBinBoundaries.Length; ++i)
                 {
-                    if (TheValue < TheValueBinBoundaries[i + 1])
+                    if (theValue < this.theValueBinBoundaries[i + 1])
                     {
-                        ++TheValueBinCounts[i];
+                        ++this.theValueBinCounts[i];
                         break;
                     }
                 }
 
-                //Increment the counter of the number of valid values encountered
-                ++TheNumberOfValuesAcrossAllBins;
+                // Increment the counter of the number of valid values encountered
+                ++this.theNumberOfValuesAcrossAllBins;
             }
         }
 
         public void ResetValues()
         {
-            TheNumberOfValuesAcrossAllBins = 0;
+            this.theNumberOfValuesAcrossAllBins = 0;
 
-            TheNumberOfValuesLowerThanBins = 0;
-            TheNumberOfValuesHigherThanBins = 0;
+            this.theNumberOfValuesLowerThanBins = 0;
+            this.theNumberOfValuesHigherThanBins = 0;
 
-            TheMinValueEncountered = double.MaxValue;
-            TheMaxValueEncountered = double.MinValue;
+            this.theMinValueEncountered = double.MaxValue;
+            this.theMaxValueEncountered = double.MinValue;
 
-            for (int i = 0; i < TheValueBinCounts.Length; ++i)
+            for (int i = 0; i < this.theValueBinCounts.Length; ++i)
             {
-                TheValueBinCounts[i] = 0;
+                this.theValueBinCounts[i] = 0;
             }
         }
 
-        //Format the contents of the histogram and output it to the debug console
+        // Format the contents of the histogram and output it to the debug console
         public void OutputValues()
         {
-            uint TheNumberOfValuesProcessed = 0;
+            uint theNumberOfValuesProcessed = 0;
 
-            bool TheFirstPercentileFound = false;
-            bool TheNinetyNinthPercentileFound = false;
+            bool theFirstPercentileFound = false;
+            bool theNinetyNinthPercentileFound = false;
 
-            if (TheNumberOfValuesLowerThanBins > 0)
+            if (this.theNumberOfValuesLowerThanBins > 0)
             {
-                TheDebugInformation.WriteTextLine
-                    (
-                    "Number of values lower than bins: " +
-                    TheNumberOfValuesLowerThanBins.ToString()
-                    );
+                this.theDebugInformation.WriteTextLine("Number of values lower than bins: " +
+                    this.theNumberOfValuesLowerThanBins.ToString());
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
             }
 
-            for (int i = 0; i < TheValueBinCounts.Length; ++i)
+            for (int i = 0; i < this.theValueBinCounts.Length; ++i)
             {
-                //Do not start processing bins for the histogram until we've reached the minimum value encountered
-                if (TheValueBinBoundaries[i + 1] < TheMinValueEncountered)
+                // Do not start processing bins for the histogram until we've reached the minimum value encountered
+                if (this.theValueBinBoundaries[i + 1] < this.theMinValueEncountered)
                 {
                     continue;
                 }
 
-                //Update the running total of entries found so far
-                TheNumberOfValuesProcessed += TheValueBinCounts[i];
+                // Update the running total of entries found so far
+                theNumberOfValuesProcessed += this.theValueBinCounts[i];
 
-                //Output an indication if the first percentile of all entries encountered has been reached
-                if (!TheFirstPercentileFound)
+                // Output an indication if the first percentile of all entries encountered has been reached
+                if (!theFirstPercentileFound)
                 {
-                    if (TheNumberOfValuesProcessed >= (TheNumberOfValuesAcrossAllBins * 0.01))
+                    if (theNumberOfValuesProcessed >= (this.theNumberOfValuesAcrossAllBins * 0.01))
                     {
-                        TheFirstPercentileFound = true;
+                        theFirstPercentileFound = true;
 
-                        TheDebugInformation.WriteTextLine(new System.String('-', 144) + "  1%");
+                        this.theDebugInformation.WriteTextLine(new string('-', 144) + "  1%");
                     }
                 }
 
-                //Correct the formatting for negative values
+                //// Correct the formatting for negative values
 
-                if (TheValueBinBoundaries[i] >= 0.0)
+                if (this.theValueBinBoundaries[i] >= 0.0)
                 {
-                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i].ToString(" 00.00000"));
-
+                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i].ToString(" 00.00000"));
                 }
                 else
                 {
-                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i].ToString("00.00000"));
+                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i].ToString("00.00000"));
                 }
 
-                TheDebugInformation.WriteTextElement(" to ");
+                this.theDebugInformation.WriteTextElement(" to ");
 
-                if (TheValueBinBoundaries[i + 1] >= 0.0)
+                if (this.theValueBinBoundaries[i + 1] >= 0.0)
                 {
-                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i + 1].ToString(" 00.00000"));
+                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i + 1].ToString(" 00.00000"));
                 }
                 else
                 {
-                    TheDebugInformation.WriteTextElement(TheValueBinBoundaries[i + 1].ToString("00.00000"));
+                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i + 1].ToString("00.00000"));
                 }
 
-                TheDebugInformation.WriteTextElement(" | ");
+                this.theDebugInformation.WriteTextElement(" | ");
 
-                //Calculated a scaled count for this bin based on the percentage of the total number of values across all bins that is in this bin
-                //The scaling of the count will the ensure that the output does not exceed 120 columns to ensure it fits on screen
-                //Perform the calculations using floating point values to prevent rounding to zero due to integer division
-                int ScaledBinCount = (int)(((float)TheValueBinCounts[i] / (float)TheNumberOfValuesAcrossAllBins) * 120.0);
+                // Calculated a scaled count for this bin based on the percentage of the total number of values across all bins that is in this bin
+                // The scaling of the count will the ensure that the output does not exceed 120 columns to ensure it fits on screen
+                // Perform the calculations using floating point values to prevent rounding to zero due to integer division
+                int theScaledBinCount = (int)(((float)this.theValueBinCounts[i] / (float)this.theNumberOfValuesAcrossAllBins) * 120.0);
 
-                //Make sure that at least a single ) character is always output for a bin with a non-zero count
-                if (TheValueBinCounts[i] > 0 && ScaledBinCount == 0)
+                // Make sure that at least a single ) character is always output for a bin with a non-zero count
+                if (this.theValueBinCounts[i] > 0 && theScaledBinCount == 0)
                 {
-                    ScaledBinCount = 1;
+                    theScaledBinCount = 1;
                 }
 
-                //Output a number of ) characters for this bin based on the scaled count
-                TheDebugInformation.WriteTextElement(new System.String(')', ScaledBinCount));
+                // Output a number of ) characters for this bin based on the scaled count
+                this.theDebugInformation.WriteTextElement(new string(')', theScaledBinCount));
 
-                //Except if there are no entries, leave a space after the last ) character
-                //for this bin for clarity and then write out the number of entries in this
-                //bin (the real value, not the scaled value)
-                if (TheValueBinCounts[i] > 0)
+                // Except if there are no entries, leave a space after the last ) character
+                // for this bin for clarity and then write out the number of entries in this
+                // bin (the real value, not the scaled value)
+                if (this.theValueBinCounts[i] > 0)
                 {
-                    TheDebugInformation.WriteTextElement(" " + TheValueBinCounts[i]);
+                    this.theDebugInformation.WriteTextElement(" " + this.theValueBinCounts[i]);
                 }
 
-                //Complete the line for this bin
-                TheDebugInformation.WriteBlankLine();
+                // Complete the line for this bin
+                this.theDebugInformation.WriteBlankLine();
 
-                //Output an indication if the ninety ninth percentile of all entries encountered has been reached
-                if (!TheNinetyNinthPercentileFound)
+                // Output an indication if the ninety ninth percentile of all entries encountered has been reached
+                if (!theNinetyNinthPercentileFound)
                 {
-                    if (TheNumberOfValuesProcessed >= (TheNumberOfValuesAcrossAllBins * 0.99))
+                    if (theNumberOfValuesProcessed >= (this.theNumberOfValuesAcrossAllBins * 0.99))
                     {
-                        TheNinetyNinthPercentileFound = true;
+                        theNinetyNinthPercentileFound = true;
 
-                        TheDebugInformation.WriteTextLine(new System.String('-', 144) + " 99%");
+                        this.theDebugInformation.WriteTextLine(new string('-', 144) + " 99%");
                     }
                 }
 
-                //Do not continue processing further bins for the histogram if we've reached the maximum value encountered
-                if (TheValueBinBoundaries[i + 1] > TheMaxValueEncountered)
+                // Do not continue processing further bins for the histogram if we've reached the maximum value encountered
+                if (this.theValueBinBoundaries[i + 1] > this.theMaxValueEncountered)
                 {
                     break;
                 }
             }
 
-            if (TheNumberOfValuesHigherThanBins > 0)
+            if (this.theNumberOfValuesHigherThanBins > 0)
             {
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextLine
-                    (
-                    "Number of values higher than bins: " +
-                    TheNumberOfValuesHigherThanBins.ToString()
-                    );
+                this.theDebugInformation.WriteTextLine("Number of values higher than bins: " +
+                    this.theNumberOfValuesHigherThanBins.ToString());
             }
         }
     }

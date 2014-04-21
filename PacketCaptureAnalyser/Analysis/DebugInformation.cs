@@ -1,178 +1,159 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="DebugInformation.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace Analysis
 {
-    //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
+    // This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
     class DebugInformation : System.IDisposable
     {
-        private System.Diagnostics.TextWriterTraceListener TheOutputWindowListener;
+        private System.Diagnostics.TextWriterTraceListener theOutputWindowListener;
 
-        private string TheOutputFilePath;
+        private string theOutputFilePath;
 
-        private bool EnableDebugInformation;
+        private bool enableDebugInformation;
 
-        private bool EnableInformationEvents;
+        private bool enableInformationEvents;
 
-        public DebugInformation(string TheOutputFilePath, bool EnableDebugInformation, bool EnableInformationEvents, bool RedirectDebugInformationToOutput)
+        public DebugInformation(string theOutputFilePath, bool enableDebugInformation, bool enableInformationEvents, bool redirectDebugInformationToOutput)
         {
-            //Delete any existing output files with the selected name to ape the clearing of all text from the output window
-            if (System.IO.File.Exists(TheOutputFilePath))
+            // Delete any existing output files with the selected name to ape the clearing of all text from the output window
+            if (System.IO.File.Exists(theOutputFilePath))
             {
-                //Reset the attributes of the existing output file to ensure that it can be deleted
-                System.IO.File.SetAttributes(TheOutputFilePath, System.IO.FileAttributes.Normal);
+                // Reset the attributes of the existing output file to ensure that it can be deleted
+                System.IO.File.SetAttributes(theOutputFilePath, System.IO.FileAttributes.Normal);
 
-                //Then delete the existing output file
-                System.IO.File.Delete(TheOutputFilePath);
+                // Then delete the existing output file
+                System.IO.File.Delete(theOutputFilePath);
             }
 
-            this.TheOutputFilePath = TheOutputFilePath;
+            this.theOutputFilePath = theOutputFilePath;
 
-            this.EnableDebugInformation = EnableDebugInformation;
+            this.enableDebugInformation = enableDebugInformation;
 
-            this.EnableInformationEvents = EnableInformationEvents;
+            this.enableInformationEvents = enableInformationEvents;
 
-            if (EnableDebugInformation)
+            if (enableDebugInformation)
             {
-                TheOutputWindowListener =
-                    new System.Diagnostics.TextWriterTraceListener(TheOutputFilePath);
+                this.theOutputWindowListener =
+                    new System.Diagnostics.TextWriterTraceListener(theOutputFilePath);
 
-                //Unless instructed otherwise, remove the output window from the list of listeners to debug output as all text will go to the output file
-                if (EnableDebugInformation &&
-                    !RedirectDebugInformationToOutput)
+                // Unless instructed otherwise, remove the output window from the list of listeners to debug output as all text will go to the output file
+                if (enableDebugInformation &&
+                    !redirectDebugInformationToOutput)
                 {
                     System.Diagnostics.Debug.Listeners.Clear();
                 }
 
-                //Redirect any text added to the output window to the output file
-                System.Diagnostics.Trace.Listeners.Add(TheOutputWindowListener);
+                // Redirect any text added to the output window to the output file
+                System.Diagnostics.Trace.Listeners.Add(this.theOutputWindowListener);
             }
         }
 
-        public virtual void Dispose(bool Disposing)
+        public virtual void Dispose(bool disposing)
         {
-            if (Disposing)
+            if (disposing)
             {
-                if (EnableDebugInformation)
+                if (this.enableDebugInformation)
                 {
-                    //Flush output to the output file and then close it
-                    TheOutputWindowListener.Flush();
-                    TheOutputWindowListener.Close();
+                    // Flush output to the output file and then close it
+                    this.theOutputWindowListener.Flush();
+                    this.theOutputWindowListener.Close();
 
-                    System.Diagnostics.Debug.Listeners.Remove(TheOutputWindowListener);
+                    System.Diagnostics.Debug.Listeners.Remove(this.theOutputWindowListener);
 
-                    //Dispose any resources allocated to the trace listener if instructed
-                    TheOutputWindowListener.Dispose();
+                    // Dispose any resources allocated to the trace listener if instructed
+                    this.theOutputWindowListener.Dispose();
                 }
             }
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
 
             System.GC.SuppressFinalize(this);
         }
 
-        public void WriteTestRunEvent(string TheTestRunEvent)
+        public void WriteTestRunEvent(string theTestRunEvent)
         {
-            if (EnableDebugInformation)
+            if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.WriteLine
-                    (
-                    "Test:  " +
-                    TheTestRunEvent
-                    );
+                System.Diagnostics.Trace.WriteLine("Test:  " +
+                    theTestRunEvent);
             }
         }
 
-        public void WriteInformationEvent(string TheInformationEvent)
+        public void WriteInformationEvent(string theInformationEvent)
         {
-            if (EnableDebugInformation && EnableInformationEvents)
+            if (this.enableDebugInformation && this.enableInformationEvents)
             {
-                System.Diagnostics.Trace.WriteLine
-                    (
-                    "Info:  " +
-                    TheInformationEvent
-                    );
+                System.Diagnostics.Trace.WriteLine("Info:  " +
+                    theInformationEvent);
             }
         }
 
-        public void WriteErrorEvent(string TheErrorEvent)
+        public void WriteErrorEvent(string theErrorEvent)
         {
-            if (EnableDebugInformation)
+            if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.WriteLine
-                    (
-                    "Error: " +
-                    TheErrorEvent
-                    );
+                System.Diagnostics.Trace.WriteLine("Error: " +
+                    theErrorEvent);
             }
         }
 
-        public void WriteTextElement(string TheTextElement)
+        public void WriteTextElement(string theTextElement)
         {
-            if (EnableDebugInformation)
+            if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.Write
-                    (
-                    TheTextElement
-                    );
+                System.Diagnostics.Trace.Write(theTextElement);
             }
         }
 
-        public void WriteTextLine(string TheTextLine)
+        public void WriteTextLine(string theTextLine)
         {
-            if (EnableDebugInformation)
+            if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.WriteLine
-                    (
-                    TheTextLine
-                    );
+                System.Diagnostics.Trace.WriteLine(theTextLine);
             }
         }
 
         public void WriteBlankLine()
         {
-            if (EnableDebugInformation)
+            if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.Write
-                    (
-                    System.Environment.NewLine
-                    );
+                System.Diagnostics.Trace.Write(System.Environment.NewLine);
             }
         }
 
         public void Open()
         {
-            if (EnableDebugInformation)
+            if (this.enableDebugInformation)
             {
-                //Flush output to the output file and then close it
-                TheOutputWindowListener.Flush();
+                // Flush output to the output file and then close it
+                this.theOutputWindowListener.Flush();
 
-                if (System.IO.File.Exists(TheOutputFilePath))
+                if (System.IO.File.Exists(this.theOutputFilePath))
                 {
                     try
                     {
-                        System.Diagnostics.Process.Start(TheOutputFilePath);
+                        System.Diagnostics.Process.Start(this.theOutputFilePath);
                     }
-
                     catch (System.ComponentModel.Win32Exception f)
                     {
-                        WriteErrorEvent
-                            (
-                            "The exception " +
+                        this.WriteErrorEvent("The exception " +
                             f.GetType().Name +
                             " with the following message: " +
                             f.Message +
                             " was raised as there is no application registered that can open the " +
-                            System.IO.Path.GetFileName(TheOutputFilePath) +
-                            " output file!!!"
-                            );
+                            System.IO.Path.GetFileName(this.theOutputFilePath) +
+                            " output file!!!");
                     }
                 }
             }

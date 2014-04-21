@@ -1,67 +1,99 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Structures.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace PacketCapture.PCAPPackageCapture
 {
     class Structures
     {
-        //
-        //PCAP packet capture global header - 24 bytes
-        //
-
+        /// <summary>
+        /// PCAP packet capture global header - 24 bytes
+        /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.GlobalHeaderLength)]
-
         public struct GlobalHeaderStructure
         {
+            /// <summary>
+            /// Magic number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public System.UInt32 MagicNumber; //Magic number
+            public uint MagicNumber;
 
+            /// <summary>
+            /// Major version number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public System.UInt16 VersionMajor; //Major version number
+            public ushort VersionMajor;
 
+            /// <summary>
+            /// Minor version number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(6)]
-            public System.UInt16 VersionMinor; //Minor version number
+            public ushort VersionMinor;
 
+            /// <summary>
+            /// GMT to local correction
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public System.Int32 ThisTimeZone; //GMT to local correction
+            public int ThisTimeZone;
 
+            /// <summary>
+            /// Accuracy of timestamps
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public System.UInt32 SignificantFigures; //Accuracy of timestamps
+            public uint SignificantFigures;
 
+            /// <summary>
+            /// Max length of captured packets, in octets
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(16)]
-            public System.UInt32 SnapshotLength; //Max length of captured packets, in octets
+            public uint SnapshotLength;
 
+            /// <summary>
+            /// Network data link type
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(20)]
-            public System.UInt32 NetworkDataLinkType; //Network data link type
+            public uint NetworkDataLinkType;
         }
 
-        //
-        //PCAP packet capture packet header - 16 bytes
-        //
-
+        /// <summary>
+        /// PCAP packet capture packet header - 16 bytes
+        /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.HeaderLength)]
-
         public struct HeaderStructure
         {
+            /// <summary>
+            /// Timestamp seconds
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public System.UInt32 TimestampSeconds; //Timestamp seconds
+            public uint TimestampSeconds;
 
+            /// <summary>
+            /// Timestamp microseconds
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public System.UInt32 TimestampMicroseconds; //Timestamp microseconds
+            public uint TimestampMicroseconds;
 
+            /// <summary>
+            /// Number of octets of packet saved in packet capture
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public System.UInt32 SavedLength; //Number of octets of packet saved in packet capture
+            public uint SavedLength;
 
+            /// <summary>
+            /// Actual length of packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public System.UInt32 ActualLength; //Actual length of packet
+            public uint ActualLength;
         }
     }
 }

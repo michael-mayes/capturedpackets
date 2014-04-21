@@ -1,537 +1,506 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Processing.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace Analysis.LatencyAnalysis
 {
-    using System.Data; //Required to be able to use AsEnumerable method
-    using System.Linq; //Required to be able to use Count method
+    using System.Data; // Required to be able to use AsEnumerable method
+    using System.Linq; // Required to be able to use Count method
 
-    //Create an alias for the key value pair for the dictionary to improve clarity of later code that uses it
-    using DictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<Structures.DictionaryKey, Structures.DictionaryValue>;
-
-    //Create an alias for the enumerable for the dictionary to improve clarity of later code that uses it
-    //Cannot nest using declarations so must use the declaration of the key value pair type in full again
+    // Create an alias for the enumerable for the dictionary to improve clarity of later code that uses it
+    // Cannot nest using declarations so must use the declaration of the key value pair type in full again
     using DictionaryEnumerableType = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Structures.DictionaryKey, Structures.DictionaryValue>>;
 
-    //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
+    // Create an alias for the key value pair for the dictionary to improve clarity of later code that uses it
+    using DictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<Structures.DictionaryKey, Structures.DictionaryValue>;
+
+    // This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
     class Processing : System.IDisposable
     {
-        private System.Collections.Generic.Dictionary
-            <
-            Structures.DictionaryKey,
-            Structures.DictionaryValue
-            > TheDictionary;
+        private System.Collections.Generic.Dictionary<Structures.DictionaryKey,
+            Structures.DictionaryValue> theDictionary;
 
-        private Analysis.DebugInformation TheDebugInformation;
+        private Analysis.DebugInformation theDebugInformation;
 
-        private bool OutputDebug;
+        private bool outputDebug;
 
-        private string SelectedPacketCaptureFile;
+        private string selectedPacketCaptureFile;
 
-        private System.Data.DataTable TheHostIdsTable;
-        private System.Data.DataTable TheMessageIdsTable;
+        private System.Data.DataTable theHostIdsTable;
+        private System.Data.DataTable theMessageIdsTable;
 
-        public Processing(Analysis.DebugInformation TheDebugInformation, bool OutputDebug, string SelectedPacketCaptureFile)
+        /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theDebugInformation"></param>
+        /// <param name="outputDebug"></param>
+        /// <param name="selectedPacketCaptureFile"></param>
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string selectedPacketCaptureFile)
         {
-            this.TheDebugInformation = TheDebugInformation;
+            this.theDebugInformation = theDebugInformation;
 
-            this.OutputDebug = OutputDebug;
+            this.outputDebug = outputDebug;
 
-            this.SelectedPacketCaptureFile = SelectedPacketCaptureFile;
+            this.selectedPacketCaptureFile = selectedPacketCaptureFile;
 
-            //Create a dictionary to hold the latency values for message pairings
-            TheDictionary =
-                new System.Collections.Generic.Dictionary
-                    <Structures.DictionaryKey, Structures.DictionaryValue>();
+            // Create a dictionary to hold the latency values for message pairings
+            this.theDictionary =
+                new System.Collections.Generic.Dictionary<Structures.DictionaryKey, Structures.DictionaryValue>();
 
-            //Create a datatable to hold the set of host Ids encountered during the latency analysis
-            TheHostIdsTable = new System.Data.DataTable();
+            // Create a datatable to hold the set of host Ids encountered during the latency analysis
+            this.theHostIdsTable = new System.Data.DataTable();
 
-            //Create a datatable to hold the set of message Ids encountered during the latency analysis
-            TheMessageIdsTable = new System.Data.DataTable();
+            // Create a datatable to hold the set of message Ids encountered during the latency analysis
+            this.theMessageIdsTable = new System.Data.DataTable();
         }
 
         public void Create()
         {
-            //Add the required column to the datatable to hold the set of host Ids encountered during the latency analysis
-            TheHostIdsTable.Columns.Add("HostId", typeof(byte));
+            // Add the required column to the datatable to hold the set of host Ids encountered during the latency analysis
+            this.theHostIdsTable.Columns.Add("HostId", typeof(byte));
 
-            //Set the primary key to be the only column
-            //The primary key is needed to allow for use of the Find method against the datatable
-            TheHostIdsTable.PrimaryKey =
+            // Set the primary key to be the only column
+            // The primary key is needed to allow for use of the Find method against the datatable
+            this.theHostIdsTable.PrimaryKey =
                 new System.Data.DataColumn[]
                 {
-                    TheHostIdsTable.Columns["HostId"]
+                    this.theHostIdsTable.Columns["HostId"]
                 };
 
-            //Add the required columns to the datatable to hold the set of message Ids encountered during the latency analysis
-            TheMessageIdsTable.Columns.Add("HostId", typeof(byte));
-            TheMessageIdsTable.Columns.Add("MessageId", typeof(ulong));
+            // Add the required columns to the datatable to hold the set of message Ids encountered during the latency analysis
+            this.theMessageIdsTable.Columns.Add("HostId", typeof(byte));
+            this.theMessageIdsTable.Columns.Add("MessageId", typeof(ulong));
 
-            //Set a multi-column primary key
-            //The primary key is needed to allow for use of the Find method against the datatable
-            TheMessageIdsTable.PrimaryKey =
+            // Set a multi-column primary key
+            // The primary key is needed to allow for use of the Find method against the datatable
+            this.theMessageIdsTable.PrimaryKey =
                 new System.Data.DataColumn[]
                 {
-                    TheMessageIdsTable.Columns["HostId"],
-                    TheMessageIdsTable.Columns["MessageId"]
+                    this.theMessageIdsTable.Columns["HostId"],
+                    this.theMessageIdsTable.Columns["MessageId"]
                 };
         }
 
-        protected virtual void Dispose(bool Disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposing)
+            if (disposing)
             {
-                //Dispose any resources allocated to the datatables if instructed
-                TheHostIdsTable.Dispose();
-                TheMessageIdsTable.Dispose();
+                // Dispose any resources allocated to the datatables if instructed
+                this.theHostIdsTable.Dispose();
+                this.theMessageIdsTable.Dispose();
             }
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
 
             System.GC.SuppressFinalize(this);
         }
 
-        public void RegisterMessageReceipt(byte TheHostId, Constants.Protocol TheProtocol, ulong TheSequenceNumber, ulong TheMessageId, ulong ThePacketNumber, double TheTimestamp)
+        public void RegisterMessageReceipt(byte theHostId, Constants.Protocol theProtocol, ulong theSequenceNumber, ulong theMessageId, ulong thePacketNumber, double theTimestamp)
         {
-            //Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
-            if (TheSequenceNumber == 0)
+            // Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
+            if (theSequenceNumber == 0)
             {
                 return;
             }
 
-            //Do not process messages where the message Id is not populated as we would not be able match message pairs using them
-            if (TheHostId == 0)
+            // Do not process messages where the message Id is not populated as we would not be able match message pairs using them
+            if (theHostId == 0)
             {
                 return;
             }
 
-            //Do not process messages where the message Id is not populated as we would not be able match message pairs using them
-            if (TheMessageId == 0)
+            // Do not process messages where the message Id is not populated as we would not be able match message pairs using them
+            if (theMessageId == 0)
             {
                 return;
             }
 
-            //Add the supplied sequence number and timestamp to latency values dictionary
+            //// Add the supplied sequence number and timestamp to latency values dictionary
 
-            Structures.DictionaryKey TheDictionaryKey =
-                new Structures.DictionaryKey
-                    (
-                    TheHostId,
-                    TheProtocol,
-                    TheSequenceNumber
-                    );
+            Structures.DictionaryKey theDictionaryKey =
+                new Structures.DictionaryKey(
+                    theHostId,
+                    theProtocol,
+                    theSequenceNumber);
 
-            //Check whether there is a dictionary entry for this key i.e. is this the first message of the pair
+            //// Check whether there is a dictionary entry for this key i.e. is this the first message of the pair
 
-            Structures.DictionaryValue TheDictionaryValueFound;
+            Structures.DictionaryValue theDictionaryValueFound;
 
-            bool TheEntryFound = TheDictionary.TryGetValue
-                (TheDictionaryKey, out TheDictionaryValueFound);
+            bool theEntryFound = this.theDictionary.TryGetValue(theDictionaryKey, out theDictionaryValueFound);
 
-            if (!TheEntryFound)
+            if (!theEntryFound)
             {
-                //If this is the first message of the pairing then create the new entry in the dictionary
-
+                // If this is the first message of the pairing then create the new entry in the dictionary
                 Structures.DictionaryValue
-                    TheDictionaryValueToAdd =
+                    theDictionaryValueToAdd =
                     new Structures.DictionaryValue
                     {
-                        MessageId = TheMessageId,
+                        MessageId = theMessageId,
                         FirstInstanceFound = true,
                         SecondInstanceFound = false,
-                        FirstInstancePacketNumber = ThePacketNumber,
+                        FirstInstancePacketNumber = thePacketNumber,
                         SecondInstancePacketNumber = 0,
-                        FirstInstanceTimestamp = TheTimestamp,
+                        FirstInstanceTimestamp = theTimestamp,
                         SecondInstanceTimestamp = 0.0,
                         TimestampDifference = 0.0,
                         TimestampDifferenceCalculated = false
                     };
 
-                //Add the new entry to the dictionary
-                TheDictionary.Add
-                    (
-                    TheDictionaryKey,
-                    TheDictionaryValueToAdd
-                    );
+                // Add the new entry to the dictionary
+                this.theDictionary.Add(
+                    theDictionaryKey,
+                    theDictionaryValueToAdd);
             }
             else
             {
-                //If this is the second message of the pairing then update the row and calculate the difference in timestamps i.e. the latency
+                //// If this is the second message of the pairing then update the row and calculate the difference in timestamps i.e. the latency
 
-                if (!TheDictionaryValueFound.FirstInstanceFound)
+                if (!theDictionaryValueFound.FirstInstanceFound)
                 {
-                    TheDebugInformation.WriteErrorEvent
-                        (
+                    this.theDebugInformation.WriteErrorEvent(
                         "Found the row for the Host Id " +
-                        TheHostId.ToString() +
+                        theHostId.ToString() +
                         " and the sequence number " +
-                        TheSequenceNumber.ToString() +
-                        " but the FirstInstanceFound flag is not set!!!"
-                        );
+                        theSequenceNumber.ToString() +
+                        " but the FirstInstanceFound flag is not set!!!");
 
                     return;
                 }
 
-                if (TheDictionaryValueFound.SecondInstanceFound)
+                if (theDictionaryValueFound.SecondInstanceFound)
                 {
-                    TheDebugInformation.WriteErrorEvent
-                        (
+                    this.theDebugInformation.WriteErrorEvent(
                         "Found the row for the Host Id " +
-                        TheHostId.ToString() +
+                        theHostId.ToString() +
                         " and the sequence number "
-                        + TheSequenceNumber.ToString() +
-                        " but the SecondInstanceFound flag is already set!!!"
-                        );
+                        + theSequenceNumber.ToString() +
+                        " but the SecondInstanceFound flag is already set!!!");
 
                     return;
                 }
 
-                TheDictionaryValueFound.SecondInstanceFound = true;
-                TheDictionaryValueFound.SecondInstancePacketNumber = ThePacketNumber;
+                theDictionaryValueFound.SecondInstanceFound = true;
+                theDictionaryValueFound.SecondInstancePacketNumber = thePacketNumber;
 
-                if (TheTimestamp > TheDictionaryValueFound.FirstInstanceTimestamp)
+                if (theTimestamp > theDictionaryValueFound.FirstInstanceTimestamp)
                 {
-                    TheDictionaryValueFound.SecondInstanceTimestamp = TheTimestamp;
-                    TheDictionaryValueFound.TimestampDifference = (TheTimestamp - TheDictionaryValueFound.FirstInstanceTimestamp) * 1000.0; //Milliseconds
-                    TheDictionaryValueFound.TimestampDifferenceCalculated = true;
+                    theDictionaryValueFound.SecondInstanceTimestamp = theTimestamp;
+                    theDictionaryValueFound.TimestampDifference = (theTimestamp - theDictionaryValueFound.FirstInstanceTimestamp) * 1000.0; // Milliseconds
+                    theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
-                else if (TheTimestamp == TheDictionaryValueFound.FirstInstanceTimestamp)
+                else if (theTimestamp == theDictionaryValueFound.FirstInstanceTimestamp)
                 {
-                    TheDictionaryValueFound.SecondInstanceTimestamp = 0.0;
-                    TheDictionaryValueFound.TimestampDifference = 0.0;
-                    TheDictionaryValueFound.TimestampDifferenceCalculated = true;
+                    theDictionaryValueFound.SecondInstanceTimestamp = 0.0;
+                    theDictionaryValueFound.TimestampDifference = 0.0;
+                    theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
                 else
                 {
-                    TheDebugInformation.WriteErrorEvent
-                        (
+                    this.theDebugInformation.WriteErrorEvent(
                         "Found the row for the Host Id " +
-                        TheHostId.ToString() +
+                        theHostId.ToString() +
                         " and the sequence number " +
-                        TheSequenceNumber.ToString() +
-                        ", but the timestamp of the first message is higher than that of the second message!!!"
-                        );
+                        theSequenceNumber.ToString() +
+                        ", but the timestamp of the first message is higher than that of the second message!!!");
 
-                    TheDictionaryValueFound.TimestampDifferenceCalculated = false;
+                    theDictionaryValueFound.TimestampDifferenceCalculated = false;
                 }
 
-                //Update the values in the dictionary entry
-                TheDictionary[TheDictionaryKey] = TheDictionaryValueFound;
+                // Update the values in the dictionary entry
+                this.theDictionary[theDictionaryKey] = theDictionaryValueFound;
 
-                //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
-                RegisterEncounteredHostId(TheHostId);
+                // Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
+                this.RegisterEncounteredHostId(theHostId);
 
-                //Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
-                RegisterEncounteredMessageId(TheHostId, TheMessageId);
+                // Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
+                this.RegisterEncounteredMessageId(theHostId, theMessageId);
             }
         }
 
-        //Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
-        private void RegisterEncounteredHostId(byte TheHostId)
+        // Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
+        private void RegisterEncounteredHostId(byte theHostId)
         {
-            object[] TheHostIdRowFindObject = new object[1];
+            object[] theHostIdRowFindObject = new object[1];
 
-            TheHostIdRowFindObject[0] = TheHostId.ToString(); //Primary key
+            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
 
-            System.Data.DataRow TheHostIdDataRowFound = TheHostIdsTable.Rows.Find(TheHostIdRowFindObject);
+            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
 
-            if (TheHostIdDataRowFound == null)
+            if (theHostIdDataRowFound == null)
             {
-                TheDebugInformation.WriteInformationEvent
-                    (
+                this.theDebugInformation.WriteInformationEvent(
                     "Found a pair of data-supplying messages for a Host Id " +
-                    string.Format("{0,3}", TheHostId) +
-                    " - adding this Host Id to the latency analysis"
-                    );
+                    string.Format("{0,3}", theHostId) +
+                    " - adding this Host Id to the latency analysis");
 
-                System.Data.DataRow TheHostIdRowToAdd = TheHostIdsTable.NewRow();
+                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
 
-                TheHostIdRowToAdd["HostId"] = TheHostId;
+                theHostIdRowToAdd["HostId"] = theHostId;
 
-                TheHostIdsTable.Rows.Add(TheHostIdRowToAdd);
+                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
             }
         }
 
-        //Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
-        private void RegisterEncounteredMessageId(byte TheHostId, ulong TheMessageId)
+        // Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
+        private void RegisterEncounteredMessageId(byte theHostId, ulong theMessageId)
         {
-            object[] TheMessageIdRowFindObject = new object[2];
+            object[] theMessageIdRowFindObject = new object[2];
 
-            TheMessageIdRowFindObject[0] = TheHostId.ToString(); //Primary key (part one)
-            TheMessageIdRowFindObject[1] = TheMessageId.ToString(); //Primary key (part two)
+            theMessageIdRowFindObject[0] = theHostId.ToString(); // Primary key (part one)
+            theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
 
-            System.Data.DataRow TheMessageIdDataRowFound = TheMessageIdsTable.Rows.Find(TheMessageIdRowFindObject);
+            System.Data.DataRow theMessageIdDataRowFound = this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
 
-            if (TheMessageIdDataRowFound == null)
+            if (theMessageIdDataRowFound == null)
             {
-                TheDebugInformation.WriteInformationEvent
-                    (
+                this.theDebugInformation.WriteInformationEvent(
                     "Found a pair of data-supplying messages with a Message Id " +
-                    string.Format("{0,5}", TheMessageId) +
+                    string.Format("{0,5}", theMessageId) +
                     " for a Host Id " +
-                    string.Format("{0,3}", TheHostId) +
-                    " - adding this Message Id/Host Id combination to the latency analysis"
-                    );
+                    string.Format("{0,3}", theHostId) +
+                    " - adding this Message Id/Host Id combination to the latency analysis");
 
-                System.Data.DataRow TheMessageIdRowToAdd = TheMessageIdsTable.NewRow();
+                System.Data.DataRow theMessageIdRowToAdd = this.theMessageIdsTable.NewRow();
 
-                TheMessageIdRowToAdd["HostId"] = TheHostId;
-                TheMessageIdRowToAdd["MessageId"] = TheMessageId;
+                theMessageIdRowToAdd["HostId"] = theHostId;
+                theMessageIdRowToAdd["MessageId"] = theMessageId;
 
-                TheMessageIdsTable.Rows.Add(TheMessageIdRowToAdd);
+                this.theMessageIdsTable.Rows.Add(theMessageIdRowToAdd);
             }
         }
 
         public void Finalise()
         {
-            //Obtain the set of host Ids encountered during the latency analysis in ascending order
-
+            // Obtain the set of host Ids encountered during the latency analysis in ascending order
             EnumerableRowCollection<System.Data.DataRow>
-                TheHostIdRowsFound =
-                from r in TheHostIdsTable.AsEnumerable()
+                theHostIdRowsFound =
+                from r in this.theHostIdsTable.AsEnumerable()
                 orderby r.Field<byte>("HostId") ascending
                 select r;
 
-            //Loop across all the latency values for the message pairings using each of these host Ids in turn
+            //// Loop across all the latency values for the message pairings using each of these host Ids in turn
 
-            TheDebugInformation.WriteBlankLine();
-            TheDebugInformation.WriteTextLine("======================");
-            TheDebugInformation.WriteTextLine("== Latency Analysis ==");
-            TheDebugInformation.WriteTextLine("======================");
-            TheDebugInformation.WriteBlankLine();
+            this.theDebugInformation.WriteBlankLine();
+            this.theDebugInformation.WriteTextLine("======================");
+            this.theDebugInformation.WriteTextLine("== Latency Analysis ==");
+            this.theDebugInformation.WriteTextLine("======================");
+            this.theDebugInformation.WriteBlankLine();
 
-            foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
+            foreach (System.Data.DataRow theHostIdRow in theHostIdRowsFound)
             {
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "Host Id " +
-                    string.Format("{0,3}", (TheHostIdRow.Field<byte>("HostId")).ToString())
-                    );
+                    string.Format("{0,3}", (theHostIdRow.Field<byte>("HostId")).ToString()));
 
-                TheDebugInformation.WriteTextLine("===========");
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteTextLine("===========");
+                this.theDebugInformation.WriteBlankLine();
 
-                FinaliseProtocolsForHostId(TheHostIdRow.Field<byte>("HostId"));
+                this.FinaliseProtocolsForHostId(theHostIdRow.Field<byte>("HostId"));
             }
         }
 
-        private void FinaliseProtocolsForHostId(byte TheHostId)
+        private void FinaliseProtocolsForHostId(byte theHostId)
         {
-            foreach (Constants.Protocol TheProtocol in
+            foreach (Constants.Protocol theProtocol in
                 System.Enum.GetValues(typeof(Constants.Protocol)))
             {
-                string TheProtocolString = ((Constants.Protocol)TheProtocol).ToString();
+                string theProtocolString = ((Constants.Protocol)theProtocol).ToString();
 
-                TheDebugInformation.WriteTextLine
-                    (
-                    TheProtocolString +
-                    " messages"
-                    );
+                this.theDebugInformation.WriteTextLine(
+                    theProtocolString +
+                    " messages");
 
-                TheDebugInformation.WriteTextLine("------------");
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteTextLine("------------");
+                this.theDebugInformation.WriteBlankLine();
 
-                //Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
+                //// Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
 
                 EnumerableRowCollection<System.Data.DataRow>
-                    TheMessageIdRowsFound =
-                    from r in TheMessageIdsTable.AsEnumerable()
-                    where r.Field<byte>("HostId") == TheHostId
+                    theMessageIdRowsFound =
+                    from r in this.theMessageIdsTable.AsEnumerable()
+                    where r.Field<byte>("HostId") == theHostId
                     orderby r.Field<ulong>("MessageId") ascending
                     select r;
 
-                //Loop across all the latency values for the message pairings using each of these message Ids in turn
+                //// Loop across all the latency values for the message pairings using each of these message Ids in turn
 
-                foreach (System.Data.DataRow TheMessageIdRow in TheMessageIdRowsFound)
+                foreach (System.Data.DataRow theMessageIdRow in theMessageIdRowsFound)
                 {
                     DictionaryEnumerableType
-                        TheLatencyValueEntriesFound =
-                        from s in TheDictionary.AsEnumerable()
-                        where s.Key.Protocol == TheProtocol &&
-                        s.Value.MessageId == TheMessageIdRow.Field<ulong>("MessageId") &&
+                        theLatencyValueEntriesFound =
+                        from s in this.theDictionary.AsEnumerable()
+                        where s.Key.Protocol == theProtocol &&
+                        s.Value.MessageId == theMessageIdRow.Field<ulong>("MessageId") &&
                         s.Value.TimestampDifferenceCalculated
                         select s;
 
-                    int TheRowsFoundCount = TheLatencyValueEntriesFound.Count();
+                    int theRowsFoundCount = theLatencyValueEntriesFound.Count();
 
-                    if (TheRowsFoundCount > 0)
+                    if (theRowsFoundCount > 0)
                     {
-                        TheDebugInformation.WriteTextLine
-                            (
+                        this.theDebugInformation.WriteTextLine(
                             "The number of pairs of " +
-                            TheProtocolString +
+                            theProtocolString +
                             " messages with a Message Id of " +
-                            (TheMessageIdRow.Field<ulong>("MessageId")).ToString() +
+                            (theMessageIdRow.Field<ulong>("MessageId")).ToString() +
                             " was " +
-                            TheRowsFoundCount.ToString()
-                            );
+                            theRowsFoundCount.ToString());
 
-                        FinaliseForMessageId(TheProtocolString, TheMessageIdRow.Field<ulong>("MessageId"), TheLatencyValueEntriesFound);
+                        this.FinaliseForMessageId(theProtocolString, theMessageIdRow.Field<ulong>("MessageId"), theLatencyValueEntriesFound);
                     }
                 }
             }
         }
 
-        private void FinaliseForMessageId(string TheProtocolString, ulong TheMessageId, DictionaryEnumerableType TheRows)
+        private void FinaliseForMessageId(string theProtocolString, ulong theMessageId, DictionaryEnumerableType theRows)
         {
-            CommonHistogram TheHistogram =
-                new CommonHistogram
-                    (
-                    TheDebugInformation,
+            CommonHistogram theHistogram =
+                new CommonHistogram(
+                    this.theDebugInformation,
                     Constants.NumberOfBins,
                     Constants.BestCaseLatency,
-                    Constants.WorstCaseLatency
-                    );
+                    Constants.WorstCaseLatency);
 
-            ulong TheMinTimestampPacketNumber = 0;
-            ulong TheMaxTimestampPacketNumber = 0;
+            ulong theMinTimestampPacketNumber = 0;
+            ulong theMaxTimestampPacketNumber = 0;
 
-            ulong TheMinTimestampSequenceNumber = 0;
-            ulong TheMaxTimestampSequenceNumber = 0;
+            ulong theMinTimestampSequenceNumber = 0;
+            ulong theMaxTimestampSequenceNumber = 0;
 
-            double TheMinTimestampDifference = double.MaxValue;
-            double TheMaxTimestampDifference = double.MinValue;
+            double theMinTimestampDifference = double.MaxValue;
+            double theMaxTimestampDifference = double.MinValue;
 
-            ulong TheNumberOfTimestampDifferenceInstances = 0;
-            double TheTotalOfTimestampDifferences = 0;
-            double TheAverageTimestampDifference = 0;
+            ulong theNumberOfTimestampDifferenceInstances = 0;
+            double theTotalOfTimestampDifferences = 0;
+            double theAverageTimestampDifference = 0;
 
-            foreach (DictionaryKeyValuePairType TheRow in TheRows)
+            foreach (DictionaryKeyValuePairType theRow in theRows)
             {
-                double TheTimestampDifference = TheRow.Value.TimestampDifference;
+                double theTimestampDifference = theRow.Value.TimestampDifference;
 
-                TheHistogram.AddValue(TheTimestampDifference);
+                theHistogram.AddValue(theTimestampDifference);
 
-                //Keep a running total to allow for averaging
-                ++TheNumberOfTimestampDifferenceInstances;
-                TheTotalOfTimestampDifferences += TheTimestampDifference;
+                // Keep a running total to allow for averaging
+                ++theNumberOfTimestampDifferenceInstances;
+                theTotalOfTimestampDifferences += theTimestampDifference;
 
-                if (TheMinTimestampDifference > TheTimestampDifference)
+                if (theMinTimestampDifference > theTimestampDifference)
                 {
-                    TheMinTimestampDifference = TheTimestampDifference;
-                    TheMinTimestampPacketNumber = TheRow.Value.FirstInstancePacketNumber;
-                    TheMinTimestampSequenceNumber = TheRow.Key.SequenceNumber;
+                    theMinTimestampDifference = theTimestampDifference;
+                    theMinTimestampPacketNumber = theRow.Value.FirstInstancePacketNumber;
+                    theMinTimestampSequenceNumber = theRow.Key.SequenceNumber;
                 }
 
-                if (TheMaxTimestampDifference < TheTimestampDifference)
+                if (theMaxTimestampDifference < theTimestampDifference)
                 {
-                    TheMaxTimestampDifference = TheTimestampDifference;
-                    TheMaxTimestampPacketNumber = TheRow.Value.FirstInstancePacketNumber;
-                    TheMaxTimestampSequenceNumber = TheRow.Key.SequenceNumber;
+                    theMaxTimestampDifference = theTimestampDifference;
+                    theMaxTimestampPacketNumber = theRow.Value.FirstInstancePacketNumber;
+                    theMaxTimestampSequenceNumber = theRow.Key.SequenceNumber;
                 }
             }
 
-            if (TheNumberOfTimestampDifferenceInstances > 0)
+            if (theNumberOfTimestampDifferenceInstances > 0)
             {
-                TheAverageTimestampDifference = (TheTotalOfTimestampDifferences / TheNumberOfTimestampDifferenceInstances);
+                theAverageTimestampDifference = theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The minimum latency for pairs of " +
-                    TheProtocolString +
+                    theProtocolString +
                     " messages with a Message Id of " +
-                    TheMessageId.ToString() +
+                    theMessageId.ToString() +
                     " was " +
-                    TheMinTimestampDifference.ToString() +
+                    theMinTimestampDifference.ToString() +
                     " ms for packet number " +
-                    TheMinTimestampPacketNumber.ToString() +
+                    theMinTimestampPacketNumber.ToString() +
                     " and sequence number " +
-                    TheMinTimestampSequenceNumber.ToString()
-                    );
+                    theMinTimestampSequenceNumber.ToString());
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The maximum latency for pairs of " +
-                    TheProtocolString +
+                    theProtocolString +
                     " messages with a Message Id of " +
-                    TheMessageId.ToString() +
+                    theMessageId.ToString() +
                     " was " +
-                    TheMaxTimestampDifference.ToString() +
+                    theMaxTimestampDifference.ToString() +
                     " ms for packet number " +
-                    TheMaxTimestampPacketNumber.ToString() +
+                    theMaxTimestampPacketNumber.ToString() +
                     " and sequence number " +
-                    TheMaxTimestampSequenceNumber.ToString()
-                    );
+                    theMaxTimestampSequenceNumber.ToString());
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The average latency for pairs of " +
-                    TheProtocolString +
+                    theProtocolString +
                     " messages with a Message Id of " +
-                    TheMessageId.ToString() +
+                    theMessageId.ToString() +
                     " was " +
-                    TheAverageTimestampDifference.ToString() +
-                    " ms"
-                    );
+                    theAverageTimestampDifference.ToString() +
+                    " ms");
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                //Output the histogram
+                //// Output the histogram
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The histogram (" +
                     Constants.BinsPerMillisecond.ToString() +
                     " bins per millisecond) for latency values for " +
-                    TheProtocolString +
+                    theProtocolString +
                     " messages with a Message Id of " +
-                    TheMessageId.ToString() +
-                    " is:"
-                    );
+                    theMessageId.ToString() +
+                    " is:");
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                TheHistogram.OutputValues();
+                theHistogram.OutputValues();
             }
 
-            TheDebugInformation.WriteBlankLine();
+            this.theDebugInformation.WriteBlankLine();
 
-            if (OutputDebug)
+            if (this.outputDebug)
             {
-                System.Text.StringBuilder OutputDebugLines = new System.Text.StringBuilder();
+                System.Text.StringBuilder outputDebugLines = new System.Text.StringBuilder();
 
-                string OutputDebugTitleLine = string.Format
-                    (
+                string outputDebugTitleLine = string.Format(
                     "{0},{1},{2},{3}{4}",
                     "First Packet Number",
                     "Second Packet Number",
                     "Sequence Number",
                     "Latency",
-                    System.Environment.NewLine
-                    );
+                    System.Environment.NewLine);
 
-                OutputDebugLines.Append(OutputDebugTitleLine);
+                outputDebugLines.Append(outputDebugTitleLine);
 
-                foreach (DictionaryKeyValuePairType TheRow in TheRows)
+                foreach (DictionaryKeyValuePairType theRow in theRows)
                 {
-                    string OutputDebugLine = string.Format
-                        (
+                    string outputDebugLine = string.Format(
                         "{0},{1},{2},{3}{4}",
-                        TheRow.Value.FirstInstancePacketNumber.ToString(),
-                        TheRow.Value.SecondInstancePacketNumber.ToString(),
-                        TheRow.Key.SequenceNumber.ToString(),
-                        TheRow.Value.TimestampDifference.ToString(),
-                        System.Environment.NewLine
-                        );
+                        theRow.Value.FirstInstancePacketNumber.ToString(),
+                        theRow.Value.SecondInstancePacketNumber.ToString(),
+                        theRow.Key.SequenceNumber.ToString(),
+                        theRow.Value.TimestampDifference.ToString(),
+                        System.Environment.NewLine);
 
-                    OutputDebugLines.Append(OutputDebugLine);
+                    outputDebugLines.Append(outputDebugLine);
                 }
 
-                System.IO.File.WriteAllText
-                    (
-                    SelectedPacketCaptureFile + ".MessageId" + TheMessageId + ".LatencyAnalysis.csv",
-                    OutputDebugLines.ToString()
-                    );
+                System.IO.File.WriteAllText(
+                    this.selectedPacketCaptureFile +
+                    ".MessageId" +
+                    theMessageId +
+                    ".LatencyAnalysis.csv",
+                    outputDebugLines.ToString());
             }
         }
     }

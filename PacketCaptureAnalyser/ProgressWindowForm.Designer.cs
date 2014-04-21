@@ -1,16 +1,19 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="ProgressWindowForm.Designer.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace PacketCaptureAnalyser
 {
     partial class ProgressWindowForm
     {
         /// <summary>
-        /// Required designer variable.
+        /// Required designer variable
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
@@ -20,19 +23,20 @@ namespace PacketCaptureAnalyser
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        // /<summary>
+        // /Required method for Designer support - do not modify
+        // /the contents of this method with the code editor.
+        // /</summary>
         private void InitializeComponent()
         {
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
@@ -46,7 +50,7 @@ namespace PacketCaptureAnalyser
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(240, 23);
             this.ProgressBar.TabIndex = 21;
-            this.ProgressBar.Tag = "";
+            this.ProgressBar.Tag = string.Empty;
             // 
             // ProgressBarLabel
             // 

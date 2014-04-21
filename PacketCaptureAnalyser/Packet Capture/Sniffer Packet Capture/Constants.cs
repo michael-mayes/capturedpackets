@@ -1,69 +1,93 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Constants.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace PacketCapture.SnifferPackageCapture
 {
     class Constants
     {
-        //
-        //Sniffer packet capture global header - 41 bytes
-        //
+        //// Sniffer packet capture global header - 41 bytes
 
-        //Length
-
+        /// <summary>
+        /// Length
+        /// </summary>
         public const ushort GlobalHeaderLength = 41;
 
-        //Magic numbers - provided in big endian (network) representation
+        //// Magic numbers - provided in big endian (network) representation
 
-        //Highest four bytes containing ASCII characters "TRSN" to start the magic number (used for indentifying the packet capture type)
-        public const System.UInt32 ExpectedMagicNumberHighest = 0x4E535254;
+        /// <summary>
+        /// Highest four bytes containing ASCII characters "TRSN" to start the magic number (used for indentifying the packet capture type)
+        /// </summary>
+        public const uint ExpectedMagicNumberHighest = 0x4E535254;
 
-        //High eight bytes containing ASCII characters "TRSNIFF " to start the magic number
-        public const System.UInt64 ExpectedMagicNumberHigh = 0x204646494E535254;
+        /// <summary>
+        /// High eight bytes containing ASCII characters "TRSNIFF " to start the magic number
+        /// </summary>
+        public const ulong ExpectedMagicNumberHigh = 0x204646494E535254;
 
-        //Low eight bytes containing ASCII characters "data    " to continue the magic number
-        public const System.UInt64 ExpectedMagicNumberLow = 0x2020202061746164;
+        /// <summary>
+        /// Low eight bytes containing ASCII characters "data    " to continue the magic number
+        /// </summary>
+        public const ulong ExpectedMagicNumberLow = 0x2020202061746164;
 
-        public const System.Byte ExpectedMagicNumberTerminator = 0x1A; //Terminating byte ASCII control character 'SUB' completes the magic number
+        /// <summary>
+        /// Terminating byte ASCII control character 'SUB' completes the magic number
+        /// </summary>
+        public const byte ExpectedMagicNumberTerminator = 0x1A;
 
-        //Version numbers
+        /// <summary>
+        /// Version numbers
+        /// </summary>
+        public const short ExpectedVersionMajor = 4;
+        public const short ExpectedVersionMinor = 0;
 
-        public const System.Int16 ExpectedVersionMajor = 4;
-        public const System.Int16 ExpectedVersionMinor = 0;
+        /// <summary>
+        /// Type of records that follow the Sniffer packet capture global header in the packet capture
+        /// </summary>
+        public const sbyte ExpectedType = 4; // Sniffer type 2 data records
 
-        //Type of records that follow the Sniffer packet capture global header in the packet capture
+        /// <summary>
+        /// Format version number
+        /// </summary>
+        public const sbyte ExpectedFormatVersion = 1; // Uncompressed
 
-        public const System.SByte ExpectedType = 4; //Sniffer type 2 data records
+        //// Sniffer packet capture record header - 6 bytes
 
-        //Format version number
-
-        public const System.SByte ExpectedFormatVersion = 1; //Uncompressed
-
-        //
-        //Sniffer packet capture record header - 6 bytes
-        //
-
-        //Length
-
+        /// <summary>
+        /// Length
+        /// </summary>
         public const ushort RecordHeaderLength = 6;
 
-        //Record type
+        /// <summary>
+        /// Sniffer packet capture Sniffer type 2 data record - 14 bytes
+        /// </summary>
+        public const ushort SnifferType2RecordLength = 14;
 
+        /// <summary>
+        /// Record type
+        /// </summary>
         public enum RecordHeaderSnifferRecordType : ushort
         {
-            VersionRecordType = 1, //Version record type
-            Type2RecordType = 4, //Type 2 data record type
-            EndOfFileRecordType = 3 //End of file record type
+            /// <summary>
+            /// Version record type
+            /// </summary>
+            VersionRecordType = 1,
+
+            /// <summary>
+            /// Type 2 data record type
+            /// </summary>
+            Type2RecordType = 4,
+
+            /// <summary>
+            /// End of file record type
+            /// </summary>
+            EndOfFileRecordType = 3
         }
-
-        //
-        //Sniffer packet capture Sniffer type 2 data record - 14 bytes
-        //
-
-        public const ushort SnifferType2RecordLength = 14;
     }
 }

@@ -1,58 +1,98 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Constants.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace EthernetFrame.IPPacket.TCPPacket
 {
     class Constants
     {
-        //
-        //TCP packet header - 20 bytes
-        //
+        //// TCP packet header - 20 bytes
 
-        //Length
-
+        // Length
         public const ushort HeaderMinimumLength = 20;
         public const ushort HeaderMaximumLength = 60;
 
-        //Port number
-
+        /// <summary>
+        /// Port number
+        /// </summary>
         public enum PortNumber : ushort
         {
+            /// <summary>
+            /// Minimum value
+            /// </summary>
             DummyValueMin = 0,
+
+            /// <summary>
+            /// Maximum value
+            /// </summary>
             DummyValueMax = 65535
         }
 
-        //Flags
-
+        /// <summary>
+        /// Flags
+        /// </summary>
         public enum Flags : byte
         {
+            /// <summary>
+            /// Congestion Window Reduced (CWR) flag
+            /// </summary>
             CWR = 0,
+
+            /// <summary>
+            /// ECN-Echo flag
+            /// </summary>
             ECE,
+
+            /// <summary>
+            /// Urgent flag
+            /// </summary>
             URG,
+
+            /// <summary>
+            /// Acknowledgment flag
+            /// </summary>
             ACK,
+
+            /// <summary>
+            /// Push flag
+            /// </summary>
             PSH,
+
+            /// <summary>
+            /// Reset flag
+            /// </summary>
             RST,
+
+            /// <summary>
+            /// Synchronize sequence numbers flag
+            /// </summary>
             SYN,
+
+            /// <summary>
+            /// Finish the connection flag
+            /// </summary>
             FIN
         }
 
-        public bool IsFlagSet(System.Byte TheByte, Flags TheFlag)
+        public bool IsFlagSet(byte theByte, Flags theFlag)
         {
-            int Shift = Flags.FIN - TheFlag;
+            int theShift = Flags.FIN - theFlag;
 
             // Get a single bit in the proper position
-            byte BitMask = (byte)(1 << Shift);
+            byte theBitMask = (byte)(1 << theShift);
 
             // Mask out the appropriate bit
-            byte MaskedByte = (byte)(TheByte & BitMask);
+            byte theMaskedByte = (byte)(theByte & theBitMask);
 
             // If masked != 0, then the masked out bit is 1
             // Otherwise, masked will be 0
-            return (MaskedByte != 0);
+            return theMaskedByte != 0;
         }
     }
 }

@@ -1,56 +1,61 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Processing.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace EthernetFrame.LLDPPacket
 {
     class Processing
     {
-        private Analysis.DebugInformation TheDebugInformation;
+        private Analysis.DebugInformation theDebugInformation;
 
-        private System.IO.BinaryReader TheBinaryReader;
+        private System.IO.BinaryReader theBinaryReader;
 
-        private Structures.PacketStructure ThePacket;
+        private Structures.PacketStructure thePacket;
 
-        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader)
+        /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theDebugInformation"></param>
+        /// <param name="theBinaryReader"></param>
+        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader)
         {
-            this.TheDebugInformation = TheDebugInformation;
+            this.theDebugInformation = theDebugInformation;
 
-            this.TheBinaryReader = TheBinaryReader;
+            this.theBinaryReader = theBinaryReader;
 
-            //Create an instance of the LLDP packet
-            ThePacket = new Structures.PacketStructure();
+            // Create an instance of the LLDP packet
+            this.thePacket = new Structures.PacketStructure();
         }
 
-        public bool Process(long ThePayloadLength)
+        public bool Process(long thePayloadLength)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            if (ThePayloadLength < Constants.PacketLength)
+            if (thePayloadLength < Constants.PacketLength)
             {
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The payload length of the Ethernet frame is lower than the length of the LLDP packet!!!"
-                    );
+                this.theDebugInformation.WriteErrorEvent("The payload length of the Ethernet frame is lower than the length of the LLDP packet!!!");
 
                 return false;
             }
 
-            //There is no separate header for the LLDP packet
+            // There is no separate header for the LLDP packet
 
-            //Just read off the bytes for the LLDP packet from the packet capture so we can move on
-            ThePacket.UnusedField1 = TheBinaryReader.ReadUInt64();
-            ThePacket.UnusedField2 = TheBinaryReader.ReadUInt64();
-            ThePacket.UnusedField3 = TheBinaryReader.ReadUInt64();
-            ThePacket.UnusedField4 = TheBinaryReader.ReadUInt64();
-            ThePacket.UnusedField5 = TheBinaryReader.ReadUInt64();
-            ThePacket.UnusedField6 = TheBinaryReader.ReadUInt32();
-            ThePacket.UnusedField7 = TheBinaryReader.ReadUInt16();
+            // Just read off the bytes for the LLDP packet from the packet capture so we can move on
+            this.thePacket.UnusedField1 = this.theBinaryReader.ReadUInt64();
+            this.thePacket.UnusedField2 = this.theBinaryReader.ReadUInt64();
+            this.thePacket.UnusedField3 = this.theBinaryReader.ReadUInt64();
+            this.thePacket.UnusedField4 = this.theBinaryReader.ReadUInt64();
+            this.thePacket.UnusedField5 = this.theBinaryReader.ReadUInt64();
+            this.thePacket.UnusedField6 = this.theBinaryReader.ReadUInt32();
+            this.thePacket.UnusedField7 = this.theBinaryReader.ReadUInt16();
 
-            return TheResult;
+            return theResult;
         }
     }
 }
