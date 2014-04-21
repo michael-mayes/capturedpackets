@@ -1,410 +1,389 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Processing.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace Analysis.TimeAnalysis
 {
-    using System.Data; //Required to be able to use AsEnumerable method
-    using System.Linq; //Required to be able to use Count method
+    using System.Data; // Required to be able to use AsEnumerable method
+    using System.Linq; // Required to be able to use Count method
 
-    //This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
+    // This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
     class Processing : System.IDisposable
     {
-        private Analysis.DebugInformation TheDebugInformation;
+        private Analysis.DebugInformation theDebugInformation;
 
-        private bool OutputDebug;
+        private bool outputDebug;
 
-        private string SelectedPacketCaptureFile;
+        private string selectedPacketCaptureFile;
 
-        private System.Data.DataTable TheTimeValuesTable;
-        private System.Data.DataTable TheHostIdsTable;
+        private System.Data.DataTable theTimeValuesTable;
+        private System.Data.DataTable theHostIdsTable;
 
-        public Processing(Analysis.DebugInformation TheDebugInformation, bool OutputDebug, string SelectedPacketCaptureFile)
+        /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theDebugInformation"></param>
+        /// <param name="outputDebug"></param>
+        /// <param name="selectedPacketCaptureFile"></param>
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string selectedPacketCaptureFile)
         {
-            this.TheDebugInformation = TheDebugInformation;
+            this.theDebugInformation = theDebugInformation;
 
-            this.OutputDebug = OutputDebug;
+            this.outputDebug = outputDebug;
 
-            this.SelectedPacketCaptureFile = SelectedPacketCaptureFile;
+            this.selectedPacketCaptureFile = selectedPacketCaptureFile;
 
-            //Create a datatable to hold the timestamp and time values for time-supplying messages
-            TheTimeValuesTable = new System.Data.DataTable();
+            // Create a datatable to hold the timestamp and time values for time-supplying messages
+            this.theTimeValuesTable = new System.Data.DataTable();
 
-            //Create a datatable to hold the set of host Ids encountered during the time analysis
-            TheHostIdsTable = new System.Data.DataTable();
+            // Create a datatable to hold the set of host Ids encountered during the time analysis
+            this.theHostIdsTable = new System.Data.DataTable();
         }
 
         public void Create()
         {
-            //Add the required columns to the datatable to hold the timestamp and time values for time-supplying messages
-            TheTimeValuesTable.Columns.Add("HostId", typeof(byte));
-            TheTimeValuesTable.Columns.Add("PacketNumber", typeof(ulong));
-            TheTimeValuesTable.Columns.Add("Timestamp", typeof(double));
-            TheTimeValuesTable.Columns.Add("Time", typeof(double));
-            TheTimeValuesTable.Columns.Add("Processed", typeof(bool));
+            // Add the required columns to the datatable to hold the timestamp and time values for time-supplying messages
+            this.theTimeValuesTable.Columns.Add("HostId", typeof(byte));
+            this.theTimeValuesTable.Columns.Add("PacketNumber", typeof(ulong));
+            this.theTimeValuesTable.Columns.Add("Timestamp", typeof(double));
+            this.theTimeValuesTable.Columns.Add("Time", typeof(double));
+            this.theTimeValuesTable.Columns.Add("Processed", typeof(bool));
 
-            //Add the required column to the datatable to hold the set of host Ids encountered during the time analysis
-            TheHostIdsTable.Columns.Add("HostId", typeof(byte));
+            // Add the required column to the datatable to hold the set of host Ids encountered during the time analysis
+            this.theHostIdsTable.Columns.Add("HostId", typeof(byte));
 
-            //Set the primary key to be the only column
-            //The primary key is needed to allow for use of the Find method against the datatable
-            TheHostIdsTable.PrimaryKey =
+            // Set the primary key to be the only column
+            // The primary key is needed to allow for use of the Find method against the datatable
+            this.theHostIdsTable.PrimaryKey =
                 new System.Data.DataColumn[]
                 {
-                    TheHostIdsTable.Columns["HostId"]
+                    this.theHostIdsTable.Columns["HostId"]
                 };
         }
 
-        protected virtual void Dispose(bool Disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposing)
+            if (disposing)
             {
-                //Dispose any resources allocated to the datatables if instructed
-                TheTimeValuesTable.Dispose();
-                TheHostIdsTable.Dispose();
+                // Dispose any resources allocated to the datatables if instructed
+                this.theTimeValuesTable.Dispose();
+                this.theHostIdsTable.Dispose();
             }
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
 
             System.GC.SuppressFinalize(this);
         }
 
-        public void RegisterTimeMessageReceipt(byte TheHostId, ulong ThePacketNumber, double TheTimestamp, double TheTime)
+        public void RegisterTimeMessageReceipt(byte theHostId, ulong thePacketNumber, double theTimestamp, double theTime)
         {
-            //Add the supplied host Id to the set of those encountered during the time analysis if not already in there
-            RegisterEncounteredHostId(TheHostId);
+            // Add the supplied Host Id to the set of those encountered during the time analysis if not already in there
+            this.RegisterEncounteredHostId(theHostId);
 
-            //Add the supplied timestamp and time to the datatable
+            //// Add the supplied timestamp and time to the datatable
 
-            System.Data.DataRow TheTimeValuesRowToAdd = TheTimeValuesTable.NewRow();
+            System.Data.DataRow theTimeValuesRowToAdd = this.theTimeValuesTable.NewRow();
 
-            TheTimeValuesRowToAdd["HostId"] = TheHostId;
-            TheTimeValuesRowToAdd["PacketNumber"] = ThePacketNumber;
-            TheTimeValuesRowToAdd["Timestamp"] = TheTimestamp;
-            TheTimeValuesRowToAdd["Time"] = TheTime;
-            TheTimeValuesRowToAdd["Processed"] = false;
+            theTimeValuesRowToAdd["HostId"] = theHostId;
+            theTimeValuesRowToAdd["PacketNumber"] = thePacketNumber;
+            theTimeValuesRowToAdd["Timestamp"] = theTimestamp;
+            theTimeValuesRowToAdd["Time"] = theTime;
+            theTimeValuesRowToAdd["Processed"] = false;
 
-            TheTimeValuesTable.Rows.Add(TheTimeValuesRowToAdd);
+            this.theTimeValuesTable.Rows.Add(theTimeValuesRowToAdd);
         }
 
-        //Add the supplied host Id to the set of those encountered during the time analysis if not already in there
-        private void RegisterEncounteredHostId(byte TheHostId)
+        // Add the supplied host Id to the set of those encountered during the time analysis if not already in there
+        private void RegisterEncounteredHostId(byte theHostId)
         {
-            object[] TheHostIdRowFindObject = new object[1];
+            object[] theHostIdRowFindObject = new object[1];
 
-            TheHostIdRowFindObject[0] = TheHostId.ToString(); //Primary key
+            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
 
-            System.Data.DataRow TheHostIdDataRowFound = TheHostIdsTable.Rows.Find(TheHostIdRowFindObject);
+            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
 
-            if (TheHostIdDataRowFound == null)
+            if (theHostIdDataRowFound == null)
             {
-                TheDebugInformation.WriteInformationEvent
-                    (
+                this.theDebugInformation.WriteInformationEvent(
                     "Found a time-supplying message for a Host Id " +
-                    string.Format("{0,3}", TheHostId) +
-                    " - adding this Host Id to the time analysis"
-                    );
+                    string.Format("{0,3}", theHostId) +
+                    " - adding this Host Id to the time analysis");
 
-                System.Data.DataRow TheHostIdRowToAdd = TheHostIdsTable.NewRow();
+                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
 
-                TheHostIdRowToAdd["HostId"] = TheHostId;
+                theHostIdRowToAdd["HostId"] = theHostId;
 
-                TheHostIdsTable.Rows.Add(TheHostIdRowToAdd);
+                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
             }
         }
 
         public void Finalise()
         {
-            //Obtain the set of host Ids encountered during the time analysis in ascending order
-
+            // Obtain the set of Host Ids encountered during the time analysis in ascending order
             EnumerableRowCollection<System.Data.DataRow>
-                TheHostIdRowsFound =
-                from r in TheHostIdsTable.AsEnumerable()
+                theHostIdRowsFound =
+                from r in this.theHostIdsTable.AsEnumerable()
                 orderby r.Field<byte>("HostId") ascending
                 select r;
 
-            //Loop across all the time values for each of these host Ids in turn
+            //// Loop across all the time values for each of these Host Ids in turn
 
-            TheDebugInformation.WriteBlankLine();
-            TheDebugInformation.WriteTextLine("===================");
-            TheDebugInformation.WriteTextLine("== Time Analysis ==");
-            TheDebugInformation.WriteTextLine("===================");
-            TheDebugInformation.WriteBlankLine();
+            this.theDebugInformation.WriteBlankLine();
+            this.theDebugInformation.WriteTextLine("===================");
+            this.theDebugInformation.WriteTextLine("== Time Analysis ==");
+            this.theDebugInformation.WriteTextLine("===================");
+            this.theDebugInformation.WriteBlankLine();
 
-            foreach (System.Data.DataRow TheHostIdRow in TheHostIdRowsFound)
+            foreach (System.Data.DataRow theHostIdRow in theHostIdRowsFound)
             {
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "Host Id " +
-                    string.Format("{0,3}", (TheHostIdRow.Field<byte>("HostId")).ToString())
-                    );
+                    string.Format("{0,3}", (theHostIdRow.Field<byte>("HostId")).ToString()));
 
-                TheDebugInformation.WriteTextLine("===========");
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteTextLine("===========");
+                this.theDebugInformation.WriteBlankLine();
 
-                FinaliseTimeValuesForHostId(TheHostIdRow.Field<byte>("HostId"));
+                this.FinaliseTimeValuesForHostId(theHostIdRow.Field<byte>("HostId"));
             }
         }
 
-        private void FinaliseTimeValuesForHostId(byte TheHostId)
+        private void FinaliseTimeValuesForHostId(byte theHostId)
         {
-            CommonHistogram TheTimestampHistogram =
-                new CommonHistogram
-                    (
-                    TheDebugInformation,
+            CommonHistogram theTimestampHistogram =
+                new CommonHistogram(
+                    this.theDebugInformation,
                     Constants.TimestampNumberOfBins,
                     Constants.MaxNegativeTimeDifference,
-                    Constants.MaxPositiveTimeDifference
-                    );
+                    Constants.MaxPositiveTimeDifference);
 
-            CommonHistogram TheTimeHistogram =
-                new CommonHistogram
-                    (
-                    TheDebugInformation,
+            CommonHistogram theTimeHistogram =
+                new CommonHistogram(
+                    this.theDebugInformation,
                     Constants.TimeNumberOfBins,
                     Constants.MaxNegativeTimeDifference,
-                    Constants.MaxPositiveTimeDifference
-                    );
+                    Constants.MaxPositiveTimeDifference);
 
-            ulong TheMinTimestampDifferencePacketNumber = 0;
-            ulong TheMaxTimestampDifferencePacketNumber = 0;
+            ulong theMinTimestampDifferencePacketNumber = 0;
+            ulong theMaxTimestampDifferencePacketNumber = 0;
 
-            ulong TheMinTimeDifferencePacketNumber = 0;
-            ulong TheMaxTimeDifferencePacketNumber = 0;
+            ulong theMinTimeDifferencePacketNumber = 0;
+            ulong theMaxTimeDifferencePacketNumber = 0;
 
-            double TheMinTimestampDifference = double.MaxValue;
-            double TheMaxTimestampDifference = double.MinValue;
+            double theMinTimestampDifference = double.MaxValue;
+            double theMaxTimestampDifference = double.MinValue;
 
-            double TheMinTimeDifference = double.MaxValue;
-            double TheMaxTimeDifference = double.MinValue;
+            double theMinTimeDifference = double.MaxValue;
+            double theMaxTimeDifference = double.MinValue;
 
-            double TheLastTimestamp = 0.0;
-            double TheLastTime = 0.0;
+            double theLastTimestamp = 0.0;
+            double theLastTime = 0.0;
 
-            ulong TheNumberOfTimestampDifferenceInstances = 0;
-            double TheTotalOfTimestampDifferences = 0;
-            double TheAverageTimestampDifference = 0;
+            ulong theNumberOfTimestampDifferenceInstances = 0;
+            double theTotalOfTimestampDifferences = 0;
+            double theAverageTimestampDifference = 0;
 
-            ulong TheNumberOfTimeDifferenceInstances = 0;
-            double TheTotalOfTimeDifferences = 0;
-            double TheAverageTimeDifference = 0;
+            ulong theNumberOfTimeDifferenceInstances = 0;
+            double theTotalOfTimeDifferences = 0;
+            double theAverageTimeDifference = 0;
 
-            bool TheFirstRowProcessed = false;
+            bool theFirstRowProcessed = false;
 
             EnumerableRowCollection<System.Data.DataRow>
-                TheTimeValuesRowsFound =
-                from r in TheTimeValuesTable.AsEnumerable()
-                where r.Field<byte>("HostId") == TheHostId
+                theTimeValuesRowsFound =
+                from r in this.theTimeValuesTable.AsEnumerable()
+                where r.Field<byte>("HostId") == theHostId
                 select r;
 
-            foreach (System.Data.DataRow TheTimeValuesRow in TheTimeValuesRowsFound)
+            foreach (System.Data.DataRow theTimeValuesRow in theTimeValuesRowsFound)
             {
-                //Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
-                if (!TheFirstRowProcessed)
+                // Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
+                if (!theFirstRowProcessed)
                 {
-                    TheLastTimestamp = TheTimeValuesRow.Field<double>("Timestamp");
-                    TheLastTime = TheTimeValuesRow.Field<double>("Time");
+                    theLastTimestamp = theTimeValuesRow.Field<double>("Timestamp");
+                    theLastTime = theTimeValuesRow.Field<double>("Time");
 
-                    //The first row is always marked as processed
-                    TheTimeValuesRow["Processed"] = true;
+                    // The first row is always marked as processed
+                    theTimeValuesRow["Processed"] = true;
 
-                    TheFirstRowProcessed = true;
+                    theFirstRowProcessed = true;
 
                     continue;
                 }
 
-                //The timestamp
+                // The timestamp
                 {
-                    double TheAbsoluteTimestampDifference = System.Math.Abs((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0);
-                    double TheTimestampDifference = ((TheTimeValuesRow.Field<double>("Timestamp") - TheLastTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; //Milliseconds;
+                    double theAbsoluteTimestampDifference = System.Math.Abs((theTimeValuesRow.Field<double>("Timestamp") - theLastTimestamp) * 1000.0);
+                    double theTimestampDifference = ((theTimeValuesRow.Field<double>("Timestamp") - theLastTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
 
-                    if (TheAbsoluteTimestampDifference > Constants.MinTimestampDifference)
+                    if (theAbsoluteTimestampDifference > Constants.MinTimestampDifference)
                     {
-                        //Only those time messages in the chosen range will be marked as processed
-                        //This should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
-                        TheTimeValuesRow["Processed"] = true;
+                        // Only those time messages in the chosen range will be marked as processed
+                        // This should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
+                        theTimeValuesRow["Processed"] = true;
 
-                        //Keep a running total to allow for averaging
-                        ++TheNumberOfTimestampDifferenceInstances;
-                        TheTotalOfTimestampDifferences += TheTimestampDifference;
+                        // Keep a running total to allow for averaging
+                        ++theNumberOfTimestampDifferenceInstances;
+                        theTotalOfTimestampDifferences += theTimestampDifference;
 
-                        TheTimestampHistogram.AddValue(TheTimestampDifference);
+                        theTimestampHistogram.AddValue(theTimestampDifference);
 
-                        if (TheMinTimestampDifference > TheTimestampDifference)
+                        if (theMinTimestampDifference > theTimestampDifference)
                         {
-                            TheMinTimestampDifference = TheTimestampDifference;
-                            TheMinTimestampDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
+                            theMinTimestampDifference = theTimestampDifference;
+                            theMinTimestampDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        if (TheMaxTimestampDifference < TheTimestampDifference)
+                        if (theMaxTimestampDifference < theTimestampDifference)
                         {
-                            TheMaxTimestampDifference = TheTimestampDifference;
-                            TheMaxTimestampDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
+                            theMaxTimestampDifference = theTimestampDifference;
+                            theMaxTimestampDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        TheLastTimestamp = TheTimeValuesRow.Field<double>("Timestamp");
+                        theLastTimestamp = theTimeValuesRow.Field<double>("Timestamp");
 
-                        //The time
+                        //// The time
 
-                        double TheTimeDifference = ((TheTimeValuesRow.Field<double>("Time") - TheLastTime) * 1000.0) - Constants.ExpectedTimeDifference; //Milliseconds;
+                        double theTimeDifference = ((theTimeValuesRow.Field<double>("Time") - theLastTime) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
 
-                        ++TheNumberOfTimeDifferenceInstances;
-                        TheTotalOfTimeDifferences += TheTimeDifference;
+                        ++theNumberOfTimeDifferenceInstances;
+                        theTotalOfTimeDifferences += theTimeDifference;
 
-                        TheTimeHistogram.AddValue(TheTimeDifference);
+                        theTimeHistogram.AddValue(theTimeDifference);
 
-                        if (TheMinTimeDifference > TheTimeDifference)
+                        if (theMinTimeDifference > theTimeDifference)
                         {
-                            TheMinTimeDifference = TheTimeDifference;
-                            TheMinTimeDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
+                            theMinTimeDifference = theTimeDifference;
+                            theMinTimeDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        if (TheMaxTimeDifference < TheTimeDifference)
+                        if (theMaxTimeDifference < theTimeDifference)
                         {
-                            TheMaxTimeDifference = TheTimeDifference;
-                            TheMaxTimeDifferencePacketNumber = TheTimeValuesRow.Field<ulong>("PacketNumber");
+                            theMaxTimeDifference = theTimeDifference;
+                            theMaxTimeDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        TheLastTime = TheTimeValuesRow.Field<double>("Time");
+                        theLastTime = theTimeValuesRow.Field<double>("Time");
                     }
                 }
             }
 
-            if (TheNumberOfTimestampDifferenceInstances > 0)
+            if (theNumberOfTimestampDifferenceInstances > 0)
             {
-                TheAverageTimestampDifference = (TheTotalOfTimestampDifferences / TheNumberOfTimestampDifferenceInstances);
-                TheAverageTimeDifference = (TheTotalOfTimeDifferences / TheNumberOfTimeDifferenceInstances);
+                theAverageTimestampDifference = theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
+                theAverageTimeDifference = theTotalOfTimeDifferences / theNumberOfTimeDifferenceInstances;
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The number of time messages was " +
-                    TheNumberOfTimestampDifferenceInstances.ToString()
-                    );
+                    theNumberOfTimestampDifferenceInstances.ToString());
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The minimum timestamp difference was " +
-                    TheMinTimestampDifference.ToString() +
+                    theMinTimestampDifference.ToString() +
                     " ms for packet number " +
-                    TheMinTimestampDifferencePacketNumber.ToString()
-                    );
+                    theMinTimestampDifferencePacketNumber.ToString());
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The maximum timestamp difference was " +
-                    TheMaxTimestampDifference.ToString() +
+                    theMaxTimestampDifference.ToString() +
                     " ms for packet number " +
-                    TheMaxTimestampDifferencePacketNumber.ToString()
-                    );
+                    theMaxTimestampDifferencePacketNumber.ToString());
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The average timestamp difference was " +
-                    TheAverageTimestampDifference.ToString() +
-                    " ms"
-                    );
+                    theAverageTimestampDifference.ToString() +
+                    " ms");
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                //Output the histogram
+                //// Output the histogram
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The histogram (" +
                     Constants.TimestampBinsPerMillisecond.ToString() +
-                    " bins per millisecond) for timestamp values is:"
-                    );
+                    " bins per millisecond) for timestamp values is:");
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                TheTimestampHistogram.OutputValues();
+                theTimestampHistogram.OutputValues();
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The minimum time difference was " +
-                    TheMinTimeDifference.ToString() +
+                    theMinTimeDifference.ToString() +
                     " ms for packet number " +
-                    TheMinTimeDifferencePacketNumber.ToString()
-                    );
+                    theMinTimeDifferencePacketNumber.ToString());
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The maximum time difference was " +
-                    TheMaxTimeDifference.ToString() +
+                    theMaxTimeDifference.ToString() +
                     " ms for packet number " +
-                    TheMaxTimeDifferencePacketNumber.ToString()
-                    );
+                    theMaxTimeDifferencePacketNumber.ToString());
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The average time difference was " +
-                    TheAverageTimeDifference.ToString() +
-                    " ms"
-                    );
+                    theAverageTimeDifference.ToString() +
+                    " ms");
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                //Output the histogram
+                //// Output the histogram
 
-                TheDebugInformation.WriteTextLine
-                    (
+                this.theDebugInformation.WriteTextLine(
                     "The histogram (" +
                     Constants.TimeBinsPerMillisecond.ToString() +
-                    " bins per millisecond) for time values is:"
-                    );
+                    " bins per millisecond) for time values is:");
 
-                TheDebugInformation.WriteBlankLine();
+                this.theDebugInformation.WriteBlankLine();
 
-                TheTimeHistogram.OutputValues();
+                theTimeHistogram.OutputValues();
             }
 
-            TheDebugInformation.WriteBlankLine();
+            this.theDebugInformation.WriteBlankLine();
 
-            if (OutputDebug)
+            if (this.outputDebug)
             {
-                System.Text.StringBuilder OutputDebugLines = new System.Text.StringBuilder();
+                System.Text.StringBuilder outputDebugLines = new System.Text.StringBuilder();
 
-                string OutputDebugTitleLine = string.Format
-                    (
+                string outputDebugTitleLine = string.Format(
                     "{0},{1}{2}",
                     "Timestamp",
                     "Time",
-                    System.Environment.NewLine
-                    );
+                    System.Environment.NewLine);
 
-                OutputDebugLines.Append(OutputDebugTitleLine);
+                outputDebugLines.Append(outputDebugTitleLine);
 
-                foreach (System.Data.DataRow TheTimeValuesRow in TheTimeValuesRowsFound)
+                foreach (System.Data.DataRow theTimeValuesRow in theTimeValuesRowsFound)
                 {
-                    if (TheTimeValuesRow.Field<bool>("Processed"))
+                    if (theTimeValuesRow.Field<bool>("Processed"))
                     {
-                        string OutputDebugLine = string.Format
-                            (
+                        string outputDebugLine = string.Format(
                             "{0},{1}{2}",
-                            (TheTimeValuesRow.Field<double>("Timestamp")).ToString(),
-                            (TheTimeValuesRow.Field<double>("Time")).ToString(),
-                            System.Environment.NewLine
-                            );
+                            (theTimeValuesRow.Field<double>("Timestamp")).ToString(),
+                            (theTimeValuesRow.Field<double>("Time")).ToString(),
+                            System.Environment.NewLine);
 
-                        OutputDebugLines.Append(OutputDebugLine);
+                        outputDebugLines.Append(outputDebugLine);
                     }
                 }
 
-                System.IO.File.WriteAllText
-                    (
-                    SelectedPacketCaptureFile + ".HostId" + TheHostId + ".TimeAnalysis.csv",
-                    OutputDebugLines.ToString()
-                    );
+                System.IO.File.WriteAllText(
+                    this.selectedPacketCaptureFile +
+                    ".HostId" +
+                    theHostId +
+                    ".TimeAnalysis.csv",
+                    outputDebugLines.ToString());
             }
         }
     }

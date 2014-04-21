@@ -1,64 +1,69 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Processing.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace EthernetFrame.LoopbackPacket
 {
     class Processing
     {
-        private Analysis.DebugInformation TheDebugInformation;
+        private Analysis.DebugInformation theDebugInformation;
 
-        private System.IO.BinaryReader TheBinaryReader;
+        private System.IO.BinaryReader theBinaryReader;
 
-        private Structures.HeaderStructure TheHeader;
+        private Structures.HeaderStructure theHeader;
 
-        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader)
+        /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theDebugInformation"></param>
+        /// <param name="theBinaryReader"></param>
+        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader)
         {
-            this.TheDebugInformation = TheDebugInformation;
+            this.theDebugInformation = theDebugInformation;
 
-            this.TheBinaryReader = TheBinaryReader;
+            this.theBinaryReader = theBinaryReader;
 
-            //Create an instance of the Loopback packet header
-            TheHeader = new Structures.HeaderStructure();
+            // Create an instance of the Loopback packet header
+            this.theHeader = new Structures.HeaderStructure();
         }
 
-        public bool Process(long ThePayloadLength)
+        public bool Process(long thePayloadLength)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            if (ThePayloadLength < (Constants.HeaderLength + Constants.PayloadLength))
+            if (thePayloadLength < (Constants.HeaderLength + Constants.PayloadLength))
             {
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The payload length of the Ethernet frame is lower than the length of the Loopback packet!!!"
-                    );
+                this.theDebugInformation.WriteErrorEvent("The payload length of the Ethernet frame is lower than the length of the Loopback packet!!!");
 
                 return false;
             }
 
-            //Process the Loopback packet header
-            TheResult = ProcessHeader();
+            // Process the Loopback packet header
+            theResult = this.ProcessHeader();
 
-            //Just read off the remaining bytes of the Loopback packet from the packet capture so we can move on
-            //The remaining length is the length for the Loopback packet payload
-            TheBinaryReader.ReadBytes(Constants.PayloadLength);
+            // Just read off the remaining bytes of the Loopback packet from the packet capture so we can move on
+            // The remaining length is the length for the Loopback packet payload
+            this.theBinaryReader.ReadBytes(Constants.PayloadLength);
 
-            return TheResult;
+            return theResult;
         }
 
         private bool ProcessHeader()
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Read the values for the Loopback packet header from the packet capture
-            TheHeader.SkipCount = TheBinaryReader.ReadUInt16();
-            TheHeader.Function = TheBinaryReader.ReadUInt16();
-            TheHeader.ReceiptNumber = TheBinaryReader.ReadUInt16();
+            // Read the values for the Loopback packet header from the packet capture
+            this.theHeader.SkipCount = this.theBinaryReader.ReadUInt16();
+            this.theHeader.Function = this.theBinaryReader.ReadUInt16();
+            this.theHeader.ReceiptNumber = this.theBinaryReader.ReadUInt16();
 
-            return TheResult;
+            return theResult;
         }
     }
 }

@@ -1,143 +1,149 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Processing.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace EthernetFrame.IPPacket.UDPDatagram
 {
     class Processing
     {
-        private Analysis.DebugInformation TheDebugInformation;
+        private Analysis.DebugInformation theDebugInformation;
 
-        private System.IO.BinaryReader TheBinaryReader;
+        private System.IO.BinaryReader theBinaryReader;
 
-        private Structures.HeaderStructure TheHeader;
+        private Structures.HeaderStructure theHeader;
 
-        public Processing(Analysis.DebugInformation TheDebugInformation, System.IO.BinaryReader TheBinaryReader, bool PerformLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing TheLatencyAnalysisProcessing, bool PerformTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing TheTimeAnalysisProcessing)
+        /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theDebugInformation"></param>
+        /// <param name="theBinaryReader"></param>
+        /// <param name="performLatencyAnalysisProcessing"></param>
+        /// <param name="theLatencyAnalysisProcessing"></param>
+        /// <param name="performTimeAnalysisProcessing"></param>
+        /// <param name="theTimeAnalysisProcessing"></param>
+        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
         {
-            this.TheDebugInformation = TheDebugInformation;
+            this.theDebugInformation = theDebugInformation;
 
-            this.TheBinaryReader = TheBinaryReader;
+            this.theBinaryReader = theBinaryReader;
 
-            //Create an instance of the UDP datagram header
-            TheHeader = new Structures.HeaderStructure();
+            // Create an instance of the UDP datagram header
+            this.theHeader = new Structures.HeaderStructure();
         }
 
-        public bool Process(ulong ThePacketNumber, double TheTimestamp, ushort TheLength)
+        public bool Process(ulong thePacketNumber, double theTimestamp, ushort theLength)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            ushort ThePayloadLength = 0;
+            ushort thePayloadLength = 0;
 
-            ushort TheSourcePort = 0;
-            ushort TheDestinationPort = 0;
+            ushort theSourcePort = 0;
+            ushort theDestinationPort = 0;
 
-            //Process the UDP datagram header
-            TheResult = ProcessHeader(TheLength, out ThePayloadLength, out TheSourcePort, out TheDestinationPort);
+            // Process the UDP datagram header
+            theResult = this.ProcessHeader(theLength, out thePayloadLength, out theSourcePort, out theDestinationPort);
 
-            if (TheResult)
+            if (theResult)
             {
-                //Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                TheResult = ProcessPayload(ThePacketNumber, TheTimestamp, ThePayloadLength, TheSourcePort, TheDestinationPort);
+                // Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
+                theResult = this.ProcessPayload(thePacketNumber, theTimestamp, thePayloadLength, theSourcePort, theDestinationPort);
             }
 
-            return TheResult;
+            return theResult;
         }
 
-        private bool ProcessHeader(ushort TheLength, out ushort ThePayloadLength, out ushort TheSourcePort, out ushort TheDestinationPort)
+        private bool ProcessHeader(ushort theLength, out ushort thePayloadLength, out ushort theSourcePort, out ushort theDestinationPort)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Provide a default value for the output parameter for the length of the payload of the UDP datagram
-            ThePayloadLength = 0;
+            // Provide a default value for the output parameter for the length of the payload of the UDP datagram
+            thePayloadLength = 0;
 
-            //Provide default values for the output parameters for source port and destination port
-            TheSourcePort = 0;
-            TheDestinationPort = 0;
+            // Provide default values for the output parameters for source port and destination port
+            theSourcePort = 0;
+            theDestinationPort = 0;
 
-            //Read the values for the UDP datagram header from the packet capture
-            TheHeader.SourcePort = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
-            TheHeader.DestinationPort = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
-            TheHeader.Length = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
-            TheHeader.Checksum = (System.UInt16)System.Net.IPAddress.NetworkToHostOrder(TheBinaryReader.ReadInt16());
+            // Read the values for the UDP datagram header from the packet capture
+            this.theHeader.SourcePort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+            this.theHeader.DestinationPort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+            this.theHeader.Length = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+            this.theHeader.Checksum = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
-            //Validate the UDP datagram header
-            TheResult = ValidateHeader(TheHeader, TheLength, TheHeader.Length);
+            // Validate the UDP datagram header
+            theResult = this.ValidateHeader(this.theHeader, theLength, this.theHeader.Length);
 
-            if (TheResult)
+            if (theResult)
             {
-                //Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
-                ThePayloadLength = (ushort)(TheLength - Constants.HeaderLength);
+                // Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
+                thePayloadLength = (ushort)(theLength - Constants.HeaderLength);
 
-                //Set up the output parameters for source port and destination port using the value read from the UDP datagram header
-                TheSourcePort = TheHeader.SourcePort;
-                TheDestinationPort = TheHeader.DestinationPort;
+                // Set up the output parameters for source port and destination port using the value read from the UDP datagram header
+                theSourcePort = this.theHeader.SourcePort;
+                theDestinationPort = this.theHeader.DestinationPort;
             }
 
-            return TheResult;
+            return theResult;
         }
 
-        private bool ProcessPayload(ulong ThePacketNumber, double TheTimestamp, ushort ThePayloadLength, ushort TheSourcePort, ushort TheDestinationPort)
+        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort thePayloadLength, ushort theSourcePort, ushort theDestinationPort)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //Only process this UDP datagram if the payload has a non-zero payload length i.e. it actually includes data (unlikely to not include data, but retain check for consistency with TCP packet processing)
-            if (ThePayloadLength > 0)
+            // Only process this UDP datagram if the payload has a non-zero payload length i.e. it actually includes data (unlikely to not include data, but retain check for consistency with TCP packet processing)
+            if (thePayloadLength > 0)
             {
-                switch (TheSourcePort)
+                switch (theSourcePort)
                 {
-                    //Put extra cases and code here to identify and process specific messages within the UDP datagram
+                    //// Put extra cases and code here to identify and process specific messages within the UDP datagram
 
                     default:
                         {
-                            //Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
-                            //The remaining length is the supplied length of the UDP datagram payload
-                            TheBinaryReader.ReadBytes(ThePayloadLength);
+                            // Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
+                            // The remaining length is the supplied length of the UDP datagram payload
+                            this.theBinaryReader.ReadBytes(thePayloadLength);
                             break;
                         }
                 }
             }
 
-            return TheResult;
+            return theResult;
         }
 
-        private bool ValidateHeader(Structures.HeaderStructure TheHeader, ushort TheLength, ushort TheHeaderLength)
+        private bool ValidateHeader(Structures.HeaderStructure theHeader, ushort theLength, ushort theHeaderLength)
         {
-            bool TheResult = true;
+            bool theResult = true;
 
-            //The length in the UDP datagram header includes both the header itself and the payload so should equal the length of the UDP datagram payload in the IP packet
-            if (TheHeader.Length != TheLength)
+            // The length in the UDP datagram header includes both the header itself and the payload so should equal the length of the UDP datagram payload in the IP packet
+            if (this.theHeader.Length != theLength)
             {
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The UDP datagram header indicates a total length " +
-                    TheHeader.Length.ToString() +
+                this.theDebugInformation.WriteErrorEvent("The UDP datagram header indicates a total length " +
+                    this.theHeader.Length.ToString() +
                     " which is not equal to the length of the UDP datagram within the IP packet of " +
-                    TheLength.ToString() +
-                    " !!!"
-                    );
+                    theLength.ToString() +
+                    " !!!");
 
-                TheResult = false;
+                theResult = false;
             }
 
-            //The length in the UDP datagram header includes both the header itself and the payload so the minimum length is that of just the header
-            if (TheHeaderLength < Constants.HeaderLength)
+            // The length in the UDP datagram header includes both the header itself and the payload so the minimum length is that of just the header
+            if (theHeaderLength < Constants.HeaderLength)
             {
-                TheDebugInformation.WriteErrorEvent
-                    (
-                    "The UDP datagram contains an unexpected header length, is " +
-                    TheHeaderLength.ToString() +
+                this.theDebugInformation.WriteErrorEvent("The UDP datagram contains an unexpected header length, is " +
+                    theHeaderLength.ToString() +
                     " not " +
                     Constants.HeaderLength.ToString() +
-                    " or above!!!"
-                    );
+                    " or above!!!");
 
-                TheResult = false;
+                theResult = false;
             }
 
-            return TheResult;
+            return theResult;
         }
     }
 }

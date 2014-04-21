@@ -1,55 +1,86 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Structures.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace EthernetFrame.IPPacket.IPv4Packet
 {
     class Structures
     {
-        //
-        //IPv4 packet header - 20 bytes
-        //
-
+        /// <summary>
+        /// IPv4 packet header - 20 bytes
+        /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.HeaderMinimumLength)]
-
         public struct HeaderStructure
         {
+            /// <summary>
+            /// IP version and IPv4 packet header length
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public System.Byte VersionAndHeaderLength; //IP version and IPv4 packet header length
+            public byte VersionAndHeaderLength;
 
+            /// <summary>
+            /// Type of IP service
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(1)]
-            public System.Byte TypeOfService; //Type of IP service
+            public byte TypeOfService;
 
+            /// <summary>
+            /// Total length of the IPv4 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public System.UInt16 TotalLength; //Total length of the IPv4 packet
+            public ushort TotalLength;
 
+            /// <summary>
+            /// IP unique identifier
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public System.UInt16 Identifier; //IP unique identifier
+            public ushort Identifier;
 
+            /// <summary>
+            /// IP header flags and fragment offset
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(6)]
-            public System.UInt16 FlagsAndOffset; //IP header flags and fragment offset
+            public ushort FlagsAndOffset;
 
+            /// <summary>
+            /// IP Time To Live
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public System.Byte TimeToLive; //IP Time To Live
+            public byte TimeToLive;
 
+            /// <summary>
+            /// IPv4 packet protocol (ICMP, IGMP, TCP, UDP etc)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(9)]
-            public System.Byte Protocol; //IPv4 packet protocol (ICMP, IGMP, TCP, UDP etc)
+            public byte Protocol;
 
+            /// <summary>
+            /// IPv4 packet header checksum - includes IPv4 packet header only
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(10)]
-            public System.UInt16 HeaderChecksum; //IPv4 packet header checksum - includes IPv4 packet header only
+            public ushort HeaderChecksum;
 
+            /// <summary>
+            /// Source IP address
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public System.Int32 SourceAddress; //Source IP address
+            public int SourceAddress;
 
+            /// <summary>
+            /// Destination IP address
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(16)]
-            public System.Int32 DestinationAddress; //Destination IP address
+            public int DestinationAddress;
 
-            //There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the IPv4 packet header length field
+            // There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the IPv4 packet header length field
         }
     }
 }

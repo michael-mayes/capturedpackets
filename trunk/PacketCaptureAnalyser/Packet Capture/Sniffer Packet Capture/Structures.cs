@@ -1,126 +1,204 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Structures.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace PacketCapture.SnifferPackageCapture
 {
     class Structures
     {
-        //
-        //Sniffer packet capture global header - 41 bytes
-        //
-
+        /// <summary>
+        /// Sniffer packet capture global header - 41 bytes
+        /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.GlobalHeaderLength)]
-
         public struct GlobalHeaderStructure
         {
+            /// <summary>
+            /// High bytes of the magic number (eight bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public System.UInt64 MagicNumberHigh; //High bytes of the magic number (eight bytes)
+            public ulong MagicNumberHigh;
 
+            /// <summary>
+            /// Low bytes of the magic number (eight bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public System.UInt64 MagicNumberLow; //Low bytes of the magic number (eight bytes)
+            public ulong MagicNumberLow;
 
+            /// <summary>
+            /// Terminating byte for the magic number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(16)]
-            public System.Byte MagicNumberTerminator; //Terminating byte for the magic number
+            public byte MagicNumberTerminator;
 
+            /// <summary>
+            /// Type of version record
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(17)]
-            public System.UInt16 RecordType; //Type of version record
+            public ushort RecordType;
 
+            /// <summary>
+            /// Length of version record - only the first two bytes are length, the latter two are "reserved" and so not processed
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(19)]
-            public System.UInt32 RecordLength; //Length of version record - only the first two bytes are length, the latter two are "reserved" and so not processed
+            public uint RecordLength;
 
+            /// <summary>
+            /// Major version number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(23)]
-            public System.Int16 VersionMajor; //Major version number
+            public short VersionMajor;
 
+            /// <summary>
+            /// Minor version number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(25)]
-            public System.Int16 VersionMinor; //Minor version number
+            public short VersionMinor;
 
+            /// <summary>
+            /// DOS-format time
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(27)]
-            public System.Int16 Time; //DOS-format time
+            public short Time;
 
+            /// <summary>
+            /// DOS-format date
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(29)]
-            public System.Int16 Date; //DOS-format date
+            public short Date;
 
+            /// <summary>
+            /// Type of records that follow the Sniffer packet capture global header in the packet capture
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(31)]
-            public System.SByte Type; //Type of records that follow the Sniffer packet capture global header in the packet capture
+            public sbyte Type;
 
+            /// <summary>
+            /// Type of network encapsulation for records that follow the Sniffer packet capture global header in the packet capture
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(32)]
-            public System.Byte NetworkEncapsulationType; //Type of network encapsulation for records that follow the Sniffer packet capture global header in the packet capture
+            public byte NetworkEncapsulationType;
 
+            /// <summary>
+            /// Format version
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(33)]
-            public System.SByte FormatVersion; //Format version
+            public sbyte FormatVersion;
 
+            /// <summary>
+            /// Timestamp units
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(34)]
-            public System.Byte TimestampUnits; //Timestamp units
+            public byte TimestampUnits;
 
+            /// <summary>
+            /// Compression version
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(35)]
-            public System.SByte CompressionVersion; //Compression version
+            public sbyte CompressionVersion;
 
+            /// <summary>
+            /// Compression level
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(36)]
-            public System.SByte CompressionLevel; //Compression level
+            public sbyte CompressionLevel;
 
+            /// <summary>
+            /// Reserved
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(37)]
-            public System.Int32 Reserved; //Reserved
+            public int Reserved;
         }
 
-        //
-        //Sniffer packet capture record header - 6 bytes
-        //
-
+        /// <summary>
+        /// Sniffer packet capture record header - 6 bytes
+        /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.RecordHeaderLength)]
-
         public struct RecordHeaderStructure
         {
+            /// <summary>
+            /// Record type
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public System.UInt16 RecordType;
+            public ushort RecordType;
 
+            /// <summary>
+            /// Record length
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public System.UInt32 RecordLength;
+            public uint RecordLength;
         }
 
-        //
-        //Sniffer packet capture Sniffer type 2 data record - 14 bytes
-        //
-
+        /// <summary>
+        /// Sniffer packet capture Sniffer type 2 data record - 14 bytes
+        /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.SnifferType2RecordLength)]
-
         public struct SnifferType2RecordStructure
         {
+            /// <summary>
+            /// Low bytes of timestamp
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public System.UInt16 TimestampLow; //Low bytes of timestamp
+            public ushort TimestampLow;
 
+            /// <summary>
+            /// Middle bytes of timestamp
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public System.UInt16 TimestampMiddle; //Middle bytes of timestamp
+            public ushort TimestampMiddle;
 
+            /// <summary>
+            /// High bytes of the timestamp
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public System.Byte TimestampHigh; //High bytes of the timestamp
+            public byte TimestampHigh;
 
+            /// <summary>
+            /// Time in days since start of capture
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(5)]
-            public System.Byte TimeDays; //Time in days since start of capture
+            public byte TimeDays;
 
+            /// <summary>
+            /// Number of bytes of data
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(6)]
-            public System.Int16 Size; //Number of bytes of data
+            public short Size;
 
+            /// <summary>
+            /// Frame error status bits
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public System.Byte FrameErrorStatusBits; //Frame error status bits
+            public byte FrameErrorStatusBits;
 
+            /// <summary>
+            /// Buffer flags
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(9)]
-            public System.Byte Flags; //Buffer flags
+            public byte Flags;
 
+            /// <summary>
+            /// Size of original frame in bytes
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(10)]
-            public System.Int16 TrueSize; //Size of original frame in bytes
+            public short TrueSize;
 
+            /// <summary>
+            /// Reserved
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public System.Int16 Reserved; //Reserved
+            public short Reserved;
         }
     }
 }

@@ -1,41 +1,49 @@
-//$Id$
-//$URL$
+// $Id$
+// $URL$
+// <copyright file="Structures.cs" company="Public Domain">
+//     Released into the public domain
+// </copyright>
 
-//This file is part of the C# Packet Capture application. It is free and
-//unencumbered software released into the public domain as detailed in
-//the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture application. It is free and
+// unencumbered software released into the public domain as detailed in
+// The UNLICENSE file in the top level directory of this distribution
 
 namespace Analysis.LatencyAnalysis
 {
     class Structures
     {
-        //Dictionary Key
-
+        /// <summary>
+        /// Dictionary Key
+        /// </summary>
         public struct DictionaryKey
         {
             public byte HostId;
             public Constants.Protocol Protocol;
             public ulong SequenceNumber;
 
-            public DictionaryKey(byte TheHostId, Constants.Protocol TheProtocol, ulong TheSequenceNumber)
+            /// <summary>
+            /// Initializes a new instance of the DictionaryKey class
+            /// </summary>
+            /// <param name="theHostId"></param>
+            /// <param name="theProtocol"></param>
+            /// <param name="theSequenceNumber"></param>
+            public DictionaryKey(byte theHostId, Constants.Protocol theProtocol, ulong theSequenceNumber)
             {
-                HostId = TheHostId;
-                Protocol = TheProtocol;
-                SequenceNumber = TheSequenceNumber;
+                this.HostId = theHostId;
+                this.Protocol = theProtocol;
+                this.SequenceNumber = theSequenceNumber;
             }
 
             public override bool Equals(object obj)
             {
                 if (obj is DictionaryKey)
                 {
-                    DictionaryKey Key = (DictionaryKey)obj;
+                    DictionaryKey key = (DictionaryKey)obj;
 
                     return
-                        (
-                        HostId == Key.HostId &&
-                        Protocol == Key.Protocol &&
-                        SequenceNumber == Key.SequenceNumber
-                        );
+                        this.HostId == key.HostId &&
+                        this.Protocol == key.Protocol &&
+                        this.SequenceNumber == key.SequenceNumber;
                 }
                 else
                 {
@@ -46,14 +54,15 @@ namespace Analysis.LatencyAnalysis
             public override int GetHashCode()
             {
                 return
-                    HostId.GetHashCode() ^
-                    Protocol.GetHashCode() ^
-                    SequenceNumber.GetHashCode();
+                    this.HostId.GetHashCode() ^
+                    this.Protocol.GetHashCode() ^
+                    this.SequenceNumber.GetHashCode();
             }
         }
 
-        //Dictionary Value
-
+        /// <summary>
+        /// Dictionary Value
+        /// </summary>
         public struct DictionaryValue
         {
             public ulong MessageId;
@@ -70,20 +79,18 @@ namespace Analysis.LatencyAnalysis
             {
                 if (obj is DictionaryValue)
                 {
-                    DictionaryValue Value = (DictionaryValue)obj;
+                    DictionaryValue value = (DictionaryValue)obj;
 
                     return
-                        (
-                        MessageId == Value.MessageId &&
-                        FirstInstanceFound == Value.FirstInstanceFound &&
-                        SecondInstanceFound == Value.SecondInstanceFound &&
-                        FirstInstancePacketNumber == Value.FirstInstancePacketNumber &&
-                        SecondInstancePacketNumber == Value.SecondInstancePacketNumber &&
-                        FirstInstanceTimestamp == Value.FirstInstanceTimestamp &&
-                        SecondInstanceTimestamp == Value.SecondInstanceTimestamp &&
-                        TimestampDifference == Value.TimestampDifference &&
-                        TimestampDifferenceCalculated == Value.TimestampDifferenceCalculated
-                        );
+                        this.MessageId == value.MessageId &&
+                        this.FirstInstanceFound == value.FirstInstanceFound &&
+                        this.SecondInstanceFound == value.SecondInstanceFound &&
+                        this.FirstInstancePacketNumber == value.FirstInstancePacketNumber &&
+                        this.SecondInstancePacketNumber == value.SecondInstancePacketNumber &&
+                        this.FirstInstanceTimestamp == value.FirstInstanceTimestamp &&
+                        this.SecondInstanceTimestamp == value.SecondInstanceTimestamp &&
+                        this.TimestampDifference == value.TimestampDifference &&
+                        this.TimestampDifferenceCalculated == value.TimestampDifferenceCalculated;
                 }
                 else
                 {
@@ -94,15 +101,15 @@ namespace Analysis.LatencyAnalysis
             public override int GetHashCode()
             {
                 return
-                    MessageId.GetHashCode() ^
-                    FirstInstanceFound.GetHashCode() ^
-                    SecondInstanceFound.GetHashCode() ^
-                    FirstInstancePacketNumber.GetHashCode() ^
-                    SecondInstancePacketNumber.GetHashCode() ^
-                    FirstInstanceTimestamp.GetHashCode() ^
-                    SecondInstanceTimestamp.GetHashCode() ^
-                    TimestampDifference.GetHashCode() ^
-                    TimestampDifferenceCalculated.GetHashCode();
+                    this.MessageId.GetHashCode() ^
+                    this.FirstInstanceFound.GetHashCode() ^
+                    this.SecondInstanceFound.GetHashCode() ^
+                    this.FirstInstancePacketNumber.GetHashCode() ^
+                    this.SecondInstancePacketNumber.GetHashCode() ^
+                    this.FirstInstanceTimestamp.GetHashCode() ^
+                    this.SecondInstanceTimestamp.GetHashCode() ^
+                    this.TimestampDifference.GetHashCode() ^
+                    this.TimestampDifferenceCalculated.GetHashCode();
             }
         }
     }
