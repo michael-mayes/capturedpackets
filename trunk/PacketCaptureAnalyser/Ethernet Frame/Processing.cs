@@ -188,7 +188,7 @@ namespace EthernetFrame
 
                 case (ushort)Constants.HeaderEtherType.IPv4:
                     {
-                        // We have got an Ethernet frame containing an IPv4 packet so process it
+                        // We have got an Ethernet frame containing an IP v4 packet so process it
                         thePacketProcessingResult = this.theIPv4PacketProcessing.Process(this.thePayloadLength, thePacketNumber, theTimestamp);
 
                         break;
@@ -196,7 +196,7 @@ namespace EthernetFrame
 
                 case (ushort)Constants.HeaderEtherType.IPv6:
                     {
-                        // We have got an Ethernet frame containing an IPv6 packet so process it
+                        // We have got an Ethernet frame containing an IP v6 packet so process it
                         thePacketProcessingResult = this.theIPv6PacketProcessing.Process(this.thePayloadLength, thePacketNumber, theTimestamp);
 
                         break;

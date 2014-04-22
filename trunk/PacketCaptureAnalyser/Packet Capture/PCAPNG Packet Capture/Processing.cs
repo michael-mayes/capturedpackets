@@ -305,7 +305,7 @@ namespace PacketCapture.PCAPNGPackageCapture
 
             // Set up the output parameter for the timestamp based on the timestamp from the PCAP Next Generation packet capture packet payload
             theTimestamp =
-                thePacketBlock.TimestampHigh * 4294967296 +
+                (thePacketBlock.TimestampHigh * 4294967296) +
                 thePacketBlock.TimestampLow;
 
             return theResult;
@@ -383,7 +383,7 @@ namespace PacketCapture.PCAPNGPackageCapture
 
             // Set up the output parameter for the timestamp based on the timestamp from the PCAP Next Generation packet capture packet payload
             theTimestamp =
-                theEnhancedPacketBlock.TimestampHigh * 4294967296 +
+                (theEnhancedPacketBlock.TimestampHigh * 4294967296) +
                 theEnhancedPacketBlock.TimestampLow;
 
             return theResult;
@@ -431,7 +431,7 @@ namespace PacketCapture.PCAPNGPackageCapture
 
             // Set up the output parameter for the timestamp based on the timestamp from the PCAP Next Generation packet capture packet payload
             theTimestamp =
-                theInterfaceStatisticsBlock.TimestampHigh * 4294967296 +
+                (theInterfaceStatisticsBlock.TimestampHigh * 4294967296) +
                 theInterfaceStatisticsBlock.TimestampLow;
 
             return theResult;

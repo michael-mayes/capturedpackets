@@ -24,7 +24,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         {
             this.theBinaryReader = theBinaryReader;
 
-            // Create an instance of the IGMPv2 packet
+            // Create an instance of the IGMP v2 packet
             this.thePacket = new Structures.PacketStructure();
         }
 
@@ -32,9 +32,9 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         {
             bool theResult = true;
 
-            // There is no separate header for the IGMPv2 packet
+            // There is no separate header for the IGMP v2 packet
 
-            // Just read off the bytes for the IGMPv2 packet from the packet capture so we can move on
+            // Just read off the bytes for the IGMP v2 packet from the packet capture so we can move on
             this.thePacket.Type = this.theBinaryReader.ReadByte();
             this.thePacket.MaxResponseTime = this.theBinaryReader.ReadByte();
             this.thePacket.Checksum = this.theBinaryReader.ReadUInt16();

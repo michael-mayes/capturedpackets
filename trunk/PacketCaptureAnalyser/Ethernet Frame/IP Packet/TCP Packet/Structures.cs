@@ -42,7 +42,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
             public ushort WindowSize; // Window size
 
             [System.Runtime.InteropServices.FieldOffset(16)]
-            public ushort Checksum; // Checksum - includes TCP packer header and TCP packet data payload as well as an IPv4 "pseudo header"
+            public ushort Checksum; // Checksum - includes TCP packer header and TCP packet data payload as well as an IP v4 "pseudo header"
 
             [System.Runtime.InteropServices.FieldOffset(18)]
             public ushort UrgentPointer; // Urgent pointer

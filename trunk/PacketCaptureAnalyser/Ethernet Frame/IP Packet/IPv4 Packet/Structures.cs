@@ -13,7 +13,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
     class Structures
     {
         /// <summary>
-        /// IPv4 packet header - 20 bytes
+        /// IP v4 packet header - 20 bytes
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -21,7 +21,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         public struct HeaderStructure
         {
             /// <summary>
-            /// IP version and IPv4 packet header length
+            /// IP version and IP v4 packet header length
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
             public byte VersionAndHeaderLength;
@@ -33,7 +33,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             public byte TypeOfService;
 
             /// <summary>
-            /// Total length of the IPv4 packet
+            /// Total length of the IP v4 packet
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
             public ushort TotalLength;
@@ -57,13 +57,13 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             public byte TimeToLive;
 
             /// <summary>
-            /// IPv4 packet protocol (ICMP, IGMP, TCP, UDP etc)
+            /// IP v4 packet protocol (ICMP, IGMP, TCP, UDP etc)
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(9)]
             public byte Protocol;
 
             /// <summary>
-            /// IPv4 packet header checksum - includes IPv4 packet header only
+            /// IP v4 packet header checksum - includes IP v4 packet header only
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(10)]
             public ushort HeaderChecksum;
@@ -80,7 +80,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             [System.Runtime.InteropServices.FieldOffset(16)]
             public int DestinationAddress;
 
-            // There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the IPv4 packet header length field
+            // There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the IP v4 packet header length field
         }
     }
 }

@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser
     partial class ProgressWindowForm
     {
         /// <summary>
-        /// Required designer variable
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
@@ -33,36 +33,36 @@ namespace PacketCaptureAnalyser
 
         #region Windows Form Designer generated code
 
-        // /<summary>
-        // /Required method for Designer support - do not modify
-        // /the contents of this method with the code editor.
-        // /</summary>
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.ProgressBarLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
+            //
             // ProgressBar
-            // 
+            //
             this.ProgressBar.Enabled = false;
             this.ProgressBar.Location = new System.Drawing.Point(13, 28);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(240, 23);
             this.ProgressBar.TabIndex = 21;
             this.ProgressBar.Tag = string.Empty;
-            // 
+            //
             // ProgressBarLabel
-            // 
+            //
             this.ProgressBarLabel.Location = new System.Drawing.Point(-3, 4);
             this.ProgressBarLabel.Name = "ProgressBarLabel";
             this.ProgressBarLabel.Size = new System.Drawing.Size(271, 18);
             this.ProgressBarLabel.TabIndex = 25;
             this.ProgressBarLabel.Text = "<Default Text>";
             this.ProgressBarLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
             // ProgressWindowForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(267, 58);

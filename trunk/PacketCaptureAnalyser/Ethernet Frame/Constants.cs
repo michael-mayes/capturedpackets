@@ -35,12 +35,12 @@ namespace EthernetFrame
             ARP = 0x0806,
 
             /// <summary>
-            /// Ethernet frame containing an IPv4 packet
+            /// Ethernet frame containing an IP v4 packet
             /// </summary>
             IPv4 = 0x0800,
 
             /// <summary>
-            /// Ethernet frame containing an IPv6 packet
+            /// Ethernet frame containing an IP v6 packet
             /// </summary>
             IPv6 = 0x86DD,
 

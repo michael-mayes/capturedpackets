@@ -24,7 +24,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         {
             this.theBinaryReader = theBinaryReader;
 
-            // Create an instance of the ICMPv4 packet header
+            // Create an instance of the ICMP v4 packet header
             this.theHeader = new Structures.HeaderStructure();
         }
 
@@ -32,11 +32,11 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         {
             bool theResult = true;
 
-            // Process the ICMPv4 packet header
+            // Process the ICMP v4 packet header
             theResult = this.ProcessHeader();
 
-            // Just read off the remaining bytes of the ICMPv4 packet from the packet capture so we can move on
-            // The remaining length is the supplied length of the ICMPv4 packet minus the length for the ICMPv4 packet header
+            // Just read off the remaining bytes of the ICMP v4 packet from the packet capture so we can move on
+            // The remaining length is the supplied length of the ICMP v4 packet minus the length for the ICMP v4 packet header
             this.theBinaryReader.ReadBytes(theICMPv4PacketLength - Constants.HeaderLength);
 
             return theResult;
@@ -46,7 +46,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         {
             bool theResult = true;
 
-            // Read the values for the ICMPv4 packet header from the packet capture
+            // Read the values for the ICMP v4 packet header from the packet capture
             this.theHeader.Type = this.theBinaryReader.ReadByte();
             this.theHeader.Code = this.theBinaryReader.ReadByte();
             this.theHeader.Checksum = this.theBinaryReader.ReadUInt16();

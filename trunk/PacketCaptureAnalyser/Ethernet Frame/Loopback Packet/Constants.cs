@@ -12,7 +12,7 @@ namespace EthernetFrame.LoopbackPacket
 {
     class Constants
     {
-        //// Loopback packet header - 6 bytes 
+        //// Loopback packet header - 6 bytes
 
         // Length
         public const ushort HeaderLength = 6;

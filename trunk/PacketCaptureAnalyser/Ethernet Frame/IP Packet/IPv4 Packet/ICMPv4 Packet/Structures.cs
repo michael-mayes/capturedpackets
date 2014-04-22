@@ -13,7 +13,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
     class Structures
     {
         /// <summary>
-        /// ICMPv4 packet header - 4 bytes
+        /// ICMP v4 packet header - 4 bytes
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -21,13 +21,13 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         public struct HeaderStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public byte Type; // Type of ICMPv4 packet
+            public byte Type; // Type of ICMP v4 packet
 
             [System.Runtime.InteropServices.FieldOffset(1)]
-            public byte Code; // Sub-type of ICMPv4 packet
+            public byte Code; // Sub-type of ICMP v4 packet
 
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort Checksum; // Checksum for the ICMPv4 packet
+            public ushort Checksum; // Checksum for the ICMP v4 packet
         }
     }
 }

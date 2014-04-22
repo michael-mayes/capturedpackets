@@ -12,7 +12,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 {
     class Constants
     {
-        //// IPv6 packet header - 40 bytes
+        //// IP v6 packet header - 40 bytes
 
         // Version
         public const ushort HeaderVersion = 6;
@@ -36,7 +36,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             UDP = 0x11,
 
             /// <summary>
-            /// ICMPv6 - Internet Control Message Protocol version 6 for IPv6 (RFC 4443, RFC 4884)
+            /// ICMP v6 - Internet Control Message Protocol version 6 for IP v6 (RFC 4443, RFC 4884)
             /// </summary>
             ICMPv6 = 0x3A,
 

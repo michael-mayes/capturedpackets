@@ -22,7 +22,7 @@ namespace Analysis.LatencyAnalysis
             public ulong SequenceNumber;
 
             /// <summary>
-            /// Initializes a new instance of the DictionaryKey class
+            /// Initializes a new instance of the DictionaryKey struct
             /// </summary>
             /// <param name="theHostId"></param>
             /// <param name="theProtocol"></param>

@@ -12,7 +12,7 @@ namespace Analysis
 {
     class CommonHistogram
     {
-        //// Private entities 
+        //// Private entities
 
         private Analysis.DebugInformation theDebugInformation;
 
