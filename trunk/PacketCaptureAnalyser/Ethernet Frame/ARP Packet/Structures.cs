@@ -20,38 +20,71 @@ namespace EthernetFrame.ARPPacket
             Size = Constants.PacketLength)]
         public struct PacketStructure
         {
+            /// <summary>
+            /// The network protocol type (e.g. Ethernet is 1)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public ushort HardwareType; // The network protocol type (e.g. Ethernet is 1)
+            public ushort HardwareType;
 
+            /// <summary>
+            /// The internetwork protocol for which the ARP request is intended (e.g. IP v4 is 0x0800) - same possible values as for Ether Type in Ethernet frame header
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort ProtocolType; // The internetwork protocol for which the ARP request is intended (e.g. IP v4 is 0x0800) - same possible values as for Ether Type in Ethernet frame header
+            public ushort ProtocolType;
 
+            /// <summary>
+            /// Length (in octets) of a hardware address (e.g. Ethernet addresses size is 6)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public byte HardwareAddressLength; // Length (in octets) of a hardware address (e.g. Ethernet addresses size is 6)
+            public byte HardwareAddressLength;
 
+            /// <summary>
+            /// Length (in octets) of addresses used in the upper layer internetwork protocol (e.g. IP v4 address size is 4)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(5)]
-            public byte ProtocolAddressLength; // Length (in octets) of addresses used in the upper layer internetwork protocol (e.g. IP v4 address size is 4)
+            public byte ProtocolAddressLength;
 
+            /// <summary>
+            /// The operation that the sender is performing - 1 for request and 2 for reply
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(6)]
-            public ushort Operation; // The operation that the sender is performing - 1 for request and 2 for reply
+            public ushort Operation;
 
+            /// <summary>
+            /// The high bytes of the media address of the sender (four bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public uint SenderHardwareAddressHigh; // The high bytes of the media address of the sender (four bytes)
+            public uint SenderHardwareAddressHigh;
 
+            /// <summary>
+            /// The low bytes of the media address of the sender (two bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public ushort SenderHardwareAddressLow; // The low bytes of the media address of the sender (two bytes)
+            public ushort SenderHardwareAddressLow;
 
+            /// <summary>
+            /// The internetwork address of the sender
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(14)]
-            public uint SenderProtocolAddress; // The internetwork address of the sender
+            public uint SenderProtocolAddress;
 
+            /// <summary>
+            /// The high bytes of the media address of the intended receiver (four bytes) - ignored in requests
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(18)]
-            public uint TargetHardwareAddressHigh; // The high bytes of the media address of the intended receiver (four bytes) - ignored in requests
+            public uint TargetHardwareAddressHigh;
 
+            /// <summary>
+            /// The low bytes of the media address of the intended receiver (two bytes) - ignored in requests
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(22)]
-            public ushort TargetHardwareAddressLow; // The low bytes of the media address of the intended receiver (two bytes) - ignored in requests
+            public ushort TargetHardwareAddressLow;
 
+            /// <summary>
+            /// The internetwork address of the intended receiver
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(24)]
-            public uint TargetProtocolAddress; // The internetwork address of the intended receiver
+            public uint TargetProtocolAddress;
         }
     }
 }

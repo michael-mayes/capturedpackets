@@ -20,34 +20,61 @@ namespace EthernetFrame.IPPacket.TCPPacket
             Size = Constants.HeaderMinimumLength)]
         public struct HeaderStructure
         {
+            /// <summary>
+            /// Source port number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public ushort SourcePort; // Source port number
+            public ushort SourcePort;
 
+            /// <summary>
+            /// Destination port number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort DestinationPort; // Destination port number
+            public ushort DestinationPort;
 
+            /// <summary>
+            /// Sequence number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public uint SequenceNumber; // Sequence number
+            public uint SequenceNumber;
 
+            /// <summary>
+            /// Acknowledgment number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public uint AcknowledgmentNumber; // Acknowledgment number
+            public uint AcknowledgmentNumber;
 
+            /// <summary>
+            /// TCP packet header length, reserved fields and NS flag
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public byte DataOffsetAndReservedAndNSFlag; // TCP packet header length, reserved fields and NS flag
+            public byte DataOffsetAndReservedAndNSFlag;
 
+            /// <summary>
+            /// Other flags (including ACK, PSH, RST, SYN and FIN)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(13)]
-            public byte Flags; // Other flags (including ACK, PSH, RST, SYN and FIN)
+            public byte Flags;
 
+            /// <summary>
+            /// Window size
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(14)]
-            public ushort WindowSize; // Window size
+            public ushort WindowSize;
 
+            /// <summary>
+            /// Checksum - Includes TCP packer header and TCP packet data payload as well as an IP v4 "pseudo header"
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(16)]
-            public ushort Checksum; // Checksum - includes TCP packer header and TCP packet data payload as well as an IP v4 "pseudo header"
+            public ushort Checksum;
 
+            /// <summary>
+            /// Urgent pointer
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(18)]
-            public ushort UrgentPointer; // Urgent pointer
+            public ushort UrgentPointer;
 
-            // There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the TCP packet header length field
+            //// There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the TCP packet header length field
         }
     }
 }
