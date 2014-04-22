@@ -20,35 +20,65 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             Size = Constants.HeaderLength)]
         public struct HeaderStructure
         {
+            /// <summary>
+            /// IP packet version and traffic class
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public byte VersionAndTrafficClass; // IP packet version and traffic class
+            public byte VersionAndTrafficClass;
 
+            /// <summary>
+            /// Traffic class and flow label
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(1)]
-            public byte TrafficClassAndFlowLabel; // Traffic class and flow label
+            public byte TrafficClassAndFlowLabel;
 
+            /// <summary>
+            /// Traffic class and flow label
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort FlowLabel; // Traffic class and flow label
+            public ushort FlowLabel;
 
+            /// <summary>
+            /// Total length of the IP v6 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public ushort PayloadLength; // Total length of the IP v6 packet
+            public ushort PayloadLength;
 
+            /// <summary>
+            /// The next header within the IP v6 packet - indicates the protocol for the payload (ICMP, IGMP, TCP, UDP etc)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(6)]
-            public byte NextHeader; // The next header within the IP v6 packet - indicates the protocol for the payload (ICMP, IGMP, TCP, UDP etc)
+            public byte NextHeader;
 
+            /// <summary>
+            /// Hop limit - the maximum number of routers that the IP v6 packet is allowed to travel through before being discarded
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(7)]
-            public byte HopLimit; // Hop limit - the maximum number of routers that the IP v6 packet is allowed to travel through before being discarded
+            public byte HopLimit;
 
+            /// <summary>
+            /// The high bytes of the source IP address (eight bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
-            public long SourceAddressHigh; // The high bytes of the source IP address (eight bytes)
+            public long SourceAddressHigh;
 
+            /// <summary>
+            /// The low bytes of the source IP address (eight bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(16)]
-            public long SourceAddressLow; // The low bytes of the source IP address (eight bytes)
+            public long SourceAddressLow;
 
+            /// <summary>
+            /// The high bytes of the destination IP address (eight bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(24)]
-            public long DestinationAddressHigh; // The high bytes of the destination IP address (eight bytes)
+            public long DestinationAddressHigh;
 
+            /// <summary>
+            /// The low bytes of the destination IP address (eight bytes)
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(32)]
-            public long DestinationAddressLow; // The low bytes of the destination IP address (eight bytes)
+            public long DestinationAddressLow;
         }
     }
 }

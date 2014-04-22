@@ -20,17 +20,29 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
             Size = Constants.PacketLength)]
         public struct PacketStructure
         {
+            /// <summary>
+            /// Type of the IGMP v2 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public byte Type; // Type of IGMP v2 packet
+            public byte Type;
 
+            /// <summary>
+            /// Maximum time allowed for response to the IGMP v2 packet - only non-zero for queries
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(1)]
-            public byte MaxResponseTime; // Maximum time allowed for response to the IGMP v2 packet - only non-zero for queries
+            public byte MaxResponseTime;
 
+            /// <summary>
+            /// Checksum for the IGMP v2 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort Checksum; // Checksum for the IGMP v2 packet
+            public ushort Checksum;
 
+            /// <summary>
+            /// // The multicast address being queried by the IGMP v2 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public uint GroupAddress; // The multicast address being queried by the IGMP v2 packet
+            public uint GroupAddress;
         }
     }
 }

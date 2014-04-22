@@ -20,17 +20,29 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             Size = Constants.HeaderLength)]
         public struct HeaderStructure
         {
+            /// <summary>
+            /// Source port number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public ushort SourcePort; // Source port number
+            public ushort SourcePort;
 
+            /// <summary>
+            /// Destination port number
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort DestinationPort; // Destination port number
+            public ushort DestinationPort;
 
+            /// <summary>
+            /// UDP datagram length - Includes UDP datagram header and UDP datagram data payload
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public ushort Length; // UDP datagram length - includes UDP datagram header and UDP datagram data payload
+            public ushort Length;
 
+            /// <summary>
+            /// Checksum - Includes UDP datagram header and UDP datagram data payload as well as an IP v4 "pseudo header"
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(6)]
-            public ushort Checksum; // Checksum - includes UDP datagram header and UDP datagram data payload as well as an IP v4 "pseudo header"
+            public ushort Checksum;
         }
     }
 }

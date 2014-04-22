@@ -20,14 +20,23 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
             Size = Constants.HeaderLength)]
         public struct HeaderStructure
         {
+            /// <summary>
+            /// Type of the ICMP v4 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public byte Type; // Type of ICMP v4 packet
+            public byte Type;
 
+            /// <summary>
+            /// Sub-type of the ICMP v4 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(1)]
-            public byte Code; // Sub-type of ICMP v4 packet
+            public byte Code;
 
+            /// <summary>
+            /// Checksum for the ICMP v4 packet
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort Checksum; // Checksum for the ICMP v4 packet
+            public ushort Checksum;
         }
     }
 }
