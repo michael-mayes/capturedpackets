@@ -11,8 +11,8 @@
 namespace EthernetFrame.LLDPPacket
 {
     class Constants
-    { 
-        //// LLDP packet - 46 bytes 
+    {
+        //// LLDP packet - 46 bytes
 
         // Length
         public const ushort PacketLength = 46;

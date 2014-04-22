@@ -11,7 +11,7 @@
 namespace PacketCapture.SnifferPackageCapture
 {
     class Processing : CommonProcessing
-    { 
+    {
         //// Concrete methods - override abstract methods on the base class
 
         public override bool ProcessGlobalHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
@@ -110,9 +110,9 @@ namespace PacketCapture.SnifferPackageCapture
                             // This is the number of seconds passed on this particular day
                             // To match up with a timestamp displayed since epoch would have to get the value of the Date field from the Sniffer packet capture global header
                             theTimestamp =
-                                theTimestampAccuracy * (theType2Record.TimestampHigh * 4294967296) +
-                                theTimestampAccuracy * (theType2Record.TimestampMiddle * 65536) +
-                                theTimestampAccuracy * theType2Record.TimestampLow;
+                                (theTimestampAccuracy * (theType2Record.TimestampHigh * 4294967296)) +
+                                (theTimestampAccuracy * (theType2Record.TimestampMiddle * 65536)) +
+                                (theTimestampAccuracy * theType2Record.TimestampLow);
 
                             break;
                         }
@@ -142,7 +142,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             return theResult;
         }
- 
+
         //// Private methods - provide methods specific to Sniffer packet captures, not required to derive from the abstract base class
 
         private bool ValidateGlobalHeader(Analysis.DebugInformation theDebugInformation, Structures.GlobalHeaderStructure theGlobalHeader)

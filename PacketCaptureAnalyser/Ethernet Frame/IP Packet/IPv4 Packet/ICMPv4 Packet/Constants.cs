@@ -12,7 +12,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 {
     class Constants
     {
-        //// ICMPv4 packet header - 4 bytes 
+        //// ICMP v4 packet header - 4 bytes
 
         // Length
         public const ushort HeaderLength = 4;

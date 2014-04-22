@@ -22,7 +22,7 @@ namespace PacketCapture.SnifferPackageCapture
         //// Magic numbers - provided in big endian (network) representation
 
         /// <summary>
-        /// Highest four bytes containing ASCII characters "TRSN" to start the magic number (used for indentifying the packet capture type)
+        /// Highest four bytes containing ASCII characters "TRSN" to start the magic number (used for identifying the packet capture type)
         /// </summary>
         public const uint ExpectedMagicNumberHighest = 0x4E535254;
 

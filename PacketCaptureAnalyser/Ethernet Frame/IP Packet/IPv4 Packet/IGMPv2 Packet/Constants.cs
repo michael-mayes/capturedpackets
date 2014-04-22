@@ -11,8 +11,8 @@
 namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
 {
     class Constants
-    { 
-        //// IGMPv2 packet - 8 bytes 
+    {
+        //// IGMP v2 packet - 8 bytes
 
         // Length
         public const ushort PacketLength = 8;

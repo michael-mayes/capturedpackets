@@ -30,7 +30,7 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             public ushort Length; // UDP datagram length - includes UDP datagram header and UDP datagram data payload
 
             [System.Runtime.InteropServices.FieldOffset(6)]
-            public ushort Checksum; // Checksum - includes UDP datagram header and UDP datagram data payload as well as an IPv4 "pseudo header"
+            public ushort Checksum; // Checksum - includes UDP datagram header and UDP datagram data payload as well as an IP v4 "pseudo header"
         }
     }
 }

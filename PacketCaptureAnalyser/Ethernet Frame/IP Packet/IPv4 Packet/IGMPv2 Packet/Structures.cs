@@ -13,7 +13,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
     class Structures
     {
         /// <summary>
-        /// IGMPv2 packet - 8 bytes
+        /// IGMP v2 packet - 8 bytes
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -21,16 +21,16 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         public struct PacketStructure
         {
             [System.Runtime.InteropServices.FieldOffset(0)]
-            public byte Type; // Type of IGMPv2 packet
+            public byte Type; // Type of IGMP v2 packet
 
             [System.Runtime.InteropServices.FieldOffset(1)]
-            public byte MaxResponseTime; // Maximum time allowed for response to the IGMPv2 packet - only non-zero for queries
+            public byte MaxResponseTime; // Maximum time allowed for response to the IGMP v2 packet - only non-zero for queries
 
             [System.Runtime.InteropServices.FieldOffset(2)]
-            public ushort Checksum; // Checksum for the IGMPv2 packet
+            public ushort Checksum; // Checksum for the IGMP v2 packet
 
             [System.Runtime.InteropServices.FieldOffset(4)]
-            public uint GroupAddress; // The multicast address being queried by the IGMPv2 packet
+            public uint GroupAddress; // The multicast address being queried by the IGMP v2 packet
         }
     }
 }

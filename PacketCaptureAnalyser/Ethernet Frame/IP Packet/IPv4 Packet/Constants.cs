@@ -12,7 +12,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
 {
     class Constants
     {
-        //// IPv4 packet header - 20 bytes
+        //// IP v4 packet header - 20 bytes
 
         /// <summary>
         /// Version
@@ -31,7 +31,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         public enum Protocol : byte
         {
             /// <summary>
-            /// ICMPv4 - Internet Control Message Protocol version 4 for IPv4 (RFC 792)
+            /// ICMP v4 - Internet Control Message Protocol version 4 for IP v4 (RFC 792)
             /// </summary>
             ICMPv4 = 0x01,
 

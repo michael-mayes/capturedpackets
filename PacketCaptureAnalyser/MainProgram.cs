@@ -12,9 +12,9 @@ namespace PacketCaptureAnalyser
 {
     static class MainProgram
     {
-        // /<summary>
-        // /The main entry point for the application.
-        // /</summary>
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
         [System.STAThread]
         static void Main()
         {
