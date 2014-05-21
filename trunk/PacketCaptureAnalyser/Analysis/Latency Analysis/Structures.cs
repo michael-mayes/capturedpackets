@@ -10,15 +10,29 @@
 
 namespace Analysis.LatencyAnalysis
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the latency analysis processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// Dictionary Key
         /// </summary>
         public struct DictionaryKey
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public byte HostId;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public Constants.Protocol Protocol;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public ulong SequenceNumber;
 
             /// <summary>
@@ -34,6 +48,11 @@ namespace Analysis.LatencyAnalysis
                 this.SequenceNumber = theSequenceNumber;
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
             public override bool Equals(object obj)
             {
                 if (obj is DictionaryKey)
@@ -51,6 +70,10 @@ namespace Analysis.LatencyAnalysis
                 }
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override int GetHashCode()
             {
                 return
@@ -65,16 +88,56 @@ namespace Analysis.LatencyAnalysis
         /// </summary>
         public struct DictionaryValue
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public ulong MessageId;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public bool FirstInstanceFound;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public bool SecondInstanceFound;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public ulong FirstInstancePacketNumber;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public ulong SecondInstancePacketNumber;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public double FirstInstanceTimestamp;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public double SecondInstanceTimestamp;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public double TimestampDifference;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public bool TimestampDifferenceCalculated;
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
             public override bool Equals(object obj)
             {
                 if (obj is DictionaryValue)
@@ -98,6 +161,10 @@ namespace Analysis.LatencyAnalysis
                 }
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override int GetHashCode()
             {
                 return

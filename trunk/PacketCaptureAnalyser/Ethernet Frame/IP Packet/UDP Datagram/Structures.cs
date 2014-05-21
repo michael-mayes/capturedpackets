@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.IPPacket.UDPDatagram
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the UDP datagram processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// UDP datagram header - 8 bytes

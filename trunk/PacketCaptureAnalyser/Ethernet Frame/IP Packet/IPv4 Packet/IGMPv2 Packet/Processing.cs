@@ -10,16 +10,25 @@
 
 namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
 {
-    class Processing
+    /// <summary>
+    /// This class provides the IGMP v2 packet processing
+    /// </summary>
+    public class Processing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Structures.PacketStructure thePacket;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theBinaryReader"></param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         public Processing(System.IO.BinaryReader theBinaryReader)
         {
             this.theBinaryReader = theBinaryReader;
@@ -28,6 +37,11 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
             this.thePacket = new Structures.PacketStructure();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theIGMPv2PacketLength"></param>
+        /// <returns></returns>
         public bool Process(ushort theIGMPv2PacketLength)
         {
             bool theResult = true;

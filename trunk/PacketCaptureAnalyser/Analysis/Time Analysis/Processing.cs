@@ -13,22 +13,41 @@ namespace Analysis.TimeAnalysis
     using System.Data; // Required to be able to use AsEnumerable method
     using System.Linq; // Required to be able to use Count method
 
-    // This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
-    class Processing : System.IDisposable
+    /// <summary>
+    /// This class provides the time analysis processing
+    /// This class will implement the Disposable class so as to be able to clean up after the data tables it creates which themselves implement the Disposable class
+    /// </summary>
+    public class Processing : System.IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private bool outputDebug;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private string selectedPacketCaptureFile;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.Data.DataTable theTimeValuesTable;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private System.Data.DataTable theHostIdsTable;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="outputDebug"></param>
         /// <param name="selectedPacketCaptureFile"></param>
         public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string selectedPacketCaptureFile)
@@ -46,6 +65,9 @@ namespace Analysis.TimeAnalysis
             this.theHostIdsTable = new System.Data.DataTable();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Create()
         {
             // Add the required columns to the datatable to hold the timestamp and time values for time-supplying messages
@@ -67,16 +89,9 @@ namespace Analysis.TimeAnalysis
                 };
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // Dispose any resources allocated to the datatables if instructed
-                this.theTimeValuesTable.Dispose();
-                this.theHostIdsTable.Dispose();
-            }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
@@ -84,6 +99,13 @@ namespace Analysis.TimeAnalysis
             System.GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theHostId"></param>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="theTime"></param>
         public void RegisterTimeMessageReceipt(byte theHostId, ulong thePacketNumber, double theTimestamp, double theTime)
         {
             // Add the supplied Host Id to the set of those encountered during the time analysis if not already in there
@@ -102,30 +124,9 @@ namespace Analysis.TimeAnalysis
             this.theTimeValuesTable.Rows.Add(theTimeValuesRowToAdd);
         }
 
-        // Add the supplied host Id to the set of those encountered during the time analysis if not already in there
-        private void RegisterEncounteredHostId(byte theHostId)
-        {
-            object[] theHostIdRowFindObject = new object[1];
-
-            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
-
-            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
-
-            if (theHostIdDataRowFound == null)
-            {
-                this.theDebugInformation.WriteInformationEvent(
-                    "Found a time-supplying message for a Host Id " +
-                    string.Format("{0,3}", theHostId) +
-                    " - adding this Host Id to the time analysis");
-
-                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
-
-                theHostIdRowToAdd["HostId"] = theHostId;
-
-                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
-            }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void Finalise()
         {
             // Obtain the set of Host Ids encountered during the time analysis in ascending order
@@ -156,6 +157,51 @@ namespace Analysis.TimeAnalysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose any resources allocated to the datatables if instructed
+                this.theTimeValuesTable.Dispose();
+                this.theHostIdsTable.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Adds the supplied host Id to the set of those encountered during the time analysis if not already in there
+        /// </summary>
+        /// <param name="theHostId"></param>
+        private void RegisterEncounteredHostId(byte theHostId)
+        {
+            object[] theHostIdRowFindObject = new object[1];
+
+            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
+
+            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
+
+            if (theHostIdDataRowFound == null)
+            {
+                this.theDebugInformation.WriteInformationEvent(
+                    "Found a time-supplying message for a Host Id " +
+                    string.Format("{0,3}", theHostId) +
+                    " - adding this Host Id to the time analysis");
+
+                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
+
+                theHostIdRowToAdd["HostId"] = theHostId;
+
+                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theHostId"></param>
         private void FinaliseTimeValuesForHostId(byte theHostId)
         {
             CommonHistogram theTimestampHistogram =

@@ -10,7 +10,10 @@
 
 namespace PacketCapture.SnifferPackageCapture
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the Sniffer packet capture processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// Sniffer packet capture global header - 41 bytes
@@ -111,7 +114,7 @@ namespace PacketCapture.SnifferPackageCapture
             public sbyte CompressionLevel;
 
             /// <summary>
-            /// Reserved
+            /// Reserved field
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(37)]
             public int Reserved;
@@ -195,7 +198,7 @@ namespace PacketCapture.SnifferPackageCapture
             public short TrueSize;
 
             /// <summary>
-            /// Reserved
+            /// Reserved field
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
             public short Reserved;

@@ -10,33 +10,70 @@
 
 namespace EthernetFrame
 {
-    class Processing
+    /// <summary>
+    /// This class provides the Ethernet frame processing
+    /// </summary>
+    public class Processing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Structures.HeaderStructure theHeader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private ARPPacket.Processing theARPPacketProcessing;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private IPPacket.IPv4Packet.Processing theIPv4PacketProcessing;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private IPPacket.IPv6Packet.Processing theIPv6PacketProcessing;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private LLDPPacket.Processing theLLDPPacketProcessing;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private LoopbackPacket.Processing theLoopbackPacketProcessing;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private long thePayloadLength;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private ushort theEtherType;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
-        /// <param name="theBinaryReader"></param>
-        /// <param name="performLatencyAnalysisProcessing"></param>
-        /// <param name="theLatencyAnalysisProcessing"></param>
-        /// <param name="performTimeAnalysisProcessing"></param>
-        /// <param name="theTimeAnalysisProcessing"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
         {
             this.theDebugInformation = theDebugInformation;
@@ -54,6 +91,13 @@ namespace EthernetFrame
             this.theLoopbackPacketProcessing = new LoopbackPacket.Processing(theDebugInformation, theBinaryReader);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         public bool Process(ulong thePacketNumber, long thePayloadLength, double theTimestamp)
         {
             bool theResult = true;
@@ -82,6 +126,10 @@ namespace EthernetFrame
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private bool ProcessHeader()
         {
             bool theResult = true;
@@ -106,6 +154,11 @@ namespace EthernetFrame
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePacketNumber"></param>
+        /// <returns></returns>
         private bool ProcessEtherType(ulong thePacketNumber)
         {
             bool theResult = true;
@@ -167,6 +220,12 @@ namespace EthernetFrame
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         private bool ProcessPayload(ulong thePacketNumber, double theTimestamp)
         {
             bool theResult = true;

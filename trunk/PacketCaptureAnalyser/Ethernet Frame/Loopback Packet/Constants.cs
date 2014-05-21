@@ -10,16 +10,23 @@
 
 namespace EthernetFrame.LoopbackPacket
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the Loopback packet processing
+    /// </summary>
+    public class Constants
     {
-        //// Loopback packet header - 6 bytes
+        //// Loopback packet header
 
-        // Length
+        /// <summary>
+        /// Loopback packet header length
+        /// </summary>
         public const ushort HeaderLength = 6;
 
         //// Loopback packet payload
 
-        // Length
+        /// <summary>
+        /// Loopback packet payload length
+        /// </summary>
         public const ushort PayloadLength = 40;
     }
 }

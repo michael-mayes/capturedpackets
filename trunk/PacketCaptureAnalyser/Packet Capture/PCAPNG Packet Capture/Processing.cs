@@ -10,12 +10,26 @@
 
 namespace PacketCapture.PCAPNGPackageCapture
 {
-    class Processing : CommonProcessing
+    /// <summary>
+    /// This class provides the PCAP Next Generation packet capture processing
+    /// </summary>
+    public class Processing : CommonProcessing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private bool isTheSectionHeaderBlockLittleEndian = true;
 
         //// Concrete methods - override abstract methods on the base class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <returns></returns>
         public override bool ProcessGlobalHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
         {
             bool theResult = true;
@@ -82,6 +96,16 @@ namespace PacketCapture.PCAPNGPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         public override bool ProcessPacketHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
@@ -163,6 +187,12 @@ namespace PacketCapture.PCAPNGPackageCapture
 
         //// Private methods - provide methods specific to PCAP Next Generation packet captures, not required to derive from the abstract base class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theSectionHeaderBlock"></param>
+        /// <returns></returns>
         private bool ValidateSectionHeaderBlock(Analysis.DebugInformation theDebugInformation, Structures.SectionHeaderBlockStructure theSectionHeaderBlock)
         {
             bool theResult = true;
@@ -219,6 +249,12 @@ namespace PacketCapture.PCAPNGPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <returns></returns>
         private bool ProcessInterfaceDescriptionBlock(System.IO.BinaryReader theBinaryReader, out long thePayloadLength)
         {
             bool theResult = true;
@@ -259,6 +295,13 @@ namespace PacketCapture.PCAPNGPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         private bool ProcessPacketBlock(System.IO.BinaryReader theBinaryReader, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
@@ -311,6 +354,12 @@ namespace PacketCapture.PCAPNGPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <returns></returns>
         private bool ProcessSimplePacketBlock(System.IO.BinaryReader theBinaryReader, out long thePayloadLength)
         {
             bool theResult = true;
@@ -340,6 +389,13 @@ namespace PacketCapture.PCAPNGPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         private bool ProcessEnhancedPacketBlock(System.IO.BinaryReader theBinaryReader, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
@@ -389,6 +445,13 @@ namespace PacketCapture.PCAPNGPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         private bool ProcessInterfaceStatisticsBlock(System.IO.BinaryReader theBinaryReader, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
@@ -437,6 +500,11 @@ namespace PacketCapture.PCAPNGPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blockTotalLength"></param>
+        /// <returns></returns>
         private uint AdjustBlockTotalLength(uint blockTotalLength)
         {
             uint theAdjustedBlockTotalLength = blockTotalLength;

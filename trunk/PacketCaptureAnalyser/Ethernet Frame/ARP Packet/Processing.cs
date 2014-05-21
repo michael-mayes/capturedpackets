@@ -10,19 +10,31 @@
 
 namespace EthernetFrame.ARPPacket
 {
-    class Processing
+    /// <summary>
+    /// This class provides the ARP packet processing
+    /// </summary>
+    public class Processing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Structures.PacketStructure thePacket;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
-        /// <param name="theBinaryReader"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader)
         {
             this.theDebugInformation = theDebugInformation;
@@ -33,6 +45,11 @@ namespace EthernetFrame.ARPPacket
             this.thePacket = new Structures.PacketStructure();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <returns></returns>
         public bool Process(long thePayloadLength)
         {
             bool theResult = true;

@@ -10,12 +10,15 @@
 
 namespace EthernetFrame
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the Ethernet frame processing
+    /// </summary>
+    public class Constants
     {
-        //// Ethernet frame header - 14 bytes
+        //// Ethernet frame header
 
         /// <summary>
-        /// Length
+        /// Ethernet frame header length
         /// </summary>
         public const ushort HeaderLength = 14;
 

@@ -10,8 +10,16 @@
 
 namespace PacketCaptureAnalyser
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class MainWindowForm : System.Windows.Forms.Form
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        private MainWindowFormPacketCaptureTypeEnumeration theMainWindowFormPacketCaptureType;
+
         /// <summary>
         /// Initializes a new instance of the MainWindowForm class
         /// </summary>
@@ -54,10 +62,13 @@ namespace PacketCaptureAnalyser
             Unknown = 4
         }
 
-        private MainWindowFormPacketCaptureTypeEnumeration theMainWindowFormPacketCaptureType;
-
         //// Button and label click actions
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void SelectPacketCaptureForAnalysisButton_Click(object sender, System.EventArgs e)
         {
             // Open the packet capture selection dialog box
@@ -88,12 +99,22 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void ClearSelectedPacketCaptureButton_Click(object sender, System.EventArgs e)
         {
             // Clear the selected packet capture on user request
             this.ClearSelectedPacketCapture();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void OpenSelectedPackageCaptureButton_Click(object sender, System.EventArgs e)
         {
             if (System.IO.File.Exists(this.theSelectedPacketCaptureForAnalysisDialog.FileName))
@@ -115,6 +136,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void EnableDebugInformationCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.theEnableDebugInformationCheckBox.Checked)
@@ -129,6 +155,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void EnableInformationEventsInDebugInformationCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.theEnableInformationEventsInDebugInformationCheckBox.Checked)
@@ -137,6 +168,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void RedirectDebugInformationToOutputCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.theRedirectDebugInformationToOutputCheckBox.Checked)
@@ -145,6 +181,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void PerformLatencyAnalysisCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.thePerformLatencyAnalysisCheckBox.Checked)
@@ -153,6 +194,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void OutputLatencyAnalysisDebugCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.theOutputLatencyAnalysisDebugCheckBox.Checked)
@@ -161,6 +207,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void PerformTimeAnalysisCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.thePerformTimeAnalysisCheckBox.Checked)
@@ -169,6 +220,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void OutputTimeAnalysisDebugCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (this.theOutputTimeAnalysisDebugCheckBox.Checked)
@@ -177,6 +233,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void RunAnalysisOnPacketCaptureButton_Click(object sender, System.EventArgs e)
         {
             bool theResult = true;
@@ -516,6 +577,11 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
         private void ExitButton_Click(object sender, System.EventArgs e)
         {
             this.Close();
@@ -523,6 +589,9 @@ namespace PacketCaptureAnalyser
 
         //// Packet capture support functions
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void ReflectSelectedPacketCapture()
         {
             switch (this.theMainWindowFormPacketCaptureType)
@@ -615,6 +684,9 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void ClearSelectedPacketCapture()
         {
             this.theMainWindowFormPacketCaptureType =
@@ -640,6 +712,9 @@ namespace PacketCaptureAnalyser
 
         //// Packet capture type
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void DeterminePacketCaptureType()
         {
             //// Determine the type of the packet capture
@@ -695,6 +770,9 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void CheckPacketCaptureType()
         {
             //// Check the type of the packet capture
@@ -765,6 +843,9 @@ namespace PacketCaptureAnalyser
 
         //// Button support functions
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void EnablePacketCaptureAnalysisButtons()
         {
             //// Enable the buttons
@@ -779,6 +860,9 @@ namespace PacketCaptureAnalyser
             this.theRunAnalysisOnSelectedPackageCaptureButton.Enabled = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void ResetPacketCaptureAnalysisButtons()
         {
             //// Reset the buttons
@@ -790,6 +874,10 @@ namespace PacketCaptureAnalyser
 
         //// Check box support functions
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resetDebugInformationCheckBox"></param>
         private void ResetPacketCaptureAnalysisCheckBoxes(bool resetDebugInformationCheckBox)
         {
             //// Reset the check boxes
@@ -816,6 +904,9 @@ namespace PacketCaptureAnalyser
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void EnablePacketCaptureAnalysisCheckBoxes()
         {
             //// Enable the check boxes
@@ -830,6 +921,10 @@ namespace PacketCaptureAnalyser
             this.theMinimiseMemoryUsageCheckBox.Enabled = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disableDebugInformationCheckBox"></param>
         private void DisablePacketCaptureAnalysisCheckBoxes(bool disableDebugInformationCheckBox)
         {
             //// Disable the check boxes

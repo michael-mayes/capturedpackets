@@ -10,12 +10,15 @@
 
 namespace PacketCapture.SnifferPackageCapture
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the Sniffer packet capture processing
+    /// </summary>
+    public class Constants
     {
-        //// Sniffer packet capture global header - 41 bytes
+        //// Sniffer packet capture global header
 
         /// <summary>
-        /// Length
+        /// Sniffer packet capture global header length
         /// </summary>
         public const ushort GlobalHeaderLength = 41;
 
@@ -42,9 +45,13 @@ namespace PacketCapture.SnifferPackageCapture
         public const byte ExpectedMagicNumberTerminator = 0x1A;
 
         /// <summary>
-        /// Version numbers
+        /// Sniffer packet capture global header major version number
         /// </summary>
         public const short ExpectedVersionMajor = 4;
+
+        /// <summary>
+        /// Sniffer packet capture global header major version number
+        /// </summary>
         public const short ExpectedVersionMinor = 0;
 
         /// <summary>
@@ -53,19 +60,19 @@ namespace PacketCapture.SnifferPackageCapture
         public const sbyte ExpectedType = 4; // Sniffer type 2 data records
 
         /// <summary>
-        /// Format version number
+        /// Sniffer packet capture global header format version number
         /// </summary>
         public const sbyte ExpectedFormatVersion = 1; // Uncompressed
 
-        //// Sniffer packet capture record header - 6 bytes
+        //// Sniffer packet capture record header
 
         /// <summary>
-        /// Length
+        /// Sniffer packet capture record header length
         /// </summary>
         public const ushort RecordHeaderLength = 6;
 
         /// <summary>
-        /// Sniffer packet capture Sniffer type 2 data record - 14 bytes
+        /// Sniffer packet capture Sniffer type 2 data record length
         /// </summary>
         public const ushort SnifferType2RecordLength = 14;
 

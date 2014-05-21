@@ -10,18 +10,25 @@
 
 namespace EthernetFrame.IPPacket.IPv6Packet
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the IP v6 packet processing
+    /// </summary>
+    public class Constants
     {
-        //// IP v6 packet header - 40 bytes
+        //// IP v6 packet header
 
-        // Version
+        /// <summary>
+        /// IP v6 packet header version
+        /// </summary>
         public const ushort HeaderVersion = 6;
 
-        // Length
+        /// <summary>
+        /// IP v6 packet header length
+        /// </summary>
         public const ushort HeaderLength = 40;
 
         /// <summary>
-        /// Protocol
+        /// Protocol for payload of the IP v6 packet
         /// </summary>
         public enum Protocol : byte
         {

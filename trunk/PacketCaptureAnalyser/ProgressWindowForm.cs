@@ -10,6 +10,9 @@
 
 namespace PacketCaptureAnalyser
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class ProgressWindowForm : System.Windows.Forms.Form
     {
         /// <summary>

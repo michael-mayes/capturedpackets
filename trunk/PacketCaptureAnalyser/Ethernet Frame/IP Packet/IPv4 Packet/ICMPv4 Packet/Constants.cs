@@ -10,11 +10,16 @@
 
 namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the ICMP v4 packet processing
+    /// </summary>
+    public class Constants
     {
-        //// ICMP v4 packet header - 4 bytes
+        //// ICMP v4 packet header
 
-        // Length
+        /// <summary>
+        /// ICMP v4 packet header length
+        /// </summary>
         public const ushort HeaderLength = 4;
     }
 }

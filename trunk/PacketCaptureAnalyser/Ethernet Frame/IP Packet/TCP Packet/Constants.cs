@@ -10,16 +10,25 @@
 
 namespace EthernetFrame.IPPacket.TCPPacket
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the TCP packet processing
+    /// </summary>
+    public class Constants
     {
-        //// TCP packet header - 20 bytes
+        //// TCP packet header
 
-        // Length
+        /// <summary>
+        /// TCP packet header minimum length
+        /// </summary>
         public const ushort HeaderMinimumLength = 20;
+
+        /// <summary>
+        /// TCP packet header maximum length
+        /// </summary>
         public const ushort HeaderMaximumLength = 60;
 
         /// <summary>
-        /// Port number
+        /// TCP packet header port number
         /// </summary>
         public enum PortNumber : ushort
         {
@@ -35,7 +44,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
         }
 
         /// <summary>
-        /// Flags
+        /// TCP packet header flags
         /// </summary>
         public enum Flags : byte
         {
@@ -80,6 +89,12 @@ namespace EthernetFrame.IPPacket.TCPPacket
             FIN
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theByte"></param>
+        /// <param name="theFlag"></param>
+        /// <returns></returns>
         public bool IsFlagSet(byte theByte, Flags theFlag)
         {
             int theShift = Flags.FIN - theFlag;

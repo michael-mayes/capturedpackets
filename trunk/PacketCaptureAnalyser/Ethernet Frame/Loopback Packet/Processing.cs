@@ -10,19 +10,31 @@
 
 namespace EthernetFrame.LoopbackPacket
 {
-    class Processing
+    /// <summary>
+    /// This class provides the Loopback packet processing
+    /// </summary>
+    public class Processing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Structures.HeaderStructure theHeader;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
-        /// <param name="theBinaryReader"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader)
         {
             this.theDebugInformation = theDebugInformation;
@@ -33,6 +45,11 @@ namespace EthernetFrame.LoopbackPacket
             this.theHeader = new Structures.HeaderStructure();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <returns></returns>
         public bool Process(long thePayloadLength)
         {
             bool theResult = true;
@@ -54,6 +71,10 @@ namespace EthernetFrame.LoopbackPacket
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private bool ProcessHeader()
         {
             bool theResult = true;

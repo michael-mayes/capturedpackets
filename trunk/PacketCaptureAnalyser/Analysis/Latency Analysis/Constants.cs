@@ -10,14 +10,33 @@
 
 namespace Analysis.LatencyAnalysis
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the latency analysis processing
+    /// </summary>
+    public class Constants
     {
-        // Latencies
+        //// Latencies
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const double BestCaseLatency = 0.0; // Milliseconds
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const double WorstCaseLatency = 50.0; // Milliseconds
 
-        // Value bins
+        //// Value bins
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const uint BinsPerMillisecond = 10; // Ten value bins for every millisecond of latency
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const uint NumberOfBins = (uint)(WorstCaseLatency - BestCaseLatency) * BinsPerMillisecond;
 
         /// <summary>

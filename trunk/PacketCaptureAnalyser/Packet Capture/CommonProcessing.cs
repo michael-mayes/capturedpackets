@@ -10,16 +10,49 @@
 
 namespace PacketCapture
 {
-    abstract class CommonProcessing
+    /// <summary>
+    /// This class provides the common packet capture processing
+    /// </summary>
+    public abstract class CommonProcessing
     {
         //// Abstract methods - must be overridden with a concrete implementation by a derived class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <returns></returns>
         public abstract bool ProcessGlobalHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         public abstract bool ProcessPacketHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp);
 
         //// Concrete methods - cannot be overridden by a derived class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theProgressWindowForm"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
+        /// <param name="thePacketCapture"></param>
+        /// <param name="minimiseMemoryUsage"></param>
+        /// <returns></returns>
         public bool Process(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string thePacketCapture, bool minimiseMemoryUsage)
         {
             bool theResult = true;
@@ -201,6 +234,19 @@ namespace PacketCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theProgressWindowForm"></param>
+        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <returns></returns>
         private bool ProcessPackets(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, uint theNetworkDataLinkType, double theTimestampAccuracy)
         {
             bool theResult = true;

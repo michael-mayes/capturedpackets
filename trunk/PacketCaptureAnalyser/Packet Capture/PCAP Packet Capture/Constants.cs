@@ -10,24 +10,43 @@
 
 namespace PacketCapture.PCAPPackageCapture
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the PCAP packet capture processing
+    /// </summary>
+    public class Constants
     {
-        //// PCAP packet capture global header - 24 bytes
+        //// PCAP packet capture global header
 
-        // Length
+        /// <summary>
+        /// PCAP packet capture global header length
+        /// </summary>
         public const ushort GlobalHeaderLength = 24;
 
-        // Magic number
+        /// <summary>
+        /// PCAP packet capture global header magic number (little endian representation)
+        /// </summary>
         public const uint LittleEndianMagicNumber = 0xa1b2c3d4;
+
+        /// <summary>
+        /// PCAP packet capture global header magic number (big endian representation)
+        /// </summary>
         public const uint BigEndianMagicNumber = 0xd4c3b2a1;
 
-        // Version numbers
+        /// <summary>
+        /// PCAP packet capture global header major version number
+        /// </summary>
         public const ushort ExpectedVersionMajor = 2;
+
+        /// <summary>
+        /// PCAP packet capture global header minor version number
+        /// </summary>
         public const ushort ExpectedVersionMinor = 4;
 
-        //// PCAP packet capture packet header - 16 bytes
+        //// PCAP packet capture packet header
 
-        // Length
+        /// <summary>
+        /// PCAP packet capture packet header length
+        /// </summary>
         public const ushort HeaderLength = 16;
     }
 }

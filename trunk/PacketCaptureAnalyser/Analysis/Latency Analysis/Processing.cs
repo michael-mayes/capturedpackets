@@ -20,25 +20,47 @@ namespace Analysis.LatencyAnalysis
     // Create an alias for the key value pair for the dictionary to improve clarity of later code that uses it
     using DictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<Structures.DictionaryKey, Structures.DictionaryValue>;
 
-    // This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
-    class Processing : System.IDisposable
+    /// <summary>
+    /// This class provides the latency analysis processing
+    /// This class will implement the Disposable class so as to be able to clean up after the data tables it creates which themselves implement the Disposable class
+    /// </summary>
+    public class Processing : System.IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private System.Collections.Generic.Dictionary<Structures.DictionaryKey,
             Structures.DictionaryValue> theDictionary;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private bool outputDebug;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private string selectedPacketCaptureFile;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.Data.DataTable theHostIdsTable;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private System.Data.DataTable theMessageIdsTable;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="outputDebug"></param>
         /// <param name="selectedPacketCaptureFile"></param>
         public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string selectedPacketCaptureFile)
@@ -60,6 +82,9 @@ namespace Analysis.LatencyAnalysis
             this.theMessageIdsTable = new System.Data.DataTable();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Create()
         {
             // Add the required column to the datatable to hold the set of host Ids encountered during the latency analysis
@@ -87,16 +112,9 @@ namespace Analysis.LatencyAnalysis
                 };
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // Dispose any resources allocated to the datatables if instructed
-                this.theHostIdsTable.Dispose();
-                this.theMessageIdsTable.Dispose();
-            }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
@@ -104,6 +122,15 @@ namespace Analysis.LatencyAnalysis
             System.GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theHostId"></param>
+        /// <param name="theProtocol"></param>
+        /// <param name="theSequenceNumber"></param>
+        /// <param name="theMessageId"></param>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
         public void RegisterMessageReceipt(byte theHostId, Constants.Protocol theProtocol, ulong theSequenceNumber, ulong theMessageId, ulong thePacketNumber, double theTimestamp)
         {
             // Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
@@ -227,58 +254,9 @@ namespace Analysis.LatencyAnalysis
             }
         }
 
-        // Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
-        private void RegisterEncounteredHostId(byte theHostId)
-        {
-            object[] theHostIdRowFindObject = new object[1];
-
-            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
-
-            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
-
-            if (theHostIdDataRowFound == null)
-            {
-                this.theDebugInformation.WriteInformationEvent(
-                    "Found a pair of data-supplying messages for a Host Id " +
-                    string.Format("{0,3}", theHostId) +
-                    " - adding this Host Id to the latency analysis");
-
-                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
-
-                theHostIdRowToAdd["HostId"] = theHostId;
-
-                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
-            }
-        }
-
-        // Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
-        private void RegisterEncounteredMessageId(byte theHostId, ulong theMessageId)
-        {
-            object[] theMessageIdRowFindObject = new object[2];
-
-            theMessageIdRowFindObject[0] = theHostId.ToString(); // Primary key (part one)
-            theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
-
-            System.Data.DataRow theMessageIdDataRowFound = this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
-
-            if (theMessageIdDataRowFound == null)
-            {
-                this.theDebugInformation.WriteInformationEvent(
-                    "Found a pair of data-supplying messages with a Message Id " +
-                    string.Format("{0,5}", theMessageId) +
-                    " for a Host Id " +
-                    string.Format("{0,3}", theHostId) +
-                    " - adding this Message Id/Host Id combination to the latency analysis");
-
-                System.Data.DataRow theMessageIdRowToAdd = this.theMessageIdsTable.NewRow();
-
-                theMessageIdRowToAdd["HostId"] = theHostId;
-                theMessageIdRowToAdd["MessageId"] = theMessageId;
-
-                this.theMessageIdsTable.Rows.Add(theMessageIdRowToAdd);
-            }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void Finalise()
         {
             // Obtain the set of host Ids encountered during the latency analysis in ascending order
@@ -309,6 +287,83 @@ namespace Analysis.LatencyAnalysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose any resources allocated to the datatables if instructed
+                this.theHostIdsTable.Dispose();
+                this.theMessageIdsTable.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Adds the supplied host Id to the set of those encountered during the latency analysis if not already in there
+        /// </summary>
+        /// <param name="theHostId"></param>
+        private void RegisterEncounteredHostId(byte theHostId)
+        {
+            object[] theHostIdRowFindObject = new object[1];
+
+            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
+
+            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
+
+            if (theHostIdDataRowFound == null)
+            {
+                this.theDebugInformation.WriteInformationEvent(
+                    "Found a pair of data-supplying messages for a Host Id " +
+                    string.Format("{0,3}", theHostId) +
+                    " - adding this Host Id to the latency analysis");
+
+                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
+
+                theHostIdRowToAdd["HostId"] = theHostId;
+
+                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
+            }
+        }
+
+        /// <summary>
+        /// Adds the supplied message Id to the set of those encountered during the latency analysis if not already in there
+        /// </summary>
+        /// <param name="theHostId"></param>
+        /// <param name="theMessageId"></param>
+        private void RegisterEncounteredMessageId(byte theHostId, ulong theMessageId)
+        {
+            object[] theMessageIdRowFindObject = new object[2];
+
+            theMessageIdRowFindObject[0] = theHostId.ToString(); // Primary key (part one)
+            theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
+
+            System.Data.DataRow theMessageIdDataRowFound = this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
+
+            if (theMessageIdDataRowFound == null)
+            {
+                this.theDebugInformation.WriteInformationEvent(
+                    "Found a pair of data-supplying messages with a Message Id " +
+                    string.Format("{0,5}", theMessageId) +
+                    " for a Host Id " +
+                    string.Format("{0,3}", theHostId) +
+                    " - adding this Message Id/Host Id combination to the latency analysis");
+
+                System.Data.DataRow theMessageIdRowToAdd = this.theMessageIdsTable.NewRow();
+
+                theMessageIdRowToAdd["HostId"] = theHostId;
+                theMessageIdRowToAdd["MessageId"] = theMessageId;
+
+                this.theMessageIdsTable.Rows.Add(theMessageIdRowToAdd);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theHostId"></param>
         private void FinaliseProtocolsForHostId(byte theHostId)
         {
             foreach (Constants.Protocol theProtocol in
@@ -362,6 +417,12 @@ namespace Analysis.LatencyAnalysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theProtocolString"></param>
+        /// <param name="theMessageId"></param>
+        /// <param name="theRows"></param>
         private void FinaliseForMessageId(string theProtocolString, ulong theMessageId, DictionaryEnumerableType theRows)
         {
             CommonHistogram theHistogram =

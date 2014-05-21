@@ -10,7 +10,10 @@
 
 namespace PacketCapture.PCAPPackageCapture
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the PCAP packet capture processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// PCAP packet capture global header - 24 bytes

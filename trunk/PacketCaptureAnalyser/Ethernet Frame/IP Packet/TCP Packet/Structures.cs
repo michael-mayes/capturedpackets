@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.IPPacket.TCPPacket
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the TCP packet processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// TCP packet header - 20 bytes
