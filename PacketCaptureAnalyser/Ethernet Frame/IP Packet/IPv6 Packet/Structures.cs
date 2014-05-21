@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.IPPacket.IPv6Packet
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the IP v6 packet processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// IP v6 packet header - 40 bytes

@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the ICMP v4 packet processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// ICMP v4 packet header - 4 bytes

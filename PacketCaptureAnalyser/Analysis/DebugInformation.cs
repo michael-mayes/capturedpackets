@@ -10,17 +10,39 @@
 
 namespace Analysis
 {
-    // This class will implement the Disposable class so as to be able to clean up after the datatables it creates which themselves implement the Disposable class
-    class DebugInformation : System.IDisposable
+    /// <summary>
+    /// This class provides processing for logging of debug information including errors and information text
+    /// This class will implement the Disposable class so as to be able to clean up after the data tables it creates which themselves implement the Disposable class
+    /// </summary>
+    public class DebugInformation : System.IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private System.Diagnostics.TextWriterTraceListener theOutputWindowListener;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private string theOutputFilePath;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private bool enableDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private bool enableInformationEvents;
 
+        /// <summary>
+        /// Initializes a new instance of the DebugInformation class
+        /// </summary>
+        /// <param name="theOutputFilePath"></param>
+        /// <param name="enableDebugInformation"></param>
+        /// <param name="enableInformationEvents"></param>
+        /// <param name="redirectDebugInformationToOutput"></param>
         public DebugInformation(string theOutputFilePath, bool enableDebugInformation, bool enableInformationEvents, bool redirectDebugInformationToOutput)
         {
             // Delete any existing output files with the selected name to ape the clearing of all text from the output window
@@ -56,6 +78,10 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="disposing"></param>
         public virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -74,6 +100,9 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
@@ -81,6 +110,10 @@ namespace Analysis
             System.GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theTestRunEvent"></param>
         public void WriteTestRunEvent(string theTestRunEvent)
         {
             if (this.enableDebugInformation)
@@ -90,6 +123,10 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theInformationEvent"></param>
         public void WriteInformationEvent(string theInformationEvent)
         {
             if (this.enableDebugInformation && this.enableInformationEvents)
@@ -99,6 +136,10 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theErrorEvent"></param>
         public void WriteErrorEvent(string theErrorEvent)
         {
             if (this.enableDebugInformation)
@@ -108,6 +149,10 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theTextElement"></param>
         public void WriteTextElement(string theTextElement)
         {
             if (this.enableDebugInformation)
@@ -116,6 +161,10 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theTextLine"></param>
         public void WriteTextLine(string theTextLine)
         {
             if (this.enableDebugInformation)
@@ -124,6 +173,9 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void WriteBlankLine()
         {
             if (this.enableDebugInformation)
@@ -132,6 +184,9 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Open()
         {
             if (this.enableDebugInformation)

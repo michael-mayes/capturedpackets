@@ -10,23 +10,35 @@
 
 namespace EthernetFrame.IPPacket.UDPDatagram
 {
-    class Processing
+    /// <summary>
+    /// This class provides the UDP datagram processing
+    /// </summary>
+    public class Processing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Structures.HeaderStructure theHeader;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
-        /// <param name="theBinaryReader"></param>
-        /// <param name="performLatencyAnalysisProcessing"></param>
-        /// <param name="theLatencyAnalysisProcessing"></param>
-        /// <param name="performTimeAnalysisProcessing"></param>
-        /// <param name="theTimeAnalysisProcessing"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
         {
             this.theDebugInformation = theDebugInformation;
@@ -37,6 +49,13 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             this.theHeader = new Structures.HeaderStructure();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="theLength"></param>
+        /// <returns></returns>
         public bool Process(ulong thePacketNumber, double theTimestamp, ushort theLength)
         {
             bool theResult = true;
@@ -58,6 +77,14 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theLength"></param>
+        /// <param name="thePayloadLength">The payload length of the UDP datagram frame read from the packet capture</param>
+        /// <param name="theSourcePort"></param>
+        /// <param name="theDestinationPort"></param>
+        /// <returns></returns>
         private bool ProcessHeader(ushort theLength, out ushort thePayloadLength, out ushort theSourcePort, out ushort theDestinationPort)
         {
             bool theResult = true;
@@ -91,6 +118,15 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the UDP datagram read from the packet capture</param>
+        /// <param name="theSourcePort"></param>
+        /// <param name="theDestinationPort"></param>
+        /// <returns></returns>
         private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort thePayloadLength, ushort theSourcePort, ushort theDestinationPort)
         {
             bool theResult = true;
@@ -115,6 +151,13 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theHeader"></param>
+        /// <param name="theLength"></param>
+        /// <param name="theHeaderLength"></param>
+        /// <returns></returns>
         private bool ValidateHeader(Structures.HeaderStructure theHeader, ushort theLength, ushort theHeaderLength)
         {
             bool theResult = true;

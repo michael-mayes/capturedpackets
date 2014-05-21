@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.ARPPacket
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the ARP packet processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// ARP packet - 28 bytes

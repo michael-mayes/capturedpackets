@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.IPPacket.IPv4Packet
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the IP v4 packet processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// IP v4 packet header - 20 bytes

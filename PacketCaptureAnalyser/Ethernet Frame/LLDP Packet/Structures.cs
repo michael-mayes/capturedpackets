@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.LLDPPacket
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the LLDP packet processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// LLDP packet - 46 bytes
@@ -20,24 +23,45 @@ namespace EthernetFrame.LLDPPacket
             Size = Constants.PacketLength)]
         public struct PacketStructure
         {
+            /// <summary>
+            /// Unused field
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(0)]
             public ulong UnusedField1;
 
+            /// <summary>
+            /// Unused field
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(8)]
             public ulong UnusedField2;
 
+            /// <summary>
+            /// Unused field
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(16)]
             public ulong UnusedField3;
 
+            /// <summary>
+            /// Unused field
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(24)]
             public ulong UnusedField4;
 
+            /// <summary>
+            /// Unused field
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(32)]
             public ulong UnusedField5;
 
+            /// <summary>
+            /// Unused field
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(40)]
             public uint UnusedField6;
 
+            /// <summary>
+            /// Unused field
+            /// </summary>
             [System.Runtime.InteropServices.FieldOffset(44)]
             public ushort UnusedField7;
         }

@@ -10,16 +10,25 @@
 
 namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 {
-    class Processing
+    /// <summary>
+    /// This class provides the ICMP v4 packet processing
+    /// </summary>
+    public class Processing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Structures.HeaderStructure theHeader;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theBinaryReader"></param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         public Processing(System.IO.BinaryReader theBinaryReader)
         {
             this.theBinaryReader = theBinaryReader;
@@ -28,6 +37,11 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
             this.theHeader = new Structures.HeaderStructure();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theICMPv4PacketLength"></param>
+        /// <returns></returns>
         public bool Process(ushort theICMPv4PacketLength)
         {
             bool theResult = true;
@@ -42,6 +56,10 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private bool ProcessHeader()
         {
             bool theResult = true;

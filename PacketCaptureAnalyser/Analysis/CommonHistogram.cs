@@ -10,27 +10,57 @@
 
 namespace Analysis
 {
-    class CommonHistogram
+    /// <summary>
+    /// This class provides common functionality associated with creating, maintaining and outputting histograms
+    /// </summary>
+    public class CommonHistogram
     {
         //// Private entities
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private double[] theValueBinBoundaries;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private uint[] theValueBinCounts;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private uint theNumberOfValuesAcrossAllBins = 0;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private uint theNumberOfValuesLowerThanBins = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private uint theNumberOfValuesHigherThanBins = 0;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private double theMinValueEncountered = double.MaxValue;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private double theMaxValueEncountered = double.MinValue;
 
         /// <summary>
         /// Initializes a new instance of the CommonHistogram class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theNumOfValueBins"></param>
         /// <param name="theMinAllowedValue"></param>
         /// <param name="theMaxAllowedValue"></param>
@@ -61,93 +91,92 @@ namespace Analysis
 
         //// Public accessor methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public double[] GetValueBinBoundaries()
         {
             return this.theValueBinBoundaries;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public uint[] GetValueBinCounts()
         {
             return this.theValueBinCounts;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theValueBinNumber"></param>
+        /// <returns></returns>
         public uint GetValueBinCount(uint theValueBinNumber)
         {
             return this.theValueBinCounts[theValueBinNumber];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public int GetNumberOfValueBins()
         {
             return this.theValueBinCounts.Length;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public double GetMinAllowedValue()
         {
             return this.theValueBinBoundaries[0];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public double GetMaxAllowedValue()
         {
             return this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public uint GetTheNumberOfValuesAcrossAllBins()
         {
             return this.theNumberOfValuesAcrossAllBins;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public uint GetNumberOfValuesLowerThanBins()
         {
             return this.theNumberOfValuesLowerThanBins;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public uint GetNumberOfValuesHigherThanBins()
         {
             return this.theNumberOfValuesHigherThanBins;
         }
 
-        //// Private methods
-
-        private void CalculateValueBinBoundaries(uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
-        {
-            this.theValueBinBoundaries = new double[theNumOfValueBins + 1];
-
-            this.theValueBinBoundaries[0] = theMinAllowedValue;
-
-            this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1] = theMaxAllowedValue;
-
-            double theSizeOfValueBins = (theMaxAllowedValue - theMinAllowedValue) / theNumOfValueBins;
-
-            for (int i = 1; i < this.theValueBinBoundaries.Length - 1; ++i)
-            {
-                this.theValueBinBoundaries[i] = this.theValueBinBoundaries[0] + (i * theSizeOfValueBins);
-            }
-
-            // Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values
-            this.CheckBinBoundaries(this.theValueBinBoundaries);
-        }
-
-        // Check that the supplied bin boundaries are a strictly monotonically increasing sequence of values
-        private void CheckBinBoundaries(double[] theBinBoundaries)
-        {
-            for (int i = 0; i < theBinBoundaries.Length - 1; ++i)
-            {
-                if (theBinBoundaries[i] >= theBinBoundaries[i + 1])
-                {
-                    string theExceptionMessage =
-                        "Bin boundary " +
-                        theBinBoundaries[i].ToString() +
-                        " is >= Bin boundary " +
-                        theBinBoundaries[i + 1].ToString() +
-                        "!!!";
-
-                    this.theDebugInformation.WriteErrorEvent(theExceptionMessage);
-
-                    throw new System.ArgumentException(theExceptionMessage);
-                }
-            }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theValue"></param>
         public void AddValue(double theValue)
         {
             // Check if the value is the lowest valid value encountered since the creation or reset of the histogram
@@ -191,6 +220,9 @@ namespace Analysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void ResetValues()
         {
             this.theNumberOfValuesAcrossAllBins = 0;
@@ -207,7 +239,9 @@ namespace Analysis
             }
         }
 
-        // Format the contents of the histogram and output it to the debug console
+        /// <summary>
+        /// Formats the contents of the histogram and outputs it to the debug console
+        /// </summary>
         public void OutputValues()
         {
             uint theNumberOfValuesProcessed = 0;
@@ -318,6 +352,57 @@ namespace Analysis
 
                 this.theDebugInformation.WriteTextLine("Number of values higher than bins: " +
                     this.theNumberOfValuesHigherThanBins.ToString());
+            }
+        }
+
+        //// Private methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theNumOfValueBins"></param>
+        /// <param name="theMinAllowedValue"></param>
+        /// <param name="theMaxAllowedValue"></param>
+        private void CalculateValueBinBoundaries(uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
+        {
+            this.theValueBinBoundaries = new double[theNumOfValueBins + 1];
+
+            this.theValueBinBoundaries[0] = theMinAllowedValue;
+
+            this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1] = theMaxAllowedValue;
+
+            double theSizeOfValueBins = (theMaxAllowedValue - theMinAllowedValue) / theNumOfValueBins;
+
+            for (int i = 1; i < this.theValueBinBoundaries.Length - 1; ++i)
+            {
+                this.theValueBinBoundaries[i] = this.theValueBinBoundaries[0] + (i * theSizeOfValueBins);
+            }
+
+            // Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values
+            this.CheckBinBoundaries(this.theValueBinBoundaries);
+        }
+
+        /// <summary>
+        /// Checks that the supplied bin boundaries are a strictly monotonically increasing sequence of values
+        /// </summary>
+        /// <param name="theBinBoundaries"></param>
+        private void CheckBinBoundaries(double[] theBinBoundaries)
+        {
+            for (int i = 0; i < theBinBoundaries.Length - 1; ++i)
+            {
+                if (theBinBoundaries[i] >= theBinBoundaries[i + 1])
+                {
+                    string theExceptionMessage =
+                        "Bin boundary " +
+                        theBinBoundaries[i].ToString() +
+                        " is >= Bin boundary " +
+                        theBinBoundaries[i + 1].ToString() +
+                        "!!!";
+
+                    this.theDebugInformation.WriteErrorEvent(theExceptionMessage);
+
+                    throw new System.ArgumentException(theExceptionMessage);
+                }
             }
         }
     }

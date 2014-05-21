@@ -10,11 +10,16 @@
 
 namespace EthernetFrame.ARPPacket
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the ARP packet processing
+    /// </summary>
+    public class Constants
     {
         //// ARP packet - 28 bytes
 
-        // Length
+        /// <summary>
+        /// ARP packet length
+        /// </summary>
         public const ushort PacketLength = 28;
     }
 }

@@ -10,26 +10,45 @@
 
 namespace EthernetFrame.IPPacket.IPv6Packet
 {
-    class Processing
+    /// <summary>
+    /// This class provides the IP v6 packet processing
+    /// </summary>
+    public class Processing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Structures.HeaderStructure theHeader;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private TCPPacket.Processing theTCPPacketProcessing;
+
+        /// <summary>
+        /// 
+        /// </summary>
         private UDPDatagram.Processing theUDPDatagramProcessing;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation"></param>
-        /// <param name="theBinaryReader"></param>
-        /// <param name="performLatencyAnalysisProcessing"></param>
-        /// <param name="theLatencyAnalysisProcessing"></param>
-        /// <param name="performTimeAnalysisProcessing"></param>
-        /// <param name="theTimeAnalysisProcessing"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
         {
             this.theDebugInformation = theDebugInformation;
@@ -44,6 +63,13 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             this.theUDPDatagramProcessing = new UDPDatagram.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         public bool Process(long thePayloadLength, ulong thePacketNumber, double theTimestamp)
         {
             bool theResult = true;
@@ -63,6 +89,13 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length of the IP v6 packet</param>
+        /// <param name="theProtocol"></param>
+        /// <returns></returns>
         private bool ProcessHeader(long thePayloadLength, out ushort thePacketPayloadLength, out byte theProtocol)
         {
             bool theResult = true;
@@ -105,7 +138,15 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             return theResult;
         }
 
-        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort thePayloadLength, byte theProtocol)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="thePacketNumber"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length of the IP v6 packet</param>
+        /// <param name="theProtocol"></param>
+        /// <returns></returns>
+        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort thePacketPayloadLength, byte theProtocol)
         {
             bool theResult = true;
 
@@ -115,7 +156,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                 case (byte)Constants.Protocol.TCP:
                     {
                         // We have got an IP v6 packet containing an TCP packet so process it
-                        theResult = this.theTCPPacketProcessing.Process(thePacketNumber, theTimestamp, thePayloadLength);
+                        theResult = this.theTCPPacketProcessing.Process(thePacketNumber, theTimestamp, thePacketPayloadLength);
 
                         break;
                     }
@@ -123,7 +164,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                 case (byte)Constants.Protocol.UDP:
                     {
                         // We have got an IP v6 packet containing an UDP datagram so process it
-                        theResult = this.theUDPDatagramProcessing.Process(thePacketNumber, theTimestamp, thePayloadLength);
+                        theResult = this.theUDPDatagramProcessing.Process(thePacketNumber, theTimestamp, thePacketPayloadLength);
 
                         break;
                     }
@@ -137,7 +178,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                         this.theDebugInformation.WriteInformationEvent("The IP v6 packet contains an ICMP v6 packet, which is not currently supported!");
 
                         // Just read off the bytes for the ICMP v6 packet from the packet capture so we can move on
-                        this.theBinaryReader.ReadBytes(thePayloadLength);
+                        this.theBinaryReader.ReadBytes(thePacketPayloadLength);
 
                         break;
                     }
@@ -173,11 +214,18 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theHeader"></param>
+        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="theHeaderVersion"></param>
+        /// <returns></returns>
         private bool ValidateHeader(Structures.HeaderStructure theHeader, long thePayloadLength, ushort theHeaderVersion)
         {
             bool theResult = true;
 
-            // Validate the version in the IP v4 packet header
+            // Validate the version in the IP v6 packet header
             if ((this.theHeader.PayloadLength + Constants.HeaderLength) > thePayloadLength)
             {
                 //// We have got an IP v6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid

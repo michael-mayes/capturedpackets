@@ -10,7 +10,10 @@
 
 namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the IGMP v2 packet processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// IGMP v2 packet - 8 bytes

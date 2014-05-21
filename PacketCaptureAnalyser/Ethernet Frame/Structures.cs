@@ -10,7 +10,10 @@
 
 namespace EthernetFrame
 {
-    class Structures
+    /// <summary>
+    /// This class provides structures for use by the Ethernet frame processing
+    /// </summary>
+    public class Structures
     {
         /// <summary>
         /// Ethernet frame header - 14 bytes

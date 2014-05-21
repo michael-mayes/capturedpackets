@@ -10,23 +10,30 @@
 
 namespace EthernetFrame.IPPacket.IPv4Packet
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the IP v4 packet processing
+    /// </summary>
+    public class Constants
     {
-        //// IP v4 packet header - 20 bytes
+        //// IP v4 packet header
 
         /// <summary>
-        /// Version
+        /// IP v4 packet header version
         /// </summary>
         public const ushort HeaderVersion = 4;
 
         /// <summary>
-        /// Length
+        /// IP v4 packet header minimum length
         /// </summary>
         public const ushort HeaderMinimumLength = 20;
+
+        /// <summary>
+        /// IP v4 packet header maximum length
+        /// </summary>
         public const ushort HeaderMaximumLength = 60;
 
         /// <summary>
-        /// Protocol
+        /// for payload of the IP v4 packet
         /// </summary>
         public enum Protocol : byte
         {

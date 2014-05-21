@@ -10,10 +10,21 @@
 
 namespace PacketCapture.SnifferPackageCapture
 {
-    class Processing : CommonProcessing
+    /// <summary>
+    /// This class provides the Sniffer packet capture processing
+    /// </summary>
+    public class Processing : CommonProcessing
     {
         //// Concrete methods - override abstract methods on the base class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <returns></returns>
         public override bool ProcessGlobalHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
         {
             bool theResult = true;
@@ -61,6 +72,16 @@ namespace PacketCapture.SnifferPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         public override bool ProcessPacketHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
@@ -145,6 +166,12 @@ namespace PacketCapture.SnifferPackageCapture
 
         //// Private methods - provide methods specific to Sniffer packet captures, not required to derive from the abstract base class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theGlobalHeader"></param>
+        /// <returns></returns>
         private bool ValidateGlobalHeader(Analysis.DebugInformation theDebugInformation, Structures.GlobalHeaderStructure theGlobalHeader)
         {
             bool theResult = true;
@@ -256,6 +283,12 @@ namespace PacketCapture.SnifferPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theRecordHeader"></param>
+        /// <returns></returns>
         private bool ValidateRecordHeader(Analysis.DebugInformation theDebugInformation, Structures.RecordHeaderStructure theRecordHeader)
         {
             bool theResult = true;
@@ -274,6 +307,13 @@ namespace PacketCapture.SnifferPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theTimestampUnits"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <returns></returns>
         private bool CalculateTimestampAccuracy(Analysis.DebugInformation theDebugInformation, byte theTimestampUnits, out double theTimestampAccuracy)
         {
             bool theResult = true;

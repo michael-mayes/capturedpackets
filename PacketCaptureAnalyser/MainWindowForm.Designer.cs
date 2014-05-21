@@ -10,12 +10,115 @@
 
 namespace PacketCaptureAnalyser
 {
-    partial class MainWindowForm
+    /// <summary>
+    /// 
+    /// </summary>
+    public partial class MainWindowForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Button theRunAnalysisOnSelectedPackageCaptureButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Button theExitButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.OpenFileDialog theSelectedPacketCaptureForAnalysisDialog;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Button theSelectPacketCaptureButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.TextBox theSelectedPacketCapturePathTextBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Label theSelectedPacketCapturePathLabel;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Label theSelectedPacketCaptureNameLabel;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.TextBox theSelectedPacketCaptureNameTextBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Label theSelectedPacketCaptureTypeLabel;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.TextBox theSelectedPacketCaptureTypeTextBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Button theClearSelectedPacketCaptureButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.Button theOpenSelectedPackageCaptureButton;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox thePerformLatencyAnalysisCheckBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox thePerformTimeAnalysisCheckBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox theOutputLatencyAnalysisDebugCheckBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox theOutputTimeAnalysisDebugCheckBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox theMinimiseMemoryUsageCheckBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox theRedirectDebugInformationToOutputCheckBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox theEnableInformationEventsInDebugInformationCheckBox;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private System.Windows.Forms.CheckBox theEnableDebugInformationCheckBox;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -305,26 +408,5 @@ namespace PacketCaptureAnalyser
         }
 
         #endregion
-
-        private System.Windows.Forms.Button theRunAnalysisOnSelectedPackageCaptureButton;
-        private System.Windows.Forms.Button theExitButton;
-        private System.Windows.Forms.OpenFileDialog theSelectedPacketCaptureForAnalysisDialog;
-        private System.Windows.Forms.Button theSelectPacketCaptureButton;
-        private System.Windows.Forms.TextBox theSelectedPacketCapturePathTextBox;
-        private System.Windows.Forms.Label theSelectedPacketCapturePathLabel;
-        private System.Windows.Forms.Label theSelectedPacketCaptureNameLabel;
-        private System.Windows.Forms.TextBox theSelectedPacketCaptureNameTextBox;
-        private System.Windows.Forms.Label theSelectedPacketCaptureTypeLabel;
-        private System.Windows.Forms.TextBox theSelectedPacketCaptureTypeTextBox;
-        private System.Windows.Forms.Button theClearSelectedPacketCaptureButton;
-        private System.Windows.Forms.Button theOpenSelectedPackageCaptureButton;
-        private System.Windows.Forms.CheckBox thePerformLatencyAnalysisCheckBox;
-        private System.Windows.Forms.CheckBox thePerformTimeAnalysisCheckBox;
-        private System.Windows.Forms.CheckBox theOutputLatencyAnalysisDebugCheckBox;
-        private System.Windows.Forms.CheckBox theOutputTimeAnalysisDebugCheckBox;
-        private System.Windows.Forms.CheckBox theMinimiseMemoryUsageCheckBox;
-        private System.Windows.Forms.CheckBox theRedirectDebugInformationToOutputCheckBox;
-        private System.Windows.Forms.CheckBox theEnableInformationEventsInDebugInformationCheckBox;
-        private System.Windows.Forms.CheckBox theEnableDebugInformationCheckBox;
     }
 }

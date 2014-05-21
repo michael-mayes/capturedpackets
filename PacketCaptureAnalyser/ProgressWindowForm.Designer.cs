@@ -10,8 +10,21 @@
 
 namespace PacketCaptureAnalyser
 {
-    partial class ProgressWindowForm
+    /// <summary>
+    /// 
+    /// </summary>
+    public partial class ProgressWindowForm
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public System.Windows.Forms.ProgressBar ProgressBar;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public System.Windows.Forms.Label ProgressBarLabel;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -83,8 +96,5 @@ namespace PacketCaptureAnalyser
         }
 
         #endregion
-
-        public System.Windows.Forms.ProgressBar ProgressBar;
-        public System.Windows.Forms.Label ProgressBarLabel;
     }
 }

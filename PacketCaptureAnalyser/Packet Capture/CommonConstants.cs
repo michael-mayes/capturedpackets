@@ -10,7 +10,10 @@
 
 namespace PacketCapture
 {
-    class CommonConstants
+    /// <summary>
+    /// This class provides constants for use by the common packet capture processing
+    /// </summary>
+    public class CommonConstants
     {
         /// <summary>
         /// Network data link type/Network encapsulation type

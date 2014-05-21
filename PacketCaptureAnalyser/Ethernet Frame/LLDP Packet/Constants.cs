@@ -10,11 +10,16 @@
 
 namespace EthernetFrame.LLDPPacket
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the LLDP packet processing
+    /// </summary>
+    public class Constants
     {
-        //// LLDP packet - 46 bytes
+        //// LLDP packet
 
-        // Length
+        /// <summary>
+        /// LLDP packet length
+        /// </summary>
         public const ushort PacketLength = 46;
     }
 }

@@ -10,16 +10,31 @@
 
 namespace PacketCapture.PCAPNGPackageCapture
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the PCAP Next Generation packet capture processing
+    /// </summary>
+    public class Constants
     {
         //// PCAP Next Generation packet capture section header block
 
-        // Magic number
+        /// <summary>
+        /// PCAP Next Generation packet capture section header block byte order magic (little endian representation)
+        /// </summary>
         public const uint LittleEndianByteOrderMagic = 0x1a2b3c4d;
+
+        /// <summary>
+        /// PCAP Next Generation packet capture section header block byte order magic (big endian representation)
+        /// </summary>
         public const uint BigEndianByteOrderMagic = 0x4d3c2b1a;
 
-        // Version numbers
+        /// <summary>
+        /// PCAP Next Generation packet capture section header block major version number
+        /// </summary>
         public const ushort ExpectedMajorVersion = 1;
+
+        /// <summary>
+        /// PCAP Next Generation packet capture section header block minor version number
+        /// </summary>
         public const ushort ExpectedMinorVersion = 0;
 
         /// <summary>

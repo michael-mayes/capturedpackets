@@ -10,11 +10,16 @@
 
 namespace EthernetFrame.IPPacket.UDPDatagram
 {
-    class Constants
+    /// <summary>
+    /// This class provides constants for use by the UDP datagram packet processing
+    /// </summary>
+    public class Constants
     {
-        //// UDP datagram header - 8 bytes
+        //// UDP datagram header
 
-        // Length
+        /// <summary>
+        /// UDP datagram header length
+        /// </summary>
         public const ushort HeaderLength = 8;
 
         /// <summary>

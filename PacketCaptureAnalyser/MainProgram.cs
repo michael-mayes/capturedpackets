@@ -10,13 +10,16 @@
 
 namespace PacketCaptureAnalyser
 {
-    static class MainProgram
+    /// <summary>
+    /// This class provides the main entry point for the application
+    /// </summary>
+    public static class MainProgram
     {
         /// <summary>
-        /// The main entry point for the application.
+        /// The main entry point for the application
         /// </summary>
         [System.STAThread]
-        static void Main()
+        private static void Main()
         {
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);

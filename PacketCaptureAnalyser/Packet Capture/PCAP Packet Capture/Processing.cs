@@ -10,12 +10,26 @@
 
 namespace PacketCapture.PCAPPackageCapture
 {
-    class Processing : CommonProcessing
+    /// <summary>
+    /// This class provides the PCAP packet capture processing
+    /// </summary>
+    public class Processing : CommonProcessing
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private bool isTheGlobalHeaderLittleEndian = true;
 
         //// Concrete methods - override abstract methods on the base class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <returns></returns>
         public override bool ProcessGlobalHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
         {
             bool theResult = true;
@@ -79,6 +93,16 @@ namespace PacketCapture.PCAPPackageCapture
             return theResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="theNetworkDataLinkType"></param>
+        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePayloadLength"></param>
+        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <returns></returns>
         public override bool ProcessPacketHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
@@ -141,6 +165,12 @@ namespace PacketCapture.PCAPPackageCapture
 
         //// Private methods - provide methods specific to PCAP packet captures, not required to derive from the abstract base class
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theGlobalHeader"></param>
+        /// <returns></returns>
         private bool ValidateGlobalHeader(Analysis.DebugInformation theDebugInformation, Structures.GlobalHeaderStructure theGlobalHeader)
         {
             bool theResult = true;
