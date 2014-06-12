@@ -15,7 +15,7 @@ namespace EthernetFrame.ARPPacket
     /// </summary>
     public class Constants
     {
-        //// ARP packet - 28 bytes
+        //// ARP packet
 
         /// <summary>
         /// ARP packet length

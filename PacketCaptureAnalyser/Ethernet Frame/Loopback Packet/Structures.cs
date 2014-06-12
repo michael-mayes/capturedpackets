@@ -30,7 +30,7 @@ namespace EthernetFrame.LoopbackPacket
             public ushort SkipCount;
 
             /// <summary>
-            /// Function
+            /// Function of the Loopback packet
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
             public ushort Function;

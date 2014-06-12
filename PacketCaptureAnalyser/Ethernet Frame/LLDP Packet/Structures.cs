@@ -16,7 +16,7 @@ namespace EthernetFrame.LLDPPacket
     public class Structures
     {
         /// <summary>
-        /// LLDP packet - 46 bytes
+        /// LLDP packet
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

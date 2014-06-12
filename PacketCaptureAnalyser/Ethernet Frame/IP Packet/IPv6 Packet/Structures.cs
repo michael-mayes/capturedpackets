@@ -16,7 +16,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
     public class Structures
     {
         /// <summary>
-        /// IP v6 packet header - 40 bytes
+        /// IP v6 packet header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

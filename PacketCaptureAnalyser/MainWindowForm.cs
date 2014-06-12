@@ -11,7 +11,7 @@
 namespace PacketCaptureAnalyser
 {
     /// <summary>
-    /// 
+    /// This class provides the main window form
     /// </summary>
     public partial class MainWindowForm : System.Windows.Forms.Form
     {
@@ -42,9 +42,9 @@ namespace PacketCaptureAnalyser
             PcapNG = 0,
 
             /// <summary>
-            /// libpcap/tcpdump packet capture
+            /// PCAP (libpcap/tcpdump) packet capture
             /// </summary>
-            LibpcapTcpdump = 1,
+            Pcap = 1,
 
             /// <summary>
             /// NA Sniffer (DOS) packet capture
@@ -191,6 +191,14 @@ namespace PacketCaptureAnalyser
             if (this.thePerformLatencyAnalysisCheckBox.Checked)
             {
                 this.theEnableDebugInformationCheckBox.Checked = true;
+
+                this.theOutputLatencyAnalysisDebugCheckBox.Checked = false;
+                this.theOutputLatencyAnalysisDebugCheckBox.Enabled = true;
+            }
+            else
+            {
+                this.theOutputLatencyAnalysisDebugCheckBox.Checked = false;
+                this.theOutputLatencyAnalysisDebugCheckBox.Enabled = false;
             }
         }
 
@@ -217,6 +225,14 @@ namespace PacketCaptureAnalyser
             if (this.thePerformTimeAnalysisCheckBox.Checked)
             {
                 this.theEnableDebugInformationCheckBox.Checked = true;
+
+                this.theOutputTimeAnalysisDebugCheckBox.Checked = false;
+                this.theOutputTimeAnalysisDebugCheckBox.Enabled = true;
+            }
+            else
+            {
+                this.theOutputTimeAnalysisDebugCheckBox.Checked = false;
+                this.theOutputTimeAnalysisDebugCheckBox.Enabled = false;
             }
         }
 
@@ -250,16 +266,16 @@ namespace PacketCaptureAnalyser
             theProgressWindowForm.Activate();
 
             // Update the label now the reading of the packet capture has started - the progress bar will stay at zero
-            theProgressWindowForm.ProgressBarLabel.Text = "Reading Packet Capture Into System Memory";
-            theProgressWindowForm.ProgressBar.Value = 0;
+            theProgressWindowForm.ProgressBarLabel = "Reading Packet Capture Into System Memory";
+            theProgressWindowForm.ProgressBar = 0;
             theProgressWindowForm.Refresh();
 
-            theProgressWindowForm.ProgressBar.Value = 5;
+            theProgressWindowForm.ProgressBar = 5;
 
             string thePacketCaptureFilePath = this.theSelectedPacketCaptureForAnalysisDialog.FileName;
             string thePacketCaptureFileName = System.IO.Path.GetFileName(thePacketCaptureFilePath);
 
-            theProgressWindowForm.ProgressBar.Value = 10;
+            theProgressWindowForm.ProgressBar = 10;
 
             using (Analysis.DebugInformation theDebugInformation =
                 new Analysis.DebugInformation(
@@ -268,19 +284,19 @@ namespace PacketCaptureAnalyser
                     this.theEnableInformationEventsInDebugInformationCheckBox.Checked,
                     this.theRedirectDebugInformationToOutputCheckBox.Checked))
             {
-                theProgressWindowForm.ProgressBar.Value = 20;
+                theProgressWindowForm.ProgressBar = 20;
 
                 // Start the analysis of the packet capture
                 theDebugInformation.WriteTestRunEvent("Analysis of the " +
                     thePacketCaptureFileName +
                     " packet capture started");
 
-                theProgressWindowForm.ProgressBar.Value = 30;
+                theProgressWindowForm.ProgressBar = 30;
 
                 Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing = null;
                 Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing = null;
 
-                theProgressWindowForm.ProgressBar.Value = 35;
+                theProgressWindowForm.ProgressBar = 35;
 
                 // Only perform the latency analysis if the check box was selected for it on the main window form
                 if (this.thePerformLatencyAnalysisCheckBox.Checked)
@@ -291,7 +307,7 @@ namespace PacketCaptureAnalyser
                     theLatencyAnalysisProcessing.Create();
                 }
 
-                theProgressWindowForm.ProgressBar.Value = 40;
+                theProgressWindowForm.ProgressBar = 40;
 
                 // Only perform the time analysis if the check box was selected for it on the main window form
                 if (this.thePerformTimeAnalysisCheckBox.Checked)
@@ -302,7 +318,7 @@ namespace PacketCaptureAnalyser
                     theTimeAnalysisProcessing.Create();
                 }
 
-                theProgressWindowForm.ProgressBar.Value = 45;
+                theProgressWindowForm.ProgressBar = 45;
 
                 switch (this.theMainWindowFormPacketCaptureType)
                 {
@@ -311,7 +327,7 @@ namespace PacketCaptureAnalyser
                             PacketCapture.PCAPNGPackageCapture.Processing thePCAPNGPackageCaptureProcessing =
                                 new PacketCapture.PCAPNGPackageCapture.Processing();
 
-                            theProgressWindowForm.ProgressBar.Value = 50;
+                            theProgressWindowForm.ProgressBar = 50;
 
                             theResult = thePCAPNGPackageCaptureProcessing.Process(
                                 theProgressWindowForm,
@@ -326,12 +342,12 @@ namespace PacketCaptureAnalyser
                             break;
                         }
 
-                    case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump:
+                    case MainWindowFormPacketCaptureTypeEnumeration.Pcap:
                         {
                             PacketCapture.PCAPPackageCapture.Processing thePCAPPackageCaptureProcessing =
                                 new PacketCapture.PCAPPackageCapture.Processing();
 
-                            theProgressWindowForm.ProgressBar.Value = 50;
+                            theProgressWindowForm.ProgressBar = 50;
 
                             theResult = thePCAPPackageCaptureProcessing.Process(
                                 theProgressWindowForm,
@@ -351,7 +367,7 @@ namespace PacketCaptureAnalyser
                             PacketCapture.SnifferPackageCapture.Processing theSnifferPackageCaptureProcessing =
                                 new PacketCapture.SnifferPackageCapture.Processing();
 
-                            theProgressWindowForm.ProgressBar.Value = 50;
+                            theProgressWindowForm.ProgressBar = 50;
 
                             theResult = theSnifferPackageCaptureProcessing.Process(
                                 theProgressWindowForm,
@@ -393,8 +409,8 @@ namespace PacketCaptureAnalyser
                     if (this.thePerformLatencyAnalysisCheckBox.Checked || this.thePerformTimeAnalysisCheckBox.Checked)
                     {
                         // Update the label now the analysis of the packet capture has started - the progress bar will stay at zero
-                        theProgressWindowForm.ProgressBarLabel.Text = "Performing Analysis Of Packet Capture";
-                        theProgressWindowForm.ProgressBar.Value = 0;
+                        theProgressWindowForm.ProgressBarLabel = "Performing Analysis Of Packet Capture";
+                        theProgressWindowForm.ProgressBar = 0;
                         theProgressWindowForm.Refresh();
 
                         // Calculate the scaling to use for the progress bar
@@ -430,11 +446,11 @@ namespace PacketCaptureAnalyser
                             thePacketCaptureFileName +
                             " packet capture started");
 
-                        theProgressWindowForm.ProgressBar.Value += 20 / theScaling;
+                        theProgressWindowForm.ProgressBar += 20 / theScaling;
 
                         theLatencyAnalysisProcessing.Finalise();
 
-                        theProgressWindowForm.ProgressBar.Value += 60 / theScaling;
+                        theProgressWindowForm.ProgressBar += 60 / theScaling;
 
                         //// Compute the duration between the start and the end times
 
@@ -449,7 +465,7 @@ namespace PacketCaptureAnalyser
                             theLatencyAnalysisDuration.TotalSeconds.ToString() +
                             " seconds");
 
-                        theProgressWindowForm.ProgressBar.Value += 20 / theScaling;
+                        theProgressWindowForm.ProgressBar += 20 / theScaling;
                     }
 
                     // Only perform the time analysis if the check box was selected for it on the main window form
@@ -467,11 +483,11 @@ namespace PacketCaptureAnalyser
                             thePacketCaptureFileName +
                             " packet capture started");
 
-                        theProgressWindowForm.ProgressBar.Value += 20 / theScaling;
+                        theProgressWindowForm.ProgressBar += 20 / theScaling;
 
                         theTimeAnalysisProcessing.Finalise();
 
-                        theProgressWindowForm.ProgressBar.Value += 60 / theScaling;
+                        theProgressWindowForm.ProgressBar += 60 / theScaling;
 
                         //// Compute the duration between the start and the end times
 
@@ -486,7 +502,7 @@ namespace PacketCaptureAnalyser
                             theTimeAnalysisDuration.TotalSeconds.ToString() +
                             " seconds");
 
-                        theProgressWindowForm.ProgressBar.Value += 20 / theScaling;
+                        theProgressWindowForm.ProgressBar += 20 / theScaling;
                     }
                 }
                 else
@@ -613,12 +629,12 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump:
+                case MainWindowFormPacketCaptureTypeEnumeration.Pcap:
                     {
-                        // This is a libpcap/tcpdump packet capture
-                        this.theSelectedPacketCaptureTypeTextBox.Text = "libpcap/tcpdump";
+                        // This is a PCAP packet capture
+                        this.theSelectedPacketCaptureTypeTextBox.Text = "PCAP (libpcap/tcpdump)";
 
-                        //// Analysis of a libpcap/tcpdump packet capture is supported
+                        //// Analysis of a PCAP packet capture is supported
 
                         // Enable the buttons
                         this.EnablePacketCaptureAnalysisButtons();
@@ -741,9 +757,9 @@ namespace PacketCaptureAnalyser
                         case (uint)PacketCapture.PCAPPackageCapture.Constants.LittleEndianMagicNumber:
                         case (uint)PacketCapture.PCAPPackageCapture.Constants.BigEndianMagicNumber:
                             {
-                                // This is a libpcap/tcpdump packet capture
+                                // This is a PCAP packet capture
                                 this.theMainWindowFormPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump;
+                                    MainWindowFormPacketCaptureTypeEnumeration.Pcap;
 
                                 break;
                             }
@@ -801,12 +817,12 @@ namespace PacketCaptureAnalyser
                 case ".libpcap":
                 case ".cap":
                     {
-                        // This should be a libpcap/tcpdump packet capture
-                        if (this.theMainWindowFormPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.LibpcapTcpdump)
+                        // This should be a PCAP packet capture
+                        if (this.theMainWindowFormPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.Pcap)
                         {
                             System.Diagnostics.Debug.WriteLine("The " +
                                 System.IO.Path.GetFileName(this.theSelectedPacketCaptureForAnalysisDialog.FileName) +
-                                " packet capture should be a libpcap/tcpdump packet capture based on its file extension, but it is not!!!");
+                                " packet capture should be a PCAP packet capture based on its file extension, but it is not!!!");
 
                             this.theMainWindowFormPacketCaptureType =
                                 MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
@@ -915,9 +931,7 @@ namespace PacketCaptureAnalyser
             this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = true;
             this.theRedirectDebugInformationToOutputCheckBox.Enabled = true;
             this.thePerformLatencyAnalysisCheckBox.Enabled = true;
-            this.theOutputLatencyAnalysisDebugCheckBox.Enabled = true;
             this.thePerformTimeAnalysisCheckBox.Enabled = true;
-            this.theOutputTimeAnalysisDebugCheckBox.Enabled = true;
             this.theMinimiseMemoryUsageCheckBox.Enabled = true;
         }
 

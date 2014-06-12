@@ -11,7 +11,7 @@
 namespace PacketCaptureAnalyser
 {
     /// <summary>
-    /// 
+    /// This class provides the main window form
     /// </summary>
     public partial class MainWindowForm
     {

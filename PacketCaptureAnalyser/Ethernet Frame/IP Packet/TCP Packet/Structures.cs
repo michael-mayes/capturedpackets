@@ -16,7 +16,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
     public class Structures
     {
         /// <summary>
-        /// TCP packet header - 20 bytes
+        /// TCP packet header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

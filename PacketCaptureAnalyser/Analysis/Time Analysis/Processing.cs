@@ -148,7 +148,7 @@ namespace Analysis.TimeAnalysis
             {
                 this.theDebugInformation.WriteTextLine(
                     "Host Id " +
-                    string.Format("{0,3}", (theHostIdRow.Field<byte>("HostId")).ToString()));
+                    string.Format("{0,3}", theHostIdRow.Field<byte>("HostId").ToString()));
 
                 this.theDebugInformation.WriteTextLine("===========");
                 this.theDebugInformation.WriteBlankLine();
@@ -416,8 +416,8 @@ namespace Analysis.TimeAnalysis
                     {
                         string outputDebugLine = string.Format(
                             "{0},{1}{2}",
-                            (theTimeValuesRow.Field<double>("Timestamp")).ToString(),
-                            (theTimeValuesRow.Field<double>("Time")).ToString(),
+                            theTimeValuesRow.Field<double>("Timestamp").ToString(),
+                            theTimeValuesRow.Field<double>("Time").ToString(),
                             System.Environment.NewLine);
 
                         outputDebugLines.Append(outputDebugLine);

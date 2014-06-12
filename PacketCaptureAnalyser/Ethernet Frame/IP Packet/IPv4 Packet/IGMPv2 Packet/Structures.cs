@@ -16,7 +16,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
     public class Structures
     {
         /// <summary>
-        /// IGMP v2 packet - 8 bytes
+        /// IGMP v2 packet
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

@@ -16,7 +16,7 @@ namespace PacketCapture.PCAPPackageCapture
     public class Structures
     {
         /// <summary>
-        /// PCAP packet capture global header - 24 bytes
+        /// PCAP packet capture global header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -67,7 +67,7 @@ namespace PacketCapture.PCAPPackageCapture
         }
 
         /// <summary>
-        /// PCAP packet capture packet header - 16 bytes
+        /// PCAP packet capture packet header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
