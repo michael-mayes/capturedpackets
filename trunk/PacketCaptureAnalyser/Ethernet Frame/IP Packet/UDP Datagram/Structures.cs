@@ -16,7 +16,7 @@ namespace EthernetFrame.IPPacket.UDPDatagram
     public class Structures
     {
         /// <summary>
-        /// UDP datagram header - 8 bytes
+        /// UDP datagram header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

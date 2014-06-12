@@ -16,7 +16,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
     public class Structures
     {
         /// <summary>
-        /// ICMP v4 packet header - 4 bytes
+        /// ICMP v4 packet header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

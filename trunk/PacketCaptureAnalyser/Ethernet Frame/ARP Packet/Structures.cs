@@ -16,7 +16,7 @@ namespace EthernetFrame.ARPPacket
     public class Structures
     {
         /// <summary>
-        /// ARP packet - 28 bytes
+        /// ARP packet
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

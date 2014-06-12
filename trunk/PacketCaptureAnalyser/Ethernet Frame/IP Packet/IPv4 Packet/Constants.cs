@@ -33,7 +33,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         public const ushort HeaderMaximumLength = 60;
 
         /// <summary>
-        /// for payload of the IP v4 packet
+        /// Protocol for payload of the IP v4 packet
         /// </summary>
         public enum Protocol : byte
         {

@@ -71,6 +71,8 @@ namespace PacketCapture.SnifferPackageCapture
         /// </summary>
         public const ushort RecordHeaderLength = 6;
 
+        //// Sniffer packet capture Sniffer type 2 data record
+
         /// <summary>
         /// Sniffer packet capture Sniffer type 2 data record length
         /// </summary>

@@ -278,7 +278,7 @@ namespace Analysis.LatencyAnalysis
             {
                 this.theDebugInformation.WriteTextLine(
                     "Host Id " +
-                    string.Format("{0,3}", (theHostIdRow.Field<byte>("HostId")).ToString()));
+                    string.Format("{0,3}", theHostIdRow.Field<byte>("HostId").ToString()));
 
                 this.theDebugInformation.WriteTextLine("===========");
                 this.theDebugInformation.WriteBlankLine();
@@ -407,7 +407,7 @@ namespace Analysis.LatencyAnalysis
                             "The number of pairs of " +
                             theProtocolString +
                             " messages with a Message Id of " +
-                            (theMessageIdRow.Field<ulong>("MessageId")).ToString() +
+                            theMessageIdRow.Field<ulong>("MessageId").ToString() +
                             " was " +
                             theRowsFoundCount.ToString());
 

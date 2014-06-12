@@ -11,24 +11,42 @@
 namespace PacketCaptureAnalyser
 {
     /// <summary>
-    /// 
+    /// This class provides the progress window form
     /// </summary>
     public partial class ProgressWindowForm
     {
         /// <summary>
-        /// 
-        /// </summary>
-        public System.Windows.Forms.ProgressBar ProgressBar;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public System.Windows.Forms.Label ProgressBarLabel;
-
-        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// The progress bar
+        /// </summary>
+        private System.Windows.Forms.ProgressBar progressBar;
+
+        /// <summary>
+        /// The label providing additional context for the progress bar
+        /// </summary>
+        private System.Windows.Forms.Label progressBarLabel;
+
+        /// <summary>
+        /// Gets or sets the value of the progress bar
+        /// </summary>
+        public int ProgressBar
+        {
+            get { return this.progressBar.Value; }
+            set { this.progressBar.Value = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the text of the progress bar label
+        /// </summary>
+        public string ProgressBarLabel
+        {
+            get { return this.progressBarLabel.Text; }
+            set { this.progressBarLabel.Text = value; }
+        }
 
         /// <summary>
         /// Clean up any resources being used.
@@ -52,27 +70,27 @@ namespace PacketCaptureAnalyser
         /// </summary>
         private void InitializeComponent()
         {
-            this.ProgressBar = new System.Windows.Forms.ProgressBar();
-            this.ProgressBarLabel = new System.Windows.Forms.Label();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.progressBarLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             //
             // ProgressBar
             //
-            this.ProgressBar.Enabled = false;
-            this.ProgressBar.Location = new System.Drawing.Point(13, 28);
-            this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(240, 23);
-            this.ProgressBar.TabIndex = 21;
-            this.ProgressBar.Tag = string.Empty;
+            this.progressBar.Enabled = false;
+            this.progressBar.Location = new System.Drawing.Point(13, 28);
+            this.progressBar.Name = "ProgressBar";
+            this.progressBar.Size = new System.Drawing.Size(240, 23);
+            this.progressBar.TabIndex = 21;
+            this.progressBar.Tag = string.Empty;
             //
             // ProgressBarLabel
             //
-            this.ProgressBarLabel.Location = new System.Drawing.Point(-3, 4);
-            this.ProgressBarLabel.Name = "ProgressBarLabel";
-            this.ProgressBarLabel.Size = new System.Drawing.Size(271, 18);
-            this.ProgressBarLabel.TabIndex = 25;
-            this.ProgressBarLabel.Text = "<Default Text>";
-            this.ProgressBarLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.progressBarLabel.Location = new System.Drawing.Point(-3, 4);
+            this.progressBarLabel.Name = "ProgressBarLabel";
+            this.progressBarLabel.Size = new System.Drawing.Size(271, 18);
+            this.progressBarLabel.TabIndex = 25;
+            this.progressBarLabel.Text = "<Default Text>";
+            this.progressBarLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             //
             // ProgressWindowForm
             //
@@ -80,8 +98,8 @@ namespace PacketCaptureAnalyser
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(267, 58);
             this.ControlBox = false;
-            this.Controls.Add(this.ProgressBarLabel);
-            this.Controls.Add(this.ProgressBar);
+            this.Controls.Add(this.progressBarLabel);
+            this.Controls.Add(this.progressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

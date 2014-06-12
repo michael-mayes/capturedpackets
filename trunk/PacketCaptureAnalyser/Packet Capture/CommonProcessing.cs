@@ -59,11 +59,11 @@ namespace PacketCapture
 
             try
             {
-                theProgressWindowForm.ProgressBar.Value = 55;
+                theProgressWindowForm.ProgressBar = 55;
 
                 if (System.IO.File.Exists(thePacketCapture))
                 {
-                    theProgressWindowForm.ProgressBar.Value = 60;
+                    theProgressWindowForm.ProgressBar = 60;
 
                     // Read the start time to allow later calculation of the duration of the processing
                     System.DateTime theStartTime = System.DateTime.Now;
@@ -72,7 +72,7 @@ namespace PacketCapture
                         System.IO.Path.GetFileName(thePacketCapture) +
                         " packet capture");
 
-                    theProgressWindowForm.ProgressBar.Value = 65;
+                    theProgressWindowForm.ProgressBar = 65;
 
                     System.IO.FileStream theFileStream = null;
 
@@ -91,7 +91,7 @@ namespace PacketCapture
                         theBytes = System.IO.File.ReadAllBytes(thePacketCapture);
                     }
 
-                    theProgressWindowForm.ProgressBar.Value = 70;
+                    theProgressWindowForm.ProgressBar = 70;
 
                     //// Compute the duration between the start and the end times
 
@@ -105,19 +105,19 @@ namespace PacketCapture
                         theDuration.Seconds.ToString() +
                         " seconds");
 
-                    theProgressWindowForm.ProgressBar.Value = 75;
+                    theProgressWindowForm.ProgressBar = 75;
 
                     // If there is a need to minimise memory usage then open the binary reader directly on the file stream, otherwise
                     // open a memory stream to the array containing the up front read of the file and then open the binary reader on that
                     if (minimiseMemoryUsage)
                     {
-                        theProgressWindowForm.ProgressBar.Value = 80;
+                        theProgressWindowForm.ProgressBar = 80;
 
                         // Open a binary reader for the file stream for the packet capture
                         using (System.IO.BinaryReader theBinaryReader =
                             new System.IO.BinaryReader(theFileStream))
                         {
-                            theProgressWindowForm.ProgressBar.Value = 90;
+                            theProgressWindowForm.ProgressBar = 90;
 
                             // Ensure that the position of the binary reader is set to the beginning of the memory stream
                             theBinaryReader.BaseStream.Position = 0;
@@ -128,12 +128,12 @@ namespace PacketCapture
                             // Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
                             double theTimestampAccuracy = 0.0;
 
-                            theProgressWindowForm.ProgressBar.Value = 95;
+                            theProgressWindowForm.ProgressBar = 95;
 
                             // Only continue reading from the packet capture if the packet capture global header was read successfully
                             if (this.ProcessGlobalHeader(theDebugInformation, theBinaryReader, out theNetworkDataLinkType, out theTimestampAccuracy))
                             {
-                                theProgressWindowForm.ProgressBar.Value = 100;
+                                theProgressWindowForm.ProgressBar = 100;
 
                                 theResult = this.ProcessPackets(theDebugInformation, theBinaryReader, theProgressWindowForm, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing, theNetworkDataLinkType, theTimestampAccuracy);
                             }
@@ -149,13 +149,13 @@ namespace PacketCapture
                         using (System.IO.MemoryStream theMemoryStream =
                             new System.IO.MemoryStream(theBytes))
                         {
-                            theProgressWindowForm.ProgressBar.Value = 80;
+                            theProgressWindowForm.ProgressBar = 80;
 
                             // Open a binary reader for the memory stream for the packet capture
                             using (System.IO.BinaryReader theBinaryReader =
                                 new System.IO.BinaryReader(theMemoryStream))
                             {
-                                theProgressWindowForm.ProgressBar.Value = 90;
+                                theProgressWindowForm.ProgressBar = 90;
 
                                 // Ensure that the position of the binary reader is set to the beginning of the memory stream
                                 theBinaryReader.BaseStream.Position = 0;
@@ -166,12 +166,12 @@ namespace PacketCapture
                                 // Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
                                 double theTimestampAccuracy = 0.0;
 
-                                theProgressWindowForm.ProgressBar.Value = 95;
+                                theProgressWindowForm.ProgressBar = 95;
 
                                 // Only continue reading from the packet capture if the packet capture global header was read successfully
                                 if (this.ProcessGlobalHeader(theDebugInformation, theBinaryReader, out theNetworkDataLinkType, out theTimestampAccuracy))
                                 {
-                                    theProgressWindowForm.ProgressBar.Value = 100;
+                                    theProgressWindowForm.ProgressBar = 100;
 
                                     theResult = this.ProcessPackets(theDebugInformation, theBinaryReader, theProgressWindowForm, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing, theNetworkDataLinkType, theTimestampAccuracy);
                                 }
@@ -261,8 +261,8 @@ namespace PacketCapture
             if (theProgressWindowForm != null)
             {
                 // Update the label and progress bar now the parsing of the packet capture has started
-                theProgressWindowForm.ProgressBarLabel.Text = "Performing Parsing Of Packet Capture";
-                theProgressWindowForm.ProgressBar.Value = 0;
+                theProgressWindowForm.ProgressBarLabel = "Performing Parsing Of Packet Capture";
+                theProgressWindowForm.ProgressBar = 0;
                 theProgressWindowForm.Refresh();
             }
 
@@ -365,7 +365,7 @@ namespace PacketCapture
                     if (theProgressWindowForm != null)
                     {
                         // Update the progress bar to reflect the completion of this iteration of the loop
-                        theProgressWindowForm.ProgressBar.Value = (int)((theBinaryReader.BaseStream.Position * 100) / theStreamLength);
+                        theProgressWindowForm.ProgressBar = (int)((theBinaryReader.BaseStream.Position * 100) / theStreamLength);
                     }
                 }
             }
@@ -400,8 +400,8 @@ namespace PacketCapture
             if (theProgressWindowForm != null)
             {
                 // Update the label and progress bar now the parsing of the packet capture has completed
-                theProgressWindowForm.ProgressBarLabel.Text = "Completed Parsing Of Packet Capture";
-                theProgressWindowForm.ProgressBar.Value = 100;
+                theProgressWindowForm.ProgressBarLabel = "Completed Parsing Of Packet Capture";
+                theProgressWindowForm.ProgressBar = 100;
                 theProgressWindowForm.Refresh();
             }
 

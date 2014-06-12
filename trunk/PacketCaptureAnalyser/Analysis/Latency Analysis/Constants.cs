@@ -40,7 +40,7 @@ namespace Analysis.LatencyAnalysis
         public const uint NumberOfBins = (uint)(WorstCaseLatency - BestCaseLatency) * BinsPerMillisecond;
 
         /// <summary>
-        /// Protocol
+        /// Protocol for the analyzed message
         /// </summary>
         public enum Protocol : byte
         {

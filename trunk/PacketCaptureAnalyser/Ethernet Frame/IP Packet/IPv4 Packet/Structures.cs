@@ -16,7 +16,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
     public class Structures
     {
         /// <summary>
-        /// IP v4 packet header - 20 bytes
+        /// IP v4 packet header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

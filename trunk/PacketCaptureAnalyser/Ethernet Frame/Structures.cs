@@ -16,7 +16,7 @@ namespace EthernetFrame
     public class Structures
     {
         /// <summary>
-        /// Ethernet frame header - 14 bytes
+        /// Ethernet frame header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

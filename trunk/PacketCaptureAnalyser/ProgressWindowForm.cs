@@ -11,7 +11,7 @@
 namespace PacketCaptureAnalyser
 {
     /// <summary>
-    /// 
+    /// This class provides the progress window form
     /// </summary>
     public partial class ProgressWindowForm : System.Windows.Forms.Form
     {

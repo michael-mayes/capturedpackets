@@ -16,7 +16,7 @@ namespace PacketCapture.SnifferPackageCapture
     public class Structures
     {
         /// <summary>
-        /// Sniffer packet capture global header - 41 bytes
+        /// Sniffer packet capture global header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -121,7 +121,7 @@ namespace PacketCapture.SnifferPackageCapture
         }
 
         /// <summary>
-        /// Sniffer packet capture record header - 6 bytes
+        /// Sniffer packet capture record header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -142,7 +142,7 @@ namespace PacketCapture.SnifferPackageCapture
         }
 
         /// <summary>
-        /// Sniffer packet capture Sniffer type 2 data record - 14 bytes
+        /// Sniffer packet capture Sniffer type 2 data record
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
