@@ -325,19 +325,19 @@ namespace PacketCaptureAnalyser
                     case MainWindowFormPacketCaptureTypeEnumeration.PcapNG:
                         {
                             PacketCapture.PCAPNGPackageCapture.Processing thePCAPNGPackageCaptureProcessing =
-                                new PacketCapture.PCAPNGPackageCapture.Processing();
+                                new PacketCapture.PCAPNGPackageCapture.Processing(
+                                    theProgressWindowForm,
+                                    theDebugInformation,
+                                    this.thePerformLatencyAnalysisCheckBox.Checked,
+                                    theLatencyAnalysisProcessing,
+                                    this.thePerformTimeAnalysisCheckBox.Checked,
+                                    theTimeAnalysisProcessing,
+                                    this.theSelectedPacketCaptureForAnalysisDialog.FileName,
+                                    this.theMinimiseMemoryUsageCheckBox.Checked);
 
                             theProgressWindowForm.ProgressBar = 50;
 
-                            theResult = thePCAPNGPackageCaptureProcessing.Process(
-                                theProgressWindowForm,
-                                theDebugInformation,
-                                this.thePerformLatencyAnalysisCheckBox.Checked,
-                                theLatencyAnalysisProcessing,
-                                this.thePerformTimeAnalysisCheckBox.Checked,
-                                theTimeAnalysisProcessing,
-                                this.theSelectedPacketCaptureForAnalysisDialog.FileName,
-                                this.theMinimiseMemoryUsageCheckBox.Checked);
+                            theResult = thePCAPNGPackageCaptureProcessing.Process();
 
                             break;
                         }
@@ -345,19 +345,19 @@ namespace PacketCaptureAnalyser
                     case MainWindowFormPacketCaptureTypeEnumeration.Pcap:
                         {
                             PacketCapture.PCAPPackageCapture.Processing thePCAPPackageCaptureProcessing =
-                                new PacketCapture.PCAPPackageCapture.Processing();
+                                new PacketCapture.PCAPPackageCapture.Processing(
+                                    theProgressWindowForm,
+                                    theDebugInformation,
+                                    this.thePerformLatencyAnalysisCheckBox.Checked,
+                                    theLatencyAnalysisProcessing,
+                                    this.thePerformTimeAnalysisCheckBox.Checked,
+                                    theTimeAnalysisProcessing,
+                                    this.theSelectedPacketCaptureForAnalysisDialog.FileName,
+                                    this.theMinimiseMemoryUsageCheckBox.Checked);
 
                             theProgressWindowForm.ProgressBar = 50;
 
-                            theResult = thePCAPPackageCaptureProcessing.Process(
-                                theProgressWindowForm,
-                                theDebugInformation,
-                                this.thePerformLatencyAnalysisCheckBox.Checked,
-                                theLatencyAnalysisProcessing,
-                                this.thePerformTimeAnalysisCheckBox.Checked,
-                                theTimeAnalysisProcessing,
-                                this.theSelectedPacketCaptureForAnalysisDialog.FileName,
-                                this.theMinimiseMemoryUsageCheckBox.Checked);
+                            theResult = thePCAPPackageCaptureProcessing.Process();
 
                             break;
                         }
@@ -365,19 +365,19 @@ namespace PacketCaptureAnalyser
                     case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
                         {
                             PacketCapture.SnifferPackageCapture.Processing theSnifferPackageCaptureProcessing =
-                                new PacketCapture.SnifferPackageCapture.Processing();
+                                new PacketCapture.SnifferPackageCapture.Processing(
+                                    theProgressWindowForm,
+                                    theDebugInformation,
+                                    this.thePerformLatencyAnalysisCheckBox.Checked,
+                                    theLatencyAnalysisProcessing,
+                                    this.thePerformTimeAnalysisCheckBox.Checked,
+                                    theTimeAnalysisProcessing,
+                                    this.theSelectedPacketCaptureForAnalysisDialog.FileName,
+                                    this.theMinimiseMemoryUsageCheckBox.Checked);
 
                             theProgressWindowForm.ProgressBar = 50;
 
-                            theResult = theSnifferPackageCaptureProcessing.Process(
-                                theProgressWindowForm,
-                                theDebugInformation,
-                                this.thePerformLatencyAnalysisCheckBox.Checked,
-                                theLatencyAnalysisProcessing,
-                                this.thePerformTimeAnalysisCheckBox.Checked,
-                                theTimeAnalysisProcessing,
-                                this.theSelectedPacketCaptureForAnalysisDialog.FileName,
-                                this.theMinimiseMemoryUsageCheckBox.Checked);
+                            theResult = theSnifferPackageCaptureProcessing.Process();
 
                             break;
                         }
