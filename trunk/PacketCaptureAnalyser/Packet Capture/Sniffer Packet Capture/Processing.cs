@@ -18,14 +18,37 @@ namespace PacketCapture.SnifferPackageCapture
         //// Concrete methods - override abstract methods on the base class
 
         /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theProgressWindowForm"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
+        /// <param name="thePacketCapture"></param>
+        /// <param name="minimiseMemoryUsage"></param>
+        public Processing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string thePacketCapture, bool minimiseMemoryUsage) :
+            base(
+            theProgressWindowForm,
+            theDebugInformation,
+            performLatencyAnalysisProcessing,
+            theLatencyAnalysisProcessing,
+            performTimeAnalysisProcessing,
+            theTimeAnalysisProcessing,
+            thePacketCapture,
+            minimiseMemoryUsage)
+        {
+        }
+
+        /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="theNetworkDataLinkType"></param>
         /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns></returns>
-        public override bool ProcessGlobalHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
+        protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
         {
             bool theResult = true;
 
@@ -58,7 +81,7 @@ namespace PacketCapture.SnifferPackageCapture
             theGlobalHeader.Reserved = theBinaryReader.ReadInt32();
 
             // Validate fields from the Sniffer packet capture global header
-            theResult = this.ValidateGlobalHeader(theDebugInformation, theGlobalHeader);
+            theResult = this.ValidateGlobalHeader(theGlobalHeader);
 
             if (theResult)
             {
@@ -66,7 +89,7 @@ namespace PacketCapture.SnifferPackageCapture
                 theNetworkDataLinkType = theGlobalHeader.NetworkEncapsulationType;
 
                 // Derive the output parameter for the timestamp accuracy (actually a timestamp slice for a Sniffer packet capture) from the timestamp units in the Sniffer packet capture global header
-                theResult = this.CalculateTimestampAccuracy(theDebugInformation, theGlobalHeader.TimestampUnits, out theTimestampAccuracy);
+                theResult = this.CalculateTimestampAccuracy(theGlobalHeader.TimestampUnits, out theTimestampAccuracy);
             }
 
             return theResult;
@@ -75,14 +98,13 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="theNetworkDataLinkType"></param>
         /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="theTimestamp">The timestamp read from the packet capture</param>
         /// <returns></returns>
-        public override bool ProcessPacketHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
 
@@ -100,7 +122,7 @@ namespace PacketCapture.SnifferPackageCapture
             theRecordHeader.RecordType = theBinaryReader.ReadUInt16();
             theRecordHeader.RecordLength = theBinaryReader.ReadUInt32();
 
-            theResult = this.ValidateRecordHeader(theDebugInformation, theRecordHeader);
+            theResult = this.ValidateRecordHeader(theRecordHeader);
 
             if (theResult)
             {
@@ -169,10 +191,9 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theGlobalHeader"></param>
         /// <returns></returns>
-        private bool ValidateGlobalHeader(Analysis.DebugInformation theDebugInformation, Structures.GlobalHeaderStructure theGlobalHeader)
+        private bool ValidateGlobalHeader(Structures.GlobalHeaderStructure theGlobalHeader)
         {
             bool theResult = true;
 
@@ -286,10 +307,9 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theRecordHeader"></param>
         /// <returns></returns>
-        private bool ValidateRecordHeader(Analysis.DebugInformation theDebugInformation, Structures.RecordHeaderStructure theRecordHeader)
+        private bool ValidateRecordHeader(Structures.RecordHeaderStructure theRecordHeader)
         {
             bool theResult = true;
 
@@ -310,11 +330,10 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theTimestampUnits"></param>
         /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns></returns>
-        private bool CalculateTimestampAccuracy(Analysis.DebugInformation theDebugInformation, byte theTimestampUnits, out double theTimestampAccuracy)
+        private bool CalculateTimestampAccuracy(byte theTimestampUnits, out double theTimestampAccuracy)
         {
             bool theResult = true;
 

@@ -23,14 +23,37 @@ namespace PacketCapture.PCAPNGPackageCapture
         //// Concrete methods - override abstract methods on the base class
 
         /// <summary>
+        /// Initializes a new instance of the Processing class
+        /// </summary>
+        /// <param name="theProgressWindowForm"></param>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
+        /// <param name="thePacketCapture"></param>
+        /// <param name="minimiseMemoryUsage"></param>
+        public Processing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string thePacketCapture, bool minimiseMemoryUsage) :
+            base(
+            theProgressWindowForm,
+            theDebugInformation,
+            performLatencyAnalysisProcessing,
+            theLatencyAnalysisProcessing,
+            performTimeAnalysisProcessing,
+            theTimeAnalysisProcessing,
+            thePacketCapture,
+            minimiseMemoryUsage)
+        {
+        }
+
+        /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="theNetworkDataLinkType"></param>
         /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns></returns>
-        public override bool ProcessGlobalHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
+        protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
         {
             bool theResult = true;
 
@@ -85,7 +108,7 @@ namespace PacketCapture.PCAPNGPackageCapture
             theBinaryReader.ReadBytes((int)(theSectionHeaderBlock.BlockTotalLength - (uint)Constants.BlockTotalLength.SectionHeaderBlock));
 
             // Validate fields from the PCAP Next Generation packet capture section header block
-            theResult = this.ValidateSectionHeaderBlock(theDebugInformation, theSectionHeaderBlock);
+            theResult = this.ValidateSectionHeaderBlock(theSectionHeaderBlock);
 
             if (theResult)
             {
@@ -99,14 +122,13 @@ namespace PacketCapture.PCAPNGPackageCapture
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="theNetworkDataLinkType"></param>
         /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="theTimestamp">The timestamp read from the packet capture</param>
         /// <returns></returns>
-        public override bool ProcessPacketHeader(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
         {
             bool theResult = true;
 
@@ -190,10 +212,9 @@ namespace PacketCapture.PCAPNGPackageCapture
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theSectionHeaderBlock"></param>
         /// <returns></returns>
-        private bool ValidateSectionHeaderBlock(Analysis.DebugInformation theDebugInformation, Structures.SectionHeaderBlockStructure theSectionHeaderBlock)
+        private bool ValidateSectionHeaderBlock(Structures.SectionHeaderBlockStructure theSectionHeaderBlock)
         {
             bool theResult = true;
 
