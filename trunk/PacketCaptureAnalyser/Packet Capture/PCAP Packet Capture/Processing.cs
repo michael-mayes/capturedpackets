@@ -122,8 +122,8 @@ namespace PacketCapture.PCAPPackageCapture
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture for the packet</param>
-        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the packet</param>
+        /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns></returns>
         protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp)
         {

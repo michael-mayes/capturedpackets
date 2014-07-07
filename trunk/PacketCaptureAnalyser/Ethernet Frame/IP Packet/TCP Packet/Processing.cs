@@ -53,7 +53,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the packet</param>
+        /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength"></param>
         /// <returns></returns>
         public bool Process(ulong thePacketNumber, double thePacketTimestamp, ushort thePacketPayloadLength)
@@ -81,7 +81,7 @@ namespace EthernetFrame.IPPacket.TCPPacket
         /// 
         /// </summary>
         /// <param name="theLength"></param>
-        /// <param name="thePayloadLength">The payload length of the TCP packet read from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the TCP packet</param>
         /// <param name="theSourcePort"></param>
         /// <param name="theDestinationPort"></param>
         /// <returns></returns>
@@ -145,12 +145,12 @@ namespace EthernetFrame.IPPacket.TCPPacket
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
-        /// <param name="thePayloadLength">The payload length of the TCP packet read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
+        /// <param name="thePayloadLength">The payload length of the TCP packet</param>
         /// <param name="theSourcePort"></param>
         /// <param name="theDestinationPort"></param>
         /// <returns></returns>
-        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort thePayloadLength, ushort theSourcePort, ushort theDestinationPort)
+        private bool ProcessPayload(ulong thePacketNumber, double thePacketTimestamp, ushort thePayloadLength, ushort theSourcePort, ushort theDestinationPort)
         {
             bool theResult = true;
 

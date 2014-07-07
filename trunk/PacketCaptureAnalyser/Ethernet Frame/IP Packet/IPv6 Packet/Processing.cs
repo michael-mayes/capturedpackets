@@ -66,11 +66,11 @@ namespace EthernetFrame.IPPacket.IPv6Packet
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="thePayloadLength">The payload length read from the packet capture</param>
+        /// <param name="theEthernetFrameLength">The length read from the packet capture for the Ethernet frame</param>
         /// <param name="thePacketNumber"></param>
-        /// <param name="thePacketTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns></returns>
-        public bool Process(long thePacketPayloadLength, ulong thePacketNumber, double thePacketTimestamp)
+        public bool Process(long theEthernetFrameLength, ulong thePacketNumber, double thePacketTimestamp)
         {
             bool theResult = true;
 
@@ -78,7 +78,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             byte theIPv6Protocol;
 
             // Process the IP v6 packet header
-            theResult = this.ProcessHeader(thePacketPayloadLength, out theIPv6PacketPayloadLength, out theIPv6Protocol);
+            theResult = this.ProcessHeader(theEthernetFrameLength, out theIPv6PacketPayloadLength, out theIPv6Protocol);
 
             if (theResult)
             {
@@ -92,11 +92,11 @@ namespace EthernetFrame.IPPacket.IPv6Packet
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="thePacketPayloadLength">The payload length read from the packet capture</param>
+        /// <param name="theEthernetFrameLength">The length read from the packet capture for the Ethernet frame</param>
         /// <param name="theIPv6PacketPayloadLength">The payload length of the IP v6 packet</param>
         /// <param name="theIPv6Protocol">The protocol for the IP v6 packet</param>
         /// <returns></returns>
-        private bool ProcessHeader(long thePacketPayloadLength, out ushort theIPv6PacketPayloadLength, out byte theIPv6Protocol)
+        private bool ProcessHeader(long theEthernetFrameLength, out ushort theIPv6PacketPayloadLength, out byte theIPv6Protocol)
         {
             bool theResult = true;
 
@@ -121,10 +121,10 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             // Determine the version of the IP v6 packet header
             // Need to first extract the version value from the combined IP packet version and traffic class field
             // We want the higher four bits from the combined IP packet version and traffic class field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
-            ushort theHeaderVersion = (ushort)((this.theHeader.VersionAndTrafficClass & 0xF0) >> 4);
+            ushort theIPv6HeaderVersion = (ushort)((this.theHeader.VersionAndTrafficClass & 0xF0) >> 4);
 
             // Validate the IP v6 packet header
-            theResult = this.ValidateHeader(this.theHeader, thePacketPayloadLength, theHeaderVersion);
+            theResult = this.ValidateHeader(this.theHeader, theEthernetFrameLength, theIPv6HeaderVersion);
 
             if (theResult)
             {
@@ -142,11 +142,11 @@ namespace EthernetFrame.IPPacket.IPv6Packet
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <param name="theIPv6PacketPayloadLength">The payload length of the IP v6 packet</param>
         /// <param name="theIPv6Protocol"></param>
         /// <returns></returns>
-        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort theIPv6PacketPayloadLength, byte theIPv6Protocol)
+        private bool ProcessPayload(ulong thePacketNumber, double thePacketTimestamp, ushort theIPv6PacketPayloadLength, byte theIPv6Protocol)
         {
             bool theResult = true;
 
@@ -156,7 +156,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                 case (byte)Constants.Protocol.TCP:
                     {
                         // We have got an IP v6 packet containing an TCP packet so process it
-                        theResult = this.theTCPPacketProcessing.Process(thePacketNumber, theTimestamp, theIPv6PacketPayloadLength);
+                        theResult = this.theTCPPacketProcessing.Process(thePacketNumber, thePacketTimestamp, theIPv6PacketPayloadLength);
 
                         break;
                     }
@@ -164,7 +164,7 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                 case (byte)Constants.Protocol.UDP:
                     {
                         // We have got an IP v6 packet containing an UDP datagram so process it
-                        theResult = this.theUDPDatagramProcessing.Process(thePacketNumber, theTimestamp, theIPv6PacketPayloadLength);
+                        theResult = this.theUDPDatagramProcessing.Process(thePacketNumber, thePacketTimestamp, theIPv6PacketPayloadLength);
 
                         break;
                     }
@@ -217,35 +217,35 @@ namespace EthernetFrame.IPPacket.IPv6Packet
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theHeader"></param>
-        /// <param name="thePacketPayloadLength">The payload length read from the packet capture</param>
-        /// <param name="theHeaderVersion"></param>
+        /// <param name="theIPv6Header">The IP v6 packet header</param>
+        /// <param name="theEthernetFrameLength">The length read from the packet capture for the Ethernet frame</param>
+        /// <param name="theIPv6HeaderVersion">The version of the IP v6 packet header</param>
         /// <returns></returns>
-        private bool ValidateHeader(Structures.HeaderStructure theHeader, long thePacketPayloadLength, ushort theHeaderVersion)
+        private bool ValidateHeader(Structures.HeaderStructure theIPv6Header, long theEthernetFrameLength, ushort theIPv6HeaderVersion)
         {
             bool theResult = true;
 
             // Validate the version in the IP v6 packet header
-            if ((this.theHeader.PayloadLength + Constants.HeaderLength) > thePacketPayloadLength)
+            if ((this.theHeader.PayloadLength + Constants.HeaderLength) > theEthernetFrameLength)
             {
                 //// We have got an IP v6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
 
                 this.theDebugInformation.WriteErrorEvent("The IP v6 packet indicates a total length of " +
                     (this.theHeader.PayloadLength + Constants.HeaderLength).ToString() +
-                    " bytes that is greater than the length of the payload of " +
-                    thePacketPayloadLength.ToString() +
+                    " bytes that is greater than the length of " +
+                    theEthernetFrameLength.ToString() +
                     " bytes in the Ethernet frame!!!");
 
                 theResult = false;
             }
 
             // Validate the version in the IP v6 packet header
-            if (theHeaderVersion != Constants.HeaderVersion)
+            if (theIPv6HeaderVersion != Constants.HeaderVersion)
             {
                 //// We have got an IP v6 packet header containing an unknown version
 
                 this.theDebugInformation.WriteErrorEvent("The IP v6 packet header contains an unexpected version of " +
-                    theHeaderVersion.ToString() +
+                    theIPv6HeaderVersion.ToString() +
                     "!!!");
 
                 theResult = false;
