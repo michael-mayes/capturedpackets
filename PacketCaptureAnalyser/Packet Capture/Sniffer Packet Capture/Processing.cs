@@ -45,18 +45,18 @@ namespace PacketCapture.SnifferPackageCapture
         /// 
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="theNetworkDataLinkType"></param>
-        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
+        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns></returns>
-        protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
+        protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
 
             // Provide a default value for the output parameter for the network datalink type
-            theNetworkDataLinkType = (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
+            thePacketCaptureNetworkDataLinkType = (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
 
             // Provide a default value to the output parameter for the timestamp accuracy
-            theTimestampAccuracy = 0.0;
+            thePacketCaptureTimestampAccuracy = 0.0;
 
             // Create the single instance of the Sniffer packet capture global header
             Structures.GlobalHeaderStructure theGlobalHeader =
@@ -86,10 +86,10 @@ namespace PacketCapture.SnifferPackageCapture
             if (theResult)
             {
                 // Set up the output parameter for the network data link type
-                theNetworkDataLinkType = theGlobalHeader.NetworkEncapsulationType;
+                thePacketCaptureNetworkDataLinkType = theGlobalHeader.NetworkEncapsulationType;
 
                 // Derive the output parameter for the timestamp accuracy (actually a timestamp slice for a Sniffer packet capture) from the timestamp units in the Sniffer packet capture global header
-                theResult = this.CalculateTimestampAccuracy(theGlobalHeader.TimestampUnits, out theTimestampAccuracy);
+                theResult = this.CalculateTimestampAccuracy(theGlobalHeader.TimestampUnits, out thePacketCaptureTimestampAccuracy);
             }
 
             return theResult;
@@ -99,20 +99,20 @@ namespace PacketCapture.SnifferPackageCapture
         /// 
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="theNetworkDataLinkType"></param>
-        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <param name="thePayloadLength">The payload length of the packet read from the packet capture</param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
+        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture for the packet</param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the packet</param>
         /// <returns></returns>
-        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
             // Provide a default value to the output parameter for the length of the PCAP packet capture packet payload
-            thePayloadLength = 0;
+            thePacketPayloadLength = 0;
 
             // Provide a default value to the output parameter for the timestamp
-            theTimestamp = 0.0;
+            thePacketTimestamp = 0.0;
 
             // Create an instance of the Sniffer packet capture record header
             Structures.RecordHeaderStructure theRecordHeader =
@@ -147,15 +147,15 @@ namespace PacketCapture.SnifferPackageCapture
 
                             // Set up the output parameter for the length of the Sniffer packet payload
                             // Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
-                            thePayloadLength = theType2Record.Size - 12;
+                            thePacketPayloadLength = theType2Record.Size - 12;
 
                             // Set up the output parameter for the timestamp based on the supplied timestamp slice and the timestamp from the Sniffer type 2 data record
                             // This is the number of seconds passed on this particular day
                             // To match up with a timestamp displayed since epoch would have to get the value of the Date field from the Sniffer packet capture global header
-                            theTimestamp =
-                                (theTimestampAccuracy * (theType2Record.TimestampHigh * 4294967296)) +
-                                (theTimestampAccuracy * (theType2Record.TimestampMiddle * 65536)) +
-                                (theTimestampAccuracy * theType2Record.TimestampLow);
+                            thePacketTimestamp =
+                                (thePacketCaptureTimestampAccuracy * (theType2Record.TimestampHigh * 4294967296)) +
+                                (thePacketCaptureTimestampAccuracy * (theType2Record.TimestampMiddle * 65536)) +
+                                (thePacketCaptureTimestampAccuracy * theType2Record.TimestampLow);
 
                             break;
                         }
@@ -330,71 +330,71 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theTimestampUnits"></param>
-        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketCaptureTimestampUnits"></param>
+        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns></returns>
-        private bool CalculateTimestampAccuracy(byte theTimestampUnits, out double theTimestampAccuracy)
+        private bool CalculateTimestampAccuracy(byte thePacketCaptureTimestampUnits, out double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
 
-            switch (theTimestampUnits)
+            switch (thePacketCaptureTimestampUnits)
             {
                 // 15.0 microseconds
                 case 0:
                     {
-                        theTimestampAccuracy = 0.000015;
+                        thePacketCaptureTimestampAccuracy = 0.000015;
                         break;
                     }
 
                 // 0.838096 microseconds
                 case 1:
                     {
-                        theTimestampAccuracy = 0.000000838096;
+                        thePacketCaptureTimestampAccuracy = 0.000000838096;
                         break;
                     }
 
                 // 15.0 microseconds
                 case 2:
                     {
-                        theTimestampAccuracy = 0.000015;
+                        thePacketCaptureTimestampAccuracy = 0.000015;
                         break;
                     }
 
                 // 0.5 microseconds
                 case 3:
                     {
-                        theTimestampAccuracy = 0.0000005;
+                        thePacketCaptureTimestampAccuracy = 0.0000005;
                         break;
                     }
 
                 // 2.0 microseconds
                 case 4:
                     {
-                        theTimestampAccuracy = 0.000002;
+                        thePacketCaptureTimestampAccuracy = 0.000002;
                         break;
                     }
 
                 // 0.08 microseconds
                 case 5:
                     {
-                        theTimestampAccuracy = 0.00000008;
+                        thePacketCaptureTimestampAccuracy = 0.00000008;
                         break;
                     }
 
                 // 0.1 microseconds
                 case 6:
                     {
-                        theTimestampAccuracy = 0.0000001;
+                        thePacketCaptureTimestampAccuracy = 0.0000001;
                         break;
                     }
 
                 default:
                     {
                         theDebugInformation.WriteErrorEvent("The Sniffer packet capture contains an unexpected timestamp unit " +
-                            theTimestampUnits.ToString() +
+                            thePacketCaptureTimestampUnits.ToString() +
                             "!!!");
 
-                        theTimestampAccuracy = 0.0;
+                        thePacketCaptureTimestampAccuracy = 0.0;
 
                         theResult = false;
 

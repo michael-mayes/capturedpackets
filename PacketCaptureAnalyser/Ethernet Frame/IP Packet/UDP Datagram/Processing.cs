@@ -53,10 +53,10 @@ namespace EthernetFrame.IPPacket.UDPDatagram
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
-        /// <param name="theLength"></param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the packet</param>
+        /// <param name="thePacketPayloadLength"></param>
         /// <returns></returns>
-        public bool Process(ulong thePacketNumber, double theTimestamp, ushort theLength)
+        public bool Process(ulong thePacketNumber, double thePacketTimestamp, ushort thePacketPayloadLength)
         {
             bool theResult = true;
 
@@ -66,12 +66,12 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             ushort theDestinationPort = 0;
 
             // Process the UDP datagram header
-            theResult = this.ProcessHeader(theLength, out thePayloadLength, out theSourcePort, out theDestinationPort);
+            theResult = this.ProcessHeader(thePacketPayloadLength, out thePayloadLength, out theSourcePort, out theDestinationPort);
 
             if (theResult)
             {
                 // Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                theResult = this.ProcessPayload(thePacketNumber, theTimestamp, thePayloadLength, theSourcePort, theDestinationPort);
+                theResult = this.ProcessPayload(thePacketNumber, thePacketTimestamp, thePayloadLength, theSourcePort, theDestinationPort);
             }
 
             return theResult;

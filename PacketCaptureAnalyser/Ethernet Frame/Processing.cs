@@ -58,7 +58,7 @@ namespace EthernetFrame
         /// <summary>
         /// 
         /// </summary>
-        private long thePayloadLength;
+        private long thePacketPayloadLength;
 
         /// <summary>
         /// 
@@ -95,18 +95,18 @@ namespace EthernetFrame
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length read from the packet capture for the Ethernet frame</param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the Ethernet frame</param>
         /// <returns></returns>
-        public bool Process(ulong thePacketNumber, long thePayloadLength, double theTimestamp)
+        public bool Process(ulong thePacketNumber, long thePacketPayloadLength, double thePacketTimestamp)
         {
             bool theResult = true;
 
             // Only process the payload as an Ethernet frame if it has a positive length
-            if (thePayloadLength > 0)
+            if (thePacketPayloadLength > 0)
             {
                 // Store the length of the payload of the Ethernet frame for use in further processing
-                this.thePayloadLength = thePayloadLength;
+                this.thePacketPayloadLength = thePacketPayloadLength;
 
                 // Process the Ethernet frame header
                 theResult = this.ProcessHeader();
@@ -118,7 +118,7 @@ namespace EthernetFrame
 
                     if (theResult)
                     {
-                        theResult = this.ProcessPayload(thePacketNumber, theTimestamp);
+                        theResult = this.ProcessPayload(thePacketNumber, thePacketTimestamp);
                     }
                 }
             }
@@ -146,7 +146,7 @@ namespace EthernetFrame
             this.theHeader.EtherType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
             // Reduce the length of the payload of the Ethernet frame to reflect that the Ether Type of two bytes would have been included
-            this.thePayloadLength -= 2;
+            this.thePacketPayloadLength -= 2;
 
             // Store the Ether Type for use in further processing
             this.theEtherType = this.theHeader.EtherType;
@@ -187,7 +187,7 @@ namespace EthernetFrame
                         this.theEtherType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
                         // Reduce the length of the payload of the Ethernet frame to reflect that the VLAN tag of four bytes would have been included
-                        this.thePayloadLength -= 4;
+                        this.thePacketPayloadLength -= 4;
 
                         break;
                     }
@@ -224,9 +224,9 @@ namespace EthernetFrame
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture</param>
         /// <returns></returns>
-        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp)
+        private bool ProcessPayload(ulong thePacketNumber, double thePacketTimestamp)
         {
             bool theResult = true;
             bool thePacketProcessingResult = true;
@@ -240,7 +240,7 @@ namespace EthernetFrame
                 case (ushort)Constants.HeaderEtherType.ARP:
                     {
                         // We have got an Ethernet frame containing an ARP packet so process it
-                        thePacketProcessingResult = this.theARPPacketProcessing.Process(this.thePayloadLength);
+                        thePacketProcessingResult = this.theARPPacketProcessing.Process(this.thePacketPayloadLength);
 
                         break;
                     }
@@ -248,7 +248,7 @@ namespace EthernetFrame
                 case (ushort)Constants.HeaderEtherType.IPv4:
                     {
                         // We have got an Ethernet frame containing an IP v4 packet so process it
-                        thePacketProcessingResult = this.theIPv4PacketProcessing.Process(this.thePayloadLength, thePacketNumber, theTimestamp);
+                        thePacketProcessingResult = this.theIPv4PacketProcessing.Process(this.thePacketPayloadLength, thePacketNumber, thePacketTimestamp);
 
                         break;
                     }
@@ -256,7 +256,7 @@ namespace EthernetFrame
                 case (ushort)Constants.HeaderEtherType.IPv6:
                     {
                         // We have got an Ethernet frame containing an IP v6 packet so process it
-                        thePacketProcessingResult = this.theIPv6PacketProcessing.Process(this.thePayloadLength, thePacketNumber, theTimestamp);
+                        thePacketProcessingResult = this.theIPv6PacketProcessing.Process(this.thePacketPayloadLength, thePacketNumber, thePacketTimestamp);
 
                         break;
                     }
@@ -264,7 +264,7 @@ namespace EthernetFrame
                 case (ushort)Constants.HeaderEtherType.LLDP:
                     {
                         // We have got an Ethernet frame containing an LLDP packet so process it
-                        thePacketProcessingResult = this.theLLDPPacketProcessing.Process(this.thePayloadLength);
+                        thePacketProcessingResult = this.theLLDPPacketProcessing.Process(this.thePacketPayloadLength);
 
                         break;
                     }
@@ -272,7 +272,7 @@ namespace EthernetFrame
                 case (ushort)Constants.HeaderEtherType.Loopback:
                     {
                         // We have got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
-                        thePacketProcessingResult = this.theLoopbackPacketProcessing.Process(this.thePayloadLength);
+                        thePacketProcessingResult = this.theLoopbackPacketProcessing.Process(this.thePacketPayloadLength);
 
                         break;
                     }
@@ -294,7 +294,7 @@ namespace EthernetFrame
                             theStartingStreamPosition = this.theBinaryReader.BaseStream.Position;
 
                             // Call this method again recursively to process the Ethernet frame stripped of the second VLAN tag
-                            thePacketProcessingResult = this.ProcessPayload(thePacketNumber, theTimestamp);
+                            thePacketProcessingResult = this.ProcessPayload(thePacketNumber, thePacketTimestamp);
                         }
 
                         break;
@@ -345,23 +345,23 @@ namespace EthernetFrame
 
             //// This processing would also read off the payload of the Ethernet frame in the event of an unrecognised, unknown or unsupported Ether Type
 
-            if (this.thePayloadLength != theStreamPositionDifference)
+            if (this.thePacketPayloadLength != theStreamPositionDifference)
             {
-                if (this.thePayloadLength > theStreamPositionDifference)
+                if (this.thePacketPayloadLength > theStreamPositionDifference)
                 {
                     // Trim the extra trailer bytes (or bytes for an unrecognised, unknown or unsupported message)
-                    this.theBinaryReader.ReadBytes((int)(this.thePayloadLength - theStreamPositionDifference));
+                    this.theBinaryReader.ReadBytes((int)(this.thePacketPayloadLength - theStreamPositionDifference));
                 }
                 else
                 {
                     //// This is a strange error condition
 
                     // Back up the stream position to where it "should be"
-                    this.theBinaryReader.BaseStream.Position = this.theBinaryReader.BaseStream.Position - (theStreamPositionDifference - this.thePayloadLength);
+                    this.theBinaryReader.BaseStream.Position = this.theBinaryReader.BaseStream.Position - (theStreamPositionDifference - this.thePacketPayloadLength);
 
                     // Warn about the error condition having arisen
                     this.theDebugInformation.WriteInformationEvent("The length " +
-                        this.thePayloadLength.ToString() +
+                        this.thePacketPayloadLength.ToString() +
                         " of payload of Ethernet frame in captured packet #" +
                         thePacketNumber.ToString() +
                         " does not match the progression " +

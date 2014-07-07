@@ -48,13 +48,13 @@ namespace EthernetFrame.ARPPacket
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
         /// <returns></returns>
-        public bool Process(long thePayloadLength)
+        public bool Process(long thePacketPayloadLength)
         {
             bool theResult = true;
 
-            if (thePayloadLength < Constants.PacketLength)
+            if (thePacketPayloadLength < Constants.PacketLength)
             {
                 this.theDebugInformation.WriteErrorEvent("The payload length of the Ethernet frame is lower than the length of the ARP packet!!!");
 
