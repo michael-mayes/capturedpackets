@@ -78,25 +78,25 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length read from the packet capture</param>
         /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the packet</param>
         /// <returns></returns>
-        public bool Process(long thePayloadLength, ulong thePacketNumber, double theTimestamp)
+        public bool Process(long thePacketPayloadLength, ulong thePacketNumber, double thePacketTimestamp)
         {
             bool theResult = true;
 
             ushort theHeaderLength;
-            ushort thePacketPayloadLength;
-            byte theProtocol;
+            ushort theIPv4PacketPayloadLength;
+            byte theIPv4Protocol;
 
             // Process the IP v4 packet header
-            theResult = this.ProcessHeader(thePayloadLength, out theHeaderLength, out thePacketPayloadLength, out theProtocol);
+            theResult = this.ProcessHeader(thePacketPayloadLength, out theHeaderLength, out theIPv4PacketPayloadLength, out theIPv4Protocol);
 
             if (theResult)
             {
                 // Process the payload of the IP v4 packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the IP v4 packet header
-                theResult = this.ProcessPayload(thePacketNumber, theTimestamp, thePacketPayloadLength, theProtocol);
+                theResult = this.ProcessPayload(thePacketNumber, thePacketTimestamp, theIPv4PacketPayloadLength, theIPv4Protocol);
             }
 
             return theResult;
@@ -105,12 +105,12 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length read from the packet capture</param>
         /// <param name="theHeaderLength"></param>
-        /// <param name="thePacketPayloadLength">The payload length of the IP v6 packet</param>
-        /// <param name="theProtocol"></param>
+        /// <param name="theIPv4PacketPayloadLength">The payload length of the IP v6 packet</param>
+        /// <param name="theIPv4Protocol">The protocol for the IP v4 packet</param>
         /// <returns></returns>
-        private bool ProcessHeader(long thePayloadLength, out ushort theHeaderLength, out ushort thePacketPayloadLength, out byte theProtocol)
+        private bool ProcessHeader(long thePacketPayloadLength, out ushort theHeaderLength, out ushort theIPv4PacketPayloadLength, out byte theIPv4Protocol)
         {
             bool theResult = true;
 
@@ -118,10 +118,10 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             theHeaderLength = 0;
 
             // Provide a default value for the output parameter for the length of the IP v4 packet payload
-            thePacketPayloadLength = 0;
+            theIPv4PacketPayloadLength = 0;
 
             // Provide a default value for the output parameter for the protocol for the IP v4 packet
-            theProtocol = 0;
+            theIPv4Protocol = 0;
 
             // Read the values for the IP v4 packet header from the packet capture
             this.theHeader.VersionAndHeaderLength = this.theBinaryReader.ReadByte();
@@ -147,15 +147,15 @@ namespace EthernetFrame.IPPacket.IPv4Packet
             theHeaderLength = (ushort)((this.theHeader.VersionAndHeaderLength & 0xF) * 4);
 
             // Validate the IP v4 packet header
-            theResult = this.ValidateHeader(this.theHeader, thePayloadLength, theHeaderVersion, theHeaderLength);
+            theResult = this.ValidateHeader(this.theHeader, thePacketPayloadLength, theHeaderVersion, theHeaderLength);
 
             if (theResult)
             {
                 // Set up the output parameter for the length of the payload of the IP v4 packet (e.g. a TCP packet), which is the total length of the IP v4 packet minus the length of the IP v4 packet header just calculated
-                thePacketPayloadLength = (ushort)(this.theHeader.TotalLength - theHeaderLength);
+                theIPv4PacketPayloadLength = (ushort)(this.theHeader.TotalLength - theHeaderLength);
 
                 // Set up the output parameter for the protocol for the IP v4 packet
-                theProtocol = this.theHeader.Protocol;
+                theIPv4Protocol = this.theHeader.Protocol;
 
                 if (theHeaderLength > Constants.HeaderMinimumLength)
                 {
@@ -173,21 +173,21 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
-        /// <param name="thePacketPayloadLength">The payload length of the IP v6 packet</param>
-        /// <param name="theProtocol"></param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the packet</param>
+        /// <param name="theIPv4PacketPayloadLength">The payload length of the IP v6 packet</param>
+        /// <param name="theIPv4Protocol"></param>
         /// <returns></returns>
-        private bool ProcessPayload(ulong thePacketNumber, double theTimestamp, ushort thePacketPayloadLength, byte theProtocol)
+        private bool ProcessPayload(ulong thePacketNumber, double thePacketTimestamp, ushort theIPv4PacketPayloadLength, byte theIPv4Protocol)
         {
             bool theResult = true;
 
             // Process the IP v4 packet based on the value indicated for the protocol in the the IP v4 packet header
-            switch (theProtocol)
+            switch (theIPv4Protocol)
             {
                 case (byte)Constants.Protocol.ICMPv4:
                     {
                         // We have got an IP v4 packet containing an ICMP v4 packet so process it
-                        theResult = this.theICMPv4PacketProcessing.Process(thePacketPayloadLength);
+                        theResult = this.theICMPv4PacketProcessing.Process(theIPv4PacketPayloadLength);
 
                         break;
                     }
@@ -195,7 +195,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                 case (byte)Constants.Protocol.IGMP:
                     {
                         // We have got an IP v4 packet containing an IGMP v2 packet so process it
-                        theResult = this.theIGMPv2PacketProcessing.Process(thePacketPayloadLength);
+                        theResult = this.theIGMPv2PacketProcessing.Process(theIPv4PacketPayloadLength);
 
                         break;
                     }
@@ -203,7 +203,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                 case (byte)Constants.Protocol.TCP:
                     {
                         // We have got an IP v4 packet containing an TCP packet so process it
-                        theResult = this.theTCPPacketProcessing.Process(thePacketNumber, theTimestamp, thePacketPayloadLength);
+                        theResult = this.theTCPPacketProcessing.Process(thePacketNumber, thePacketTimestamp, theIPv4PacketPayloadLength);
 
                         break;
                     }
@@ -211,7 +211,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                 case (byte)Constants.Protocol.UDP:
                     {
                         // We have got an IP v4 packet containing an UDP datagram so process it
-                        theResult = this.theUDPDatagramProcessing.Process(thePacketNumber, theTimestamp, thePacketPayloadLength);
+                        theResult = this.theUDPDatagramProcessing.Process(thePacketNumber, thePacketTimestamp, theIPv4PacketPayloadLength);
 
                         break;
                     }
@@ -235,7 +235,7 @@ namespace EthernetFrame.IPPacket.IPv4Packet
                         //// Processing of packets with network data link types not enumerated above are obviously not currently supported!
 
                         this.theDebugInformation.WriteErrorEvent("The IP v4 packet contains an unexpected protocol of " +
-                            string.Format("{0:X}", theProtocol) +
+                            string.Format("{0:X}", theIPv4Protocol) +
                             "!!!");
 
                         theResult = false;
@@ -251,23 +251,23 @@ namespace EthernetFrame.IPPacket.IPv4Packet
         /// 
         /// </summary>
         /// <param name="theHeader"></param>
-        /// <param name="thePayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
         /// <param name="theHeaderVersion"></param>
         /// <param name="theHeaderLength"></param>
         /// <returns></returns>
-        private bool ValidateHeader(Structures.HeaderStructure theHeader, long thePayloadLength, ushort theHeaderVersion, ushort theHeaderLength)
+        private bool ValidateHeader(Structures.HeaderStructure theHeader, long thePacketPayloadLength, ushort theHeaderVersion, ushort theHeaderLength)
         {
             bool theResult = true;
 
             // Validate the version in the IP v4 packet header
-            if (this.theHeader.TotalLength > thePayloadLength)
+            if (this.theHeader.TotalLength > thePacketPayloadLength)
             {
                 //// We have got an IP v4 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
 
                 this.theDebugInformation.WriteErrorEvent("The IP v4 packet indicates a total length of " +
                     this.theHeader.TotalLength.ToString() +
                     " bytes that is greater than the length of the payload of " +
-                    thePayloadLength.ToString() +
+                    thePacketPayloadLength.ToString() +
                     " bytes in the Ethernet frame!!!");
 
                 theResult = false;

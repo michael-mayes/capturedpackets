@@ -40,9 +40,9 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theICMPv4PacketLength"></param>
+        /// <param name="thePacketPayloadLength"></param>
         /// <returns></returns>
-        public bool Process(ushort theICMPv4PacketLength)
+        public bool Process(ushort thePacketPayloadLength)
         {
             bool theResult = true;
 
@@ -50,8 +50,8 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
             theResult = this.ProcessHeader();
 
             // Just read off the remaining bytes of the ICMP v4 packet from the packet capture so we can move on
-            // The remaining length is the supplied length of the ICMP v4 packet minus the length for the ICMP v4 packet header
-            this.theBinaryReader.ReadBytes(theICMPv4PacketLength - Constants.HeaderLength);
+            // The remaining length is the supplied length of the packet payload minus the length for the ICMP v4 packet header
+            this.theBinaryReader.ReadBytes(thePacketPayloadLength - Constants.HeaderLength);
 
             return theResult;
         }

@@ -40,9 +40,9 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="theIGMPv2PacketLength"></param>
+        /// <param name="thePacketPayloadLength"></param>
         /// <returns></returns>
-        public bool Process(ushort theIGMPv2PacketLength)
+        public bool Process(ushort thePacketPayloadLength)
         {
             bool theResult = true;
 

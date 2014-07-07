@@ -50,18 +50,18 @@ namespace PacketCapture.PCAPPackageCapture
         /// 
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="theNetworkDataLinkType"></param>
-        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
+        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns></returns>
-        protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint theNetworkDataLinkType, out double theTimestampAccuracy)
+        protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
 
             // Provide a default value for the output parameter for the network datalink type
-            theNetworkDataLinkType = (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
+            thePacketCaptureNetworkDataLinkType = (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
 
             // Set up the output parameter for the timestamp accuracy - not used for PCAP packet captures so default to zero
-            theTimestampAccuracy = 0.0;
+            thePacketCaptureTimestampAccuracy = 0.0;
 
             // Create the single instance of the PCAP packet capture global header
             Structures.GlobalHeaderStructure theGlobalHeader =
@@ -110,7 +110,7 @@ namespace PacketCapture.PCAPPackageCapture
             if (theResult)
             {
                 // Set up the output parameter for the network data link type
-                theNetworkDataLinkType = theGlobalHeader.NetworkDataLinkType;
+                thePacketCaptureNetworkDataLinkType = theGlobalHeader.NetworkDataLinkType;
             }
 
             return theResult;
@@ -120,20 +120,20 @@ namespace PacketCapture.PCAPPackageCapture
         /// 
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="theNetworkDataLinkType"></param>
-        /// <param name="theTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <param name="thePayloadLength"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
+        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
+        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture for the packet</param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the packet</param>
         /// <returns></returns>
-        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint theNetworkDataLinkType, double theTimestampAccuracy, out long thePayloadLength, out double theTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
             // Provide a default value to the output parameter for the length of the PCAP packet capture packet payload
-            thePayloadLength = 0;
+            thePacketPayloadLength = 0;
 
             // Provide a default value to the output parameter for the timestamp
-            theTimestamp = 0.0;
+            thePacketTimestamp = 0.0;
 
             // Create an instance of the PCAP packet capture packet header
             Structures.HeaderStructure thePacketHeader =
@@ -159,12 +159,12 @@ namespace PacketCapture.PCAPPackageCapture
             if (theResult)
             {
                 // Set up the output parameter for the length of the PCAP packet capture packet payload
-                switch (theNetworkDataLinkType)
+                switch (thePacketCaptureNetworkDataLinkType)
                 {
                     case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet:
                         {
                             // Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
-                            thePayloadLength = thePacketHeader.SavedLength - 12;
+                            thePacketPayloadLength = thePacketHeader.SavedLength - 12;
 
                             break;
                         }
@@ -173,13 +173,13 @@ namespace PacketCapture.PCAPPackageCapture
                     case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC:
                     default:
                         {
-                            thePayloadLength = thePacketHeader.SavedLength;
+                            thePacketPayloadLength = thePacketHeader.SavedLength;
                             break;
                         }
                 }
 
                 // Set up the output parameter for the timestamp based on the timestamp values in seconds and microseconds
-                theTimestamp = (double)thePacketHeader.TimestampSeconds + ((double)thePacketHeader.TimestampMicroseconds / 1000000.0);
+                thePacketTimestamp = (double)thePacketHeader.TimestampSeconds + ((double)thePacketHeader.TimestampMicroseconds / 1000000.0);
             }
 
             return theResult;
