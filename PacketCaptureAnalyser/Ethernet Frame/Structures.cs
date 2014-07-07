@@ -48,10 +48,10 @@ namespace EthernetFrame
             public ushort SourceMACAddressLow;
 
             /// <summary>
-            /// The Ether Type for the Ethernet frame
+            /// The type of the Ethernet frame
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(12)]
-            public ushort EtherType;
+            public ushort EthernetFrameType;
         }
     }
 }

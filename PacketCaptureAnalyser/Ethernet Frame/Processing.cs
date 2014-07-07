@@ -58,12 +58,12 @@ namespace EthernetFrame
         /// <summary>
         /// 
         /// </summary>
-        private long thePacketPayloadLength;
+        private long theEthernetFrameLength;
 
         /// <summary>
         /// 
         /// </summary>
-        private ushort theEtherType;
+        private ushort theEthernetFrameType;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
@@ -83,7 +83,7 @@ namespace EthernetFrame
             // Create an instance of the Ethernet frame header
             this.theHeader = new Structures.HeaderStructure();
 
-            // Create instances of the processing classes for each Ether Type
+            // Create instances of the processing classes for each supported type for an Ethernet frame
             this.theARPPacketProcessing = new ARPPacket.Processing(theDebugInformation, theBinaryReader);
             this.theIPv4PacketProcessing = new IPPacket.IPv4Packet.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
             this.theIPv6PacketProcessing = new IPPacket.IPv6Packet.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
@@ -95,26 +95,26 @@ namespace EthernetFrame
         /// 
         /// </summary>
         /// <param name="thePacketNumber"></param>
-        /// <param name="thePacketPayloadLength">The payload length read from the packet capture for the Ethernet frame</param>
-        /// <param name="thePacketTimestamp">The timestamp read from the packet capture for the Ethernet frame</param>
+        /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns></returns>
         public bool Process(ulong thePacketNumber, long thePacketPayloadLength, double thePacketTimestamp)
         {
             bool theResult = true;
 
-            // Only process the payload as an Ethernet frame if it has a positive length
+            // Only process the payload of the packet as an Ethernet frame if it has a positive length
             if (thePacketPayloadLength > 0)
             {
-                // Store the length of the payload of the Ethernet frame for use in further processing
-                this.thePacketPayloadLength = thePacketPayloadLength;
+                // Store the length of the payload of the packet as the total length of the Ethernet frame for use in further processing
+                this.theEthernetFrameLength = thePacketPayloadLength;
 
                 // Process the Ethernet frame header
                 theResult = this.ProcessHeader();
 
                 if (theResult)
                 {
-                    // Read the Ether Type for the Ethernet frame from the packet capture and process it
-                    theResult = this.ProcessEtherType(thePacketNumber);
+                    // Read the type for the Ethernet frame from the packet capture and process it
+                    theResult = this.ProcessEthernetFrameType(thePacketNumber);
 
                     if (theResult)
                     {
@@ -142,14 +142,14 @@ namespace EthernetFrame
             this.theHeader.SourceMACAddressHigh = this.theBinaryReader.ReadUInt32();
             this.theHeader.SourceMACAddressLow = this.theBinaryReader.ReadUInt16();
 
-            // Read the Ether Type for the Ethernet frame from the packet capture
-            this.theHeader.EtherType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+            // Read the type for the Ethernet frame from the packet capture
+            this.theHeader.EthernetFrameType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
-            // Reduce the length of the payload of the Ethernet frame to reflect that the Ether Type of two bytes would have been included
-            this.thePacketPayloadLength -= 2;
+            // Reduce the length of the Ethernet frame to reflect that the two bytes for the type of the Ethernet frame would have been included
+            this.theEthernetFrameLength -= 2;
 
-            // Store the Ether Type for use in further processing
-            this.theEtherType = this.theHeader.EtherType;
+            // Store the type of the Ethernet frame for use in further processing
+            this.theEthernetFrameType = this.theHeader.EthernetFrameType;
 
             return theResult;
         }
@@ -159,57 +159,57 @@ namespace EthernetFrame
         /// </summary>
         /// <param name="thePacketNumber"></param>
         /// <returns></returns>
-        private bool ProcessEtherType(ulong thePacketNumber)
+        private bool ProcessEthernetFrameType(ulong thePacketNumber)
         {
             bool theResult = true;
 
-            switch (this.theEtherType)
+            switch (this.theEthernetFrameType)
             {
-                case (ushort)Constants.HeaderEtherType.ARP:
-                case (ushort)Constants.HeaderEtherType.IPv4:
-                case (ushort)Constants.HeaderEtherType.IPv6:
-                case (ushort)Constants.HeaderEtherType.LLDP:
-                case (ushort)Constants.HeaderEtherType.Loopback:
+                case (ushort)Constants.HeaderEthernetFrameType.ARP:
+                case (ushort)Constants.HeaderEthernetFrameType.IPv4:
+                case (ushort)Constants.HeaderEthernetFrameType.IPv6:
+                case (ushort)Constants.HeaderEthernetFrameType.LLDP:
+                case (ushort)Constants.HeaderEthernetFrameType.Loopback:
                     {
                         break;
                     }
 
-                case (ushort)Constants.HeaderEtherType.VLANTagged:
+                case (ushort)Constants.HeaderEthernetFrameType.VLANTagged:
                     {
-                        // We have got an Ethernet frame with a VLAN tag (IEEE 802.1Q) so must advance and re-read the Ether Type
+                        // We have got an Ethernet frame with a VLAN tag (IEEE 802.1Q) so must advance and re-read the type
 
-                        // The "Ether Type" we've just read will actually be the IEEE 802.1Q Tag Protocol Identifier
+                        // The "type" we've just read will actually be the IEEE 802.1Q Tag Protocol Identifier
 
                         // First just read off the IEEE 802.1Q Tag Control Identifier so we can move on
                         this.theBinaryReader.ReadUInt16();
 
-                        // Then re-read the Ether Type, this time obtaining the real value (so long as there is only one VLAN tag of course!)
-                        this.theEtherType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+                        // Then re-read the typer of the Ethernet frame, this time obtaining the real value (so long as there is only one VLAN tag of course!)
+                        this.theEthernetFrameType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
-                        // Reduce the length of the payload of the Ethernet frame to reflect that the VLAN tag of four bytes would have been included
-                        this.thePacketPayloadLength -= 4;
+                        // Reduce the length of the Ethernet frame to reflect that the VLAN tag of four bytes would have been included
+                        this.theEthernetFrameLength -= 4;
 
                         break;
                     }
 
                 default:
                     {
-                        // We have got an Ethernet frame containing an unrecognised Ether Type
+                        // We have got an Ethernet frame containing an unrecognised type
 
-                        // Check against the minimum value for Ether Type - lower values indicate length of an IEEE 802.3 Ethernet frame
-                        if (this.theEtherType < (ushort)Constants.HeaderEtherType.MinimumValue)
+                        // Check against the minimum value for the type of the Ethernet frame - lower values indicate length of an IEEE 802.3 Ethernet frame
+                        if (this.theEthernetFrameType < (ushort)Constants.HeaderEthernetFrameType.MinimumValue)
                         {
-                            // This Ethernet frame has a value for "Ether Type" lower than the minimum
+                            // This Ethernet frame has a value for "type" lower than the minimum
                             // This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame
                             // This value is the length of the IEEE 802.3 Ethernet frame
                         }
                         else
                         {
-                            // This Ethernet frame has an unknown value for Ether Type
+                            // This Ethernet frame has an unknown value for the type
                             this.theDebugInformation.WriteInformationEvent("The Ethernet frame in captured packet #" +
                                 thePacketNumber.ToString() +
-                                " contains an unexpected Ether Type of 0x" +
-                                string.Format("{0:X}", this.theEtherType) +
+                                " contains an unexpected type of 0x" +
+                                string.Format("{0:X}", this.theEthernetFrameType) +
                                 "! - Attempt to recover and continue processing");
                         }
 
@@ -234,50 +234,50 @@ namespace EthernetFrame
             // Record the position in the stream for the packet capture so we can later determine how far has been progressed
             long theStartingStreamPosition = this.theBinaryReader.BaseStream.Position;
 
-            // Check the value of the Ether Type for this Ethernet frame
-            switch (this.theEtherType)
+            // Check the value of the type of this Ethernet frame
+            switch (this.theEthernetFrameType)
             {
-                case (ushort)Constants.HeaderEtherType.ARP:
+                case (ushort)Constants.HeaderEthernetFrameType.ARP:
                     {
                         // We have got an Ethernet frame containing an ARP packet so process it
-                        thePacketProcessingResult = this.theARPPacketProcessing.Process(this.thePacketPayloadLength);
+                        thePacketProcessingResult = this.theARPPacketProcessing.Process(this.theEthernetFrameLength);
 
                         break;
                     }
 
-                case (ushort)Constants.HeaderEtherType.IPv4:
+                case (ushort)Constants.HeaderEthernetFrameType.IPv4:
                     {
                         // We have got an Ethernet frame containing an IP v4 packet so process it
-                        thePacketProcessingResult = this.theIPv4PacketProcessing.Process(this.thePacketPayloadLength, thePacketNumber, thePacketTimestamp);
+                        thePacketProcessingResult = this.theIPv4PacketProcessing.Process(this.theEthernetFrameLength, thePacketNumber, thePacketTimestamp);
 
                         break;
                     }
 
-                case (ushort)Constants.HeaderEtherType.IPv6:
+                case (ushort)Constants.HeaderEthernetFrameType.IPv6:
                     {
                         // We have got an Ethernet frame containing an IP v6 packet so process it
-                        thePacketProcessingResult = this.theIPv6PacketProcessing.Process(this.thePacketPayloadLength, thePacketNumber, thePacketTimestamp);
+                        thePacketProcessingResult = this.theIPv6PacketProcessing.Process(this.theEthernetFrameLength, thePacketNumber, thePacketTimestamp);
 
                         break;
                     }
 
-                case (ushort)Constants.HeaderEtherType.LLDP:
+                case (ushort)Constants.HeaderEthernetFrameType.LLDP:
                     {
                         // We have got an Ethernet frame containing an LLDP packet so process it
-                        thePacketProcessingResult = this.theLLDPPacketProcessing.Process(this.thePacketPayloadLength);
+                        thePacketProcessingResult = this.theLLDPPacketProcessing.Process(this.theEthernetFrameLength);
 
                         break;
                     }
 
-                case (ushort)Constants.HeaderEtherType.Loopback:
+                case (ushort)Constants.HeaderEthernetFrameType.Loopback:
                     {
                         // We have got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
-                        thePacketProcessingResult = this.theLoopbackPacketProcessing.Process(this.thePacketPayloadLength);
+                        thePacketProcessingResult = this.theLoopbackPacketProcessing.Process(this.theEthernetFrameLength);
 
                         break;
                     }
 
-                case (ushort)Constants.HeaderEtherType.VLANTagged:
+                case (ushort)Constants.HeaderEthernetFrameType.VLANTagged:
                     {
                         //// We have got an Ethernet frame containing a second VLAN tag!
 
@@ -286,7 +286,7 @@ namespace EthernetFrame
                             " contains a second VLAN tag!" +
                             " - Attempt to recover and continue processing");
 
-                        thePacketProcessingResult = this.ProcessEtherType(thePacketNumber);
+                        thePacketProcessingResult = this.ProcessEthernetFrameType(thePacketNumber);
 
                         if (thePacketProcessingResult)
                         {
@@ -302,26 +302,26 @@ namespace EthernetFrame
 
                 default:
                     {
-                        // We have got an Ethernet frame containing an unrecognised Ether Type
+                        // We have got an Ethernet frame containing an unrecognised type
 
-                        // This is not strictly an error as it may be that the Ether Type is just not supported yet
+                        // This is not strictly an error as it may be that the type of an Ethernet frame is just not supported yet
                         // Debug information line will have been previously output to indicate this instance so just continue
                         thePacketProcessingResult = true;
 
-                        // Check against the minimum value for Ether Type - lower values indicate length of the Ethernet frame
-                        if (this.theEtherType < (ushort)Constants.HeaderEtherType.MinimumValue)
+                        // Check against the minimum value for type of an Ethernet frame - lower values indicate length of the Ethernet frame
+                        if (this.theEthernetFrameType < (ushort)Constants.HeaderEthernetFrameType.MinimumValue)
                         {
-                            // This Ethernet frame has a value for "Ether Type" lower than the minimum
+                            // This Ethernet frame has a value for "type" lower than the minimum
                             // This is an IEEE 802.3 Ethernet frame rather than an Ethernet II frame
                             // This value is the length of the IEEE 802.3 Ethernet frame
 
                             // Not going to process IEEE 802.3 Ethernet frames currently as they do not include any data of interest
                             // Just read off the bytes for the IEEE 802.3 Ethernet frame from the packet capture so we can move on
-                            this.theBinaryReader.ReadBytes(this.theEtherType);
+                            this.theBinaryReader.ReadBytes(this.theEthernetFrameType);
                         }
                         else
                         {
-                            // Processing of Ethernet frames with Ether Types not enumerated above are obviously not currently recognised or supported!
+                            // Processing of Ethernet frames with types not enumerated above are obviously not currently recognised or supported!
                             // Just fall through to the processing below that will read off the payload so we can move on
                         }
 
@@ -343,26 +343,26 @@ namespace EthernetFrame
             //// Check whether the Ethernet frame payload has extra trailer bytes
             //// These would typically not be exposed in the packet capture by the recorder, but sometimes are for whatever reason!
 
-            //// This processing would also read off the payload of the Ethernet frame in the event of an unrecognised, unknown or unsupported Ether Type
+            //// This processing would also read off the payload of the Ethernet frame in the event of an unrecognised, unknown or unsupported type
 
-            if (this.thePacketPayloadLength != theStreamPositionDifference)
+            if (this.theEthernetFrameLength != theStreamPositionDifference)
             {
-                if (this.thePacketPayloadLength > theStreamPositionDifference)
+                if (this.theEthernetFrameLength > theStreamPositionDifference)
                 {
                     // Trim the extra trailer bytes (or bytes for an unrecognised, unknown or unsupported message)
-                    this.theBinaryReader.ReadBytes((int)(this.thePacketPayloadLength - theStreamPositionDifference));
+                    this.theBinaryReader.ReadBytes((int)(this.theEthernetFrameLength - theStreamPositionDifference));
                 }
                 else
                 {
                     //// This is a strange error condition
 
                     // Back up the stream position to where it "should be"
-                    this.theBinaryReader.BaseStream.Position = this.theBinaryReader.BaseStream.Position - (theStreamPositionDifference - this.thePacketPayloadLength);
+                    this.theBinaryReader.BaseStream.Position = this.theBinaryReader.BaseStream.Position - (theStreamPositionDifference - this.theEthernetFrameLength);
 
                     // Warn about the error condition having arisen
                     this.theDebugInformation.WriteInformationEvent("The length " +
-                        this.thePacketPayloadLength.ToString() +
-                        " of payload of Ethernet frame in captured packet #" +
+                        this.theEthernetFrameLength.ToString() +
+                        " of the Ethernet frame in captured packet #" +
                         thePacketNumber.ToString() +
                         " does not match the progression " +
                         theStreamPositionDifference.ToString() +

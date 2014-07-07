@@ -30,7 +30,7 @@ namespace EthernetFrame.ARPPacket
             public ushort HardwareType;
 
             /// <summary>
-            /// The internetwork protocol for which the ARP request is intended (e.g. IP v4 is 0x0800) - same possible values as for Ether Type in Ethernet frame header
+            /// The internetwork protocol for which the ARP request is intended (e.g. IP v4 is 0x0800) - same possible values as for type in Ethernet frame header
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(2)]
             public ushort ProtocolType;

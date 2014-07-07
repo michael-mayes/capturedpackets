@@ -48,15 +48,15 @@ namespace EthernetFrame.LLDPPacket
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="thePacketPayloadLength">The payload length of the Ethernet frame read from the packet capture</param>
+        /// <param name="theEthernetFrameLength">The length read from the packet capture for the Ethernet frame</param>
         /// <returns></returns>
-        public bool Process(long thePacketPayloadLength)
+        public bool Process(long theEthernetFrameLength)
         {
             bool theResult = true;
 
-            if (thePacketPayloadLength < Constants.PacketLength)
+            if (theEthernetFrameLength < Constants.PacketLength)
             {
-                this.theDebugInformation.WriteErrorEvent("The payload length of the Ethernet frame is lower than the length of the LLDP packet!!!");
+                this.theDebugInformation.WriteErrorEvent("The length of the Ethernet frame is lower than the length of the LLDP packet!!!");
 
                 return false;
             }

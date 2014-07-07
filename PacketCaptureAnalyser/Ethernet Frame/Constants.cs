@@ -23,12 +23,12 @@ namespace EthernetFrame
         public const ushort HeaderLength = 14;
 
         /// <summary>
-        /// Ether Type - provided in little endian representation
+        /// Type of an Ethernet frame - provided in little endian representation
         /// </summary>
-        public enum HeaderEtherType : ushort
+        public enum HeaderEthernetFrameType : ushort
         {
             /// <summary>
-            /// Minimum value for Ether Type - lower values indicate length for an IEEE 802.3 Ethernet frame
+            /// Minimum value for type of an Ethernet frame - lower values indicate length for an IEEE 802.3 Ethernet frame
             /// </summary>
             MinimumValue = 0x0600,
 
