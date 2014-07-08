@@ -79,7 +79,19 @@ namespace Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary keys are equal</returns>
             public static bool operator ==(DictionaryKey a, DictionaryKey b)
             {
-                // The two dictionary keys are deemed identical if the fields of each are identical
+                // If both dictionary keys are null, or both are same instance, return true
+                if (System.Object.ReferenceEquals(a, b))
+                {
+                    return true;
+                }
+
+                // If one dictionary key is null, but not both, return false
+                if (((object)a == null) || ((object)b == null))
+                {
+                    return false;
+                }
+
+                // Otherwise the two dictionary keys are deemed identical if the fields of each are identical
                 return
                     a.HostId == b.HostId &&
                     a.Protocol == b.Protocol &&
@@ -218,17 +230,29 @@ namespace Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
             public static bool operator ==(DictionaryValue a, DictionaryValue b)
             {
-                    // The two dictionary values are deemed identical if the fields of each are identical
-                    return
-                        a.MessageId == b.MessageId &&
-                        a.FirstInstanceFound == b.FirstInstanceFound &&
-                        a.SecondInstanceFound == b.SecondInstanceFound &&
-                        a.FirstInstanceFrameNumber == b.FirstInstanceFrameNumber &&
-                        a.SecondInstanceFrameNumber == b.SecondInstanceFrameNumber &&
-                        a.FirstInstanceTimestamp == b.FirstInstanceTimestamp &&
-                        a.SecondInstanceTimestamp == b.SecondInstanceTimestamp &&
-                        a.TimestampDifference == b.TimestampDifference &&
-                        a.TimestampDifferenceCalculated == b.TimestampDifferenceCalculated;
+                // If both dictionary values are null, or both are same instance, return true
+                if (System.Object.ReferenceEquals(a, b))
+                {
+                    return true;
+                }
+
+                // If one dictionary value is null, but not both, return false
+                if (((object)a == null) || ((object)b == null))
+                {
+                    return false;
+                }
+
+                // Otherwise the two dictionary values are deemed identical if the fields of each are identical
+                return
+                    a.MessageId == b.MessageId &&
+                    a.FirstInstanceFound == b.FirstInstanceFound &&
+                    a.SecondInstanceFound == b.SecondInstanceFound &&
+                    a.FirstInstanceFrameNumber == b.FirstInstanceFrameNumber &&
+                    a.SecondInstanceFrameNumber == b.SecondInstanceFrameNumber &&
+                    a.FirstInstanceTimestamp == b.FirstInstanceTimestamp &&
+                    a.SecondInstanceTimestamp == b.SecondInstanceTimestamp &&
+                    a.TimestampDifference == b.TimestampDifference &&
+                    a.TimestampDifferenceCalculated == b.TimestampDifferenceCalculated;
             }
 
             /// <summary>
