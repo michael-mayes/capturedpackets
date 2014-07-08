@@ -72,6 +72,33 @@ namespace Analysis.LatencyAnalysis
             }
 
             /// <summary>
+            /// Determines whether the two supplied dictionary keys are equal
+            /// </summary>
+            /// <param name="a">The first dictionary key to be compared</param>
+            /// <param name="b">The second dictionary key to be compared</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary keys are equal</returns>
+            public static bool operator ==(DictionaryKey a, DictionaryKey b)
+            {
+                // The two dictionary keys are deemed identical if the fields of each are identical
+                return
+                    a.HostId == b.HostId &&
+                    a.Protocol == b.Protocol &&
+                    a.SequenceNumber == b.SequenceNumber;
+            }
+
+            /// <summary>
+            /// Determines whether the two supplied dictionary keys are different
+            /// </summary>
+            /// <param name="a">The first dictionary key to be compared</param>
+            /// <param name="b">The second dictionary key to be compared</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary keys are different</returns>
+            public static bool operator !=(DictionaryKey a, DictionaryKey b)
+            {
+                //Call the == operator and take a ! of the returned value
+                return !(a == b);
+            }
+
+            /// <summary>
             /// Returns the hash code of the dictionary key
             /// </summary>
             /// <returns>The hash code of the dictionary key</returns>
@@ -181,6 +208,39 @@ namespace Analysis.LatencyAnalysis
                 {
                     return false;
                 }
+            }
+
+            /// <summary>
+            /// Determines whether the current and supplied dictionary values are equal
+            /// </summary>
+            /// <param name="a">The first dictionary value to be compared</param>
+            /// <param name="b">The second dictionary value to be compared</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
+            public static bool operator ==(DictionaryValue a, DictionaryValue b)
+            {
+                    // The two dictionary values are deemed identical if the fields of each are identical
+                    return
+                        a.MessageId == b.MessageId &&
+                        a.FirstInstanceFound == b.FirstInstanceFound &&
+                        a.SecondInstanceFound == b.SecondInstanceFound &&
+                        a.FirstInstanceFrameNumber == b.FirstInstanceFrameNumber &&
+                        a.SecondInstanceFrameNumber == b.SecondInstanceFrameNumber &&
+                        a.FirstInstanceTimestamp == b.FirstInstanceTimestamp &&
+                        a.SecondInstanceTimestamp == b.SecondInstanceTimestamp &&
+                        a.TimestampDifference == b.TimestampDifference &&
+                        a.TimestampDifferenceCalculated == b.TimestampDifferenceCalculated;
+            }
+
+            /// <summary>
+            /// Determines whether the current and supplied dictionary values are different
+            /// </summary>
+            /// <param name="a">The first dictionary value to be compared</param>
+            /// <param name="b">The second dictionary value to be compared</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary values are different</returns>
+            public static bool operator !=(DictionaryValue a, DictionaryValue b)
+            {
+                //Call the == operator and take a ! of the returned value
+                return !(a == b);
             }
 
             /// <summary>
