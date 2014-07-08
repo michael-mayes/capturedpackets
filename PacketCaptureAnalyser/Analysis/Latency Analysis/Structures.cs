@@ -49,29 +49,6 @@ namespace Analysis.LatencyAnalysis
             }
 
             /// <summary>
-            /// Determines whether the current and supplied dictionary keys are equal
-            /// </summary>
-            /// <param name="obj">The dictionary key to be compared with the current dictionary key</param>
-            /// <returns>Boolean flag that indicates whether the two dictionary keys are equal</returns>
-            public override bool Equals(object obj)
-            {
-                if (obj is DictionaryKey)
-                {
-                    DictionaryKey key = (DictionaryKey)obj;
-
-                    // The two dictionary keys are deemed identical if the fields of each are identical
-                    return
-                        this.HostId == key.HostId &&
-                        this.Protocol == key.Protocol &&
-                        this.SequenceNumber == key.SequenceNumber;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            /// <summary>
             /// Determines whether the two supplied dictionary keys are equal
             /// </summary>
             /// <param name="a">The first dictionary key to be compared</param>
@@ -80,7 +57,7 @@ namespace Analysis.LatencyAnalysis
             public static bool operator ==(DictionaryKey a, DictionaryKey b)
             {
                 // If both dictionary keys are null, or both are same instance, return true
-                if (System.Object.ReferenceEquals(a, b))
+                if (object.ReferenceEquals(a, b))
                 {
                     return true;
                 }
@@ -106,8 +83,31 @@ namespace Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary keys are different</returns>
             public static bool operator !=(DictionaryKey a, DictionaryKey b)
             {
-                //Call the == operator and take a ! of the returned value
+                // Call the == operator and take a ! of the returned value
                 return !(a == b);
+            }
+
+            /// <summary>
+            /// Determines whether the current and supplied dictionary keys are equal
+            /// </summary>
+            /// <param name="obj">The dictionary key to be compared with the current dictionary key</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary keys are equal</returns>
+            public override bool Equals(object obj)
+            {
+                if (obj is DictionaryKey)
+                {
+                    DictionaryKey key = (DictionaryKey)obj;
+
+                    // The two dictionary keys are deemed identical if the fields of each are identical
+                    return
+                        this.HostId == key.HostId &&
+                        this.Protocol == key.Protocol &&
+                        this.SequenceNumber == key.SequenceNumber;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             /// <summary>
@@ -196,42 +196,13 @@ namespace Analysis.LatencyAnalysis
             /// <summary>
             /// Determines whether the current and supplied dictionary values are equal
             /// </summary>
-            /// <param name="obj">The dictionary value to be compared with the current dictionary value</param>
-            /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
-            public override bool Equals(object obj)
-            {
-                if (obj is DictionaryValue)
-                {
-                    DictionaryValue value = (DictionaryValue)obj;
-
-                    // The two dictionary values are deemed identical if the fields of each are identical
-                    return
-                        this.MessageId == value.MessageId &&
-                        this.FirstInstanceFound == value.FirstInstanceFound &&
-                        this.SecondInstanceFound == value.SecondInstanceFound &&
-                        this.FirstInstanceFrameNumber == value.FirstInstanceFrameNumber &&
-                        this.SecondInstanceFrameNumber == value.SecondInstanceFrameNumber &&
-                        this.FirstInstanceTimestamp == value.FirstInstanceTimestamp &&
-                        this.SecondInstanceTimestamp == value.SecondInstanceTimestamp &&
-                        this.TimestampDifference == value.TimestampDifference &&
-                        this.TimestampDifferenceCalculated == value.TimestampDifferenceCalculated;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            /// <summary>
-            /// Determines whether the current and supplied dictionary values are equal
-            /// </summary>
             /// <param name="a">The first dictionary value to be compared</param>
             /// <param name="b">The second dictionary value to be compared</param>
             /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
             public static bool operator ==(DictionaryValue a, DictionaryValue b)
             {
                 // If both dictionary values are null, or both are same instance, return true
-                if (System.Object.ReferenceEquals(a, b))
+                if (object.ReferenceEquals(a, b))
                 {
                     return true;
                 }
@@ -263,8 +234,37 @@ namespace Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary values are different</returns>
             public static bool operator !=(DictionaryValue a, DictionaryValue b)
             {
-                //Call the == operator and take a ! of the returned value
+                // Call the == operator and take a ! of the returned value
                 return !(a == b);
+            }
+
+            /// <summary>
+            /// Determines whether the current and supplied dictionary values are equal
+            /// </summary>
+            /// <param name="obj">The dictionary value to be compared with the current dictionary value</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
+            public override bool Equals(object obj)
+            {
+                if (obj is DictionaryValue)
+                {
+                    DictionaryValue value = (DictionaryValue)obj;
+
+                    // The two dictionary values are deemed identical if the fields of each are identical
+                    return
+                        this.MessageId == value.MessageId &&
+                        this.FirstInstanceFound == value.FirstInstanceFound &&
+                        this.SecondInstanceFound == value.SecondInstanceFound &&
+                        this.FirstInstanceFrameNumber == value.FirstInstanceFrameNumber &&
+                        this.SecondInstanceFrameNumber == value.SecondInstanceFrameNumber &&
+                        this.FirstInstanceTimestamp == value.FirstInstanceTimestamp &&
+                        this.SecondInstanceTimestamp == value.SecondInstanceTimestamp &&
+                        this.TimestampDifference == value.TimestampDifference &&
+                        this.TimestampDifferenceCalculated == value.TimestampDifferenceCalculated;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             /// <summary>
