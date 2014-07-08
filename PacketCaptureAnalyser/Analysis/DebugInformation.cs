@@ -17,32 +17,32 @@ namespace Analysis
     public class DebugInformation : System.IDisposable
     {
         /// <summary>
-        /// 
+        /// The list of listeners to receive the debug output
         /// </summary>
         private System.Diagnostics.TextWriterTraceListener theOutputWindowListener;
 
         /// <summary>
-        /// 
+        /// The path of the output file to receive the debug output
         /// </summary>
         private string theOutputFilePath;
 
         /// <summary>
-        /// 
+        /// Boolean flag that indicates whether to enable the debug information
         /// </summary>
         private bool enableDebugInformation;
 
         /// <summary>
-        /// 
+        /// Boolean flag that indicates whether to include information events in the debug information
         /// </summary>
         private bool enableInformationEvents;
 
         /// <summary>
         /// Initializes a new instance of the DebugInformation class
         /// </summary>
-        /// <param name="theOutputFilePath"></param>
-        /// <param name="enableDebugInformation"></param>
-        /// <param name="enableInformationEvents"></param>
-        /// <param name="redirectDebugInformationToOutput"></param>
+        /// <param name="theOutputFilePath">The path of the output file to receive the debug output</param>
+        /// <param name="enableDebugInformation">Boolean flag that indicates whether to enable the debug information</param>
+        /// <param name="enableInformationEvents">Boolean flag that indicates whether to include information events in the debug information</param>
+        /// <param name="redirectDebugInformationToOutput">Boolean flag that indicates whether to redirect debug information to the output window</param>
         public DebugInformation(string theOutputFilePath, bool enableDebugInformation, bool enableInformationEvents, bool redirectDebugInformationToOutput)
         {
             // Delete any existing output files with the selected name to ape the clearing of all text from the output window
@@ -79,9 +79,9 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Clean up any resources used by the debug information class
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
         public virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -101,7 +101,7 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Clean up any resources used by the debug information class
         /// </summary>
         public void Dispose()
         {
@@ -111,9 +111,9 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Writes the supplied test run event string as a new line to the list of listeners if the debug information is enabled
         /// </summary>
-        /// <param name="theTestRunEvent"></param>
+        /// <param name="theTestRunEvent">The test run event string to be written as a new line to the list of listeners</param>
         public void WriteTestRunEvent(string theTestRunEvent)
         {
             if (this.enableDebugInformation)
@@ -124,9 +124,9 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Writes the supplied information string as a new line to the list of listeners if the debug information is enabled and information events are to be included
         /// </summary>
-        /// <param name="theInformationEvent"></param>
+        /// <param name="theInformationEvent">The information string to be written as a new line to the list of listeners</param>
         public void WriteInformationEvent(string theInformationEvent)
         {
             if (this.enableDebugInformation && this.enableInformationEvents)
@@ -137,9 +137,9 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Writes the supplied error string as a new line to the list of listeners if the debug information is enabled
         /// </summary>
-        /// <param name="theErrorEvent"></param>
+        /// <param name="theErrorEvent">The error string to be written as a new line to the list of listeners</param>
         public void WriteErrorEvent(string theErrorEvent)
         {
             if (this.enableDebugInformation)
@@ -150,9 +150,9 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Writes the supplied text string on the current line for the list of listeners if the debug information is enabled
         /// </summary>
-        /// <param name="theTextElement"></param>
+        /// <param name="theTextElement">The text string to be written on the current line for the list of listeners</param>
         public void WriteTextElement(string theTextElement)
         {
             if (this.enableDebugInformation)
@@ -162,9 +162,9 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Writes the supplied text string as a new line to the list of listeners if the debug information is enabled
         /// </summary>
-        /// <param name="theTextLine"></param>
+        /// <param name="theTextLine">The text string to be written as a new line to the list of listeners</param>
         public void WriteTextLine(string theTextLine)
         {
             if (this.enableDebugInformation)
@@ -174,7 +174,7 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Writes a blank line to the list of listeners if the debug information is enabled
         /// </summary>
         public void WriteBlankLine()
         {
@@ -185,7 +185,7 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Opens the output file for viewing if the debug information is enabled
         /// </summary>
         public void Open()
         {

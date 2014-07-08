@@ -16,14 +16,14 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
     public class Processing
     {
         /// <summary>
-        /// 
+        /// The object that provides for binary reading from the packet capture
         /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// 
+        /// The reusable instance of the IGMP v2 packet
         /// </summary>
-        private Structures.PacketStructure thePacket;
+        private Structures.PacketStructure theIGMPv2Packet;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
@@ -34,27 +34,22 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
             this.theBinaryReader = theBinaryReader;
 
             // Create an instance of the IGMP v2 packet
-            this.thePacket = new Structures.PacketStructure();
+            this.theIGMPv2Packet = new Structures.PacketStructure();
         }
 
         /// <summary>
-        /// 
+        /// Processes an IGMP v2 packet
         /// </summary>
-        /// <param name="thePacketPayloadLength"></param>
-        /// <returns></returns>
-        public bool Process(ushort thePacketPayloadLength)
+        /// <param name="theIPv4PacketPayloadLength">The length of the payload of the IP v4 packet</param>
+        public void ProcessIGMPv2Packet(ushort theIPv4PacketPayloadLength)
         {
-            bool theResult = true;
-
             // There is no separate header for the IGMP v2 packet
 
             // Just read off the bytes for the IGMP v2 packet from the packet capture so we can move on
-            this.thePacket.Type = this.theBinaryReader.ReadByte();
-            this.thePacket.MaxResponseTime = this.theBinaryReader.ReadByte();
-            this.thePacket.Checksum = this.theBinaryReader.ReadUInt16();
-            this.thePacket.GroupAddress = this.theBinaryReader.ReadUInt32();
-
-            return theResult;
+            this.theIGMPv2Packet.Type = this.theBinaryReader.ReadByte();
+            this.theIGMPv2Packet.MaxResponseTime = this.theBinaryReader.ReadByte();
+            this.theIGMPv2Packet.Checksum = this.theBinaryReader.ReadUInt16();
+            this.theIGMPv2Packet.GroupAddress = this.theBinaryReader.ReadUInt32();
         }
     }
 }

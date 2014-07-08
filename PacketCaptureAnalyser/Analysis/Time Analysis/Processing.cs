@@ -20,27 +20,27 @@ namespace Analysis.TimeAnalysis
     public class Processing : System.IDisposable
     {
         /// <summary>
-        /// 
+        /// The object that provides for the logging of debug information
         /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// 
+        /// Boolean flag that indicates whether to output debug information
         /// </summary>
         private bool outputDebug;
 
         /// <summary>
-        /// 
+        /// The path of the selected packet capture
         /// </summary>
-        private string selectedPacketCaptureFile;
+        private string theSelectedPacketCaptureFile;
 
         /// <summary>
-        /// 
+        /// The data table to hold the timestamp and time values for time-supplying messages
         /// </summary>
         private System.Data.DataTable theTimeValuesTable;
 
         /// <summary>
-        /// 
+        /// The data table to hold the set of host Ids encountered during the time analysis
         /// </summary>
         private System.Data.DataTable theHostIdsTable;
 
@@ -48,15 +48,15 @@ namespace Analysis.TimeAnalysis
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="outputDebug"></param>
-        /// <param name="selectedPacketCaptureFile"></param>
-        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string selectedPacketCaptureFile)
+        /// <param name="outputDebug">Boolean flag that indicates whether to output debug information</param>
+        /// <param name="theSelectedPacketCaptureFile">The path of the selected packet capture</param>
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string theSelectedPacketCaptureFile)
         {
             this.theDebugInformation = theDebugInformation;
 
             this.outputDebug = outputDebug;
 
-            this.selectedPacketCaptureFile = selectedPacketCaptureFile;
+            this.theSelectedPacketCaptureFile = theSelectedPacketCaptureFile;
 
             // Create a datatable to hold the timestamp and time values for time-supplying messages
             this.theTimeValuesTable = new System.Data.DataTable();
@@ -66,15 +66,15 @@ namespace Analysis.TimeAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Creates the data tables necessary to perform the time analysis processing
         /// </summary>
         public void Create()
         {
             // Add the required columns to the datatable to hold the timestamp and time values for time-supplying messages
             this.theTimeValuesTable.Columns.Add("HostId", typeof(byte));
             this.theTimeValuesTable.Columns.Add("PacketNumber", typeof(ulong));
-            this.theTimeValuesTable.Columns.Add("Timestamp", typeof(double));
-            this.theTimeValuesTable.Columns.Add("Time", typeof(double));
+            this.theTimeValuesTable.Columns.Add("PacketTimestamp", typeof(double));
+            this.theTimeValuesTable.Columns.Add("PacketTime", typeof(double));
             this.theTimeValuesTable.Columns.Add("Processed", typeof(bool));
 
             // Add the required column to the datatable to hold the set of host Ids encountered during the time analysis
@@ -90,7 +90,7 @@ namespace Analysis.TimeAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Clean up any resources used by the time analysis class
         /// </summary>
         public void Dispose()
         {
@@ -100,13 +100,13 @@ namespace Analysis.TimeAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Supplies a set of data for a time message to register its receipt for the purposes of time analysis
         /// </summary>
-        /// <param name="theHostId"></param>
-        /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
-        /// <param name="theTime"></param>
-        public void RegisterTimeMessageReceipt(byte theHostId, ulong thePacketNumber, double theTimestamp, double theTime)
+        /// <param name="theHostId">The host Id for the message</param>
+        /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
+        /// <param name="thePacketTime">The time for the packet read from the packet capture</param>
+        public void RegisterTimeMessageReceipt(byte theHostId, ulong thePacketNumber, double thePacketTimestamp, double thePacketTime)
         {
             // Add the supplied Host Id to the set of those encountered during the time analysis if not already in there
             this.RegisterEncounteredHostId(theHostId);
@@ -117,15 +117,15 @@ namespace Analysis.TimeAnalysis
 
             theTimeValuesRowToAdd["HostId"] = theHostId;
             theTimeValuesRowToAdd["PacketNumber"] = thePacketNumber;
-            theTimeValuesRowToAdd["Timestamp"] = theTimestamp;
-            theTimeValuesRowToAdd["Time"] = theTime;
+            theTimeValuesRowToAdd["PacketTimestamp"] = thePacketTimestamp;
+            theTimeValuesRowToAdd["PacketTime"] = thePacketTime;
             theTimeValuesRowToAdd["Processed"] = false;
 
             this.theTimeValuesTable.Rows.Add(theTimeValuesRowToAdd);
         }
 
         /// <summary>
-        /// 
+        /// Finalize the time analysis
         /// </summary>
         public void Finalise()
         {
@@ -158,9 +158,9 @@ namespace Analysis.TimeAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Clean up any resources used by the time analysis class
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -174,7 +174,7 @@ namespace Analysis.TimeAnalysis
         /// <summary>
         /// Adds the supplied host Id to the set of those encountered during the time analysis if not already in there
         /// </summary>
-        /// <param name="theHostId"></param>
+        /// <param name="theHostId">The host Id encountered</param>
         private void RegisterEncounteredHostId(byte theHostId)
         {
             object[] theHostIdRowFindObject = new object[1];
@@ -199,9 +199,9 @@ namespace Analysis.TimeAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Finalize time analysis for the supplied host Id
         /// </summary>
-        /// <param name="theHostId"></param>
+        /// <param name="theHostId">The host Id for which time analysis is to be finalized</param>
         private void FinaliseTimeValuesForHostId(byte theHostId)
         {
             CommonHistogram theTimestampHistogram =
@@ -254,8 +254,8 @@ namespace Analysis.TimeAnalysis
                 // Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
                 if (!theFirstRowProcessed)
                 {
-                    theLastTimestamp = theTimeValuesRow.Field<double>("Timestamp");
-                    theLastTime = theTimeValuesRow.Field<double>("Time");
+                    theLastTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
+                    theLastTime = theTimeValuesRow.Field<double>("PacketTime");
 
                     // The first row is always marked as processed
                     theTimeValuesRow["Processed"] = true;
@@ -267,8 +267,8 @@ namespace Analysis.TimeAnalysis
 
                 // The timestamp
                 {
-                    double theAbsoluteTimestampDifference = System.Math.Abs((theTimeValuesRow.Field<double>("Timestamp") - theLastTimestamp) * 1000.0);
-                    double theTimestampDifference = ((theTimeValuesRow.Field<double>("Timestamp") - theLastTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
+                    double theAbsoluteTimestampDifference = System.Math.Abs((theTimeValuesRow.Field<double>("PacketTimestamp") - theLastTimestamp) * 1000.0);
+                    double theTimestampDifference = ((theTimeValuesRow.Field<double>("PacketTimestamp") - theLastTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
 
                     if (theAbsoluteTimestampDifference > Constants.MinTimestampDifference)
                     {
@@ -294,11 +294,11 @@ namespace Analysis.TimeAnalysis
                             theMaxTimestampDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        theLastTimestamp = theTimeValuesRow.Field<double>("Timestamp");
+                        theLastTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
 
                         //// The time
 
-                        double theTimeDifference = ((theTimeValuesRow.Field<double>("Time") - theLastTime) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
+                        double theTimeDifference = ((theTimeValuesRow.Field<double>("PacketTime") - theLastTime) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
 
                         ++theNumberOfTimeDifferenceInstances;
                         theTotalOfTimeDifferences += theTimeDifference;
@@ -317,7 +317,7 @@ namespace Analysis.TimeAnalysis
                             theMaxTimeDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
                         }
 
-                        theLastTime = theTimeValuesRow.Field<double>("Time");
+                        theLastTime = theTimeValuesRow.Field<double>("PacketTime");
                     }
                 }
             }
@@ -416,8 +416,8 @@ namespace Analysis.TimeAnalysis
                     {
                         string outputDebugLine = string.Format(
                             "{0},{1}{2}",
-                            theTimeValuesRow.Field<double>("Timestamp").ToString(),
-                            theTimeValuesRow.Field<double>("Time").ToString(),
+                            theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
+                            theTimeValuesRow.Field<double>("PacketTime").ToString(),
                             System.Environment.NewLine);
 
                         outputDebugLines.Append(outputDebugLine);
@@ -425,7 +425,7 @@ namespace Analysis.TimeAnalysis
                 }
 
                 System.IO.File.WriteAllText(
-                    this.selectedPacketCaptureFile +
+                    this.theSelectedPacketCaptureFile +
                     ".HostId" +
                     theHostId +
                     ".TimeAnalysis.csv",

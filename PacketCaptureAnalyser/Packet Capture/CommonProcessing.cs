@@ -17,32 +17,60 @@ namespace PacketCapture
     {
         //// Concrete attributes - cannot be overridden by a derived class
 
-        protected PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm;
-        protected Analysis.DebugInformation theDebugInformation;
+        /// <summary>
+        /// The instance of the progress window form to use for reporting progress of the processing
+        /// </summary>
+        private PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm;
 
-        protected bool performLatencyAnalysisProcessing;
-        protected Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing;
+        /// <summary>
+        /// The object that provides for the logging of debug information
+        /// </summary>
+        private Analysis.DebugInformation theDebugInformation;
 
-        protected bool performTimeAnalysisProcessing;
-        protected Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing;
+        /// <summary>
+        /// Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture
+        /// </summary>
+        private bool performLatencyAnalysisProcessing;
 
-        protected string thePacketCapture;
-        protected bool minimiseMemoryUsage;
+        /// <summary>
+        /// The object that provides the latency analysis processing for data read from the packet capture
+        /// </summary>
+        private Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing;
+
+        /// <summary>
+        /// Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture
+        /// </summary>
+        private bool performTimeAnalysisProcessing;
+
+        /// <summary>
+        /// The object that provides the time analysis processing for data read from the packet capture
+        /// </summary>
+        private Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing;
+
+        /// <summary>
+        /// The path of the selected packet capture
+        /// </summary>
+        private string theSelectedPacketCapturePath;
+
+        /// <summary>
+        /// Boolean flag that indicates whether to perform reading from the packet capture using a method that will minimize memory usage, possibly at the expense of increased processing time
+        /// </summary>
+        private bool minimizeMemoryUsage;
 
         //// Concrete methods - cannot be overridden by a derived class
 
         /// <summary>
         /// Initializes a new instance of the CommonProcessing class
         /// </summary>
-        /// <param name="theProgressWindowForm"></param>
+        /// <param name="theProgressWindowForm">The instance of the progress window form to use for reporting progress of the processing</param>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
-        /// <param name="thePacketCapture"></param>
-        /// <param name="minimiseMemoryUsage"></param>
-        protected CommonProcessing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string thePacketCapture, bool minimiseMemoryUsage)
+        /// <param name="theSelectedPacketCapturePath">The path of the selected packet capture</param>
+        /// <param name="minimizeMemoryUsage">Boolean flag that indicates whether to perform reading from the packet capture using a method that will minimize memory usage, possibly at the expense of increased processing time</param>
+        protected CommonProcessing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string theSelectedPacketCapturePath, bool minimizeMemoryUsage)
         {
             this.theProgressWindowForm = theProgressWindowForm;
             this.theDebugInformation = theDebugInformation;
@@ -50,14 +78,25 @@ namespace PacketCapture
             this.theLatencyAnalysisProcessing = theLatencyAnalysisProcessing;
             this.performTimeAnalysisProcessing = performTimeAnalysisProcessing;
             this.theTimeAnalysisProcessing = theTimeAnalysisProcessing;
-            this.thePacketCapture = thePacketCapture;
-            this.minimiseMemoryUsage = minimiseMemoryUsage;
+            this.theSelectedPacketCapturePath = theSelectedPacketCapturePath;
+            this.minimizeMemoryUsage = minimizeMemoryUsage;
         }
 
         /// <summary>
-        /// 
+        /// Gets the object that provides for the logging of debug information
         /// </summary>
-        /// <returns></returns>
+        protected Analysis.DebugInformation TheDebugInformation
+        {
+            get
+            {
+                return this.theDebugInformation;
+            }
+        }
+
+        /// <summary>
+        /// Processes the selected packet capture
+        /// </summary>
+        /// <returns>Boolean flag that indicates whether the selected packet capture could be processed</returns>
         public bool Process()
         {
             bool theResult = true;
@@ -66,7 +105,7 @@ namespace PacketCapture
             {
                 this.theProgressWindowForm.ProgressBar = 55;
 
-                if (System.IO.File.Exists(this.thePacketCapture))
+                if (System.IO.File.Exists(this.theSelectedPacketCapturePath))
                 {
                     this.theProgressWindowForm.ProgressBar = 60;
 
@@ -74,7 +113,7 @@ namespace PacketCapture
                     System.DateTime theStartTime = System.DateTime.Now;
 
                     this.theDebugInformation.WriteInformationEvent("Starting read of all bytes from the " +
-                        System.IO.Path.GetFileName(this.thePacketCapture) +
+                        System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                         " packet capture");
 
                     this.theProgressWindowForm.ProgressBar = 65;
@@ -83,17 +122,17 @@ namespace PacketCapture
 
                     byte[] theBytes = null;
 
-                    // If there is a need to minimise memory usage then sacrifice the significant processing
+                    // If there is a need to minimize memory usage then sacrifice the significant processing
                     // speed improvements that come from the up front read of the whole file into an array
-                    if (this.minimiseMemoryUsage)
+                    if (this.minimizeMemoryUsage)
                     {
                         // Open a file stream for the packet capture for reading
-                        theFileStream = System.IO.File.OpenRead(this.thePacketCapture);
+                        theFileStream = System.IO.File.OpenRead(this.theSelectedPacketCapturePath);
                     }
                     else
                     {
                         // Read all the bytes from the packet capture into an array
-                        theBytes = System.IO.File.ReadAllBytes(this.thePacketCapture);
+                        theBytes = System.IO.File.ReadAllBytes(this.theSelectedPacketCapturePath);
                     }
 
                     this.theProgressWindowForm.ProgressBar = 70;
@@ -105,16 +144,16 @@ namespace PacketCapture
                     System.TimeSpan theDuration = theEndTime - theStartTime;
 
                     this.theDebugInformation.WriteInformationEvent("Finished read of all bytes from the " +
-                        System.IO.Path.GetFileName(this.thePacketCapture) +
+                        System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                         " packet capture in " +
                         theDuration.Seconds.ToString() +
                         " seconds");
 
                     this.theProgressWindowForm.ProgressBar = 75;
 
-                    // If there is a need to minimise memory usage then open the binary reader directly on the file stream, otherwise
+                    // If there is a need to minimize memory usage then open the binary reader directly on the file stream, otherwise
                     // open a memory stream to the array containing the up front read of the file and then open the binary reader on that
-                    if (this.minimiseMemoryUsage)
+                    if (this.minimizeMemoryUsage)
                     {
                         this.theProgressWindowForm.ProgressBar = 80;
 
@@ -191,7 +230,7 @@ namespace PacketCapture
                 else
                 {
                     this.theDebugInformation.WriteErrorEvent("The " +
-                        System.IO.Path.GetFileName(this.thePacketCapture) +
+                        System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                         " packet capture does not exist!!!");
 
                     theResult = false;
@@ -204,7 +243,7 @@ namespace PacketCapture
                     " with the following message: " +
                     e.Message +
                     " was raised as access to the " +
-                    System.IO.Path.GetFileName(this.thePacketCapture) +
+                    System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                     " packet capture was denied because it is being used by another process or because of insufficient resources!!!");
 
                 theResult = false;
@@ -216,7 +255,7 @@ namespace PacketCapture
                     " with the following message: " +
                     e.Message +
                     " was raised as access to the " +
-                    System.IO.Path.GetFileName(this.thePacketCapture) +
+                    System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                     " packet capture was denied because this process was deemed as unauthorised by the OS!!!");
 
                 theResult = false;
@@ -228,10 +267,10 @@ namespace PacketCapture
                     " with the following message: " +
                     e.Message +
                     " was raised as there was insufficient memory to read in all of the " +
-                    System.IO.Path.GetFileName(this.thePacketCapture) +
+                    System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                     " packet capture!!!");
 
-                this.theDebugInformation.WriteInformationEvent("It is suggested that the analysis is run again with the 'Minimise Memory Usage' check-box checked");
+                this.theDebugInformation.WriteInformationEvent("It is suggested that the analysis is run again with the 'minimize Memory Usage' check-box checked");
 
                 theResult = false;
             }
@@ -242,34 +281,34 @@ namespace PacketCapture
         //// Abstract methods - must be overridden with a concrete implementation by a derived class
 
         /// <summary>
-        /// 
+        /// Processes the packet capture global header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <returns></returns>
+        /// <returns>Boolean flag that indicates whether the packet capture global header could be processed</returns>
         protected abstract bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy);
 
         /// <summary>
-        /// 
+        /// Processes the packet header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
-        /// <returns></returns>
+        /// <returns>Boolean flag that indicates whether the packet header could be processed</returns>
         protected abstract bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp);
 
         //// Private methods
 
         /// <summary>
-        /// 
+        /// Processes packets from the selected packet capture
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <returns></returns>
+        /// <returns>Boolean flag that indicates whether the packets could be processed from the selected packet capture</returns>
         private bool ProcessPackets(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
@@ -337,14 +376,7 @@ namespace PacketCapture
 
                                     case (uint)CommonConstants.NetworkDataLinkType.Ethernet:
                                         {
-                                            if (!theEthernetFrameProcessing.Process(theNumberOfPacketsProcessed, thePacketPayloadLength, thePacketTimestamp))
-                                            {
-                                                theResult = false;
-
-                                                this.theDebugInformation.WriteErrorEvent("Processing of the captured packet #" +
-                                                    theNumberOfPacketsProcessed.ToString() +
-                                                    " failed during processing of packet header for Ethernet frame!!!");
-                                            }
+                                            theEthernetFrameProcessing.Process(theNumberOfPacketsProcessed, thePacketPayloadLength, thePacketTimestamp);
 
                                             break;
                                         }

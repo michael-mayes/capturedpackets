@@ -20,15 +20,15 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theProgressWindowForm"></param>
+        /// <param name="theProgressWindowForm">The instance of the progress window form to use for reporting progress of the processing</param>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
-        /// <param name="thePacketCapture"></param>
-        /// <param name="minimiseMemoryUsage"></param>
-        public Processing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string thePacketCapture, bool minimiseMemoryUsage) :
+        /// <param name="theSelectedPacketCapturePath">The path of the selected packet capture</param>
+        /// <param name="minimizeMemoryUsage">Boolean flag that indicates whether to perform reading from the packet capture using a method that will minimize memory usage, possibly at the expense of increased processing time</param>
+        public Processing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string theSelectedPacketCapturePath, bool minimizeMemoryUsage) :
             base(
             theProgressWindowForm,
             theDebugInformation,
@@ -36,18 +36,18 @@ namespace PacketCapture.SnifferPackageCapture
             theLatencyAnalysisProcessing,
             performTimeAnalysisProcessing,
             theTimeAnalysisProcessing,
-            thePacketCapture,
-            minimiseMemoryUsage)
+            theSelectedPacketCapturePath,
+            minimizeMemoryUsage)
         {
         }
 
         /// <summary>
-        /// 
+        /// Processes the Sniffer packet capture global header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <returns></returns>
+        /// <returns>Boolean flag that indicates whether the Sniffer packet capture global header could be processed</returns>
         protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
@@ -96,29 +96,29 @@ namespace PacketCapture.SnifferPackageCapture
         }
 
         /// <summary>
-        /// 
+        /// Processes the Sniffer packet record header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
-        /// <returns></returns>
+        /// <returns>Boolean flag that indicates whether the Sniffer packet record header could be processed</returns>
         protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
-            // Provide a default value to the output parameter for the length of the PCAP packet capture packet payload
+            // Provide a default value to the output parameter for the length of the Sniffer packet payload
             thePacketPayloadLength = 0;
 
             // Provide a default value to the output parameter for the timestamp
             thePacketTimestamp = 0.0;
 
-            // Create an instance of the Sniffer packet capture record header
+            // Create an instance of the Sniffer packet record header
             Structures.RecordHeaderStructure theRecordHeader =
                 new Structures.RecordHeaderStructure();
 
-            // Populate the Sniffer packet capture record header from the packet capture
+            // Populate the Sniffer packet record header from the packet capture
             theRecordHeader.RecordType = theBinaryReader.ReadUInt16();
             theRecordHeader.RecordLength = theBinaryReader.ReadUInt32();
 
@@ -130,11 +130,11 @@ namespace PacketCapture.SnifferPackageCapture
                 {
                     case (ushort)Constants.RecordHeaderSnifferRecordType.Type2RecordType:
                         {
-                            // Create an instance of the Sniffer packet capture Sniffer type 2 data record
+                            // Create an instance of the Sniffer type 2 data record
                             Structures.SnifferType2RecordStructure theType2Record =
                                 new Structures.SnifferType2RecordStructure();
 
-                            // Populate the Sniffer packet capture Sniffer type 2 data record from the packet capture
+                            // Populate the Sniffer type 2 data record from the packet capture
                             theType2Record.TimestampLow = theBinaryReader.ReadUInt16();
                             theType2Record.TimestampMiddle = theBinaryReader.ReadUInt16();
                             theType2Record.TimestampHigh = theBinaryReader.ReadByte();
@@ -162,7 +162,7 @@ namespace PacketCapture.SnifferPackageCapture
 
                     case (ushort)Constants.RecordHeaderSnifferRecordType.EndOfFileRecordType:
                         {
-                            // No further reading required for the Sniffer packet capture Sniffer end of file data record as it only consists of the Sniffer packet capture record header!
+                            // No further reading required for the Sniffer end of file data record as it only consists of the Sniffer packet capture record header!
                             break;
                         }
 
@@ -172,7 +172,7 @@ namespace PacketCapture.SnifferPackageCapture
 
                             //// Processing of Sniffer packet captures with record types not enumerated above are obviously not currently supported!
 
-                            theDebugInformation.WriteErrorEvent("The Sniffer packet capture contains an unexpected record type of " +
+                            this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture contains an unexpected record type of " +
                                 theRecordHeader.RecordType.ToString() +
                                 "!!!");
 
@@ -189,10 +189,10 @@ namespace PacketCapture.SnifferPackageCapture
         //// Private methods - provide methods specific to Sniffer packet captures, not required to derive from the abstract base class
 
         /// <summary>
-        /// 
+        /// Validates the Sniffer packet capture global header
         /// </summary>
-        /// <param name="theGlobalHeader"></param>
-        /// <returns></returns>
+        /// <param name="theGlobalHeader">The Sniffer packet capture global header</param>
+        /// <returns>Boolean flag that indicates whether the Sniffer packet capture global header is valid</returns>
         private bool ValidateGlobalHeader(Structures.GlobalHeaderStructure theGlobalHeader)
         {
             bool theResult = true;
@@ -201,7 +201,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.MagicNumberHigh != Constants.ExpectedMagicNumberHigh)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected high bytes for the magic number, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected high bytes for the magic number, is " +
                     string.Format("{0:X}", theGlobalHeader.MagicNumberHigh.ToString()) +
                     " not " +
                     string.Format("{0:X}", Constants.ExpectedMagicNumberHigh.ToString()) +
@@ -212,7 +212,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.MagicNumberLow != Constants.ExpectedMagicNumberLow)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected low bytes for the magic number, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected low bytes for the magic number, is " +
                     string.Format("{0:X}", theGlobalHeader.MagicNumberLow.ToString()) +
                     " not " +
                     string.Format("{0:X}", Constants.ExpectedMagicNumberLow.ToString()) +
@@ -223,7 +223,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.MagicNumberTerminator != Constants.ExpectedMagicNumberTerminator)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected magic number terminating character, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected magic number terminating character, is " +
                     theGlobalHeader.MagicNumberTerminator.ToString() +
                     " not " +
                     Constants.ExpectedMagicNumberTerminator.ToString() +
@@ -234,7 +234,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.RecordType != (ushort)Constants.RecordHeaderSnifferRecordType.VersionRecordType)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected record type, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected record type, is " +
                     theGlobalHeader.RecordType.ToString() +
                     " not " +
                     Constants.RecordHeaderSnifferRecordType.VersionRecordType.ToString() +
@@ -245,7 +245,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.VersionMajor != Constants.ExpectedVersionMajor)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected major version number, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected major version number, is " +
                     theGlobalHeader.VersionMajor.ToString() +
                     " not " +
                     Constants.ExpectedVersionMajor.ToString() +
@@ -256,7 +256,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.VersionMinor != Constants.ExpectedVersionMinor)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected minor version number, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected minor version number, is " +
                     theGlobalHeader.VersionMinor.ToString() +
                     " not " +
                     Constants.ExpectedVersionMinor.ToString() +
@@ -267,7 +267,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.Type != Constants.ExpectedType)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected record type, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected record type, is " +
                     theGlobalHeader.Type.ToString() +
                     " not " +
                     Constants.ExpectedType.ToString() +
@@ -279,7 +279,7 @@ namespace PacketCapture.SnifferPackageCapture
             if (theGlobalHeader.NetworkEncapsulationType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack &&
                 theGlobalHeader.NetworkEncapsulationType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected network encapsulation type, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected network encapsulation type, is " +
                     theGlobalHeader.NetworkEncapsulationType.ToString() +
                     " not " +
                     PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack.ToString() +
@@ -292,7 +292,7 @@ namespace PacketCapture.SnifferPackageCapture
 
             if (theGlobalHeader.FormatVersion != Constants.ExpectedFormatVersion)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected format version, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture global header does not contain the expected format version, is " +
                     theGlobalHeader.FormatVersion.ToString() +
                     " not " +
                     Constants.ExpectedFormatVersion.ToString() +
@@ -305,19 +305,19 @@ namespace PacketCapture.SnifferPackageCapture
         }
 
         /// <summary>
-        /// 
+        /// Validates the Sniffer packet record header
         /// </summary>
-        /// <param name="theRecordHeader"></param>
-        /// <returns></returns>
+        /// <param name="theRecordHeader">The Sniffer packet record header</param>
+        /// <returns>Boolean flag that indicates whether the Sniffer packet record header is valid</returns>
         private bool ValidateRecordHeader(Structures.RecordHeaderStructure theRecordHeader)
         {
             bool theResult = true;
 
-            // Validate fields from the Sniffer packet capture record header
+            // Validate fields from the Sniffer packet record header
             if (theRecordHeader.RecordType != (ushort)Constants.RecordHeaderSnifferRecordType.Type2RecordType &&
                 theRecordHeader.RecordType != (ushort)Constants.RecordHeaderSnifferRecordType.EndOfFileRecordType)
             {
-                theDebugInformation.WriteErrorEvent("The Sniffer packet capture record header does not contain the expected type, is " +
+                this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture record header does not contain the expected type, is " +
                     theRecordHeader.RecordType.ToString() +
                     "!!!");
 
@@ -328,11 +328,11 @@ namespace PacketCapture.SnifferPackageCapture
         }
 
         /// <summary>
-        /// 
+        /// Calculates the accuracy of the timestamp for the packet capture based on the timestamp units read from the packet capture
         /// </summary>
-        /// <param name="thePacketCaptureTimestampUnits"></param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <returns></returns>
+        /// <param name="thePacketCaptureTimestampUnits">The timestamp units read from the packet capture</param>
+        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp for the packet capture</param>
+        /// <returns>Boolean flag that indicates whether the accuracy of the timestamp for the packet capture could be calculated</returns>
         private bool CalculateTimestampAccuracy(byte thePacketCaptureTimestampUnits, out double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
@@ -390,7 +390,7 @@ namespace PacketCapture.SnifferPackageCapture
 
                 default:
                     {
-                        theDebugInformation.WriteErrorEvent("The Sniffer packet capture contains an unexpected timestamp unit " +
+                        this.TheDebugInformation.WriteErrorEvent("The Sniffer packet capture contains an unexpected timestamp unit " +
                             thePacketCaptureTimestampUnits.ToString() +
                             "!!!");
 

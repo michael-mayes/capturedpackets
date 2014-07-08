@@ -62,7 +62,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         }
 
         /// <summary>
-        /// PCAP Next Generation packet capture interface description block
+        /// PCAP Next Generation interface description block
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -102,7 +102,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         }
 
         /// <summary>
-        /// PCAP Next Generation packet capture packet block
+        /// PCAP Next Generation packet block
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -160,7 +160,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         }
 
         /// <summary>
-        /// PCAP Next Generation packet capture simple packet block
+        /// PCAP Next Generation simple packet block
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -188,7 +188,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         }
 
         /// <summary>
-        /// PCAP Next Generation packet capture enhanced packet block
+        /// PCAP Next Generation enhanced packet block
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
@@ -240,7 +240,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         }
 
         /// <summary>
-        /// PCAP Next Generation packet capture interface statistics block
+        /// PCAP Next Generation interface statistics block
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

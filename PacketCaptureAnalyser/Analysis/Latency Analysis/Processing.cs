@@ -27,33 +27,33 @@ namespace Analysis.LatencyAnalysis
     public class Processing : System.IDisposable
     {
         /// <summary>
-        /// 
+        /// The dictionary to hold the latency values for message pairings
         /// </summary>
         private System.Collections.Generic.Dictionary<Structures.DictionaryKey,
             Structures.DictionaryValue> theDictionary;
 
         /// <summary>
-        /// 
+        /// The object that provides for the logging of debug information
         /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// 
+        /// Boolean flag that indicates whether to output debug information
         /// </summary>
         private bool outputDebug;
 
         /// <summary>
-        /// 
+        /// The path of the selected packet capture
         /// </summary>
-        private string selectedPacketCaptureFile;
+        private string theSelectedPacketCaptureFile;
 
         /// <summary>
-        /// 
+        /// The data table to hold the set of host Ids encountered during the latency analysis
         /// </summary>
         private System.Data.DataTable theHostIdsTable;
 
         /// <summary>
-        /// 
+        /// The data table to hold the set of message Ids encountered during the latency analysis
         /// </summary>
         private System.Data.DataTable theMessageIdsTable;
 
@@ -61,15 +61,15 @@ namespace Analysis.LatencyAnalysis
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="outputDebug"></param>
-        /// <param name="selectedPacketCaptureFile"></param>
-        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string selectedPacketCaptureFile)
+        /// <param name="outputDebug">Boolean flag that indicates whether to output debug information</param>
+        /// <param name="theSelectedPacketCaptureFile">The path of the selected packet capture</param>
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string theSelectedPacketCaptureFile)
         {
             this.theDebugInformation = theDebugInformation;
 
             this.outputDebug = outputDebug;
 
-            this.selectedPacketCaptureFile = selectedPacketCaptureFile;
+            this.theSelectedPacketCaptureFile = theSelectedPacketCaptureFile;
 
             // Create a dictionary to hold the latency values for message pairings
             this.theDictionary =
@@ -83,7 +83,7 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Creates the data tables necessary to perform the latency analysis processing
         /// </summary>
         public void Create()
         {
@@ -113,7 +113,7 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Clean up any resources used by the time analysis class
         /// </summary>
         public void Dispose()
         {
@@ -123,15 +123,15 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Supplies a set of data for a message to register its receipt for the purposes of latency analysis
         /// </summary>
-        /// <param name="theHostId"></param>
-        /// <param name="theProtocol"></param>
-        /// <param name="theSequenceNumber"></param>
-        /// <param name="theMessageId"></param>
-        /// <param name="thePacketNumber"></param>
-        /// <param name="theTimestamp">The timestamp read from the packet capture</param>
-        public void RegisterMessageReceipt(byte theHostId, Constants.Protocol theProtocol, ulong theSequenceNumber, ulong theMessageId, ulong thePacketNumber, double theTimestamp)
+        /// <param name="theHostId">The host Id for the message</param>
+        /// <param name="theProtocol">The protocol for the message</param>
+        /// <param name="theSequenceNumber">The sequence number for the message</param>
+        /// <param name="theMessageId">The identifier for the type of message</param>
+        /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
+        /// <param name="thePacketTimestamp">The timestamp read from the packet capture</param>
+        public void RegisterMessageReceipt(byte theHostId, Constants.Protocol theProtocol, ulong theSequenceNumber, ulong theMessageId, ulong thePacketNumber, double thePacketTimestamp)
         {
             // Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
             if (theSequenceNumber == 0)
@@ -170,18 +170,10 @@ namespace Analysis.LatencyAnalysis
                 // If this is the first message of the pairing then create the new entry in the dictionary
                 Structures.DictionaryValue
                     theDictionaryValueToAdd =
-                    new Structures.DictionaryValue
-                    {
-                        MessageId = theMessageId,
-                        FirstInstanceFound = true,
-                        SecondInstanceFound = false,
-                        FirstInstancePacketNumber = thePacketNumber,
-                        SecondInstancePacketNumber = 0,
-                        FirstInstanceTimestamp = theTimestamp,
-                        SecondInstanceTimestamp = 0.0,
-                        TimestampDifference = 0.0,
-                        TimestampDifferenceCalculated = false
-                    };
+                    new Structures.DictionaryValue(
+                        theMessageId,
+                        thePacketNumber,
+                        thePacketTimestamp);
 
                 // Add the new entry to the dictionary
                 this.theDictionary.Add(
@@ -217,15 +209,15 @@ namespace Analysis.LatencyAnalysis
                 }
 
                 theDictionaryValueFound.SecondInstanceFound = true;
-                theDictionaryValueFound.SecondInstancePacketNumber = thePacketNumber;
+                theDictionaryValueFound.SecondInstanceFrameNumber = thePacketNumber;
 
-                if (theTimestamp > theDictionaryValueFound.FirstInstanceTimestamp)
+                if (thePacketTimestamp > theDictionaryValueFound.FirstInstanceTimestamp)
                 {
-                    theDictionaryValueFound.SecondInstanceTimestamp = theTimestamp;
-                    theDictionaryValueFound.TimestampDifference = (theTimestamp - theDictionaryValueFound.FirstInstanceTimestamp) * 1000.0; // Milliseconds
+                    theDictionaryValueFound.SecondInstanceTimestamp = thePacketTimestamp;
+                    theDictionaryValueFound.TimestampDifference = (thePacketTimestamp - theDictionaryValueFound.FirstInstanceTimestamp) * 1000.0; // Milliseconds
                     theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
-                else if (theTimestamp == theDictionaryValueFound.FirstInstanceTimestamp)
+                else if (thePacketTimestamp == theDictionaryValueFound.FirstInstanceTimestamp)
                 {
                     theDictionaryValueFound.SecondInstanceTimestamp = 0.0;
                     theDictionaryValueFound.TimestampDifference = 0.0;
@@ -255,7 +247,7 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Finalize the latency analysis
         /// </summary>
         public void Finalise()
         {
@@ -288,9 +280,9 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Clean up any resources used by the time analysis class
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -304,7 +296,7 @@ namespace Analysis.LatencyAnalysis
         /// <summary>
         /// Adds the supplied host Id to the set of those encountered during the latency analysis if not already in there
         /// </summary>
-        /// <param name="theHostId"></param>
+        /// <param name="theHostId">The host Id encountered</param>
         private void RegisterEncounteredHostId(byte theHostId)
         {
             object[] theHostIdRowFindObject = new object[1];
@@ -331,8 +323,8 @@ namespace Analysis.LatencyAnalysis
         /// <summary>
         /// Adds the supplied message Id to the set of those encountered during the latency analysis if not already in there
         /// </summary>
-        /// <param name="theHostId"></param>
-        /// <param name="theMessageId"></param>
+        /// <param name="theHostId">The host Id for the message encountered</param>
+        /// <param name="theMessageId">The identifier for the type of message encountered</param>
         private void RegisterEncounteredMessageId(byte theHostId, ulong theMessageId)
         {
             object[] theMessageIdRowFindObject = new object[2];
@@ -361,9 +353,9 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Finalize latency analysis for each of the encountered protocols the supplied host Id
         /// </summary>
-        /// <param name="theHostId"></param>
+        /// <param name="theHostId">The host Id for which latency analysis is to be finalized</param>
         private void FinaliseProtocolsForHostId(byte theHostId)
         {
             foreach (Constants.Protocol theProtocol in
@@ -418,11 +410,11 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Finalize latency analysis for the supplied type and protocol of message
         /// </summary>
-        /// <param name="theProtocolString"></param>
-        /// <param name="theMessageId"></param>
-        /// <param name="theRows"></param>
+        /// <param name="theProtocolString">The protocol of message for which latency analysis is to be finalized</param>
+        /// <param name="theMessageId">The identifier for the type of message for which latency analysis is to be finalized</param>
+        /// <param name="theRows">The data table rows on which latency analysis is to be finalized</param>
         private void FinaliseForMessageId(string theProtocolString, ulong theMessageId, DictionaryEnumerableType theRows)
         {
             CommonHistogram theHistogram =
@@ -458,14 +450,14 @@ namespace Analysis.LatencyAnalysis
                 if (theMinTimestampDifference > theTimestampDifference)
                 {
                     theMinTimestampDifference = theTimestampDifference;
-                    theMinTimestampPacketNumber = theRow.Value.FirstInstancePacketNumber;
+                    theMinTimestampPacketNumber = theRow.Value.FirstInstanceFrameNumber;
                     theMinTimestampSequenceNumber = theRow.Key.SequenceNumber;
                 }
 
                 if (theMaxTimestampDifference < theTimestampDifference)
                 {
                     theMaxTimestampDifference = theTimestampDifference;
-                    theMaxTimestampPacketNumber = theRow.Value.FirstInstancePacketNumber;
+                    theMaxTimestampPacketNumber = theRow.Value.FirstInstanceFrameNumber;
                     theMaxTimestampSequenceNumber = theRow.Key.SequenceNumber;
                 }
             }
@@ -535,8 +527,8 @@ namespace Analysis.LatencyAnalysis
 
                 string outputDebugTitleLine = string.Format(
                     "{0},{1},{2},{3}{4}",
-                    "First Packet Number",
-                    "Second Packet Number",
+                    "First Frame Number",
+                    "Second Frame Number",
                     "Sequence Number",
                     "Latency",
                     System.Environment.NewLine);
@@ -547,8 +539,8 @@ namespace Analysis.LatencyAnalysis
                 {
                     string outputDebugLine = string.Format(
                         "{0},{1},{2},{3}{4}",
-                        theRow.Value.FirstInstancePacketNumber.ToString(),
-                        theRow.Value.SecondInstancePacketNumber.ToString(),
+                        theRow.Value.FirstInstanceFrameNumber.ToString(),
+                        theRow.Value.SecondInstanceFrameNumber.ToString(),
                         theRow.Key.SequenceNumber.ToString(),
                         theRow.Value.TimestampDifference.ToString(),
                         System.Environment.NewLine);
@@ -557,7 +549,7 @@ namespace Analysis.LatencyAnalysis
                 }
 
                 System.IO.File.WriteAllText(
-                    this.selectedPacketCaptureFile +
+                    this.theSelectedPacketCaptureFile +
                     ".MessageId" +
                     theMessageId +
                     ".LatencyAnalysis.csv",
