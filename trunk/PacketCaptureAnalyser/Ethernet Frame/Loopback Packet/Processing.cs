@@ -16,19 +16,19 @@ namespace EthernetFrame.LoopbackPacket
     public class Processing
     {
         /// <summary>
-        /// 
+        /// The object that provides for the logging of debug information
         /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// 
+        /// The object that provides for binary reading from the packet capture
         /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// 
+        /// The reusable instance of the Loopback packet header
         /// </summary>
-        private Structures.HeaderStructure theHeader;
+        private Structures.HeaderStructure theLoopbackPacketHeader;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
@@ -42,18 +42,16 @@ namespace EthernetFrame.LoopbackPacket
             this.theBinaryReader = theBinaryReader;
 
             // Create an instance of the Loopback packet header
-            this.theHeader = new Structures.HeaderStructure();
+            this.theLoopbackPacketHeader = new Structures.HeaderStructure();
         }
 
         /// <summary>
-        /// 
+        /// Processes a Loopback packet
         /// </summary>
-        /// <param name="theEthernetFrameLength">The length read from the packet capture for the Ethernet frame</param>
-        /// <returns></returns>
+        /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
+        /// <returns>Boolean flag that indicates whether the Loopback packet could be processed</returns>
         public bool Process(long theEthernetFrameLength)
         {
-            bool theResult = true;
-
             if (theEthernetFrameLength < (Constants.HeaderLength + Constants.PayloadLength))
             {
                 this.theDebugInformation.WriteErrorEvent("The length of the Ethernet frame is lower than the length of the Loopback packet!!!");
@@ -62,29 +60,24 @@ namespace EthernetFrame.LoopbackPacket
             }
 
             // Process the Loopback packet header
-            theResult = this.ProcessHeader();
+            this.ProcessLoopbackPacketHeader();
 
             // Just read off the remaining bytes of the Loopback packet from the packet capture so we can move on
-            // The remaining length is the length for the Loopback packet payload
+            // The remaining length to read off is the length of the payload of the Loopback packet
             this.theBinaryReader.ReadBytes(Constants.PayloadLength);
 
-            return theResult;
+            return true;
         }
 
         /// <summary>
-        /// 
+        /// Processes the Loopback packet header
         /// </summary>
-        /// <returns></returns>
-        private bool ProcessHeader()
+        private void ProcessLoopbackPacketHeader()
         {
-            bool theResult = true;
-
             // Read the values for the Loopback packet header from the packet capture
-            this.theHeader.SkipCount = this.theBinaryReader.ReadUInt16();
-            this.theHeader.Function = this.theBinaryReader.ReadUInt16();
-            this.theHeader.ReceiptNumber = this.theBinaryReader.ReadUInt16();
-
-            return theResult;
+            this.theLoopbackPacketHeader.SkipCount = this.theBinaryReader.ReadUInt16();
+            this.theLoopbackPacketHeader.Function = this.theBinaryReader.ReadUInt16();
+            this.theLoopbackPacketHeader.ReceiptNumber = this.theBinaryReader.ReadUInt16();
         }
     }
 }

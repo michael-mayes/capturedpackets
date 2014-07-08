@@ -16,14 +16,14 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
     public class Processing
     {
         /// <summary>
-        /// 
+        /// The object that provides for binary reading from the packet capture
         /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// 
+        /// The reusable instance of the ICMP v4 packet header
         /// </summary>
-        private Structures.HeaderStructure theHeader;
+        private Structures.HeaderStructure theICMPv4PacketHeader;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
@@ -34,42 +34,32 @@ namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
             this.theBinaryReader = theBinaryReader;
 
             // Create an instance of the ICMP v4 packet header
-            this.theHeader = new Structures.HeaderStructure();
+            this.theICMPv4PacketHeader = new Structures.HeaderStructure();
         }
 
         /// <summary>
-        /// 
+        /// Processes an ICMP v4 packet
         /// </summary>
-        /// <param name="thePacketPayloadLength"></param>
-        /// <returns></returns>
-        public bool Process(ushort thePacketPayloadLength)
+        /// <param name="theIPv4PacketPayloadLength">The length of the payload of the IP v4 packet</param>
+        public void ProcessICMPv4Packet(ushort theIPv4PacketPayloadLength)
         {
-            bool theResult = true;
-
             // Process the ICMP v4 packet header
-            theResult = this.ProcessHeader();
+            this.ProcessICMPv4PacketHeader();
 
             // Just read off the remaining bytes of the ICMP v4 packet from the packet capture so we can move on
-            // The remaining length is the supplied length of the packet payload minus the length for the ICMP v4 packet header
-            this.theBinaryReader.ReadBytes(thePacketPayloadLength - Constants.HeaderLength);
-
-            return theResult;
+            // The remaining length is the supplied length of the payload of the IP v4 packet payload minus the length for the ICMP v4 packet header
+            this.theBinaryReader.ReadBytes(theIPv4PacketPayloadLength - Constants.HeaderLength);
         }
 
         /// <summary>
-        /// 
+        /// Processes an ICMP v4 packet header
         /// </summary>
-        /// <returns></returns>
-        private bool ProcessHeader()
+        private void ProcessICMPv4PacketHeader()
         {
-            bool theResult = true;
-
             // Read the values for the ICMP v4 packet header from the packet capture
-            this.theHeader.Type = this.theBinaryReader.ReadByte();
-            this.theHeader.Code = this.theBinaryReader.ReadByte();
-            this.theHeader.Checksum = this.theBinaryReader.ReadUInt16();
-
-            return theResult;
+            this.theICMPv4PacketHeader.Type = this.theBinaryReader.ReadByte();
+            this.theICMPv4PacketHeader.Code = this.theBinaryReader.ReadByte();
+            this.theICMPv4PacketHeader.Checksum = this.theBinaryReader.ReadUInt16();
         }
     }
 }

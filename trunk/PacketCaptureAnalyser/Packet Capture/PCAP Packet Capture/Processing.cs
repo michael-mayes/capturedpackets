@@ -16,7 +16,7 @@ namespace PacketCapture.PCAPPackageCapture
     public class Processing : CommonProcessing
     {
         /// <summary>
-        /// 
+        /// Boolean flag that indicates whether the PCAP packet capture global header indicates little endian data in the PCAP packet payload
         /// </summary>
         private bool isTheGlobalHeaderLittleEndian = true;
 
@@ -25,15 +25,15 @@ namespace PacketCapture.PCAPPackageCapture
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theProgressWindowForm"></param>
+        /// <param name="theProgressWindowForm">The instance of the progress window form to use for reporting progress of the processing</param>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
-        /// <param name="thePacketCapture"></param>
-        /// <param name="minimiseMemoryUsage"></param>
-        public Processing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string thePacketCapture, bool minimiseMemoryUsage) :
+        /// <param name="theSelectedPacketCapturePath">The path of the selected packet capture</param>
+        /// <param name="minimizeMemoryUsage">Boolean flag that indicates whether to perform reading from the packet capture using a method that will minimize memory usage, possibly at the expense of increased processing time</param>
+        public Processing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string theSelectedPacketCapturePath, bool minimizeMemoryUsage) :
             base(
             theProgressWindowForm,
             theDebugInformation,
@@ -41,18 +41,18 @@ namespace PacketCapture.PCAPPackageCapture
             theLatencyAnalysisProcessing,
             performTimeAnalysisProcessing,
             theTimeAnalysisProcessing,
-            thePacketCapture,
-            minimiseMemoryUsage)
+            theSelectedPacketCapturePath,
+            minimizeMemoryUsage)
         {
         }
 
         /// <summary>
-        /// 
+        /// Processes the PCAP packet capture global header 
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
-        /// <returns></returns>
+        /// <returns>Boolean flag that indicates whether the PCAP packet capture global header could be processed</returns>
         protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
@@ -73,13 +73,13 @@ namespace PacketCapture.PCAPPackageCapture
             // The endianism of the remainder of the values in the PCAP packet capture global header will be corrected to little endian if the magic number indicates big endian representation
             if (theGlobalHeader.MagicNumber == Constants.LittleEndianMagicNumber)
             {
-                theDebugInformation.WriteInformationEvent("The PCAP packet capture contains the little endian magic number");
+                this.TheDebugInformation.WriteInformationEvent("The PCAP packet capture contains the little endian magic number");
 
                 this.isTheGlobalHeaderLittleEndian = true;
             }
             else if (theGlobalHeader.MagicNumber == Constants.BigEndianMagicNumber)
             {
-                theDebugInformation.WriteInformationEvent("The PCAP packet capture contains the big endian magic number");
+                this.TheDebugInformation.WriteInformationEvent("The PCAP packet capture contains the big endian magic number");
 
                 this.isTheGlobalHeaderLittleEndian = false;
             }
@@ -117,29 +117,29 @@ namespace PacketCapture.PCAPPackageCapture
         }
 
         /// <summary>
-        /// 
+        /// Processes the PCAP packet header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
-        /// <returns></returns>
+        /// <returns>Boolean flag that indicates whether the PCAP packet header could be processed</returns>
         protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
-            // Provide a default value to the output parameter for the length of the PCAP packet capture packet payload
+            // Provide a default value to the output parameter for the length of the PCAP packet payload
             thePacketPayloadLength = 0;
 
             // Provide a default value to the output parameter for the timestamp
             thePacketTimestamp = 0.0;
 
-            // Create an instance of the PCAP packet capture packet header
+            // Create an instance of the PCAP packet header
             Structures.HeaderStructure thePacketHeader =
                 new Structures.HeaderStructure();
 
-            // Populate the PCAP packet capture packet header from the packet capture
+            // Populate the PCAP packet header from the packet capture
             if (this.isTheGlobalHeaderLittleEndian)
             {
                 thePacketHeader.TimestampSeconds = theBinaryReader.ReadUInt32();
@@ -155,7 +155,7 @@ namespace PacketCapture.PCAPPackageCapture
                 thePacketHeader.ActualLength = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
             }
 
-            // No need to validate fields from the PCAP packet capture packet header
+            // No need to validate fields from the PCAP packet header
             if (theResult)
             {
                 // Set up the output parameter for the length of the PCAP packet capture packet payload
@@ -188,10 +188,10 @@ namespace PacketCapture.PCAPPackageCapture
         //// Private methods - provide methods specific to PCAP packet captures, not required to derive from the abstract base class
 
         /// <summary>
-        /// 
+        /// Validates the PCAP packet capture global header
         /// </summary>
-        /// <param name="theGlobalHeader"></param>
-        /// <returns></returns>
+        /// <param name="theGlobalHeader">The PCAP packet capture global header</param>
+        /// <returns>Boolean flag that indicates whether the PCAP packet capture global header is valid</returns>
         private bool ValidateGlobalHeader(Structures.GlobalHeaderStructure theGlobalHeader)
         {
             bool theResult = true;
@@ -201,7 +201,7 @@ namespace PacketCapture.PCAPPackageCapture
             if (theGlobalHeader.MagicNumber != Constants.LittleEndianMagicNumber &&
                 theGlobalHeader.MagicNumber != Constants.BigEndianMagicNumber)
             {
-                theDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected magic number, is " +
+                this.TheDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected magic number, is " +
                     theGlobalHeader.MagicNumber.ToString() +
                     " not " +
                     Constants.LittleEndianMagicNumber.ToString() +
@@ -214,7 +214,7 @@ namespace PacketCapture.PCAPPackageCapture
 
             if (theGlobalHeader.VersionMajor != Constants.ExpectedVersionMajor)
             {
-                theDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected major version number, is " +
+                this.TheDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected major version number, is " +
                     theGlobalHeader.VersionMajor.ToString() +
                     " not " +
                     Constants.ExpectedVersionMajor.ToString() +
@@ -225,7 +225,7 @@ namespace PacketCapture.PCAPPackageCapture
 
             if (theGlobalHeader.VersionMinor != Constants.ExpectedVersionMinor)
             {
-                theDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected minor version number, is " +
+                this.TheDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected minor version number, is " +
                     theGlobalHeader.VersionMinor.ToString() +
                     " not " +
                     Constants.ExpectedVersionMinor.ToString() +
@@ -238,7 +238,7 @@ namespace PacketCapture.PCAPPackageCapture
                 theGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet &&
                 theGlobalHeader.NetworkDataLinkType != (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC)
             {
-                theDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected network data link type, is " +
+                this.TheDebugInformation.WriteErrorEvent("The PCAP packet capture global header does not contain the expected network data link type, is " +
                     theGlobalHeader.NetworkDataLinkType.ToString() +
                     " not " +
                     PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack.ToString() +

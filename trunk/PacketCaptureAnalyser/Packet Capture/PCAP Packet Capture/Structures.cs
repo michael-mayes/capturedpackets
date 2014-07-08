@@ -67,7 +67,7 @@ namespace PacketCapture.PCAPPackageCapture
         }
 
         /// <summary>
-        /// PCAP packet capture packet header
+        /// PCAP packet header
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,

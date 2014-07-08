@@ -18,42 +18,42 @@ namespace Analysis
         //// Private entities
 
         /// <summary>
-        /// 
+        /// The object that provides for the logging of debug information
         /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// 
+        /// The set of boundaries for the bins in the histogram
         /// </summary>
         private double[] theValueBinBoundaries;
 
         /// <summary>
-        /// 
+        /// The number of values in each bin of the histogram
         /// </summary>
         private uint[] theValueBinCounts;
 
         /// <summary>
-        /// 
+        /// The total number of values across all bins in the histogram
         /// </summary>
         private uint theNumberOfValuesAcrossAllBins = 0;
 
         /// <summary>
-        /// 
+        /// The number of values added to the histogram that had a value lower than the minimum bin boundary
         /// </summary>
         private uint theNumberOfValuesLowerThanBins = 0;
 
         /// <summary>
-        /// 
+        /// The number of values added to the histogram that had a value higher than the maximum bin boundary
         /// </summary>
         private uint theNumberOfValuesHigherThanBins = 0;
 
         /// <summary>
-        /// 
+        /// The minimum value encountered during adding values to the histogram
         /// </summary>
         private double theMinValueEncountered = double.MaxValue;
 
         /// <summary>
-        /// 
+        /// The maximum value encountered during adding values to the histogram
         /// </summary>
         private double theMaxValueEncountered = double.MinValue;
 
@@ -61,9 +61,9 @@ namespace Analysis
         /// Initializes a new instance of the CommonHistogram class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="theNumOfValueBins"></param>
-        /// <param name="theMinAllowedValue"></param>
-        /// <param name="theMaxAllowedValue"></param>
+        /// <param name="theNumOfValueBins">The number of bins to use for the histogram</param>
+        /// <param name="theMinAllowedValue">The minimum value allowed to be added to the bins for the histogram</param>
+        /// <param name="theMaxAllowedValue">The maximum value allowed to be added to the bins for the histogram</param>
         public CommonHistogram(Analysis.DebugInformation theDebugInformation, uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
         {
             this.theDebugInformation = theDebugInformation;
@@ -92,91 +92,27 @@ namespace Analysis
         //// Public accessor methods
 
         /// <summary>
-        /// 
+        /// Returns the minimum value allowed to be added to the bins for the histogram
         /// </summary>
-        /// <returns></returns>
-        public double[] GetValueBinBoundaries()
-        {
-            return this.theValueBinBoundaries;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public uint[] GetValueBinCounts()
-        {
-            return this.theValueBinCounts;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="theValueBinNumber"></param>
-        /// <returns></returns>
-        public uint GetValueBinCount(uint theValueBinNumber)
-        {
-            return this.theValueBinCounts[theValueBinNumber];
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public int GetNumberOfValueBins()
-        {
-            return this.theValueBinCounts.Length;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        /// <returns>The minimum value allowed to be added to the bins for the histogram</returns>
         public double GetMinAllowedValue()
         {
             return this.theValueBinBoundaries[0];
         }
 
         /// <summary>
-        /// 
+        /// Returns the maximum value allowed to be added to the bins for the histogram
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The maximum value allowed to be added to the bins for the histogram</returns>
         public double GetMaxAllowedValue()
         {
             return this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1];
         }
 
         /// <summary>
-        /// 
+        /// Adds the supplied value to appropriate bin in the histogram and updates associated data
         /// </summary>
-        /// <returns></returns>
-        public uint GetTheNumberOfValuesAcrossAllBins()
-        {
-            return this.theNumberOfValuesAcrossAllBins;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public uint GetNumberOfValuesLowerThanBins()
-        {
-            return this.theNumberOfValuesLowerThanBins;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public uint GetNumberOfValuesHigherThanBins()
-        {
-            return this.theNumberOfValuesHigherThanBins;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="theValue"></param>
+        /// <param name="theValue">The value to be added to the appropriate bin in the histogram</param>
         public void AddValue(double theValue)
         {
             // Check if the value is the lowest valid value encountered since the creation or reset of the histogram
@@ -221,7 +157,7 @@ namespace Analysis
         }
 
         /// <summary>
-        /// 
+        /// Resets all data and values for the histogram
         /// </summary>
         public void ResetValues()
         {
@@ -358,11 +294,11 @@ namespace Analysis
         //// Private methods
 
         /// <summary>
-        /// 
+        /// Calculates the bin boundaries to be used for the histogram based on the supplied number of bins, minimum allowed value, and maximum allowed value
         /// </summary>
-        /// <param name="theNumOfValueBins"></param>
-        /// <param name="theMinAllowedValue"></param>
-        /// <param name="theMaxAllowedValue"></param>
+        /// <param name="theNumOfValueBins">The number of bins to use for the histogram</param>
+        /// <param name="theMinAllowedValue">The minimum value allowed to be added to the bins for the histogram</param>
+        /// <param name="theMaxAllowedValue">The maximum value allowed to be added to the bins for the histogram</param>
         private void CalculateValueBinBoundaries(uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
         {
             this.theValueBinBoundaries = new double[theNumOfValueBins + 1];
@@ -385,7 +321,7 @@ namespace Analysis
         /// <summary>
         /// Checks that the supplied bin boundaries are a strictly monotonically increasing sequence of values
         /// </summary>
-        /// <param name="theBinBoundaries"></param>
+        /// <param name="theBinBoundaries">The bin boundaries to be checked</param>
         private void CheckBinBoundaries(double[] theBinBoundaries)
         {
             for (int i = 0; i < theBinBoundaries.Length - 1; ++i)

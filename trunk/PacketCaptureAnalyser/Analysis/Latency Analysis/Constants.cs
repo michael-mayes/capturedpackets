@@ -18,24 +18,24 @@ namespace Analysis.LatencyAnalysis
         //// Latencies
 
         /// <summary>
-        /// 
+        /// The best case (lowest) latency to be shown in the histogram
         /// </summary>
         public const double BestCaseLatency = 0.0; // Milliseconds
 
         /// <summary>
-        /// 
+        /// The worst case (highest) latency to be shown in the histogram
         /// </summary>
         public const double WorstCaseLatency = 50.0; // Milliseconds
 
         //// Value bins
 
         /// <summary>
-        /// 
+        /// The number of bins for each millisecond to be used for the histogram of latency values
         /// </summary>
         public const uint BinsPerMillisecond = 10; // Ten value bins for every millisecond of latency
 
         /// <summary>
-        /// 
+        /// The number of bins to be used for the histogram of latency values - calculated from other constants
         /// </summary>
         public const uint NumberOfBins = (uint)(WorstCaseLatency - BestCaseLatency) * BinsPerMillisecond;
 

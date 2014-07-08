@@ -42,10 +42,10 @@ namespace PacketCapture.PCAPPackageCapture
         /// </summary>
         public const ushort ExpectedVersionMinor = 4;
 
-        //// PCAP packet capture packet header
+        //// PCAP packet header
 
         /// <summary>
-        /// PCAP packet capture packet header length
+        /// PCAP packet header length
         /// </summary>
         public const ushort HeaderLength = 16;
     }

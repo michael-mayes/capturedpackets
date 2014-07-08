@@ -48,27 +48,27 @@ namespace PacketCapture.PCAPNGPackageCapture
             SectionHeaderBlock = 0x0a0d0d0a,
 
             /// <summary>
-            /// PCAP Next Generation packet capture interface description block
+            /// PCAP Next Generation interface description block
             /// </summary>
             InterfaceDescriptionBlock = 0x00000001,
 
             /// <summary>
-            /// PCAP Next Generation packet capture packet block
+            /// PCAP Next Generation packet block
             /// </summary>
             PacketBlock = 0x00000002,
 
             /// <summary>
-            /// PCAP Next Generation packet capture simple packet block
+            /// PCAP Next Generation simple packet block
             /// </summary>
             SimplePacketBlock = 0x00000003,
 
             /// <summary>
-            /// PCAP Next Generation packet capture enhanced packet block
+            /// PCAP Next Generation enhanced packet block
             /// </summary>
             EnhancedPacketBlock = 0x00000006,
 
             /// <summary>
-            /// PCAP Next Generation packet capture interface statistics block
+            /// PCAP Next Generation interface statistics block
             /// </summary>
             InterfaceStatisticsBlock = 0x00000005
         }
@@ -84,27 +84,27 @@ namespace PacketCapture.PCAPNGPackageCapture
             SectionHeaderBlock = 24,
 
             /// <summary>
-            /// PCAP Next Generation packet capture interface description block length
+            /// PCAP Next Generation interface description block length
             /// </summary>
             InterfaceDescriptionBlock = 16,
 
             /// <summary>
-            /// PCAP Next Generation packet capture packet block length
+            /// PCAP Next Generation packet block length
             /// </summary>
             PacketBlock = 28,
 
             /// <summary>
-            /// PCAP Next Generation packet capture simple packet block length
+            /// PCAP Next Generation simple packet block length
             /// </summary>
             SimplePacketBlock = 12,
 
             /// <summary>
-            /// PCAP Next Generation packet capture enhanced packet block length
+            /// PCAP Next Generation enhanced packet block length
             /// </summary>
             EnhancedPacketBlock = 28,
 
             /// <summary>
-            /// PCAP Next Generation packet capture interface statistics block length
+            /// PCAP Next Generation interface statistics block length
             /// </summary>
             InterfaceStatisticsBlock = 20
         }

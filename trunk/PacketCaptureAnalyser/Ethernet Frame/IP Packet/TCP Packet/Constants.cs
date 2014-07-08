@@ -90,11 +90,11 @@ namespace EthernetFrame.IPPacket.TCPPacket
         }
 
         /// <summary>
-        /// 
+        /// Examines the supplied byte to determine whether the supplied flag is set
         /// </summary>
-        /// <param name="theByte"></param>
-        /// <param name="theFlag"></param>
-        /// <returns></returns>
+        /// <param name="theByte">The byte to be examined</param>
+        /// <param name="theFlag">The flag to be examined within the byte</param>
+        /// <returns>Boolean flag which indicates whether the supplied flag is set in the supplied byte</returns>
         public bool IsFlagSet(byte theByte, Flags theFlag)
         {
             int theShift = Flags.FIN - theFlag;

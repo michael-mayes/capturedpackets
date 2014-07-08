@@ -16,19 +16,19 @@ namespace EthernetFrame.LLDPPacket
     public class Processing
     {
         /// <summary>
-        /// 
+        /// The object that provides for the logging of debug information
         /// </summary>
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// 
+        /// The object that provides for binary reading from the packet capture
         /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// 
+        /// The reusable instance of the LLDP packet
         /// </summary>
-        private Structures.PacketStructure thePacket;
+        private Structures.PacketStructure theLLDPPacket;
 
         /// <summary>
         /// Initializes a new instance of the Processing class
@@ -42,18 +42,16 @@ namespace EthernetFrame.LLDPPacket
             this.theBinaryReader = theBinaryReader;
 
             // Create an instance of the LLDP packet
-            this.thePacket = new Structures.PacketStructure();
+            this.theLLDPPacket = new Structures.PacketStructure();
         }
 
         /// <summary>
-        /// 
+        /// Processes an LLDP packet
         /// </summary>
-        /// <param name="theEthernetFrameLength">The length read from the packet capture for the Ethernet frame</param>
-        /// <returns></returns>
-        public bool Process(long theEthernetFrameLength)
+        /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
+        /// <returns>Boolean flag that indicates whether the LLDP packet could be processed</returns>
+        public bool ProcessLLDPPacket(long theEthernetFrameLength)
         {
-            bool theResult = true;
-
             if (theEthernetFrameLength < Constants.PacketLength)
             {
                 this.theDebugInformation.WriteErrorEvent("The length of the Ethernet frame is lower than the length of the LLDP packet!!!");
@@ -64,15 +62,15 @@ namespace EthernetFrame.LLDPPacket
             // There is no separate header for the LLDP packet
 
             // Just read off the bytes for the LLDP packet from the packet capture so we can move on
-            this.thePacket.UnusedField1 = this.theBinaryReader.ReadUInt64();
-            this.thePacket.UnusedField2 = this.theBinaryReader.ReadUInt64();
-            this.thePacket.UnusedField3 = this.theBinaryReader.ReadUInt64();
-            this.thePacket.UnusedField4 = this.theBinaryReader.ReadUInt64();
-            this.thePacket.UnusedField5 = this.theBinaryReader.ReadUInt64();
-            this.thePacket.UnusedField6 = this.theBinaryReader.ReadUInt32();
-            this.thePacket.UnusedField7 = this.theBinaryReader.ReadUInt16();
+            this.theLLDPPacket.UnusedField1 = this.theBinaryReader.ReadUInt64();
+            this.theLLDPPacket.UnusedField2 = this.theBinaryReader.ReadUInt64();
+            this.theLLDPPacket.UnusedField3 = this.theBinaryReader.ReadUInt64();
+            this.theLLDPPacket.UnusedField4 = this.theBinaryReader.ReadUInt64();
+            this.theLLDPPacket.UnusedField5 = this.theBinaryReader.ReadUInt64();
+            this.theLLDPPacket.UnusedField6 = this.theBinaryReader.ReadUInt32();
+            this.theLLDPPacket.UnusedField7 = this.theBinaryReader.ReadUInt16();
 
-            return theResult;
+            return true;
         }
     }
 }

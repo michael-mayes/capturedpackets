@@ -21,107 +21,107 @@ namespace PacketCaptureAnalyser
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// 
+        /// The "Run Analysis On Packet Capture" button
         /// </summary>
         private System.Windows.Forms.Button theRunAnalysisOnSelectedPackageCaptureButton;
 
         /// <summary>
-        /// 
+        /// The "Exit" button
         /// </summary>
         private System.Windows.Forms.Button theExitButton;
 
         /// <summary>
-        /// 
+        /// The dialog box used to select a packet capture for analysis
         /// </summary>
         private System.Windows.Forms.OpenFileDialog theSelectedPacketCaptureForAnalysisDialog;
 
         /// <summary>
-        /// 
+        /// The "Select Packet Capture For Analysis" button
         /// </summary>
         private System.Windows.Forms.Button theSelectPacketCaptureButton;
 
         /// <summary>
-        /// 
+        /// The text box that displays the path of the selected packet capture
         /// </summary>
         private System.Windows.Forms.TextBox theSelectedPacketCapturePathTextBox;
 
         /// <summary>
-        /// 
+        /// The label for the path of the selected packet capture
         /// </summary>
         private System.Windows.Forms.Label theSelectedPacketCapturePathLabel;
 
         /// <summary>
-        /// 
+        /// The label for the name of the selected packet capture
         /// </summary>
         private System.Windows.Forms.Label theSelectedPacketCaptureNameLabel;
 
         /// <summary>
-        /// 
+        /// The text box that displays the name of the selected packet capture
         /// </summary>
         private System.Windows.Forms.TextBox theSelectedPacketCaptureNameTextBox;
 
         /// <summary>
-        /// 
+        /// The label for the type of the selected packet capture
         /// </summary>
         private System.Windows.Forms.Label theSelectedPacketCaptureTypeLabel;
 
         /// <summary>
-        /// 
+        /// The text box that displays the type of the selected packet capture
         /// </summary>
         private System.Windows.Forms.TextBox theSelectedPacketCaptureTypeTextBox;
 
         /// <summary>
-        /// 
+        /// The "Clear Selected Packet Capture" button
         /// </summary>
         private System.Windows.Forms.Button theClearSelectedPacketCaptureButton;
 
         /// <summary>
-        /// 
+        /// The "Open Selected Packet Capture" button
         /// </summary>
         private System.Windows.Forms.Button theOpenSelectedPackageCaptureButton;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to perform latency analysis for the selected packet capture
         /// </summary>
         private System.Windows.Forms.CheckBox thePerformLatencyAnalysisCheckBox;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to perform time analysis for the selected packet capture
         /// </summary>
         private System.Windows.Forms.CheckBox thePerformTimeAnalysisCheckBox;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to output debug information from the latency analysis for the selected packet capture
         /// </summary>
         private System.Windows.Forms.CheckBox theOutputLatencyAnalysisDebugCheckBox;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to output debug information from the time analysis for the selected packet capture
         /// </summary>
         private System.Windows.Forms.CheckBox theOutputTimeAnalysisDebugCheckBox;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to perform reading from the packet capture using a method that will minimize memory usage, possibly at the expense of increased processing time
         /// </summary>
-        private System.Windows.Forms.CheckBox theMinimiseMemoryUsageCheckBox;
+        private System.Windows.Forms.CheckBox theMinimizeMemoryUsageCheckBox;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to redirect debug information to the output window
         /// </summary>
         private System.Windows.Forms.CheckBox theRedirectDebugInformationToOutputCheckBox;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to include information events in the debug information
         /// </summary>
         private System.Windows.Forms.CheckBox theEnableInformationEventsInDebugInformationCheckBox;
 
         /// <summary>
-        /// 
+        /// The check box that indicates whether to enable the debug information
         /// </summary>
         private System.Windows.Forms.CheckBox theEnableDebugInformationCheckBox;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Clean up any resources used by the main window form
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
@@ -158,7 +158,7 @@ namespace PacketCaptureAnalyser
             this.thePerformTimeAnalysisCheckBox = new System.Windows.Forms.CheckBox();
             this.theOutputLatencyAnalysisDebugCheckBox = new System.Windows.Forms.CheckBox();
             this.theOutputTimeAnalysisDebugCheckBox = new System.Windows.Forms.CheckBox();
-            this.theMinimiseMemoryUsageCheckBox = new System.Windows.Forms.CheckBox();
+            this.theMinimizeMemoryUsageCheckBox = new System.Windows.Forms.CheckBox();
             this.theRedirectDebugInformationToOutputCheckBox = new System.Windows.Forms.CheckBox();
             this.theEnableInformationEventsInDebugInformationCheckBox = new System.Windows.Forms.CheckBox();
             this.theEnableDebugInformationCheckBox = new System.Windows.Forms.CheckBox();
@@ -328,16 +328,16 @@ namespace PacketCaptureAnalyser
             this.theOutputTimeAnalysisDebugCheckBox.UseVisualStyleBackColor = true;
             this.theOutputTimeAnalysisDebugCheckBox.CheckedChanged += new System.EventHandler(this.OutputTimeAnalysisDebugCheckBox_CheckedChanged);
             //
-            // theMinimiseMemoryUsageCheckBox
+            // theMinimizeMemoryUsageCheckBox
             //
-            this.theMinimiseMemoryUsageCheckBox.AutoSize = true;
-            this.theMinimiseMemoryUsageCheckBox.Enabled = false;
-            this.theMinimiseMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 380);
-            this.theMinimiseMemoryUsageCheckBox.Name = "minimiseMemoryUsageCheckBox";
-            this.theMinimiseMemoryUsageCheckBox.Size = new System.Drawing.Size(346, 17);
-            this.theMinimiseMemoryUsageCheckBox.TabIndex = 20;
-            this.theMinimiseMemoryUsageCheckBox.Text = "Minimise Memory Usage (Potentially Necessary For Very Large Files)";
-            this.theMinimiseMemoryUsageCheckBox.UseVisualStyleBackColor = true;
+            this.theMinimizeMemoryUsageCheckBox.AutoSize = true;
+            this.theMinimizeMemoryUsageCheckBox.Enabled = false;
+            this.theMinimizeMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 380);
+            this.theMinimizeMemoryUsageCheckBox.Name = "minimizeMemoryUsageCheckBox";
+            this.theMinimizeMemoryUsageCheckBox.Size = new System.Drawing.Size(346, 17);
+            this.theMinimizeMemoryUsageCheckBox.TabIndex = 20;
+            this.theMinimizeMemoryUsageCheckBox.Text = "Minimize Memory Usage (Potentially Necessary For Very Large Files)";
+            this.theMinimizeMemoryUsageCheckBox.UseVisualStyleBackColor = true;
             //
             // theRedirectDebugInformationToOutputCheckBox
             //
@@ -383,7 +383,7 @@ namespace PacketCaptureAnalyser
             this.Controls.Add(this.theEnableDebugInformationCheckBox);
             this.Controls.Add(this.theEnableInformationEventsInDebugInformationCheckBox);
             this.Controls.Add(this.theRedirectDebugInformationToOutputCheckBox);
-            this.Controls.Add(this.theMinimiseMemoryUsageCheckBox);
+            this.Controls.Add(this.theMinimizeMemoryUsageCheckBox);
             this.Controls.Add(this.theOutputTimeAnalysisDebugCheckBox);
             this.Controls.Add(this.theOutputLatencyAnalysisDebugCheckBox);
             this.Controls.Add(this.thePerformTimeAnalysisCheckBox);
