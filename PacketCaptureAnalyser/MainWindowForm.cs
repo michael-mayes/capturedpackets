@@ -415,7 +415,7 @@ namespace PacketCaptureAnalyser
                     if (theResult)
                     {
                         // Display a debug message to indicate processing of the packet capture completed successfully
-                        theDebugInformation.WriteTestRunEvent("Processing of the " +
+                        theDebugInformation.WriteTestRunEvent("Parsing of the " +
                             thePacketCaptureFileName +
                             " packet capture completed successfully!");
 
