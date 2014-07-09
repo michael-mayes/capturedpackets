@@ -113,8 +113,11 @@ namespace Analysis
         /// Adds the supplied value to appropriate bin in the histogram and updates associated data
         /// </summary>
         /// <param name="theValue">The value to be added to the appropriate bin in the histogram</param>
-        public void AddValue(double theValue)
+        /// <returns>Boolean flag that indicates whether the values was allowed to be added to the bins for the histogram</returns>
+        public bool AddValue(double theValue)
         {
+            bool theResult = true;
+
             // Check if the value is the lowest valid value encountered since the creation or reset of the histogram
             if (this.theMinValueEncountered > theValue &&
                 theValue >= this.GetMinAllowedValue())
@@ -132,10 +135,14 @@ namespace Analysis
             if (theValue < this.GetMinAllowedValue())
             {
                 ++this.theNumberOfValuesLowerThanBins;
+
+                theResult = false;
             }
             else if (theValue > this.GetMaxAllowedValue())
             {
                 ++this.theNumberOfValuesHigherThanBins;
+
+                theResult = false;
             }
             else
             {
@@ -154,6 +161,8 @@ namespace Analysis
                 // Increment the counter of the number of valid values encountered
                 ++this.theNumberOfValuesAcrossAllBins;
             }
+
+            return theResult;
         }
 
         /// <summary>
@@ -184,14 +193,6 @@ namespace Analysis
 
             bool theFirstPercentileFound = false;
             bool theNinetyNinthPercentileFound = false;
-
-            if (this.theNumberOfValuesLowerThanBins > 0)
-            {
-                this.theDebugInformation.WriteTextLine("Number of values lower than bins: " +
-                    this.theNumberOfValuesLowerThanBins.ToString());
-
-                this.theDebugInformation.WriteBlankLine();
-            }
 
             for (int i = 0; i < this.theValueBinCounts.Length; ++i)
             {
@@ -280,6 +281,14 @@ namespace Analysis
                 {
                     break;
                 }
+            }
+
+            if (this.theNumberOfValuesLowerThanBins > 0)
+            {
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine("Number of values lower than bins: " +
+                    this.theNumberOfValuesLowerThanBins.ToString());
             }
 
             if (this.theNumberOfValuesHigherThanBins > 0)

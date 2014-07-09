@@ -153,7 +153,7 @@ namespace Analysis.TimeAnalysis
                 this.theDebugInformation.WriteTextLine("===========");
                 this.theDebugInformation.WriteBlankLine();
 
-                this.FinaliseTimeValuesForHostId(theHostIdRow.Field<byte>("HostId"));
+                this.FinaliseForHostId(theHostIdRow.Field<byte>("HostId"));
             }
         }
 
@@ -202,7 +202,7 @@ namespace Analysis.TimeAnalysis
         /// Finalize time analysis for the supplied host Id
         /// </summary>
         /// <param name="theHostId">The host Id for which time analysis is to be finalized</param>
-        private void FinaliseTimeValuesForHostId(byte theHostId)
+        private void FinaliseForHostId(byte theHostId)
         {
             CommonHistogram theTimestampHistogram =
                 new CommonHistogram(
@@ -243,6 +243,12 @@ namespace Analysis.TimeAnalysis
 
             bool theFirstRowProcessed = false;
 
+            System.Collections.Generic.List<string> theOutOfRangeTimestamps =
+                new System.Collections.Generic.List<string>();
+
+            System.Collections.Generic.List<string> theOutOfRangeTimes =
+                new System.Collections.Generic.List<string>();
+
             EnumerableRowCollection<System.Data.DataRow>
                 theTimeValuesRowsFound =
                 from r in this.theTimeValuesTable.AsEnumerable()
@@ -280,7 +286,15 @@ namespace Analysis.TimeAnalysis
                         ++theNumberOfTimestampDifferenceInstances;
                         theTotalOfTimestampDifferences += theTimestampDifference;
 
-                        theTimestampHistogram.AddValue(theTimestampDifference);
+                        if (!theTimestampHistogram.AddValue(theTimestampDifference))
+                        {
+                            theOutOfRangeTimestamps.Add(
+                                "The time message with packet number " +
+                                string.Format("{0,7}", theTimeValuesRow.Field<ulong>("PacketNumber").ToString()) +
+                                " has an out of range timestamp difference of " +
+                                string.Format("{0,18}", theTimestampDifference.ToString()) +
+                                " ms");
+                        }
 
                         if (theMinTimestampDifference > theTimestampDifference)
                         {
@@ -303,7 +317,15 @@ namespace Analysis.TimeAnalysis
                         ++theNumberOfTimeDifferenceInstances;
                         theTotalOfTimeDifferences += theTimeDifference;
 
-                        theTimeHistogram.AddValue(theTimeDifference);
+                        if (!theTimeHistogram.AddValue(theTimeDifference))
+                        {
+                            theOutOfRangeTimes.Add(
+                                "The time message with packet number " +
+                                string.Format("{0,7}", theTimeValuesRow.Field<ulong>("PacketNumber").ToString()) +
+                                " has an out of range time difference of " +
+                                string.Format("{0,18}", theTimeDifference.ToString()) +
+                                " ms");
+                        }
 
                         if (theMinTimeDifference > theTimeDifference)
                         {
@@ -335,19 +357,19 @@ namespace Analysis.TimeAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum timestamp difference was " +
-                    theMinTimestampDifference.ToString() +
+                    string.Format("{0,18}", theMinTimestampDifference.ToString()) +
                     " ms for packet number " +
-                    theMinTimestampDifferencePacketNumber.ToString());
+                    string.Format("{0,7}", theMinTimestampDifferencePacketNumber.ToString()));
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum timestamp difference was " +
-                    theMaxTimestampDifference.ToString() +
+                    string.Format("{0,18}", theMaxTimestampDifference.ToString()) +
                     " ms for packet number " +
-                    theMaxTimestampDifferencePacketNumber.ToString());
+                    string.Format("{0,7}", theMaxTimestampDifferencePacketNumber.ToString()));
 
                 this.theDebugInformation.WriteTextLine(
                     "The average timestamp difference was " +
-                    theAverageTimestampDifference.ToString() +
+                    string.Format("{0,18}", theAverageTimestampDifference.ToString()) +
                     " ms");
 
                 this.theDebugInformation.WriteBlankLine();
@@ -363,23 +385,34 @@ namespace Analysis.TimeAnalysis
 
                 theTimestampHistogram.OutputValues();
 
+                if (theOutOfRangeTimestamps.Count > 0)
+                {
+                    this.theDebugInformation.WriteBlankLine();
+
+                    // Output the data for any time message with an out of range timestamp difference
+                    foreach (string theString in theOutOfRangeTimestamps)
+                    {
+                        this.theDebugInformation.WriteTextLine(theString);
+                    }
+                }
+
                 this.theDebugInformation.WriteBlankLine();
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum time difference was " +
-                    theMinTimeDifference.ToString() +
+                    string.Format("{0,18}", theMinTimeDifference.ToString()) +
                     " ms for packet number " +
-                    theMinTimeDifferencePacketNumber.ToString());
+                    string.Format("{0,7}", theMinTimeDifferencePacketNumber.ToString()));
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum time difference was " +
-                    theMaxTimeDifference.ToString() +
+                    string.Format("{0,18}", theMaxTimeDifference.ToString()) +
                     " ms for packet number " +
-                    theMaxTimeDifferencePacketNumber.ToString());
+                    string.Format("{0,7}", theMaxTimeDifferencePacketNumber.ToString()));
 
                 this.theDebugInformation.WriteTextLine(
                     "The average time difference was " +
-                    theAverageTimeDifference.ToString() +
+                    string.Format("{0,18}", theAverageTimeDifference.ToString()) +
                     " ms");
 
                 this.theDebugInformation.WriteBlankLine();
@@ -394,6 +427,17 @@ namespace Analysis.TimeAnalysis
                 this.theDebugInformation.WriteBlankLine();
 
                 theTimeHistogram.OutputValues();
+
+                if (theOutOfRangeTimes.Count > 0)
+                {
+                    this.theDebugInformation.WriteBlankLine();
+
+                    // Output the data for any time message with an out of range time difference
+                    foreach (string theString in theOutOfRangeTimes)
+                    {
+                        this.theDebugInformation.WriteTextLine(theString);
+                    }
+                }
             }
 
             this.theDebugInformation.WriteBlankLine();
@@ -404,8 +448,8 @@ namespace Analysis.TimeAnalysis
 
                 string outputDebugTitleLine = string.Format(
                     "{0},{1}{2}",
-                    "Timestamp",
-                    "Time",
+                    "Packet Timestamp",
+                    "Message Time",
                     System.Environment.NewLine);
 
                 outputDebugLines.Append(outputDebugTitleLine);

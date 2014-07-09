@@ -97,7 +97,7 @@ namespace PacketCapture
         /// Processes the selected packet capture
         /// </summary>
         /// <returns>Boolean flag that indicates whether the selected packet capture could be processed</returns>
-        public bool Process()
+        public bool ProcessPacketCapture()
         {
             bool theResult = true;
 
@@ -175,7 +175,7 @@ namespace PacketCapture
                             this.theProgressWindowForm.ProgressBar = 95;
 
                             // Only continue reading from the packet capture if the packet capture global header was read successfully
-                            if (this.ProcessGlobalHeader(theBinaryReader, out theNetworkDataLinkType, out theTimestampAccuracy))
+                            if (this.ProcessPacketCaptureGlobalHeader(theBinaryReader, out theNetworkDataLinkType, out theTimestampAccuracy))
                             {
                                 this.theProgressWindowForm.ProgressBar = 100;
 
@@ -213,7 +213,7 @@ namespace PacketCapture
                                 this.theProgressWindowForm.ProgressBar = 95;
 
                                 // Only continue reading from the packet capture if the packet capture global header was read successfully
-                                if (this.ProcessGlobalHeader(theBinaryReader, out thePacketCaptureNetworkDataLinkType, out thePacketCaptureTimestampAccuracy))
+                                if (this.ProcessPacketCaptureGlobalHeader(theBinaryReader, out thePacketCaptureNetworkDataLinkType, out thePacketCaptureTimestampAccuracy))
                                 {
                                     this.theProgressWindowForm.ProgressBar = 100;
 
@@ -287,7 +287,7 @@ namespace PacketCapture
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the packet capture global header could be processed</returns>
-        protected abstract bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy);
+        protected abstract bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy);
 
         /// <summary>
         /// Processes the packet header
@@ -356,8 +356,8 @@ namespace PacketCapture
                     //// Restore the following lines if you want indication of progress through the packet capture or want to tie an error condition to a particular packet
 
                     // theDebugInformation.WriteInformationEvent
-                    //     ("Started processing of captured packet #" +
-                    //     PacketsProcessed.ToString());
+                    //     ("Started processing of packet number " +
+                    //     theNumberOfPacketsProcessed.ToString());
 
                     // Check whether the end of the packet capture has been reached
                     if (theBinaryReader.BaseStream.Position < theStreamLength)
@@ -379,7 +379,7 @@ namespace PacketCapture
 
                                     case (uint)CommonConstants.NetworkDataLinkType.Ethernet:
                                         {
-                                            theEthernetFrameProcessing.Process(theNumberOfPacketsProcessed, thePacketPayloadLength, thePacketTimestamp);
+                                            theEthernetFrameProcessing.ProcessEthernetFrame(theNumberOfPacketsProcessed, thePacketPayloadLength, thePacketTimestamp);
 
                                             break;
                                         }
@@ -388,7 +388,7 @@ namespace PacketCapture
                                         {
                                             theResult = false;
 
-                                            this.theDebugInformation.WriteErrorEvent("Processing of the captured packet #" +
+                                            this.theDebugInformation.WriteErrorEvent("Processing of the packet number " +
                                                 theNumberOfPacketsProcessed.ToString() +
                                                 " failed during processing of packet header with unknown datalink type!!!");
 
@@ -406,7 +406,7 @@ namespace PacketCapture
                         {
                             theResult = false;
 
-                            this.theDebugInformation.WriteErrorEvent("Processing of the captured packet #" +
+                            this.theDebugInformation.WriteErrorEvent("Processing of the packet number " +
                                 theNumberOfPacketsProcessed.ToString() +
                                 " failed during processing of Ethernet frame!!!");
 
@@ -450,7 +450,7 @@ namespace PacketCapture
 
                 this.theDebugInformation.WriteInformationEvent("Parsing of " +
                     theNumberOfPacketsProcessed.ToString() +
-                    " captured packets completed in " +
+                    " packets completed in " +
                     theDuration.TotalSeconds.ToString() +
                     " seconds");
             }

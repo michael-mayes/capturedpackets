@@ -26,9 +26,9 @@ namespace Analysis.LatencyAnalysis
             public byte HostId;
 
             /// <summary>
-            /// The protocol for the message in the dictionary value looked up by this dictionary key
+            /// Boolean flag that indicates whether the message in the dictionary value looked up by this dictionary key was received reliably
             /// </summary>
-            public Constants.Protocol Protocol;
+            public bool IsReliable;
 
             /// <summary>
             /// The sequence number for the message in the dictionary value looked up by this dictionary key
@@ -39,12 +39,12 @@ namespace Analysis.LatencyAnalysis
             /// Initializes a new instance of the DictionaryKey struct
             /// </summary>
             /// <param name="theHostId">The host Id for the message in the dictionary value looked up by this dictionary key</param>
-            /// <param name="theProtocol">The protocol for the message in the dictionary value looked up by this dictionary key</param>
+            /// <param name="isReliable">Boolean flag that indicates whether the message in the dictionary value looked up by this dictionary key was received reliably</param>
             /// <param name="theSequenceNumber">The sequence number for the message in the dictionary value looked up by this dictionary key</param>
-            public DictionaryKey(byte theHostId, Constants.Protocol theProtocol, ulong theSequenceNumber)
+            public DictionaryKey(byte theHostId, bool isReliable, ulong theSequenceNumber)
             {
                 this.HostId = theHostId;
-                this.Protocol = theProtocol;
+                this.IsReliable = isReliable;
                 this.SequenceNumber = theSequenceNumber;
             }
 
@@ -71,7 +71,7 @@ namespace Analysis.LatencyAnalysis
                 // Otherwise the two dictionary keys are deemed identical if the fields of each are identical
                 return
                     a.HostId == b.HostId &&
-                    a.Protocol == b.Protocol &&
+                    a.IsReliable == b.IsReliable &&
                     a.SequenceNumber == b.SequenceNumber;
             }
 
@@ -101,7 +101,7 @@ namespace Analysis.LatencyAnalysis
                     // The two dictionary keys are deemed identical if the fields of each are identical
                     return
                         this.HostId == key.HostId &&
-                        this.Protocol == key.Protocol &&
+                        this.IsReliable == key.IsReliable &&
                         this.SequenceNumber == key.SequenceNumber;
                 }
                 else
@@ -119,7 +119,7 @@ namespace Analysis.LatencyAnalysis
                 // The hash code for the dictionary key is calculated as an exclusive OR of each of its fields
                 return
                     this.HostId.GetHashCode() ^
-                    this.Protocol.GetHashCode() ^
+                    this.IsReliable.GetHashCode() ^
                     this.SequenceNumber.GetHashCode();
             }
         }
@@ -145,14 +145,14 @@ namespace Analysis.LatencyAnalysis
             public bool SecondInstanceFound;
 
             /// <summary>
-            /// The frame number of the first instance of the message
+            /// The packet number of the first instance of the message
             /// </summary>
-            public ulong FirstInstanceFrameNumber;
+            public ulong FirstInstancePacketNumber;
 
             /// <summary>
-            /// The frame number of the second instance of the message
+            /// The packet number of the second instance of the message
             /// </summary>
-            public ulong SecondInstanceFrameNumber;
+            public ulong SecondInstancePacketNumber;
 
             /// <summary>
             /// The timestamp for the first instance of the message
@@ -185,8 +185,8 @@ namespace Analysis.LatencyAnalysis
                 this.MessageId = theMessageId;
                 this.FirstInstanceFound = true;
                 this.SecondInstanceFound = false;
-                this.FirstInstanceFrameNumber = thePacketNumber;
-                this.SecondInstanceFrameNumber = 0;
+                this.FirstInstancePacketNumber = thePacketNumber;
+                this.SecondInstancePacketNumber = 0;
                 this.FirstInstanceTimestamp = thePacketTimestamp;
                 this.SecondInstanceTimestamp = 0.0;
                 this.TimestampDifference = 0.0;
@@ -218,8 +218,8 @@ namespace Analysis.LatencyAnalysis
                     a.MessageId == b.MessageId &&
                     a.FirstInstanceFound == b.FirstInstanceFound &&
                     a.SecondInstanceFound == b.SecondInstanceFound &&
-                    a.FirstInstanceFrameNumber == b.FirstInstanceFrameNumber &&
-                    a.SecondInstanceFrameNumber == b.SecondInstanceFrameNumber &&
+                    a.FirstInstancePacketNumber == b.FirstInstancePacketNumber &&
+                    a.SecondInstancePacketNumber == b.SecondInstancePacketNumber &&
                     a.FirstInstanceTimestamp == b.FirstInstanceTimestamp &&
                     a.SecondInstanceTimestamp == b.SecondInstanceTimestamp &&
                     a.TimestampDifference == b.TimestampDifference &&
@@ -254,8 +254,8 @@ namespace Analysis.LatencyAnalysis
                         this.MessageId == value.MessageId &&
                         this.FirstInstanceFound == value.FirstInstanceFound &&
                         this.SecondInstanceFound == value.SecondInstanceFound &&
-                        this.FirstInstanceFrameNumber == value.FirstInstanceFrameNumber &&
-                        this.SecondInstanceFrameNumber == value.SecondInstanceFrameNumber &&
+                        this.FirstInstancePacketNumber == value.FirstInstancePacketNumber &&
+                        this.SecondInstancePacketNumber == value.SecondInstancePacketNumber &&
                         this.FirstInstanceTimestamp == value.FirstInstanceTimestamp &&
                         this.SecondInstanceTimestamp == value.SecondInstanceTimestamp &&
                         this.TimestampDifference == value.TimestampDifference &&
@@ -278,8 +278,8 @@ namespace Analysis.LatencyAnalysis
                     this.MessageId.GetHashCode() ^
                     this.FirstInstanceFound.GetHashCode() ^
                     this.SecondInstanceFound.GetHashCode() ^
-                    this.FirstInstanceFrameNumber.GetHashCode() ^
-                    this.SecondInstanceFrameNumber.GetHashCode() ^
+                    this.FirstInstancePacketNumber.GetHashCode() ^
+                    this.SecondInstancePacketNumber.GetHashCode() ^
                     this.FirstInstanceTimestamp.GetHashCode() ^
                     this.SecondInstanceTimestamp.GetHashCode() ^
                     this.TimestampDifference.GetHashCode() ^
