@@ -544,6 +544,8 @@ namespace Analysis.LatencyAnalysis
             {
                 System.Text.StringBuilder outputDebugLines = new System.Text.StringBuilder();
 
+                //// Add a column titles line to the debug output file
+
                 string outputDebugTitleLine = string.Format(
                     "{0},{1},{2},{3}{4}",
                     "First Packet Number",
@@ -553,6 +555,8 @@ namespace Analysis.LatencyAnalysis
                     System.Environment.NewLine);
 
                 outputDebugLines.Append(outputDebugTitleLine);
+
+                //// Add a line to the debug output file for each of the processed message pairs
 
                 foreach (DictionaryKeyValuePairType theRow in theRows)
                 {

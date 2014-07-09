@@ -444,27 +444,59 @@ namespace Analysis.TimeAnalysis
 
             if (this.outputDebug)
             {
-                System.Text.StringBuilder outputDebugLines = new System.Text.StringBuilder();
+                System.Text.StringBuilder theOutputDebugLines = new System.Text.StringBuilder();
 
-                string outputDebugTitleLine = string.Format(
-                    "{0},{1}{2}",
+                //// Add a column titles line to the debug output file
+
+                string theOutputDebugTitleLine = string.Format(
+                    "{0},{1},,{2},{3}{4}",
                     "Packet Timestamp",
                     "Message Time",
+                    "Packet Timestamp Delta",
+                    "Message Time Delta",
                     System.Environment.NewLine);
 
-                outputDebugLines.Append(outputDebugTitleLine);
+                theOutputDebugLines.Append(theOutputDebugTitleLine);
+
+                double? thePreviousPacketTimestamp = null;
+                double? thePreviousPacketTime = null;
+
+                //// Add a line to the debug output file for each of the processed time messages
 
                 foreach (System.Data.DataRow theTimeValuesRow in theTimeValuesRowsFound)
                 {
                     if (theTimeValuesRow.Field<bool>("Processed"))
                     {
-                        string outputDebugLine = string.Format(
-                            "{0},{1}{2}",
-                            theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
-                            theTimeValuesRow.Field<double>("PacketTime").ToString(),
-                            System.Environment.NewLine);
+                        string theOutputDebugLine = null;
 
-                        outputDebugLines.Append(outputDebugLine);
+                        double theCurrentPacketTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
+                        double theCurrentPacketTime = theTimeValuesRow.Field<double>("PacketTime");
+
+                        if (thePreviousPacketTimestamp == null || thePreviousPacketTime == null)
+                        {
+                            // If this is the first time message then there is no previous time message and so just output the timestamp and time
+                            theOutputDebugLine = string.Format(
+                                "{0},{1}{2}",
+                                theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
+                                theTimeValuesRow.Field<double>("PacketTime").ToString(),
+                                System.Environment.NewLine);
+                        }
+                        else
+                        {
+                            // If this is another time message then also calculate the differences in timestamp and time from the previous time message and output them along with the timestamp and time
+                            theOutputDebugLine = string.Format(
+                                "{0},{1},,{2},{3}{4}",
+                                theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
+                                theTimeValuesRow.Field<double>("PacketTime").ToString(),
+                                (theCurrentPacketTimestamp - thePreviousPacketTimestamp).ToString(),
+                                (theCurrentPacketTime - thePreviousPacketTime).ToString(),
+                                System.Environment.NewLine);
+                        }
+
+                        thePreviousPacketTimestamp = theCurrentPacketTimestamp;
+                        thePreviousPacketTime = theCurrentPacketTime;
+
+                        theOutputDebugLines.Append(theOutputDebugLine);
                     }
                 }
 
@@ -473,7 +505,7 @@ namespace Analysis.TimeAnalysis
                     ".HostId" +
                     theHostId +
                     ".TimeAnalysis.csv",
-                    outputDebugLines.ToString());
+                    theOutputDebugLines.ToString());
             }
         }
     }
