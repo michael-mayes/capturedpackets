@@ -48,7 +48,7 @@ namespace PacketCapture.SnifferPackageCapture
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the Sniffer packet capture global header could be processed</returns>
-        protected override bool ProcessGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
+        protected override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
         {
             bool theResult = true;
 

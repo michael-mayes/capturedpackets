@@ -25,7 +25,7 @@ namespace Analysis.LatencyAnalysis
         /// <summary>
         /// The worst case (highest) latency to be shown in the histogram
         /// </summary>
-        public const double WorstCaseLatency = 50.0; // Milliseconds
+        public const double WorstCaseLatency = 5.0; // Milliseconds
 
         //// Value bins
 
@@ -38,21 +38,5 @@ namespace Analysis.LatencyAnalysis
         /// The number of bins to be used for the histogram of latency values - calculated from other constants
         /// </summary>
         public const uint NumberOfBins = (uint)(WorstCaseLatency - BestCaseLatency) * BinsPerMillisecond;
-
-        /// <summary>
-        /// Protocol for the analyzed message
-        /// </summary>
-        public enum Protocol : byte
-        {
-            /// <summary>
-            /// TCP - Transmission Control Protocol (RFC 793)
-            /// </summary>
-            TCP,
-
-            /// <summary>
-            /// UDP - User Datagram Protocol (RFC 768)
-            /// </summary>
-            UDP
-        }
     }
 }

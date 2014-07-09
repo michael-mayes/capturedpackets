@@ -97,7 +97,7 @@ namespace EthernetFrame
         /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
-        public void Process(ulong thePacketNumber, long thePacketPayloadLength, double thePacketTimestamp)
+        public void ProcessEthernetFrame(ulong thePacketNumber, long thePacketPayloadLength, double thePacketTimestamp)
         {
             // Only process the payload of the packet as an Ethernet frame if it has a positive length
             if (thePacketPayloadLength > 0)
@@ -187,7 +187,7 @@ namespace EthernetFrame
                         else
                         {
                             // The type for this Ethernet frame has an unknown value
-                            this.theDebugInformation.WriteInformationEvent("The Ethernet frame in captured packet #" +
+                            this.theDebugInformation.WriteInformationEvent("The Ethernet frame in packet number " +
                                 thePacketNumber.ToString() +
                                 " contains an unexpected type of 0x" +
                                 string.Format("{0:X}", this.theEthernetFrameType) +
@@ -258,7 +258,7 @@ namespace EthernetFrame
                     {
                         //// We have got an Ethernet frame containing a second VLAN tag!
 
-                        this.theDebugInformation.WriteInformationEvent("The Ethernet frame in captured packet #" +
+                        this.theDebugInformation.WriteInformationEvent("The Ethernet frame in packet number " +
                             thePacketNumber.ToString() +
                             " contains a second VLAN tag!" +
                             " - Attempt to recover and continue processing");
@@ -305,7 +305,7 @@ namespace EthernetFrame
 
             if (!thePacketProcessingResult)
             {
-                this.theDebugInformation.WriteInformationEvent("Processing of the Ethernet frame in captured packet #" +
+                this.theDebugInformation.WriteInformationEvent("Processing of the Ethernet frame in packet number " +
                     thePacketNumber.ToString() +
                     " encountered an error during processing of the payload!" +
                     " - Attempt to recover and continue processing");
@@ -336,7 +336,7 @@ namespace EthernetFrame
                     // Warn about the error condition having arisen
                     this.theDebugInformation.WriteInformationEvent("The length " +
                         this.theEthernetFrameLength.ToString() +
-                        " of the Ethernet frame in captured packet #" +
+                        " of the Ethernet frame in packet number " +
                         thePacketNumber.ToString() +
                         " does not match the progression " +
                         theStreamPositionDifference.ToString() +

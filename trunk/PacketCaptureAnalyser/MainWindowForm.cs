@@ -354,7 +354,7 @@ namespace PacketCaptureAnalyser
 
                                 theProgressWindowForm.ProgressBar = 50;
 
-                                theResult = thePCAPNGPackageCaptureProcessing.Process();
+                                theResult = thePCAPNGPackageCaptureProcessing.ProcessPacketCapture();
 
                                 break;
                             }
@@ -376,14 +376,14 @@ namespace PacketCaptureAnalyser
 
                                 theProgressWindowForm.ProgressBar = 50;
 
-                                theResult = thePCAPPackageCaptureProcessing.Process();
+                                theResult = thePCAPPackageCaptureProcessing.ProcessPacketCapture();
 
                                 break;
                             }
 
                         case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
                             {
-                                theDebugInformation.WriteInformationEvent("This is a NA Sniffer (DOS) packet capture");
+                                theDebugInformation.WriteInformationEvent("This is an NA Sniffer (DOS) packet capture");
 
                                 PacketCapture.SnifferPackageCapture.Processing theSnifferPackageCaptureProcessing =
                                     new PacketCapture.SnifferPackageCapture.Processing(
@@ -398,7 +398,7 @@ namespace PacketCaptureAnalyser
 
                                 theProgressWindowForm.ProgressBar = 50;
 
-                                theResult = theSnifferPackageCaptureProcessing.Process();
+                                theResult = theSnifferPackageCaptureProcessing.ProcessPacketCapture();
 
                                 break;
                             }
@@ -526,6 +526,8 @@ namespace PacketCaptureAnalyser
                             theProgressWindowForm.ProgressBar += 20 / theScaling;
                         }
 
+                        theDebugInformation.WriteBlankLine();
+
                         // Completed the processing of the packet capture
                         theDebugInformation.WriteTestRunEvent("Processing of the " +
                             thePacketCaptureFileName +
@@ -533,6 +535,8 @@ namespace PacketCaptureAnalyser
                     }
                     else
                     {
+                        theDebugInformation.WriteBlankLine();
+
                         // Display a debug message to indicate processing of the packet capture failed
                         theDebugInformation.WriteErrorEvent("Processing of the " +
                             thePacketCaptureFileName +

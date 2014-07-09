@@ -54,7 +54,7 @@ namespace PacketCapture.PCAPPackageCapture
             public uint SignificantFigures;
 
             /// <summary>
-            /// Max length of captured packets, in octets
+            /// Max length of packet capture, in octets
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(16)]
             public uint SnapshotLength;
