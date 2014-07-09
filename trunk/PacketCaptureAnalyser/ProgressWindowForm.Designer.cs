@@ -35,8 +35,15 @@ namespace PacketCaptureAnalyser
         /// </summary>
         public int ProgressBar
         {
-            get { return this.progressBar.Value; }
-            set { this.progressBar.Value = value; }
+            get
+            {
+                return this.progressBar.Value;
+            }
+
+            set
+            {
+                this.progressBar.Value = value;
+            }
         }
 
         /// <summary>
@@ -44,14 +51,21 @@ namespace PacketCaptureAnalyser
         /// </summary>
         public string ProgressBarLabel
         {
-            get { return this.progressBarLabel.Text; }
-            set { this.progressBarLabel.Text = value; }
+            get
+            {
+                return this.progressBarLabel.Text;
+            }
+
+            set
+            {
+                this.progressBarLabel.Text = value;
+            }
         }
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Clean up any resources used by the progress window form
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (this.components != null))
@@ -73,27 +87,27 @@ namespace PacketCaptureAnalyser
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.progressBarLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            //
-            // ProgressBar
-            //
+            // 
+            // progressBar
+            // 
             this.progressBar.Enabled = false;
             this.progressBar.Location = new System.Drawing.Point(13, 28);
-            this.progressBar.Name = "ProgressBar";
+            this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(240, 23);
             this.progressBar.TabIndex = 21;
-            this.progressBar.Tag = string.Empty;
-            //
-            // ProgressBarLabel
-            //
+            this.progressBar.Tag = "progressBar";
+            // 
+            // progressBarLabel
+            // 
             this.progressBarLabel.Location = new System.Drawing.Point(-3, 4);
-            this.progressBarLabel.Name = "ProgressBarLabel";
+            this.progressBarLabel.Name = "progressBarLabel";
             this.progressBarLabel.Size = new System.Drawing.Size(271, 18);
             this.progressBarLabel.TabIndex = 25;
             this.progressBarLabel.Text = "<Default Text>";
             this.progressBarLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // ProgressWindowForm
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(267, 58);
@@ -107,7 +121,7 @@ namespace PacketCaptureAnalyser
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Analysis Progress";
+            this.Text = "Progress";
             this.TopMost = true;
             this.ResumeLayout(false);
 

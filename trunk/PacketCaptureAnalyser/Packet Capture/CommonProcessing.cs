@@ -318,7 +318,7 @@ namespace PacketCapture
             // Read the start time to allow later calculation of the duration of the processing
             System.DateTime theStartTime = System.DateTime.Now;
 
-            this.theDebugInformation.WriteInformationEvent("Started processing of the captured packets");
+            this.theDebugInformation.WriteInformationEvent("Started parsing of the packet capture");
 
             if (this.theProgressWindowForm != null)
             {

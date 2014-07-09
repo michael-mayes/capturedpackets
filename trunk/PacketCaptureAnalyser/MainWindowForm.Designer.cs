@@ -123,7 +123,7 @@ namespace PacketCaptureAnalyser
         /// <summary>
         /// Clean up any resources used by the main window form
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (this.components != null))
