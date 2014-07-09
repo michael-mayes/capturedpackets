@@ -112,9 +112,9 @@ namespace PacketCapture
                     // Read the start time to allow later calculation of the duration of the processing
                     System.DateTime theStartTime = System.DateTime.Now;
 
-                    this.theDebugInformation.WriteInformationEvent("Starting read of all bytes from the " +
+                    this.theDebugInformation.WriteInformationEvent("Reading of all bytes from the " +
                         System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                        " packet capture");
+                        " packet capture started");
 
                     this.theProgressWindowForm.ProgressBar = 65;
 
@@ -143,9 +143,9 @@ namespace PacketCapture
 
                     System.TimeSpan theDuration = theEndTime - theStartTime;
 
-                    this.theDebugInformation.WriteInformationEvent("Finished read of all bytes from the " +
+                    this.theDebugInformation.WriteInformationEvent("Reading of all bytes from the " +
                         System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                        " packet capture in " +
+                        " packet capture completed in " +
                         theDuration.Seconds.ToString() +
                         " seconds");
 
@@ -318,7 +318,10 @@ namespace PacketCapture
             // Read the start time to allow later calculation of the duration of the processing
             System.DateTime theStartTime = System.DateTime.Now;
 
-            this.theDebugInformation.WriteInformationEvent("Started parsing of the packet capture");
+            // Display a debug message to indicate parsing of the packet capture completed successfully
+            this.theDebugInformation.WriteTestRunEvent("Parsing of the " +
+                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                " packet capture started");
 
             if (this.theProgressWindowForm != null)
             {
@@ -445,9 +448,9 @@ namespace PacketCapture
 
                 System.TimeSpan theDuration = theEndTime - theStartTime;
 
-                this.theDebugInformation.WriteInformationEvent("Finished processing of " +
+                this.theDebugInformation.WriteInformationEvent("Parsing of " +
                     theNumberOfPacketsProcessed.ToString() +
-                    " captured packets in " +
+                    " captured packets completed in " +
                     theDuration.TotalSeconds.ToString() +
                     " seconds");
             }

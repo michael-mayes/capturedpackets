@@ -44,12 +44,12 @@ namespace PacketCaptureAnalyser
             /// <summary>
             /// PCAP Next Generation capture
             /// </summary>
-            PcapNG = 0,
+            PCAPNextGeneration = 0,
 
             /// <summary>
             /// PCAP packet capture
             /// </summary>
-            Pcap = 1,
+            PCAP = 1,
 
             /// <summary>
             /// NA Sniffer (DOS) packet capture
@@ -293,7 +293,7 @@ namespace PacketCaptureAnalyser
                 {
                     theProgressWindowForm.ProgressBar = 20;
 
-                    // Start the analysis of the packet capture
+                    // Start the processing of the packet capture
                     theDebugInformation.WriteTestRunEvent("Processing of the " +
                         thePacketCaptureFileName +
                         " packet capture started");
@@ -337,8 +337,10 @@ namespace PacketCaptureAnalyser
 
                     switch (this.theSelectedPacketCaptureType)
                     {
-                        case MainWindowFormPacketCaptureTypeEnumeration.PcapNG:
+                        case MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration:
                             {
+                                theDebugInformation.WriteInformationEvent("This is a PCAP Next Generation packet capture");
+
                                 PacketCapture.PCAPNGPackageCapture.Processing thePCAPNGPackageCaptureProcessing =
                                     new PacketCapture.PCAPNGPackageCapture.Processing(
                                         theProgressWindowForm,
@@ -357,8 +359,10 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case MainWindowFormPacketCaptureTypeEnumeration.Pcap:
+                        case MainWindowFormPacketCaptureTypeEnumeration.PCAP:
                             {
+                                theDebugInformation.WriteInformationEvent("This is a PCAP packet capture");
+
                                 PacketCapture.PCAPPackageCapture.Processing thePCAPPackageCaptureProcessing =
                                     new PacketCapture.PCAPPackageCapture.Processing(
                                         theProgressWindowForm,
@@ -379,6 +383,8 @@ namespace PacketCaptureAnalyser
 
                         case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
                             {
+                                theDebugInformation.WriteInformationEvent("This is a NA Sniffer (DOS) packet capture");
+
                                 PacketCapture.SnifferPackageCapture.Processing theSnifferPackageCaptureProcessing =
                                     new PacketCapture.SnifferPackageCapture.Processing(
                                         theProgressWindowForm,
@@ -414,10 +420,10 @@ namespace PacketCaptureAnalyser
                     // Dependent on the result of the processing above, display a debug message to indicate success or otherwise
                     if (theResult)
                     {
-                        // Display a debug message to indicate processing of the packet capture completed successfully
+                        // Display a debug message to indicate parsing of the packet capture completed successfully
                         theDebugInformation.WriteTestRunEvent("Parsing of the " +
                             thePacketCaptureFileName +
-                            " packet capture completed successfully!");
+                            " packet capture completed successfully");
 
                         int theScaling = 0;
 
@@ -519,11 +525,16 @@ namespace PacketCaptureAnalyser
 
                             theProgressWindowForm.ProgressBar += 20 / theScaling;
                         }
+
+                        // Completed the processing of the packet capture
+                        theDebugInformation.WriteTestRunEvent("Processing of the " +
+                            thePacketCaptureFileName +
+                            " packet capture completed");
                     }
                     else
                     {
-                        // Display a debug message to indicate analysis of the packet capture failed
-                        theDebugInformation.WriteErrorEvent("Analysis of the " +
+                        // Display a debug message to indicate processing of the packet capture failed
+                        theDebugInformation.WriteErrorEvent("Processing of the " +
                             thePacketCaptureFileName +
                             " packet capture failed!!!");
                     }
@@ -628,7 +639,7 @@ namespace PacketCaptureAnalyser
         {
             switch (this.theSelectedPacketCaptureType)
             {
-                case MainWindowFormPacketCaptureTypeEnumeration.PcapNG:
+                case MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration:
                     {
                         // This is a PCAP Next Generation packet capture
                         this.theSelectedPacketCaptureTypeTextBox.Text = "PCAP Next Generation";
@@ -645,7 +656,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureTypeEnumeration.Pcap:
+                case MainWindowFormPacketCaptureTypeEnumeration.PCAP:
                     {
                         // This is a PCAP packet capture
                         this.theSelectedPacketCaptureTypeTextBox.Text = "PCAP (libpcap/tcpdump)";
@@ -765,9 +776,9 @@ namespace PacketCaptureAnalyser
                     {
                         case (uint)PacketCapture.PCAPNGPackageCapture.Constants.BlockType.SectionHeaderBlock:
                             {
-                                // This is a PCAP Next Generation capture
+                                // This is a PCAP Next Generation packet capture
                                 this.theSelectedPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.PcapNG;
+                                    MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration;
 
                                 break;
                             }
@@ -777,7 +788,7 @@ namespace PacketCaptureAnalyser
                             {
                                 // This is a PCAP packet capture
                                 this.theSelectedPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.Pcap;
+                                    MainWindowFormPacketCaptureTypeEnumeration.PCAP;
 
                                 break;
                             }
@@ -818,7 +829,7 @@ namespace PacketCaptureAnalyser
                 case ".ntar":
                     {
                         // This should be a PCAP Next Generation packet capture
-                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PcapNG)
+                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration)
                         {
                             System.Diagnostics.Debug.WriteLine("The " +
                                 System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
@@ -836,7 +847,7 @@ namespace PacketCaptureAnalyser
                 case ".cap":
                     {
                         // This should be a PCAP packet capture
-                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.Pcap)
+                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PCAP)
                         {
                             System.Diagnostics.Debug.WriteLine("The " +
                                 System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
