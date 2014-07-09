@@ -70,7 +70,7 @@ namespace Analysis
 
             if (theMinAllowedValue == theMaxAllowedValue)
             {
-                theDebugInformation.WriteErrorEvent("The minimum and maximum allowed values for the histogram are equal!!!");
+                this.theDebugInformation.WriteErrorEvent("The minimum and maximum allowed values for the histogram are equal!!!");
 
                 throw new System.ArgumentException("Error: The minimum and maximum allowed values for the histogram are equal!!!");
             }
@@ -83,7 +83,7 @@ namespace Analysis
             }
             else
             {
-                theDebugInformation.WriteErrorEvent("The minimum value is greater than the maximum value!");
+                this.theDebugInformation.WriteErrorEvent("The minimum value is greater than the maximum value!");
 
                 this.CalculateValueBinBoundaries(theNumOfValueBins, theMaxAllowedValue, theMinAllowedValue);
             }
