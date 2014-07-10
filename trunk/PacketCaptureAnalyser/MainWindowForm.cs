@@ -298,6 +298,12 @@ namespace PacketCaptureAnalyser
                         thePacketCaptureFileName +
                         " packet capture started");
 
+                    theDebugInformation.WriteBlankLine();
+
+                    theDebugInformation.WriteTextLine(new string('=', 144));
+
+                    theDebugInformation.WriteBlankLine();
+
                     theProgressWindowForm.ProgressBar = 30;
 
                     Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing = null;
@@ -457,6 +463,10 @@ namespace PacketCaptureAnalyser
                         {
                             theDebugInformation.WriteBlankLine();
 
+                            theDebugInformation.WriteTextLine(new string('=', 144));
+
+                            theDebugInformation.WriteBlankLine();
+
                             //// Finalise the latency analysis on the messages found including printing the results to debug output
                             //// Only perform this action if the analysis of the packet capture completed successfully
 
@@ -494,6 +504,10 @@ namespace PacketCaptureAnalyser
                         {
                             theDebugInformation.WriteBlankLine();
 
+                            theDebugInformation.WriteTextLine(new string('=', 144));
+
+                            theDebugInformation.WriteBlankLine();
+
                             //// Finalise the time analysis on the messages found including printing the results to debug output
                             //// Only perform this action if the analysis of the packet capture completed successfully
 
@@ -528,6 +542,10 @@ namespace PacketCaptureAnalyser
 
                         theDebugInformation.WriteBlankLine();
 
+                        theDebugInformation.WriteTextLine(new string('=', 144));
+
+                        theDebugInformation.WriteBlankLine();
+
                         // Completed the processing of the packet capture
                         theDebugInformation.WriteTestRunEvent("Processing of the " +
                             thePacketCaptureFileName +
@@ -535,6 +553,10 @@ namespace PacketCaptureAnalyser
                     }
                     else
                     {
+                        theDebugInformation.WriteBlankLine();
+
+                        theDebugInformation.WriteTextLine(new string('=', 144));
+
                         theDebugInformation.WriteBlankLine();
 
                         // Display a debug message to indicate processing of the packet capture failed
