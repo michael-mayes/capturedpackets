@@ -270,7 +270,7 @@ namespace PacketCapture
                     System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                     " packet capture!!!");
 
-                this.theDebugInformation.WriteInformationEvent("It is suggested that the analysis is run again with the 'minimize Memory Usage' check-box checked");
+                this.theDebugInformation.WriteInformationEvent("It is suggested that the analysis is run again with the 'Minimize Memory Usage' check-box checked");
 
                 theResult = false;
             }

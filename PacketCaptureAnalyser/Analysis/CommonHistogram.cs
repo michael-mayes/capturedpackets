@@ -212,7 +212,7 @@ namespace Analysis
                     {
                         theFirstPercentileFound = true;
 
-                        this.theDebugInformation.WriteTextLine(new string('-', 144) + "  1%");
+                        this.theDebugInformation.WriteTextLine(new string('+', 144) + "  1%");
                     }
                 }
 
@@ -272,7 +272,7 @@ namespace Analysis
                     {
                         theNinetyNinthPercentileFound = true;
 
-                        this.theDebugInformation.WriteTextLine(new string('-', 144) + " 99%");
+                        this.theDebugInformation.WriteTextLine(new string('+', 144) + " 99%");
                     }
                 }
 

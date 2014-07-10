@@ -358,17 +358,19 @@ namespace Analysis.LatencyAnalysis
         /// <param name="theHostId">The host Id for which latency analysis is to be finalized</param>
         private void FinaliseProtocolsForHostId(byte theHostId)
         {
-            // Finalize the latency analysis separately for both Reliable and Non-Reliable messages
+            //// Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
+
+            EnumerableRowCollection<System.Data.DataRow>
+                theMessageIdRowsFound =
+                from r in this.theMessageIdsTable.AsEnumerable()
+                where r.Field<byte>("HostId") == theHostId
+                orderby r.Field<ulong>("MessageId") ascending
+                select r;
+
+            // Finalize the latency analysis separately for reliable and non-reliable messages
             foreach (bool isReliable in new bool[] { true, false })
             {
-                //// Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
-
-                EnumerableRowCollection<System.Data.DataRow>
-                    theMessageIdRowsFound =
-                    from r in this.theMessageIdsTable.AsEnumerable()
-                    where r.Field<byte>("HostId") == theHostId
-                    orderby r.Field<ulong>("MessageId") ascending
-                    select r;
+                bool theFirstRowProcessed = false;
 
                 //// Loop across all the latency values for the message pairings using each of these message Ids in turn
 
@@ -386,24 +388,31 @@ namespace Analysis.LatencyAnalysis
 
                     if (theRowsFoundCount > 0)
                     {
-                        if (isReliable)
+                        if (!theFirstRowProcessed)
                         {
-                            this.theDebugInformation.WriteTextLine("Reliable messages");
-                            this.theDebugInformation.WriteTextLine("-----------------");
-                        }
-                        else
-                        {
-                            this.theDebugInformation.WriteTextLine("Non-Reliable messages");
-                            this.theDebugInformation.WriteTextLine("---------------------");
-                        }
+                            theFirstRowProcessed = true;
 
-                        this.theDebugInformation.WriteBlankLine();
+                            if (isReliable)
+                            {
+                                this.theDebugInformation.WriteTextLine("Reliable Messages");
+                                this.theDebugInformation.WriteTextLine("-----------------");
+                            }
+                            else
+                            {
+                                this.theDebugInformation.WriteTextLine("Non-Reliable Messages");
+                                this.theDebugInformation.WriteTextLine("---------------------");
+                            }
+
+                            this.theDebugInformation.WriteBlankLine();
+                        }
 
                         this.theDebugInformation.WriteTextLine(
                             "The number of message pairs with a Message Id of " +
                             string.Format("{0,5}", theMessageIdRow.Field<ulong>("MessageId").ToString()) +
                             " was " +
                             theRowsFoundCount.ToString());
+
+                        this.theDebugInformation.WriteBlankLine();
 
                         this.FinaliseForMessageId(theMessageIdRow.Field<ulong>("MessageId"), theLatencyValueEntriesFound);
                     }
@@ -482,8 +491,6 @@ namespace Analysis.LatencyAnalysis
             {
                 theAverageTimestampDifference = theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
 
-                this.theDebugInformation.WriteBlankLine();
-
                 this.theDebugInformation.WriteTextLine(
                     "The minimum latency for message pairs with a Message Id of " +
                     string.Format("{0,5}", theMessageId.ToString()) +
@@ -540,6 +547,10 @@ namespace Analysis.LatencyAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
+            this.theDebugInformation.WriteTextLine(new string('-', 144));
+
+            this.theDebugInformation.WriteBlankLine();
+
             if (this.outputDebug)
             {
                 System.Text.StringBuilder outputDebugLines = new System.Text.StringBuilder();
@@ -551,7 +562,7 @@ namespace Analysis.LatencyAnalysis
                     "First Packet Number",
                     "Second Packet Number",
                     "Sequence Number",
-                    "Latency",
+                    "Latency (ms)",
                     System.Environment.NewLine);
 
                 outputDebugLines.Append(outputDebugTitleLine);
@@ -561,7 +572,7 @@ namespace Analysis.LatencyAnalysis
                 foreach (DictionaryKeyValuePairType theRow in theRows)
                 {
                     string outputDebugLine = string.Format(
-                        "{0},{1},{2},{3}{4}",
+                        "{0,7},{1,7},{2,7},{3,18}{4}",
                         theRow.Value.FirstInstancePacketNumber.ToString(),
                         theRow.Value.SecondInstancePacketNumber.ToString(),
                         theRow.Key.SequenceNumber.ToString(),
