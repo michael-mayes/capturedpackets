@@ -33,7 +33,7 @@ namespace PacketCaptureAnalyser
             this.InitializeComponent();
 
             // Clear the selected packet capture on window form creation
-            this.ClearSelectedPacketCapture();
+            this.ClearSelectedPacketCapture(this);
         }
 
         /// <summary>
@@ -70,11 +70,11 @@ namespace PacketCaptureAnalyser
         //// Button and label click actions
 
         /// <summary>
-        /// Processes the button click event for the "Select Packet Capture For Analysis" button
+        /// Processes the button click event for the "Select Packet Capture" button
         /// </summary>
         /// <param name="sender">The sender for the button click event</param>
         /// <param name="e">The arguments for the button click event</param>
-        private void SelectPacketCaptureForAnalysisButton_Click(object sender, System.EventArgs e)
+        private void SelectPacketCaptureButton_Click(object sender, System.EventArgs e)
         {
             // Open the packet capture selection dialog box
             System.Windows.Forms.DialogResult theSelectedPacketCaptureDialogResult =
@@ -99,7 +99,7 @@ namespace PacketCaptureAnalyser
                 this.CheckPacketCaptureType();
 
                 // Update the window to reflect the selected packet capture
-                this.ReflectSelectedPacketCapture();
+                this.ReflectSelectedPacketCapture(sender);
 
                 System.Diagnostics.Debug.WriteLine("Selection of the " +
                     System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
@@ -115,7 +115,7 @@ namespace PacketCaptureAnalyser
         private void ClearSelectedPacketCaptureButton_Click(object sender, System.EventArgs e)
         {
             // Clear the selected packet capture on user request
-            this.ClearSelectedPacketCapture();
+            this.ClearSelectedPacketCapture(sender);
         }
 
         /// <summary>
@@ -145,115 +145,77 @@ namespace PacketCaptureAnalyser
         }
 
         /// <summary>
-        /// Processes the check changed event for the "Enable Debug Information" check box
+        /// Processes the check changed event for the "Enable" check box in the "Debug Information" group box
         /// </summary>
         /// <param name="sender">The sender for the check changed event</param>
         /// <param name="e">The arguments for the check changed event</param>
         private void EnableDebugInformationCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
-            if (this.theEnableDebugInformationCheckBox.Checked)
+            // Guard against infinite recursion
+            if ((sender as System.Windows.Forms.Control).ContainsFocus)
             {
-                this.ResetPacketCaptureAnalysisCheckBoxes(false);
-                this.EnablePacketCaptureAnalysisCheckBoxes();
-            }
-            else
-            {
-                this.ResetPacketCaptureAnalysisCheckBoxes(false);
-                this.DisablePacketCaptureAnalysisCheckBoxes(false);
-            }
-        }
-
-        /// <summary>
-        /// Processes the check changed event for the "Enable Information Events In Debug Information" check box
-        /// </summary>
-        /// <param name="sender">The sender for the check changed event</param>
-        /// <param name="e">The arguments for the check changed event</param>
-        private void EnableInformationEventsInDebugInformationCheckBox_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (this.theEnableInformationEventsInDebugInformationCheckBox.Checked)
-            {
-                this.theEnableDebugInformationCheckBox.Checked = true;
+                if (this.theEnableDebugInformationCheckBox.Checked)
+                {
+                    this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                    this.EnablePacketCaptureAnalysisCheckBoxes(sender);
+                }
+                else
+                {
+                    this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                    this.DisablePacketCaptureAnalysisCheckBoxes(sender);
+                }
             }
         }
 
         /// <summary>
-        /// Processes the check changed event for the "Redirect Debug Information To Output" check box
-        /// </summary>
-        /// <param name="sender">The sender for the check changed event</param>
-        /// <param name="e">The arguments for the check changed event</param>
-        private void RedirectDebugInformationToOutputCheckBox_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (this.theRedirectDebugInformationToOutputCheckBox.Checked)
-            {
-                this.theEnableDebugInformationCheckBox.Checked = true;
-            }
-        }
-
-        /// <summary>
-        /// Processes the check changed event for the "Perform Latency Analysis" check box
+        /// Processes the check changed event for the "Perform" check box in the "Latency Analysis" group box
         /// </summary>
         /// <param name="sender">The sender for the check changed event</param>
         /// <param name="e">The arguments for the check changed event</param>
         private void PerformLatencyAnalysisCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
-            if (this.thePerformLatencyAnalysisCheckBox.Checked)
+            // Guard against infinite recursion
+            if ((sender as System.Windows.Forms.Control).ContainsFocus)
             {
-                this.theEnableDebugInformationCheckBox.Checked = true;
+                if (this.thePerformLatencyAnalysisCheckBox.Checked)
+                {
+                    this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked = false;
+                    this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = true;
 
-                this.theOutputLatencyAnalysisDebugCheckBox.Checked = false;
-                this.theOutputLatencyAnalysisDebugCheckBox.Enabled = true;
-            }
-            else
-            {
-                this.theOutputLatencyAnalysisDebugCheckBox.Checked = false;
-                this.theOutputLatencyAnalysisDebugCheckBox.Enabled = false;
-            }
-        }
+                    this.theUseAlternativeSequenceNumberCheckBox.Checked = false;
+                    this.theUseAlternativeSequenceNumberCheckBox.Enabled = true;
+                }
+                else
+                {
+                    this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked = false;
+                    this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = false;
 
-        /// <summary>
-        /// Processes the check changed event for the "Output Latency Analysis Debug" check box
-        /// </summary>
-        /// <param name="sender">The sender for the check changed event</param>
-        /// <param name="e">The arguments for the check changed event</param>
-        private void OutputLatencyAnalysisDebugCheckBox_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (this.theOutputLatencyAnalysisDebugCheckBox.Checked)
-            {
-                this.thePerformLatencyAnalysisCheckBox.Checked = true;
+                    this.theUseAlternativeSequenceNumberCheckBox.Checked = false;
+                    this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
+                }
             }
         }
 
         /// <summary>
-        /// Processes the check changed event for the "Perform Time Analysis" check box
+        /// Processes the check changed event for the "Perform" check box in the "Time Analysis" group box
         /// </summary>
         /// <param name="sender">The sender for the check changed event</param>
         /// <param name="e">The arguments for the check changed event</param>
         private void PerformTimeAnalysisCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
-            if (this.thePerformTimeAnalysisCheckBox.Checked)
+            // Guard against infinite recursion
+            if ((sender as System.Windows.Forms.Control).ContainsFocus)
             {
-                this.theEnableDebugInformationCheckBox.Checked = true;
-
-                this.theOutputTimeAnalysisDebugCheckBox.Checked = false;
-                this.theOutputTimeAnalysisDebugCheckBox.Enabled = true;
-            }
-            else
-            {
-                this.theOutputTimeAnalysisDebugCheckBox.Checked = false;
-                this.theOutputTimeAnalysisDebugCheckBox.Enabled = false;
-            }
-        }
-
-        /// <summary>
-        /// Processes the check changed event for the "Output Time Analysis Debug" check box
-        /// </summary>
-        /// <param name="sender">The sender for the check changed event</param>
-        /// <param name="e">The arguments for the check changed event</param>
-        private void OutputTimeAnalysisDebugCheckBox_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (this.theOutputTimeAnalysisDebugCheckBox.Checked)
-            {
-                this.thePerformTimeAnalysisCheckBox.Checked = true;
+                if (this.thePerformTimeAnalysisCheckBox.Checked)
+                {
+                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
+                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = true;
+                }
+                else
+                {
+                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
+                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
+                }
             }
         }
 
@@ -317,7 +279,7 @@ namespace PacketCaptureAnalyser
                         theLatencyAnalysisProcessing =
                             new Analysis.LatencyAnalysis.Processing(
                                 theDebugInformation,
-                                this.theOutputLatencyAnalysisDebugCheckBox.Checked,
+                                this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked,
                                 this.theSelectedPacketCapturePath);
 
                         // Initialise the functionality to perform latency analysis on the messages found
@@ -332,7 +294,7 @@ namespace PacketCaptureAnalyser
                         theTimeAnalysisProcessing =
                             new Analysis.TimeAnalysis.Processing(
                                 theDebugInformation,
-                                this.theOutputTimeAnalysisDebugCheckBox.Checked,
+                                this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked,
                                 this.theSelectedPacketCapturePath);
 
                         // Initialise the functionality to perform time analysis on the messages found
@@ -353,6 +315,7 @@ namespace PacketCaptureAnalyser
                                         theDebugInformation,
                                         this.thePerformLatencyAnalysisCheckBox.Checked,
                                         theLatencyAnalysisProcessing,
+                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
                                         this.thePerformTimeAnalysisCheckBox.Checked,
                                         theTimeAnalysisProcessing,
                                         this.theSelectedPacketCapturePath,
@@ -375,6 +338,7 @@ namespace PacketCaptureAnalyser
                                         theDebugInformation,
                                         this.thePerformLatencyAnalysisCheckBox.Checked,
                                         theLatencyAnalysisProcessing,
+                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
                                         this.thePerformTimeAnalysisCheckBox.Checked,
                                         theTimeAnalysisProcessing,
                                         this.theSelectedPacketCapturePath,
@@ -397,6 +361,7 @@ namespace PacketCaptureAnalyser
                                         theDebugInformation,
                                         this.thePerformLatencyAnalysisCheckBox.Checked,
                                         theLatencyAnalysisProcessing,
+                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
                                         this.thePerformTimeAnalysisCheckBox.Checked,
                                         theTimeAnalysisProcessing,
                                         this.theSelectedPacketCapturePath,
@@ -661,7 +626,8 @@ namespace PacketCaptureAnalyser
         /// <summary>
         /// Reflects the currently selected packet capture by setting up the associated items accordingly
         /// </summary>
-        private void ReflectSelectedPacketCapture()
+        /// <param name="sender">The sender for the initiating event</param>
+        private void ReflectSelectedPacketCapture(object sender)
         {
             switch (this.theSelectedPacketCaptureType)
             {
@@ -676,8 +642,8 @@ namespace PacketCaptureAnalyser
                         this.EnablePacketCaptureAnalysisButtons();
 
                         // Reset and enable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(true);
-                        this.EnablePacketCaptureAnalysisCheckBoxes();
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
 
                         break;
                     }
@@ -693,8 +659,8 @@ namespace PacketCaptureAnalyser
                         this.EnablePacketCaptureAnalysisButtons();
 
                         // Reset and enable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(true);
-                        this.EnablePacketCaptureAnalysisCheckBoxes();
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
 
                         break;
                     }
@@ -710,8 +676,8 @@ namespace PacketCaptureAnalyser
                         this.EnablePacketCaptureAnalysisButtons();
 
                         // Reset and enable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(true);
-                        this.EnablePacketCaptureAnalysisCheckBoxes();
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
 
                         break;
                     }
@@ -727,8 +693,8 @@ namespace PacketCaptureAnalyser
                         this.ResetPacketCaptureAnalysisButtons();
 
                         // Reset and disable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(true);
-                        this.DisablePacketCaptureAnalysisCheckBoxes(true);
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.DisablePacketCaptureAnalysisCheckBoxes(sender);
 
                         break;
                     }
@@ -745,8 +711,8 @@ namespace PacketCaptureAnalyser
                         this.ResetPacketCaptureAnalysisButtons();
 
                         // Reset and disable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(true);
-                        this.DisablePacketCaptureAnalysisCheckBoxes(true);
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.DisablePacketCaptureAnalysisCheckBoxes(sender);
 
                         break;
                     }
@@ -756,7 +722,8 @@ namespace PacketCaptureAnalyser
         /// <summary>
         /// Clears the currently selected packet capture and resets the associated items
         /// </summary>
-        private void ClearSelectedPacketCapture()
+        /// <param name="sender">The sender for the initiating event</param>
+        private void ClearSelectedPacketCapture(object sender)
         {
             this.theSelectedPacketCapturePath = null;
 
@@ -777,8 +744,8 @@ namespace PacketCaptureAnalyser
             this.theRunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
 
             // 4) Reset and disable the check boxes
-            this.ResetPacketCaptureAnalysisCheckBoxes(true);
-            this.DisablePacketCaptureAnalysisCheckBoxes(true);
+            this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+            this.DisablePacketCaptureAnalysisCheckBoxes(sender);
         }
 
         //// Packet capture type
@@ -949,28 +916,32 @@ namespace PacketCaptureAnalyser
         /// <summary>
         /// Resets the check boxes concerned with packet capture analysis on the main window form
         /// </summary>
-        /// <param name="resetDebugInformationCheckBox">Boolean flag that indicates whether to reset the "Enable Debug Information" check box</param>
-        private void ResetPacketCaptureAnalysisCheckBoxes(bool resetDebugInformationCheckBox)
+        /// <param name="sender">The sender for the initiating event</param>
+        private void ResetPacketCaptureAnalysisCheckBoxes(object sender)
         {
             //// Reset the check boxes
 
-            if (resetDebugInformationCheckBox)
+            // Guard against infinite recursion
+            if (sender != this.theEnableDebugInformationCheckBox)
             {
                 this.theEnableDebugInformationCheckBox.Checked = true;
-                this.theEnableInformationEventsInDebugInformationCheckBox.Checked = true;
             }
-            else
-            {
-                this.theEnableInformationEventsInDebugInformationCheckBox.Checked = false;
-            }
+
+            // Match the state of the "Enable Information Events" check box to the state of the "Enable" check box
+            this.theEnableInformationEventsInDebugInformationCheckBox.Checked =
+                this.theEnableDebugInformationCheckBox.Checked;
 
             this.theRedirectDebugInformationToOutputCheckBox.Checked = false;
-            this.thePerformLatencyAnalysisCheckBox.Checked = false;
-            this.theOutputLatencyAnalysisDebugCheckBox.Checked = false;
-            this.thePerformTimeAnalysisCheckBox.Checked = false;
-            this.theOutputTimeAnalysisDebugCheckBox.Checked = false;
 
-            if (resetDebugInformationCheckBox)
+            this.thePerformLatencyAnalysisCheckBox.Checked = false;
+            this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked = false;
+            this.theUseAlternativeSequenceNumberCheckBox.Checked = false;
+
+            this.thePerformTimeAnalysisCheckBox.Checked = false;
+            this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
+
+            // Do not change the "Minimize Memory Usage" check box on a change to the "Enable" check box in the "Debug Information" group box
+            if (sender != this.theEnableDebugInformationCheckBox)
             {
                 this.theMinimizeMemoryUsageCheckBox.Checked = false;
             }
@@ -979,39 +950,57 @@ namespace PacketCaptureAnalyser
         /// <summary>
         /// Enables the check boxes concerned with packet capture analysis on the main window form
         /// </summary>
-        private void EnablePacketCaptureAnalysisCheckBoxes()
+        /// <param name="sender">The sender for the initiating event</param>
+        private void EnablePacketCaptureAnalysisCheckBoxes(object sender)
         {
             //// Enable the check boxes
 
-            this.theEnableDebugInformationCheckBox.Enabled = true;
+            // Guard against infinite recursion
+            if (sender != this.theEnableDebugInformationCheckBox)
+            {
+                this.theEnableDebugInformationCheckBox.Enabled = true;
+            }
+
             this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = true;
             this.theRedirectDebugInformationToOutputCheckBox.Enabled = true;
+
             this.thePerformLatencyAnalysisCheckBox.Enabled = true;
+
             this.thePerformTimeAnalysisCheckBox.Enabled = true;
-            this.theMinimizeMemoryUsageCheckBox.Enabled = true;
+
+            // Do not change the "Minimize Memory Usage" check box on a change to the "Enable" check box in the "Debug Information" group box
+            if (sender != this.theEnableDebugInformationCheckBox)
+            {
+                this.theMinimizeMemoryUsageCheckBox.Enabled = true;
+            }
         }
 
         /// <summary>
         /// Disables the check boxes concerned with packet capture analysis on the main window form
         /// </summary>
-        /// <param name="disableDebugInformationCheckBox">Boolean flag that indicates whether to disable the "Enable Debug Information" check box</param>
-        private void DisablePacketCaptureAnalysisCheckBoxes(bool disableDebugInformationCheckBox)
+        /// <param name="sender">The sender for the initiating event</param>
+        private void DisablePacketCaptureAnalysisCheckBoxes(object sender)
         {
             //// Disable the check boxes
 
-            if (disableDebugInformationCheckBox)
+            // Guard against infinite recursion
+            if (sender != this.theEnableDebugInformationCheckBox)
             {
                 this.theEnableDebugInformationCheckBox.Enabled = false;
             }
 
             this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = false;
             this.theRedirectDebugInformationToOutputCheckBox.Enabled = false;
-            this.thePerformLatencyAnalysisCheckBox.Enabled = false;
-            this.theOutputLatencyAnalysisDebugCheckBox.Enabled = false;
-            this.thePerformTimeAnalysisCheckBox.Enabled = false;
-            this.theOutputTimeAnalysisDebugCheckBox.Enabled = false;
 
-            if (disableDebugInformationCheckBox)
+            this.thePerformLatencyAnalysisCheckBox.Enabled = false;
+            this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = false;
+            this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
+
+            this.thePerformTimeAnalysisCheckBox.Enabled = false;
+            this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
+
+            // Do not change the "Minimize Memory Usage" check box on a change to the "Enable" check box in the "Debug Information" group box
+            if (sender != this.theEnableDebugInformationCheckBox)
             {
                 this.theMinimizeMemoryUsageCheckBox.Enabled = false;
             }

@@ -25,9 +25,9 @@ namespace Analysis.TimeAnalysis
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// Boolean flag that indicates whether to output debug information
+        /// Boolean flag that indicates whether to output additional information
         /// </summary>
-        private bool outputDebug;
+        private bool outputAdditionalInformation;
 
         /// <summary>
         /// The path of the selected packet capture
@@ -48,13 +48,13 @@ namespace Analysis.TimeAnalysis
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="outputDebug">Boolean flag that indicates whether to output debug information</param>
+        /// <param name="outputAdditionalInformation">Boolean flag that indicates whether to output additional information</param>
         /// <param name="theSelectedPacketCaptureFile">The path of the selected packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string theSelectedPacketCaptureFile)
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
         {
             this.theDebugInformation = theDebugInformation;
 
-            this.outputDebug = outputDebug;
+            this.outputAdditionalInformation = outputAdditionalInformation;
 
             this.theSelectedPacketCaptureFile = theSelectedPacketCaptureFile;
 
@@ -450,13 +450,14 @@ namespace Analysis.TimeAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
-            if (this.outputDebug)
+            if (this.outputAdditionalInformation)
             {
-                System.Text.StringBuilder theOutputDebugLines = new System.Text.StringBuilder();
+                System.Text.StringBuilder theOutputAdditionalInformationLines =
+                    new System.Text.StringBuilder();
 
                 //// Add a column titles line to the debug output file
 
-                string theOutputDebugTitleLine = string.Format(
+                string theOutputAdditionalInformationTitleLine = string.Format(
                     "{0},{1},{2},,{3},{4}{5}",
                     "Packet Number",
                     "Packet Timestamp (s)",
@@ -465,7 +466,7 @@ namespace Analysis.TimeAnalysis
                     "Message Time Delta (ms)",
                     System.Environment.NewLine);
 
-                theOutputDebugLines.Append(theOutputDebugTitleLine);
+                theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationTitleLine);
 
                 double? thePreviousPacketTimestamp = null;
                 double? thePreviousPacketTime = null;
@@ -476,7 +477,7 @@ namespace Analysis.TimeAnalysis
                 {
                     if (theTimeValuesRow.Field<bool>("Processed"))
                     {
-                        string theOutputDebugLine = null;
+                        string theOutputAdditionalInformationLine = null;
 
                         double theCurrentPacketTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
 
@@ -485,7 +486,7 @@ namespace Analysis.TimeAnalysis
                         if (thePreviousPacketTimestamp == null || thePreviousPacketTime == null)
                         {
                             // If this is the first time message then there is no previous time message and so just output the timestamp and time
-                            theOutputDebugLine = string.Format(
+                            theOutputAdditionalInformationLine = string.Format(
                                 "{0},{1,18},{2,18}{3}",
                                 theTimeValuesRow.Field<ulong>("PacketNumber").ToString(),
                                 theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
@@ -495,7 +496,7 @@ namespace Analysis.TimeAnalysis
                         else
                         {
                             // If this is another time message then also calculate the differences in timestamp and time from the previous time message and output them along with the timestamp and time
-                            theOutputDebugLine = string.Format(
+                            theOutputAdditionalInformationLine = string.Format(
                                 "{0},{1,18},{2,18},,{3,18},{4,18}{5}",
                                 theTimeValuesRow.Field<ulong>("PacketNumber").ToString(),
                                 theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
@@ -508,7 +509,7 @@ namespace Analysis.TimeAnalysis
                         thePreviousPacketTimestamp = theCurrentPacketTimestamp;
                         thePreviousPacketTime = theCurrentPacketTime;
 
-                        theOutputDebugLines.Append(theOutputDebugLine);
+                        theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationLine);
                     }
                 }
 
@@ -517,7 +518,7 @@ namespace Analysis.TimeAnalysis
                     ".HostId" +
                     theHostId +
                     ".TimeAnalysis.csv",
-                    theOutputDebugLines.ToString());
+                    theOutputAdditionalInformationLines.ToString());
             }
         }
     }

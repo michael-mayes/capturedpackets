@@ -72,9 +72,10 @@ namespace EthernetFrame
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
         /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
+        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool useAlternativeSequenceNumber, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
         {
             this.theDebugInformation = theDebugInformation;
 
@@ -85,8 +86,8 @@ namespace EthernetFrame
 
             // Create instances of the processing classes for each supported type for an Ethernet frame
             this.theARPPacketProcessing = new ARPPacket.Processing(theDebugInformation, theBinaryReader);
-            this.theIPv4PacketProcessing = new IPPacket.IPv4Packet.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
-            this.theIPv6PacketProcessing = new IPPacket.IPv6Packet.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
+            this.theIPv4PacketProcessing = new IPPacket.IPv4Packet.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, useAlternativeSequenceNumber, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
+            this.theIPv6PacketProcessing = new IPPacket.IPv6Packet.Processing(theDebugInformation, theBinaryReader, performLatencyAnalysisProcessing, theLatencyAnalysisProcessing, useAlternativeSequenceNumber, performTimeAnalysisProcessing, theTimeAnalysisProcessing);
             this.theLLDPPacketProcessing = new LLDPPacket.Processing(theDebugInformation, theBinaryReader);
             this.theLoopbackPacketProcessing = new LoopbackPacket.Processing(theDebugInformation, theBinaryReader);
         }
