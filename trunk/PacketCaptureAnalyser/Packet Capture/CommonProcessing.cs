@@ -38,6 +38,11 @@ namespace PacketCapture
         private Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing;
 
         /// <summary>
+        /// Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings
+        /// </summary>
+        private bool useAlternativeSequenceNumber;
+
+        /// <summary>
         /// Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture
         /// </summary>
         private bool performTimeAnalysisProcessing;
@@ -66,19 +71,26 @@ namespace PacketCapture
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="performLatencyAnalysisProcessing">Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
+        /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
         /// <param name="performTimeAnalysisProcessing">Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
         /// <param name="theSelectedPacketCapturePath">The path of the selected packet capture</param>
         /// <param name="minimizeMemoryUsage">Boolean flag that indicates whether to perform reading from the packet capture using a method that will minimize memory usage, possibly at the expense of increased processing time</param>
-        protected CommonProcessing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string theSelectedPacketCapturePath, bool minimizeMemoryUsage)
+        protected CommonProcessing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool useAlternativeSequenceNumber, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string theSelectedPacketCapturePath, bool minimizeMemoryUsage)
         {
             this.theProgressWindowForm = theProgressWindowForm;
+
             this.theDebugInformation = theDebugInformation;
+
             this.performLatencyAnalysisProcessing = performLatencyAnalysisProcessing;
+            this.useAlternativeSequenceNumber = useAlternativeSequenceNumber;
             this.theLatencyAnalysisProcessing = theLatencyAnalysisProcessing;
+
             this.performTimeAnalysisProcessing = performTimeAnalysisProcessing;
             this.theTimeAnalysisProcessing = theTimeAnalysisProcessing;
+
             this.theSelectedPacketCapturePath = theSelectedPacketCapturePath;
+
             this.minimizeMemoryUsage = minimizeMemoryUsage;
         }
 
@@ -179,7 +191,10 @@ namespace PacketCapture
                             {
                                 this.theProgressWindowForm.ProgressBar = 100;
 
-                                theResult = this.ProcessPackets(theBinaryReader, theNetworkDataLinkType, theTimestampAccuracy);
+                                theResult = this.ProcessPackets(
+                                    theBinaryReader,
+                                    theNetworkDataLinkType,
+                                    theTimestampAccuracy);
                             }
                             else
                             {
@@ -217,7 +232,10 @@ namespace PacketCapture
                                 {
                                     this.theProgressWindowForm.ProgressBar = 100;
 
-                                    theResult = this.ProcessPackets(theBinaryReader, thePacketCaptureNetworkDataLinkType, thePacketCaptureTimestampAccuracy);
+                                    theResult = this.ProcessPackets(
+                                        theBinaryReader,
+                                        thePacketCaptureNetworkDataLinkType,
+                                        thePacketCaptureTimestampAccuracy);
                                 }
                                 else
                                 {
@@ -331,7 +349,15 @@ namespace PacketCapture
                 this.theProgressWindowForm.Refresh();
             }
 
-            EthernetFrame.Processing theEthernetFrameProcessing = new EthernetFrame.Processing(this.theDebugInformation, theBinaryReader, this.performLatencyAnalysisProcessing, this.theLatencyAnalysisProcessing, this.performTimeAnalysisProcessing, this.theTimeAnalysisProcessing);
+            EthernetFrame.Processing theEthernetFrameProcessing =
+                new EthernetFrame.Processing(
+                    this.theDebugInformation,
+                    theBinaryReader,
+                    this.performLatencyAnalysisProcessing,
+                    this.theLatencyAnalysisProcessing,
+                    this.useAlternativeSequenceNumber,
+                    this.performTimeAnalysisProcessing,
+                    this.theTimeAnalysisProcessing);
 
             // Attempt to process the packets in the packet capture
             try

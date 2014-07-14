@@ -38,9 +38,9 @@ namespace Analysis.LatencyAnalysis
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// Boolean flag that indicates whether to output debug information
+        /// Boolean flag that indicates whether to output additional information
         /// </summary>
-        private bool outputDebug;
+        private bool outputAdditionalInformation;
 
         /// <summary>
         /// The path of the selected packet capture
@@ -61,13 +61,13 @@ namespace Analysis.LatencyAnalysis
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="outputDebug">Boolean flag that indicates whether to output debug information</param>
+        /// <param name="outputAdditionalInformation">Boolean flag that indicates whether to output additional information</param>
         /// <param name="theSelectedPacketCaptureFile">The path of the selected packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, bool outputDebug, string theSelectedPacketCaptureFile)
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
         {
             this.theDebugInformation = theDebugInformation;
 
-            this.outputDebug = outputDebug;
+            this.outputAdditionalInformation = outputAdditionalInformation;
 
             this.theSelectedPacketCaptureFile = theSelectedPacketCaptureFile;
 
@@ -551,13 +551,14 @@ namespace Analysis.LatencyAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
-            if (this.outputDebug)
+            if (this.outputAdditionalInformation)
             {
-                System.Text.StringBuilder outputDebugLines = new System.Text.StringBuilder();
+                System.Text.StringBuilder theOutputAdditionalInformationLines =
+                    new System.Text.StringBuilder();
 
                 //// Add a column titles line to the debug output file
 
-                string outputDebugTitleLine = string.Format(
+                string theOutputAdditionalInformationTitleLine = string.Format(
                     "{0},{1},{2},{3}{4}",
                     "First Packet Number",
                     "Second Packet Number",
@@ -565,7 +566,7 @@ namespace Analysis.LatencyAnalysis
                     "Latency (ms)",
                     System.Environment.NewLine);
 
-                outputDebugLines.Append(outputDebugTitleLine);
+                theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationTitleLine);
 
                 //// Add a line to the debug output file for each of the processed message pairs
 
@@ -579,7 +580,7 @@ namespace Analysis.LatencyAnalysis
                         theRow.Value.TimestampDifference.ToString(),
                         System.Environment.NewLine);
 
-                    outputDebugLines.Append(outputDebugLine);
+                    theOutputAdditionalInformationLines.Append(outputDebugLine);
                 }
 
                 System.IO.File.WriteAllText(
@@ -587,7 +588,7 @@ namespace Analysis.LatencyAnalysis
                     ".MessageId" +
                     theMessageId +
                     ".LatencyAnalysis.csv",
-                    outputDebugLines.ToString());
+                    theOutputAdditionalInformationLines.ToString());
             }
         }
     }
