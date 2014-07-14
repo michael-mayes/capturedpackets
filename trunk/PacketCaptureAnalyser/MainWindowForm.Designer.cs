@@ -215,9 +215,9 @@ namespace PacketCaptureAnalyser
             this.theTimeAnalysisGroupBox.SuspendLayout();
             this.theSelectedPacketCaptureGroupBox.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // theRunAnalysisOnSelectedPackageCaptureButton
-            // 
+            //
             this.theRunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
             this.theRunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 479);
             this.theRunAnalysisOnSelectedPackageCaptureButton.Name = "theRunAnalysisOnSelectedPackageCaptureButton";
@@ -226,9 +226,9 @@ namespace PacketCaptureAnalyser
             this.theRunAnalysisOnSelectedPackageCaptureButton.Text = "Run Analysis On Selected Packet Capture";
             this.theRunAnalysisOnSelectedPackageCaptureButton.UseVisualStyleBackColor = true;
             this.theRunAnalysisOnSelectedPackageCaptureButton.Click += new System.EventHandler(this.RunAnalysisOnPacketCaptureButton_Click);
-            // 
+            //
             // theExitButton
-            // 
+            //
             this.theExitButton.Location = new System.Drawing.Point(12, 508);
             this.theExitButton.Name = "theExitButton";
             this.theExitButton.Size = new System.Drawing.Size(340, 23);
@@ -236,15 +236,15 @@ namespace PacketCaptureAnalyser
             this.theExitButton.Text = "Exit";
             this.theExitButton.UseVisualStyleBackColor = true;
             this.theExitButton.Click += new System.EventHandler(this.ExitButton_Click);
-            // 
+            //
             // theSelectedPacketCaptureForAnalysisDialog
-            // 
+            //
             this.theSelectedPacketCaptureForAnalysisDialog.Filter = "Packet Captures (*pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.l" +
     "ibpcap;*.enc;*.cap;*.ntar";
             this.theSelectedPacketCaptureForAnalysisDialog.Title = "Select Packet Capture For Analysis";
-            // 
+            //
             // theSelectPacketCaptureButton
-            // 
+            //
             this.theSelectPacketCaptureButton.Location = new System.Drawing.Point(12, 12);
             this.theSelectPacketCaptureButton.Name = "theSelectPacketCaptureButton";
             this.theSelectPacketCaptureButton.Size = new System.Drawing.Size(340, 23);
@@ -252,9 +252,9 @@ namespace PacketCaptureAnalyser
             this.theSelectPacketCaptureButton.Text = "Select Packet Capture";
             this.theSelectPacketCaptureButton.UseVisualStyleBackColor = true;
             this.theSelectPacketCaptureButton.Click += new System.EventHandler(this.SelectPacketCaptureButton_Click);
-            // 
+            //
             // theSelectedPacketCapturePathTextBox
-            // 
+            //
             this.theSelectedPacketCapturePathTextBox.Location = new System.Drawing.Point(38, 16);
             this.theSelectedPacketCapturePathTextBox.Name = "theSelectedPacketCapturePathTextBox";
             this.theSelectedPacketCapturePathTextBox.ReadOnly = true;
@@ -262,27 +262,27 @@ namespace PacketCaptureAnalyser
             this.theSelectedPacketCapturePathTextBox.TabIndex = 1;
             this.theSelectedPacketCapturePathTextBox.TabStop = false;
             this.theSelectedPacketCapturePathTextBox.Text = "<No Packet Capture Selected>";
-            // 
+            //
             // theSelectedPacketCapturePathLabel
-            // 
+            //
             this.theSelectedPacketCapturePathLabel.AutoSize = true;
             this.theSelectedPacketCapturePathLabel.Location = new System.Drawing.Point(3, 19);
             this.theSelectedPacketCapturePathLabel.Name = "theSelectedPacketCapturePathLabel";
             this.theSelectedPacketCapturePathLabel.Size = new System.Drawing.Size(29, 13);
             this.theSelectedPacketCapturePathLabel.TabIndex = 0;
             this.theSelectedPacketCapturePathLabel.Text = "Path";
-            // 
+            //
             // theSelectedPacketCaptureNameLabel
-            // 
+            //
             this.theSelectedPacketCaptureNameLabel.AutoSize = true;
             this.theSelectedPacketCaptureNameLabel.Location = new System.Drawing.Point(3, 45);
             this.theSelectedPacketCaptureNameLabel.Name = "theSelectedPacketCaptureNameLabel";
             this.theSelectedPacketCaptureNameLabel.Size = new System.Drawing.Size(35, 13);
             this.theSelectedPacketCaptureNameLabel.TabIndex = 2;
             this.theSelectedPacketCaptureNameLabel.Text = "Name";
-            // 
+            //
             // theSelectedPacketCaptureNameTextBox
-            // 
+            //
             this.theSelectedPacketCaptureNameTextBox.Location = new System.Drawing.Point(38, 42);
             this.theSelectedPacketCaptureNameTextBox.Name = "theSelectedPacketCaptureNameTextBox";
             this.theSelectedPacketCaptureNameTextBox.ReadOnly = true;
@@ -290,18 +290,18 @@ namespace PacketCaptureAnalyser
             this.theSelectedPacketCaptureNameTextBox.TabIndex = 3;
             this.theSelectedPacketCaptureNameTextBox.TabStop = false;
             this.theSelectedPacketCaptureNameTextBox.Text = "<No Packet Capture Selected>";
-            // 
+            //
             // theSelectedPacketCaptureTypeLabel
-            // 
+            //
             this.theSelectedPacketCaptureTypeLabel.AutoSize = true;
             this.theSelectedPacketCaptureTypeLabel.Location = new System.Drawing.Point(3, 70);
             this.theSelectedPacketCaptureTypeLabel.Name = "theSelectedPacketCaptureTypeLabel";
             this.theSelectedPacketCaptureTypeLabel.Size = new System.Drawing.Size(31, 13);
             this.theSelectedPacketCaptureTypeLabel.TabIndex = 4;
             this.theSelectedPacketCaptureTypeLabel.Text = "Type";
-            // 
+            //
             // theSelectedPacketCaptureTypeTextBox
-            // 
+            //
             this.theSelectedPacketCaptureTypeTextBox.Location = new System.Drawing.Point(38, 67);
             this.theSelectedPacketCaptureTypeTextBox.Name = "theSelectedPacketCaptureTypeTextBox";
             this.theSelectedPacketCaptureTypeTextBox.ReadOnly = true;
@@ -309,9 +309,9 @@ namespace PacketCaptureAnalyser
             this.theSelectedPacketCaptureTypeTextBox.TabIndex = 5;
             this.theSelectedPacketCaptureTypeTextBox.TabStop = false;
             this.theSelectedPacketCaptureTypeTextBox.Text = "<No Packet Capture Selected>";
-            // 
+            //
             // theClearSelectedPacketCaptureButton
-            // 
+            //
             this.theClearSelectedPacketCaptureButton.Enabled = false;
             this.theClearSelectedPacketCaptureButton.Location = new System.Drawing.Point(12, 143);
             this.theClearSelectedPacketCaptureButton.Name = "theClearSelectedPacketCaptureButton";
@@ -320,9 +320,9 @@ namespace PacketCaptureAnalyser
             this.theClearSelectedPacketCaptureButton.Text = "Clear Selected Packet Capture";
             this.theClearSelectedPacketCaptureButton.UseVisualStyleBackColor = true;
             this.theClearSelectedPacketCaptureButton.Click += new System.EventHandler(this.ClearSelectedPacketCaptureButton_Click);
-            // 
+            //
             // theOpenSelectedPackageCaptureButton
-            // 
+            //
             this.theOpenSelectedPackageCaptureButton.Enabled = false;
             this.theOpenSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 172);
             this.theOpenSelectedPackageCaptureButton.Name = "theOpenSelectedPackageCaptureButton";
@@ -331,9 +331,9 @@ namespace PacketCaptureAnalyser
             this.theOpenSelectedPackageCaptureButton.Text = "Open Selected Packet Capture";
             this.theOpenSelectedPackageCaptureButton.UseVisualStyleBackColor = true;
             this.theOpenSelectedPackageCaptureButton.Click += new System.EventHandler(this.OpenSelectedPackageCaptureButton_Click);
-            // 
+            //
             // thePerformLatencyAnalysisCheckBox
-            // 
+            //
             this.thePerformLatencyAnalysisCheckBox.AutoSize = true;
             this.thePerformLatencyAnalysisCheckBox.Enabled = false;
             this.thePerformLatencyAnalysisCheckBox.Location = new System.Drawing.Point(6, 19);
@@ -343,9 +343,9 @@ namespace PacketCaptureAnalyser
             this.thePerformLatencyAnalysisCheckBox.Text = "Perform";
             this.thePerformLatencyAnalysisCheckBox.UseVisualStyleBackColor = true;
             this.thePerformLatencyAnalysisCheckBox.CheckedChanged += new System.EventHandler(this.PerformLatencyAnalysisCheckBox_CheckedChanged);
-            // 
+            //
             // thePerformTimeAnalysisCheckBox
-            // 
+            //
             this.thePerformTimeAnalysisCheckBox.AutoSize = true;
             this.thePerformTimeAnalysisCheckBox.Enabled = false;
             this.thePerformTimeAnalysisCheckBox.Location = new System.Drawing.Point(6, 19);
@@ -355,31 +355,31 @@ namespace PacketCaptureAnalyser
             this.thePerformTimeAnalysisCheckBox.Text = "Perform";
             this.thePerformTimeAnalysisCheckBox.UseVisualStyleBackColor = true;
             this.thePerformTimeAnalysisCheckBox.CheckedChanged += new System.EventHandler(this.PerformTimeAnalysisCheckBox_CheckedChanged);
-            // 
+            //
             // theOutputAdditionalLatencyAnalysisInformationCheckBox
-            // 
+            //
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.AutoSize = true;
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = false;
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Location = new System.Drawing.Point(31, 42);
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Name = "theOutputAdditionalLatencyAnalysisInformationCheckBox";
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Size = new System.Drawing.Size(159, 17);
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.TabIndex = 1;
-            this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Text = "Output Additional Infomation";
+            this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Text = "Output Additional Information";
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
             // theOutputAdditionalTimeAnalysisInformationCheckBox
-            // 
+            //
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.AutoSize = true;
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Location = new System.Drawing.Point(31, 42);
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Name = "theOutputAdditionalTimeAnalysisInformationCheckBox";
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Size = new System.Drawing.Size(159, 17);
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.TabIndex = 1;
-            this.theOutputAdditionalTimeAnalysisInformationCheckBox.Text = "Output Additional Infomation";
+            this.theOutputAdditionalTimeAnalysisInformationCheckBox.Text = "Output Additional Information";
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
             // theMinimizeMemoryUsageCheckBox
-            // 
+            //
             this.theMinimizeMemoryUsageCheckBox.AutoSize = true;
             this.theMinimizeMemoryUsageCheckBox.Enabled = false;
             this.theMinimizeMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 456);
@@ -388,9 +388,9 @@ namespace PacketCaptureAnalyser
             this.theMinimizeMemoryUsageCheckBox.TabIndex = 7;
             this.theMinimizeMemoryUsageCheckBox.Text = "Minimize Memory Usage (Potentially Necessary For Very Large Files)";
             this.theMinimizeMemoryUsageCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
             // theRedirectDebugInformationToOutputCheckBox
-            // 
+            //
             this.theRedirectDebugInformationToOutputCheckBox.AutoSize = true;
             this.theRedirectDebugInformationToOutputCheckBox.Enabled = false;
             this.theRedirectDebugInformationToOutputCheckBox.Location = new System.Drawing.Point(31, 65);
@@ -399,9 +399,9 @@ namespace PacketCaptureAnalyser
             this.theRedirectDebugInformationToOutputCheckBox.TabIndex = 2;
             this.theRedirectDebugInformationToOutputCheckBox.Text = "Redirect To Output (Potentially Helpful On Error)";
             this.theRedirectDebugInformationToOutputCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
             // theEnableInformationEventsInDebugInformationCheckBox
-            // 
+            //
             this.theEnableInformationEventsInDebugInformationCheckBox.AutoSize = true;
             this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = false;
             this.theEnableInformationEventsInDebugInformationCheckBox.Location = new System.Drawing.Point(31, 42);
@@ -410,9 +410,9 @@ namespace PacketCaptureAnalyser
             this.theEnableInformationEventsInDebugInformationCheckBox.TabIndex = 1;
             this.theEnableInformationEventsInDebugInformationCheckBox.Text = "Enable Information Events";
             this.theEnableInformationEventsInDebugInformationCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
             // theEnableDebugInformationCheckBox
-            // 
+            //
             this.theEnableDebugInformationCheckBox.AutoSize = true;
             this.theEnableDebugInformationCheckBox.Enabled = false;
             this.theEnableDebugInformationCheckBox.Location = new System.Drawing.Point(3, 19);
@@ -422,9 +422,9 @@ namespace PacketCaptureAnalyser
             this.theEnableDebugInformationCheckBox.Text = "Enable";
             this.theEnableDebugInformationCheckBox.UseVisualStyleBackColor = true;
             this.theEnableDebugInformationCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugInformationCheckBox_CheckedChanged);
-            // 
+            //
             // theUseAlternativeSequenceNumberCheckBox
-            // 
+            //
             this.theUseAlternativeSequenceNumberCheckBox.AutoSize = true;
             this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
             this.theUseAlternativeSequenceNumberCheckBox.Location = new System.Drawing.Point(31, 65);
@@ -433,9 +433,9 @@ namespace PacketCaptureAnalyser
             this.theUseAlternativeSequenceNumberCheckBox.TabIndex = 2;
             this.theUseAlternativeSequenceNumberCheckBox.Text = "Use Alternative Sequence Number (For Legacy Recordings)";
             this.theUseAlternativeSequenceNumberCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
             // theLatencyAnalysisGroupBox
-            // 
+            //
             this.theLatencyAnalysisGroupBox.Controls.Add(this.thePerformLatencyAnalysisCheckBox);
             this.theLatencyAnalysisGroupBox.Controls.Add(this.theUseAlternativeSequenceNumberCheckBox);
             this.theLatencyAnalysisGroupBox.Controls.Add(this.theOutputAdditionalLatencyAnalysisInformationCheckBox);
@@ -445,9 +445,9 @@ namespace PacketCaptureAnalyser
             this.theLatencyAnalysisGroupBox.TabIndex = 5;
             this.theLatencyAnalysisGroupBox.TabStop = false;
             this.theLatencyAnalysisGroupBox.Text = "Latency Analysis";
-            // 
+            //
             // theDebugInformationGroupBox
-            // 
+            //
             this.theDebugInformationGroupBox.Controls.Add(this.theEnableDebugInformationCheckBox);
             this.theDebugInformationGroupBox.Controls.Add(this.theEnableInformationEventsInDebugInformationCheckBox);
             this.theDebugInformationGroupBox.Controls.Add(this.theRedirectDebugInformationToOutputCheckBox);
@@ -457,9 +457,9 @@ namespace PacketCaptureAnalyser
             this.theDebugInformationGroupBox.TabIndex = 4;
             this.theDebugInformationGroupBox.TabStop = false;
             this.theDebugInformationGroupBox.Text = "Debug Information";
-            // 
+            //
             // theTimeAnalysisGroupBox
-            // 
+            //
             this.theTimeAnalysisGroupBox.Controls.Add(this.thePerformTimeAnalysisCheckBox);
             this.theTimeAnalysisGroupBox.Controls.Add(this.theOutputAdditionalTimeAnalysisInformationCheckBox);
             this.theTimeAnalysisGroupBox.Location = new System.Drawing.Point(12, 386);
@@ -468,9 +468,9 @@ namespace PacketCaptureAnalyser
             this.theTimeAnalysisGroupBox.TabIndex = 6;
             this.theTimeAnalysisGroupBox.TabStop = false;
             this.theTimeAnalysisGroupBox.Text = "Time Analysis";
-            // 
+            //
             // theSelectedPacketCaptureGroupBox
-            // 
+            //
             this.theSelectedPacketCaptureGroupBox.Controls.Add(this.theSelectedPacketCapturePathLabel);
             this.theSelectedPacketCaptureGroupBox.Controls.Add(this.theSelectedPacketCapturePathTextBox);
             this.theSelectedPacketCaptureGroupBox.Controls.Add(this.theSelectedPacketCaptureNameLabel);
@@ -483,9 +483,9 @@ namespace PacketCaptureAnalyser
             this.theSelectedPacketCaptureGroupBox.TabIndex = 1;
             this.theSelectedPacketCaptureGroupBox.TabStop = false;
             this.theSelectedPacketCaptureGroupBox.Text = "Selected Packet Capture";
-            // 
+            //
             // MainWindowForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(364, 543);
