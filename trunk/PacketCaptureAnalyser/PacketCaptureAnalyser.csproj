@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\Burst Analysis\Constants.cs" />
+    <Compile Include="Analysis\Burst Analysis\Processing.cs" />
     <Compile Include="Analysis\DebugInformation.cs" />
     <Compile Include="Analysis\Latency Analysis\Structures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Processing.cs" />

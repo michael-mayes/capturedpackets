@@ -18,7 +18,7 @@ namespace Analysis.TimeAnalysis
         //// Timestamps
 
         /// <summary>
-        /// The minimum timestamp difference be accepted - should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message) 
+        /// The minimum timestamp difference be accepted - should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
         /// </summary>
         public const double MinTimestampDifference = 0.03; // Milliseconds
 
@@ -45,7 +45,7 @@ namespace Analysis.TimeAnalysis
         /// <summary>
         /// The number of bins for each millisecond to be used for the histogram of timestamp values
         /// </summary>
-        public const uint TimestampBinsPerMillisecond = 40; // Forty value bins for every millisecond of latency
+        public const uint TimestampBinsPerMillisecond = 40; // Forty value bins for every millisecond of timestamp difference
 
         /// <summary>
         /// The number of bins to be used for the histogram of timestamp values - calculated from other constants
@@ -55,7 +55,7 @@ namespace Analysis.TimeAnalysis
         /// <summary>
         /// The number of bins for each millisecond to be used for the histogram of time values
         /// </summary>
-        public const uint TimeBinsPerMillisecond = 40; // Forty value bins for every millisecond of latency
+        public const uint TimeBinsPerMillisecond = 40; // Forty value bins for every millisecond of time difference
 
         /// <summary>
         /// The number of bins to be used for the histogram of time values - calculated from other constants
