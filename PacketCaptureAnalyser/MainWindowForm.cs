@@ -83,14 +83,8 @@ namespace PacketCaptureAnalyser
             if (theSelectedPacketCaptureDialogResult == System.Windows.Forms.DialogResult.OK)
             {
                 // Read the path of the selected packet capture and store it for use by later processing
-                this.theSelectedPacketCapturePath = this.theSelectedPacketCaptureForAnalysisDialog.FileName;
-
-                // Populate the path and name of the selected packet capture, not necessarily a packet capture at this stage
-                this.theSelectedPacketCapturePathTextBox.Text =
-                    System.IO.Path.GetDirectoryName(this.theSelectedPacketCapturePath);
-
-                this.theSelectedPacketCaptureNameTextBox.Text =
-                    System.IO.Path.GetFileName(this.theSelectedPacketCapturePath);
+                this.theSelectedPacketCapturePath =
+                    this.theSelectedPacketCaptureForAnalysisDialog.FileName;
 
                 // Determine the type of the packet capture
                 this.DeterminePacketCaptureType();
@@ -179,19 +173,48 @@ namespace PacketCaptureAnalyser
             {
                 if (this.thePerformLatencyAnalysisCheckBox.Checked)
                 {
+                    this.theOutputLatencyAnalysisHistogramCheckBox.Checked = false;
+                    this.theOutputLatencyAnalysisHistogramCheckBox.Enabled = true;
+
                     this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked = false;
                     this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = true;
-
-                    this.theUseAlternativeSequenceNumberCheckBox.Checked = false;
-                    this.theUseAlternativeSequenceNumberCheckBox.Enabled = true;
                 }
                 else
                 {
+                    this.theOutputLatencyAnalysisHistogramCheckBox.Checked = false;
+                    this.theOutputLatencyAnalysisHistogramCheckBox.Enabled = false;
+
                     this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked = false;
                     this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = false;
+                }
+            }
+        }
 
-                    this.theUseAlternativeSequenceNumberCheckBox.Checked = false;
-                    this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
+        /// <summary>
+        /// Processes the check changed event for the "Perform" check box in the "Burst Analysis" group box
+        /// </summary>
+        /// <param name="sender">The sender for the check changed event</param>
+        /// <param name="e">The arguments for the check changed event</param>
+        private void PerformBurstAnalysisCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            // Guard against infinite recursion
+            if ((sender as System.Windows.Forms.Control).ContainsFocus)
+            {
+                if (this.thePerformBurstAnalysisCheckBox.Checked)
+                {
+                    this.theOutputBurstAnalysisHistogramCheckBox.Checked = false;
+                    this.theOutputBurstAnalysisHistogramCheckBox.Enabled = true;
+
+                    this.theOutputAdditionalBurstAnalysisInformationCheckBox.Checked = false;
+                    this.theOutputAdditionalBurstAnalysisInformationCheckBox.Enabled = true;
+                }
+                else
+                {
+                    this.theOutputBurstAnalysisHistogramCheckBox.Checked = false;
+                    this.theOutputBurstAnalysisHistogramCheckBox.Enabled = false;
+
+                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
+                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
                 }
             }
         }
@@ -208,11 +231,17 @@ namespace PacketCaptureAnalyser
             {
                 if (this.thePerformTimeAnalysisCheckBox.Checked)
                 {
+                    this.theOutputTimeAnalysisHistogramCheckBox.Checked = false;
+                    this.theOutputTimeAnalysisHistogramCheckBox.Enabled = true;
+
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = true;
                 }
                 else
                 {
+                    this.theOutputTimeAnalysisHistogramCheckBox.Checked = false;
+                    this.theOutputTimeAnalysisHistogramCheckBox.Enabled = false;
+
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
                 }
@@ -225,6 +254,342 @@ namespace PacketCaptureAnalyser
         /// <param name="sender">The sender for the button click event</param>
         /// <param name="e">The arguments for the button click event</param>
         private void RunAnalysisOnPacketCaptureButton_Click(object sender, System.EventArgs e)
+        {
+            this.AnalysePacketCapture();
+        }
+
+        /// <summary>
+        /// Processes the button click event for the "Exit" button
+        /// </summary>
+        /// <param name="sender">The sender for the button click event</param>
+        /// <param name="e">The arguments for the button click event</param>
+        private void ExitButton_Click(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
+
+        //// Packet capture support functions
+
+        /// <summary>
+        /// Reflects the currently selected packet capture by setting up the associated items accordingly
+        /// </summary>
+        /// <param name="sender">The sender for the initiating event</param>
+        private void ReflectSelectedPacketCapture(object sender)
+        {
+            switch (this.theSelectedPacketCaptureType)
+            {
+                case MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration:
+                    {
+                        //// Analysis of a PCAP Next Generation packet capture is supported
+
+                        // Enable the "Selected Packet Capture" group box
+                        this.theSelectedPacketCaptureGroupBox.Enabled = true;
+
+                        // Populate the path for the selected packet capture
+                        this.theSelectedPacketCapturePathTextBox.Text =
+                            System.IO.Path.GetDirectoryName(this.theSelectedPacketCapturePath);
+
+                        // Populate the name for the selected packet capture
+                        this.theSelectedPacketCaptureNameTextBox.Text =
+                            System.IO.Path.GetFileName(this.theSelectedPacketCapturePath);
+
+                        // This is a PCAP Next Generation packet capture
+                        this.theSelectedPacketCaptureTypeTextBox.Text = "PCAP Next Generation";
+
+                        // Enable the buttons
+                        this.EnablePacketCaptureAnalysisButtons();
+
+                        // Reset and enable the check boxes
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
+
+                        break;
+                    }
+
+                case MainWindowFormPacketCaptureTypeEnumeration.PCAP:
+                    {
+                        //// Analysis of a PCAP packet capture is supported
+
+                        // Enable the "Selected Packet Capture" group box
+                        this.theSelectedPacketCaptureGroupBox.Enabled = true;
+
+                        // Populate the path for the selected packet capture
+                        this.theSelectedPacketCapturePathTextBox.Text =
+                            System.IO.Path.GetDirectoryName(this.theSelectedPacketCapturePath);
+
+                        // Populate the name for the selected packet capture
+                        this.theSelectedPacketCaptureNameTextBox.Text =
+                            System.IO.Path.GetFileName(this.theSelectedPacketCapturePath);
+
+                        // This is a PCAP packet capture
+                        this.theSelectedPacketCaptureTypeTextBox.Text = "PCAP (libpcap/tcpdump)";
+
+                        // Enable the buttons
+                        this.EnablePacketCaptureAnalysisButtons();
+
+                        // Reset and enable the check boxes
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
+
+                        break;
+                    }
+
+                case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
+                    {
+                        //// Analysis of an NA Sniffer (DOS) packet capture is supported
+
+                        // Enable the "Selected Packet Capture" group box
+                        this.theSelectedPacketCaptureGroupBox.Enabled = true;
+
+                        // Populate the path for the selected packet capture
+                        this.theSelectedPacketCapturePathTextBox.Text =
+                            System.IO.Path.GetDirectoryName(this.theSelectedPacketCapturePath);
+
+                        // Populate the name for the selected packet capture
+                        this.theSelectedPacketCaptureNameTextBox.Text =
+                            System.IO.Path.GetFileName(this.theSelectedPacketCapturePath);
+
+                        // This is an NA Sniffer (DOS) packet capture
+                        this.theSelectedPacketCaptureTypeTextBox.Text = "NA Sniffer (DOS)";
+
+                        // Enable the buttons
+                        this.EnablePacketCaptureAnalysisButtons();
+
+                        // Reset and enable the check boxes
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
+
+                        break;
+                    }
+
+                case MainWindowFormPacketCaptureTypeEnumeration.Incorrect:
+                    {
+                        //// Analysis of this packet capture is not supported
+
+                        // Enable the "Selected Packet Capture" group box
+                        this.theSelectedPacketCaptureGroupBox.Enabled = true;
+
+                        // Populate the path for the selected packet capture
+                        this.theSelectedPacketCapturePathTextBox.Text =
+                            System.IO.Path.GetDirectoryName(this.theSelectedPacketCapturePath);
+
+                        // Populate the name for the selected packet capture
+                        this.theSelectedPacketCaptureNameTextBox.Text =
+                            System.IO.Path.GetFileName(this.theSelectedPacketCapturePath);
+
+                        // This packet capture has an incorrect file extension for the form of packet capture it contains
+                        this.theSelectedPacketCaptureTypeTextBox.Text = "<Incorrect Packet Capture Type For File Extension>";
+
+                        // Reset the buttons
+                        this.ResetPacketCaptureAnalysisButtons();
+
+                        // Reset and disable the check boxes
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.DisablePacketCaptureAnalysisCheckBoxes(sender);
+
+                        break;
+                    }
+
+                case MainWindowFormPacketCaptureTypeEnumeration.Unknown:
+                default:
+                    {
+                        //// Analysis of this packet capture is not supported
+
+                        // Enable the "Selected Packet Capture" group box
+                        this.theSelectedPacketCaptureGroupBox.Enabled = true;
+
+                        // Populate the path for the selected packet capture
+                        this.theSelectedPacketCapturePathTextBox.Text =
+                            System.IO.Path.GetDirectoryName(this.theSelectedPacketCapturePath);
+
+                        // Populate the name for the selected packet capture
+                        this.theSelectedPacketCaptureNameTextBox.Text =
+                            System.IO.Path.GetFileName(this.theSelectedPacketCapturePath);
+
+                        // This packet capture is either an unsupported form of packet capture or is another type of file
+                        this.theSelectedPacketCaptureTypeTextBox.Text = "<Unknown Packet Capture Type>";
+
+                        // Reset the buttons
+                        this.ResetPacketCaptureAnalysisButtons();
+
+                        // Reset and disable the check boxes
+                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+                        this.DisablePacketCaptureAnalysisCheckBoxes(sender);
+
+                        break;
+                    }
+            }
+        }
+
+        /// <summary>
+        /// Clears the currently selected packet capture and resets the associated items
+        /// </summary>
+        /// <param name="sender">The sender for the initiating event</param>
+        private void ClearSelectedPacketCapture(object sender)
+        {
+            this.theSelectedPacketCapturePath = null;
+
+            this.theSelectedPacketCaptureType =
+                MainWindowFormPacketCaptureTypeEnumeration.Unknown;
+
+            // Disable the "Selected Packet Capture" group box
+            this.theSelectedPacketCaptureGroupBox.Enabled = false;
+
+            // Clear the path, name and type for the selected packet capture
+            this.theSelectedPacketCapturePathTextBox.Text = string.Empty;
+            this.theSelectedPacketCaptureNameTextBox.Text = string.Empty;
+            this.theSelectedPacketCaptureTypeTextBox.Text = string.Empty;
+
+            // Disable the button to clear the selected package capture
+            this.theClearSelectedPacketCaptureButton.Enabled = false;
+
+            // Disable the button to open the package capture
+            this.theOpenSelectedPackageCaptureButton.Enabled = false;
+
+            // Disable the button to start the analysis on the packet capture
+            this.theRunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
+
+            // Reset and disable the check boxes
+            this.ResetPacketCaptureAnalysisCheckBoxes(sender);
+            this.DisablePacketCaptureAnalysisCheckBoxes(sender);
+        }
+
+        //// Packet capture type
+
+        /// <summary>
+        /// Determines the type of the packet capture from the initial bytes
+        /// </summary>
+        private void DeterminePacketCaptureType()
+        {
+            //// Determine the type of the packet capture
+
+            // Open a file stream for the packet capture for reading
+            using (System.IO.FileStream theFileStream =
+                System.IO.File.OpenRead(this.theSelectedPacketCapturePath))
+            {
+                // Open a binary reader for the file stream for the packet capture
+                using (System.IO.BinaryReader theBinaryReader =
+                    new System.IO.BinaryReader(theFileStream))
+                {
+                    switch (theBinaryReader.ReadUInt32())
+                    {
+                        case (uint)PacketCapture.PCAPNGPackageCapture.Constants.BlockType.SectionHeaderBlock:
+                            {
+                                // This is a PCAP Next Generation packet capture
+                                this.theSelectedPacketCaptureType =
+                                    MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration;
+
+                                break;
+                            }
+
+                        case (uint)PacketCapture.PCAPPackageCapture.Constants.LittleEndianMagicNumber:
+                        case (uint)PacketCapture.PCAPPackageCapture.Constants.BigEndianMagicNumber:
+                            {
+                                // This is a PCAP packet capture
+                                this.theSelectedPacketCaptureType =
+                                    MainWindowFormPacketCaptureTypeEnumeration.PCAP;
+
+                                break;
+                            }
+
+                        case (uint)PacketCapture.SnifferPackageCapture.Constants.ExpectedMagicNumberHighest:
+                            {
+                                // This is a NA Sniffer (DOS) packet capture
+                                this.theSelectedPacketCaptureType =
+                                    MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS;
+
+                                break;
+                            }
+
+                        default:
+                            {
+                                // This packet capture is either an unsupported form of packet capture or is another type of file
+                                this.theSelectedPacketCaptureType =
+                                    MainWindowFormPacketCaptureTypeEnumeration.Unknown;
+
+                                break;
+                            }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks the type of the packet capture to ensure that it is of the expected type for the file extension
+        /// </summary>
+        private void CheckPacketCaptureType()
+        {
+            //// Check the type of the packet capture
+
+            // Determine the expected type of the packet capture from the file extension
+            switch (System.IO.Path.GetExtension(this.theSelectedPacketCapturePath))
+            {
+                case ".pcapng":
+                case ".ntar":
+                    {
+                        // This should be a PCAP Next Generation packet capture
+                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration)
+                        {
+                            System.Diagnostics.Debug.WriteLine("The " +
+                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                                " packet capture should be a PCAP Next Generation packet capture based on its file extension, but it is not!!!");
+
+                            this.theSelectedPacketCaptureType =
+                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
+                        }
+
+                        break;
+                    }
+
+                case ".pcap":
+                case ".libpcap":
+                case ".cap":
+                    {
+                        // This should be a PCAP packet capture
+                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PCAP)
+                        {
+                            System.Diagnostics.Debug.WriteLine("The " +
+                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                                " packet capture should be a PCAP packet capture based on its file extension, but it is not!!!");
+
+                            this.theSelectedPacketCaptureType =
+                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
+                        }
+
+                        break;
+                    }
+
+                case ".enc":
+                    {
+                        // This should be an NA Sniffer (DOS) packet capture
+                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS)
+                        {
+                            System.Diagnostics.Debug.WriteLine("The " +
+                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                                " packet capture should be a NA Sniffer (DOS) packet capture based on its file extension, but it is not!!!");
+
+                            this.theSelectedPacketCaptureType =
+                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        // This packet capture is either an unsupported form of packet capture or is another type of file
+                        this.theSelectedPacketCaptureType =
+                            MainWindowFormPacketCaptureTypeEnumeration.Unknown;
+
+                        break;
+                    }
+            }
+        }
+
+        /// <summary>
+        /// Performs analysis of the currently selected packet capture
+        /// </summary>
+        private void AnalysePacketCapture()
         {
             bool theResult = true;
 
@@ -266,12 +631,11 @@ namespace PacketCaptureAnalyser
 
                     theDebugInformation.WriteBlankLine();
 
-                    theProgressWindowForm.ProgressBar = 30;
-
                     Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing = null;
+                    Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing = null;
                     Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing = null;
 
-                    theProgressWindowForm.ProgressBar = 35;
+                    theProgressWindowForm.ProgressBar = 30;
 
                     // Only perform the latency analysis if the check box was selected for it on the main window form
                     if (this.thePerformLatencyAnalysisCheckBox.Checked)
@@ -279,11 +643,28 @@ namespace PacketCaptureAnalyser
                         theLatencyAnalysisProcessing =
                             new Analysis.LatencyAnalysis.Processing(
                                 theDebugInformation,
+                                this.theOutputLatencyAnalysisHistogramCheckBox.Checked,
                                 this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked,
                                 this.theSelectedPacketCapturePath);
 
                         // Initialise the functionality to perform latency analysis on the messages found
                         theLatencyAnalysisProcessing.Create();
+                    }
+
+                    theProgressWindowForm.ProgressBar = 35;
+
+                    // Only perform the burst analysis if the check box was selected for it on the main window form
+                    if (this.thePerformBurstAnalysisCheckBox.Checked)
+                    {
+                        theBurstAnalysisProcessing =
+                            new Analysis.BurstAnalysis.Processing(
+                                theDebugInformation,
+                                this.theOutputBurstAnalysisHistogramCheckBox.Checked,
+                                this.theOutputAdditionalBurstAnalysisInformationCheckBox.Checked,
+                                this.theSelectedPacketCapturePath);
+
+                        // Initialise the functionality to perform burst analysis on the messages found
+                        theBurstAnalysisProcessing.Create();
                     }
 
                     theProgressWindowForm.ProgressBar = 40;
@@ -294,6 +675,7 @@ namespace PacketCaptureAnalyser
                         theTimeAnalysisProcessing =
                             new Analysis.TimeAnalysis.Processing(
                                 theDebugInformation,
+                                this.theOutputTimeAnalysisHistogramCheckBox.Checked,
                                 this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked,
                                 this.theSelectedPacketCapturePath);
 
@@ -315,10 +697,12 @@ namespace PacketCaptureAnalyser
                                         theDebugInformation,
                                         this.thePerformLatencyAnalysisCheckBox.Checked,
                                         theLatencyAnalysisProcessing,
-                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
+                                        this.thePerformBurstAnalysisCheckBox.Checked,
+                                        theBurstAnalysisProcessing,
                                         this.thePerformTimeAnalysisCheckBox.Checked,
                                         theTimeAnalysisProcessing,
                                         this.theSelectedPacketCapturePath,
+                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
                                         this.theMinimizeMemoryUsageCheckBox.Checked);
 
                                 theProgressWindowForm.ProgressBar = 50;
@@ -338,10 +722,12 @@ namespace PacketCaptureAnalyser
                                         theDebugInformation,
                                         this.thePerformLatencyAnalysisCheckBox.Checked,
                                         theLatencyAnalysisProcessing,
-                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
+                                        this.thePerformBurstAnalysisCheckBox.Checked,
+                                        theBurstAnalysisProcessing,
                                         this.thePerformTimeAnalysisCheckBox.Checked,
                                         theTimeAnalysisProcessing,
                                         this.theSelectedPacketCapturePath,
+                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
                                         this.theMinimizeMemoryUsageCheckBox.Checked);
 
                                 theProgressWindowForm.ProgressBar = 50;
@@ -361,10 +747,12 @@ namespace PacketCaptureAnalyser
                                         theDebugInformation,
                                         this.thePerformLatencyAnalysisCheckBox.Checked,
                                         theLatencyAnalysisProcessing,
-                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
+                                        this.thePerformBurstAnalysisCheckBox.Checked,
+                                        theBurstAnalysisProcessing,
                                         this.thePerformTimeAnalysisCheckBox.Checked,
                                         theTimeAnalysisProcessing,
                                         this.theSelectedPacketCapturePath,
+                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
                                         this.theMinimizeMemoryUsageCheckBox.Checked);
 
                                 theProgressWindowForm.ProgressBar = 50;
@@ -398,7 +786,9 @@ namespace PacketCaptureAnalyser
 
                         int theScaling = 0;
 
-                        if (this.thePerformLatencyAnalysisCheckBox.Checked || this.thePerformTimeAnalysisCheckBox.Checked)
+                        if (this.thePerformLatencyAnalysisCheckBox.Checked ||
+                            this.thePerformTimeAnalysisCheckBox.Checked ||
+                            true)
                         {
                             // Update the label now the analysis of the packet capture has started - the progress bar will stay at zero
                             theProgressWindowForm.ProgressBarLabel = "Performing Analysis Of Packet Capture";
@@ -406,12 +796,14 @@ namespace PacketCaptureAnalyser
                             theProgressWindowForm.Refresh();
 
                             // Calculate the scaling to use for the progress bar
-                            if (this.thePerformLatencyAnalysisCheckBox.Checked & !this.thePerformTimeAnalysisCheckBox.Checked)
+                            if (this.thePerformLatencyAnalysisCheckBox.Checked &&
+                                !this.thePerformTimeAnalysisCheckBox.Checked)
                             {
                                 // Only one set of analysis will be run
                                 theScaling = 1;
                             }
-                            else if (!this.thePerformLatencyAnalysisCheckBox.Checked && this.thePerformTimeAnalysisCheckBox.Checked)
+                            else if (!this.thePerformLatencyAnalysisCheckBox.Checked &&
+                                this.thePerformTimeAnalysisCheckBox.Checked)
                             {
                                 // Only one set of analysis will be run
                                 theScaling = 1;
@@ -462,6 +854,47 @@ namespace PacketCaptureAnalyser
                                 " seconds");
 
                             theProgressWindowForm.ProgressBar += 20 / theScaling;
+                        }
+
+                        // Only perform the burst analysis if the check box was selected for it on the main window form
+                        if (this.thePerformBurstAnalysisCheckBox.Checked)
+                        {
+                            theDebugInformation.WriteBlankLine();
+
+                            theDebugInformation.WriteTextLine(new string('=', 144));
+
+                            theDebugInformation.WriteBlankLine();
+
+                            //// Finalise the burst analysis on the messages found including printing the results to debug output
+                            //// Only perform this action if the analysis of the packet capture completed successfully
+
+                            // Read the start time to allow later calculation of the duration of the burst analysis finalisation
+                            System.DateTime theBurstAnalysisStartTime = System.DateTime.Now;
+
+                            theDebugInformation.WriteTestRunEvent("Burst analysis for the " +
+                                thePacketCaptureFileName +
+                                " packet capture started");
+
+                            //// theProgressWindowForm.ProgressBar += 20 / theScaling;
+
+                            theBurstAnalysisProcessing.Finalise();
+
+                            //// theProgressWindowForm.ProgressBar += 60 / theScaling;
+
+                            //// Compute the duration between the start and the end times
+
+                            System.DateTime theBurstAnalysisEndTime = System.DateTime.Now;
+
+                            System.TimeSpan theBurstAnalysisDuration =
+                                theBurstAnalysisEndTime - theBurstAnalysisStartTime;
+
+                            theDebugInformation.WriteTestRunEvent("Burst analysis for the " +
+                                thePacketCaptureFileName +
+                                " packet capture completed in " +
+                                theBurstAnalysisDuration.TotalSeconds.ToString() +
+                                " seconds");
+
+                            //// theProgressWindowForm.ProgressBar += 20 / theScaling;
                         }
 
                         // Only perform the time analysis if the check box was selected for it on the main window form
@@ -611,275 +1044,6 @@ namespace PacketCaptureAnalyser
             }
         }
 
-        /// <summary>
-        /// Processes the button click event for the "Exit" button
-        /// </summary>
-        /// <param name="sender">The sender for the button click event</param>
-        /// <param name="e">The arguments for the button click event</param>
-        private void ExitButton_Click(object sender, System.EventArgs e)
-        {
-            this.Close();
-        }
-
-        //// Packet capture support functions
-
-        /// <summary>
-        /// Reflects the currently selected packet capture by setting up the associated items accordingly
-        /// </summary>
-        /// <param name="sender">The sender for the initiating event</param>
-        private void ReflectSelectedPacketCapture(object sender)
-        {
-            switch (this.theSelectedPacketCaptureType)
-            {
-                case MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration:
-                    {
-                        // This is a PCAP Next Generation packet capture
-                        this.theSelectedPacketCaptureTypeTextBox.Text = "PCAP Next Generation";
-
-                        //// Analysis of a PCAP Next Generation packet capture is supported
-
-                        // Enable the buttons
-                        this.EnablePacketCaptureAnalysisButtons();
-
-                        // Reset and enable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
-                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
-
-                        break;
-                    }
-
-                case MainWindowFormPacketCaptureTypeEnumeration.PCAP:
-                    {
-                        // This is a PCAP packet capture
-                        this.theSelectedPacketCaptureTypeTextBox.Text = "PCAP (libpcap/tcpdump)";
-
-                        //// Analysis of a PCAP packet capture is supported
-
-                        // Enable the buttons
-                        this.EnablePacketCaptureAnalysisButtons();
-
-                        // Reset and enable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
-                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
-
-                        break;
-                    }
-
-                case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
-                    {
-                        // This is an NA Sniffer (DOS) packet capture
-                        this.theSelectedPacketCaptureTypeTextBox.Text = "NA Sniffer (DOS)";
-
-                        //// Analysis of an NA Sniffer (DOS) packet capture is supported
-
-                        // Enable the buttons
-                        this.EnablePacketCaptureAnalysisButtons();
-
-                        // Reset and enable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
-                        this.EnablePacketCaptureAnalysisCheckBoxes(sender);
-
-                        break;
-                    }
-
-                case MainWindowFormPacketCaptureTypeEnumeration.Incorrect:
-                    {
-                        // This packet capture has an incorrect file extension for the form of packet capture it contains
-                        this.theSelectedPacketCaptureTypeTextBox.Text = "<Incorrect Packet Capture Type For File Extension>";
-
-                        //// Analysis of this packet capture is not supported
-
-                        // Reset the buttons
-                        this.ResetPacketCaptureAnalysisButtons();
-
-                        // Reset and disable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
-                        this.DisablePacketCaptureAnalysisCheckBoxes(sender);
-
-                        break;
-                    }
-
-                case MainWindowFormPacketCaptureTypeEnumeration.Unknown:
-                default:
-                    {
-                        // This packet capture is either an unsupported form of packet capture or is another type of file
-                        this.theSelectedPacketCaptureTypeTextBox.Text = "<Unknown Packet Capture Type>";
-
-                        //// Analysis of this packet capture is not supported
-
-                        // Reset the buttons
-                        this.ResetPacketCaptureAnalysisButtons();
-
-                        // Reset and disable the check boxes
-                        this.ResetPacketCaptureAnalysisCheckBoxes(sender);
-                        this.DisablePacketCaptureAnalysisCheckBoxes(sender);
-
-                        break;
-                    }
-            }
-        }
-
-        /// <summary>
-        /// Clears the currently selected packet capture and resets the associated items
-        /// </summary>
-        /// <param name="sender">The sender for the initiating event</param>
-        private void ClearSelectedPacketCapture(object sender)
-        {
-            this.theSelectedPacketCapturePath = null;
-
-            this.theSelectedPacketCaptureType =
-                MainWindowFormPacketCaptureTypeEnumeration.Unknown;
-
-            this.theSelectedPacketCapturePathTextBox.Text = "<No Packet Capture Selected>";
-            this.theSelectedPacketCaptureNameTextBox.Text = "<No Packet Capture Selected>";
-            this.theSelectedPacketCaptureTypeTextBox.Text = "<No Packet Capture Selected>";
-
-            // 1) Disable the button to clear the selected package capture
-            this.theClearSelectedPacketCaptureButton.Enabled = false;
-
-            // 2) Disable the button to open the package capture
-            this.theOpenSelectedPackageCaptureButton.Enabled = false;
-
-            // 3) Disable the button to start the analysis on the packet capture
-            this.theRunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
-
-            // 4) Reset and disable the check boxes
-            this.ResetPacketCaptureAnalysisCheckBoxes(sender);
-            this.DisablePacketCaptureAnalysisCheckBoxes(sender);
-        }
-
-        //// Packet capture type
-
-        /// <summary>
-        /// Determines the type of the packet capture from the initial bytes
-        /// </summary>
-        private void DeterminePacketCaptureType()
-        {
-            //// Determine the type of the packet capture
-
-            // Open a file stream for the packet capture for reading
-            using (System.IO.FileStream theFileStream =
-                System.IO.File.OpenRead(this.theSelectedPacketCapturePath))
-            {
-                // Open a binary reader for the file stream for the packet capture
-                using (System.IO.BinaryReader theBinaryReader =
-                    new System.IO.BinaryReader(theFileStream))
-                {
-                    switch (theBinaryReader.ReadUInt32())
-                    {
-                        case (uint)PacketCapture.PCAPNGPackageCapture.Constants.BlockType.SectionHeaderBlock:
-                            {
-                                // This is a PCAP Next Generation packet capture
-                                this.theSelectedPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration;
-
-                                break;
-                            }
-
-                        case (uint)PacketCapture.PCAPPackageCapture.Constants.LittleEndianMagicNumber:
-                        case (uint)PacketCapture.PCAPPackageCapture.Constants.BigEndianMagicNumber:
-                            {
-                                // This is a PCAP packet capture
-                                this.theSelectedPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.PCAP;
-
-                                break;
-                            }
-
-                        case (uint)PacketCapture.SnifferPackageCapture.Constants.ExpectedMagicNumberHighest:
-                            {
-                                // This is a NA Sniffer (DOS) packet capture
-                                this.theSelectedPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS;
-
-                                break;
-                            }
-
-                        default:
-                            {
-                                // This packet capture is either an unsupported form of packet capture or is another type of file
-                                this.theSelectedPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.Unknown;
-
-                                break;
-                            }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Checks the type of the packet capture to ensure that it is of the expected type for the file extension
-        /// </summary>
-        private void CheckPacketCaptureType()
-        {
-            //// Check the type of the packet capture
-
-            // Determine the expected type of the packet capture from the file extension
-            switch (System.IO.Path.GetExtension(this.theSelectedPacketCapturePath))
-            {
-                case ".pcapng":
-                case ".ntar":
-                    {
-                        // This should be a PCAP Next Generation packet capture
-                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration)
-                        {
-                            System.Diagnostics.Debug.WriteLine("The " +
-                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                " packet capture should be a PCAP Next Generation packet capture based on its file extension, but it is not!!!");
-
-                            this.theSelectedPacketCaptureType =
-                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
-                        }
-
-                        break;
-                    }
-
-                case ".pcap":
-                case ".libpcap":
-                case ".cap":
-                    {
-                        // This should be a PCAP packet capture
-                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.PCAP)
-                        {
-                            System.Diagnostics.Debug.WriteLine("The " +
-                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                " packet capture should be a PCAP packet capture based on its file extension, but it is not!!!");
-
-                            this.theSelectedPacketCaptureType =
-                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
-                        }
-
-                        break;
-                    }
-
-                case ".enc":
-                    {
-                        // This should be an NA Sniffer (DOS) packet capture
-                        if (this.theSelectedPacketCaptureType != MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS)
-                        {
-                            System.Diagnostics.Debug.WriteLine("The " +
-                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                " packet capture should be a NA Sniffer (DOS) packet capture based on its file extension, but it is not!!!");
-
-                            this.theSelectedPacketCaptureType =
-                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
-                        }
-
-                        break;
-                    }
-
-                default:
-                    {
-                        // This packet capture is either an unsupported form of packet capture or is another type of file
-                        this.theSelectedPacketCaptureType =
-                            MainWindowFormPacketCaptureTypeEnumeration.Unknown;
-
-                        break;
-                    }
-            }
-        }
-
         //// Button support functions
 
         /// <summary>
@@ -924,26 +1088,58 @@ namespace PacketCaptureAnalyser
             // Guard against infinite recursion
             if (sender != this.theEnableDebugInformationCheckBox)
             {
-                this.theEnableDebugInformationCheckBox.Checked = true;
+                this.theEnableDebugInformationCheckBox.Checked = false;
             }
 
             // Match the state of the "Enable Information Events" check box to the state of the "Enable" check box
             this.theEnableInformationEventsInDebugInformationCheckBox.Checked =
                 this.theEnableDebugInformationCheckBox.Checked;
+            this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = false;
 
             this.theRedirectDebugInformationToOutputCheckBox.Checked = false;
+            this.theRedirectDebugInformationToOutputCheckBox.Enabled = false;
+
+            this.theLatencyAnalysisGroupBox.Enabled = false;
 
             this.thePerformLatencyAnalysisCheckBox.Checked = false;
+            this.thePerformLatencyAnalysisCheckBox.Enabled = false;
+
+            this.theOutputLatencyAnalysisHistogramCheckBox.Checked = false;
+            this.theOutputLatencyAnalysisHistogramCheckBox.Enabled = false;
+
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked = false;
-            this.theUseAlternativeSequenceNumberCheckBox.Checked = false;
+            this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = false;
+
+            this.theBurstAnalysisGroupBox.Enabled = false;
+
+            this.thePerformBurstAnalysisCheckBox.Checked = false;
+            this.thePerformBurstAnalysisCheckBox.Enabled = false;
+
+            this.theOutputBurstAnalysisHistogramCheckBox.Checked = false;
+            this.theOutputBurstAnalysisHistogramCheckBox.Enabled = false;
+
+            this.theOutputAdditionalBurstAnalysisInformationCheckBox.Checked = false;
+            this.theOutputAdditionalBurstAnalysisInformationCheckBox.Enabled = false;
+
+            this.theTimeAnalysisGroupBox.Enabled = false;
 
             this.thePerformTimeAnalysisCheckBox.Checked = false;
+            this.thePerformTimeAnalysisCheckBox.Enabled = false;
+
+            this.theOutputTimeAnalysisHistogramCheckBox.Checked = false;
+            this.theOutputTimeAnalysisHistogramCheckBox.Enabled = false;
+
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
+            this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
 
             // Do not change the "Minimize Memory Usage" check box on a change to the "Enable" check box in the "Debug Information" group box
             if (sender != this.theEnableDebugInformationCheckBox)
             {
+                this.theUseAlternativeSequenceNumberCheckBox.Checked = false;
+                this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
+
                 this.theMinimizeMemoryUsageCheckBox.Checked = false;
+                this.theMinimizeMemoryUsageCheckBox.Enabled = false;
             }
         }
 
@@ -959,18 +1155,45 @@ namespace PacketCaptureAnalyser
             if (sender != this.theEnableDebugInformationCheckBox)
             {
                 this.theEnableDebugInformationCheckBox.Enabled = true;
+
+                this.theDebugInformationGroupBox.Enabled = true;
             }
 
-            this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = true;
-            this.theRedirectDebugInformationToOutputCheckBox.Enabled = true;
+            // Only enable the debug information and analysis check boxes on a change to the "Enable" check box in the "Debug Information" group box
+            if (sender != this.theEnableDebugInformationCheckBox)
+            {
+                this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = false;
+                this.theRedirectDebugInformationToOutputCheckBox.Enabled = false;
 
-            this.thePerformLatencyAnalysisCheckBox.Enabled = true;
+                this.theLatencyAnalysisGroupBox.Enabled = false;
+                this.thePerformLatencyAnalysisCheckBox.Enabled = false;
 
-            this.thePerformTimeAnalysisCheckBox.Enabled = true;
+                this.theBurstAnalysisGroupBox.Enabled = false;
+                this.thePerformBurstAnalysisCheckBox.Enabled = false;
+
+                this.theTimeAnalysisGroupBox.Enabled = false;
+                this.thePerformTimeAnalysisCheckBox.Enabled = false;
+            }
+            else
+            {
+                this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = true;
+                this.theRedirectDebugInformationToOutputCheckBox.Enabled = true;
+
+                this.theLatencyAnalysisGroupBox.Enabled = true;
+                this.thePerformLatencyAnalysisCheckBox.Enabled = true;
+
+                this.theBurstAnalysisGroupBox.Enabled = true;
+                this.thePerformBurstAnalysisCheckBox.Enabled = true;
+
+                this.theTimeAnalysisGroupBox.Enabled = true;
+                this.thePerformTimeAnalysisCheckBox.Enabled = true;
+            }
 
             // Do not change the "Minimize Memory Usage" check box on a change to the "Enable" check box in the "Debug Information" group box
             if (sender != this.theEnableDebugInformationCheckBox)
             {
+                this.theUseAlternativeSequenceNumberCheckBox.Enabled = true;
+
                 this.theMinimizeMemoryUsageCheckBox.Enabled = true;
             }
         }
@@ -987,21 +1210,33 @@ namespace PacketCaptureAnalyser
             if (sender != this.theEnableDebugInformationCheckBox)
             {
                 this.theEnableDebugInformationCheckBox.Enabled = false;
+
+                this.theDebugInformationGroupBox.Enabled = false;
             }
 
             this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = false;
             this.theRedirectDebugInformationToOutputCheckBox.Enabled = false;
 
+            this.theLatencyAnalysisGroupBox.Enabled = false;
             this.thePerformLatencyAnalysisCheckBox.Enabled = false;
+            this.theOutputLatencyAnalysisHistogramCheckBox.Enabled = false;
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Enabled = false;
-            this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
 
+            this.theBurstAnalysisGroupBox.Enabled = false;
+            this.thePerformBurstAnalysisCheckBox.Enabled = false;
+            this.theOutputBurstAnalysisHistogramCheckBox.Enabled = false;
+            this.theOutputAdditionalBurstAnalysisInformationCheckBox.Enabled = false;
+
+            this.theTimeAnalysisGroupBox.Enabled = false;
             this.thePerformTimeAnalysisCheckBox.Enabled = false;
+            this.theOutputTimeAnalysisHistogramCheckBox.Enabled = false;
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
 
             // Do not change the "Minimize Memory Usage" check box on a change to the "Enable" check box in the "Debug Information" group box
             if (sender != this.theEnableDebugInformationCheckBox)
             {
+                this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
+
                 this.theMinimizeMemoryUsageCheckBox.Enabled = false;
             }
         }

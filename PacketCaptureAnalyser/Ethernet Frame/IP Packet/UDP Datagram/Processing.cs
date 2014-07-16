@@ -37,10 +37,12 @@ namespace EthernetFrame.IPPacket.UDPDatagram
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
+        /// <param name="performBurstAnalysisProcessing">The flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
+        /// <param name="theBurstAnalysisProcessing">The object that provides the burst analysis processing for data read from the packet capture</param>
         /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool useAlternativeSequenceNumber, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
+        /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
+        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performBurstAnalysisProcessing, Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, bool useAlternativeSequenceNumber)
         {
             this.theDebugInformation = theDebugInformation;
 
@@ -67,12 +69,21 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             ushort theUDPDatagramDestinationPort = 0;
 
             // Process the UDP datagram header
-            theResult = this.ProcessUDPDatagramHeader(theIPPacketPayloadLength, out theUDPDatagramPayloadLength, out theUDPDatagramSourcePort, out theUDPDatagramDestinationPort);
+            theResult = this.ProcessUDPDatagramHeader(
+                theIPPacketPayloadLength,
+                out theUDPDatagramPayloadLength,
+                out theUDPDatagramSourcePort,
+                out theUDPDatagramDestinationPort);
 
             if (theResult)
             {
                 // Process the payload of the UDP datagram, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the UDP datagram header
-                theResult = this.ProcessUDPDatagramPayload(thePacketNumber, thePacketTimestamp, theUDPDatagramPayloadLength, theUDPDatagramSourcePort, theUDPDatagramDestinationPort);
+                theResult = this.ProcessUDPDatagramPayload(
+                    thePacketNumber,
+                    thePacketTimestamp,
+                    theUDPDatagramPayloadLength,
+                    theUDPDatagramSourcePort,
+                    theUDPDatagramDestinationPort);
             }
 
             return theResult;
@@ -109,7 +120,8 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             if (theResult)
             {
                 // Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
-                theUDPDatagramPayloadLength = (ushort)(theIPPacketPayloadLength - Constants.HeaderLength);
+                theUDPDatagramPayloadLength =
+                    (ushort)(theIPPacketPayloadLength - Constants.HeaderLength);
 
                 // Set up the output parameters for source port and destination port using the value read from the UDP datagram header
                 theUDPDatagramSourcePort = this.theUDPDatagramHeader.SourcePort;

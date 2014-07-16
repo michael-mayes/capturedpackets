@@ -11,7 +11,7 @@
 namespace Analysis.LatencyAnalysis
 {
     using System.Data; // Required to be able to use AsEnumerable method
-    using System.Linq; // Required to be able to use Count method
+    using System.Linq; // Required to be able to use Any method
 
     // Create an alias for the enumerable for the dictionary to improve clarity of later code that uses it
     // Cannot nest using declarations so must use the declaration of the key value pair type in full again
@@ -38,6 +38,11 @@ namespace Analysis.LatencyAnalysis
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
+        /// Boolean flag that indicates whether to output the histogram
+        /// </summary>
+        private bool outputHistogram;
+
+        /// <summary>
         /// Boolean flag that indicates whether to output additional information
         /// </summary>
         private bool outputAdditionalInformation;
@@ -61,11 +66,14 @@ namespace Analysis.LatencyAnalysis
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="outputHistogram">Boolean flag that indicates whether to output the histogram</param>
         /// <param name="outputAdditionalInformation">Boolean flag that indicates whether to output additional information</param>
         /// <param name="theSelectedPacketCaptureFile">The path of the selected packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputHistogram, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
         {
             this.theDebugInformation = theDebugInformation;
+
+            this.outputHistogram = outputHistogram;
 
             this.outputAdditionalInformation = outputAdditionalInformation;
 
@@ -113,7 +121,7 @@ namespace Analysis.LatencyAnalysis
         }
 
         /// <summary>
-        /// Clean up any resources used by the time analysis class
+        /// Clean up any resources used by the latency analysis class
         /// </summary>
         public void Dispose()
         {
@@ -275,12 +283,12 @@ namespace Analysis.LatencyAnalysis
                 this.theDebugInformation.WriteTextLine("===========");
                 this.theDebugInformation.WriteBlankLine();
 
-                this.FinaliseProtocolsForHostId(theHostIdRow.Field<byte>("HostId"));
+                this.FinaliseForHostId(theHostIdRow.Field<byte>("HostId"));
             }
         }
 
         /// <summary>
-        /// Clean up any resources used by the time analysis class
+        /// Clean up any resources used by the latency analysis class
         /// </summary>
         /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
         protected virtual void Dispose(bool disposing)
@@ -356,7 +364,7 @@ namespace Analysis.LatencyAnalysis
         /// Finalize latency analysis for the supplied host Id
         /// </summary>
         /// <param name="theHostId">The host Id for which latency analysis is to be finalized</param>
-        private void FinaliseProtocolsForHostId(byte theHostId)
+        private void FinaliseForHostId(byte theHostId)
         {
             //// Obtain the set of message Ids encountered for this host Id during the latency analysis in ascending order
 
@@ -376,17 +384,18 @@ namespace Analysis.LatencyAnalysis
 
                 foreach (System.Data.DataRow theMessageIdRow in theMessageIdRowsFound)
                 {
+                    ulong theMessageId = theMessageIdRow.Field<ulong>("MessageId");
+
                     DictionaryEnumerableType
                         theLatencyValueEntriesFound =
                         from s in this.theDictionary.AsEnumerable()
                         where s.Key.IsReliable == isReliable &&
-                        s.Value.MessageId == theMessageIdRow.Field<ulong>("MessageId") &&
+                        s.Key.HostId == theHostId &&
+                        s.Value.MessageId == theMessageId &&
                         s.Value.TimestampDifferenceCalculated
                         select s;
 
-                    int theRowsFoundCount = theLatencyValueEntriesFound.Count();
-
-                    if (theRowsFoundCount > 0)
+                    if (theLatencyValueEntriesFound.Any())
                     {
                         if (!theFirstRowProcessed)
                         {
@@ -406,15 +415,7 @@ namespace Analysis.LatencyAnalysis
                             this.theDebugInformation.WriteBlankLine();
                         }
 
-                        this.theDebugInformation.WriteTextLine(
-                            "The number of message pairs with a Message Id of " +
-                            string.Format("{0,5}", theMessageIdRow.Field<ulong>("MessageId").ToString()) +
-                            " was " +
-                            theRowsFoundCount.ToString());
-
-                        this.theDebugInformation.WriteBlankLine();
-
-                        this.FinaliseForMessageId(theMessageIdRow.Field<ulong>("MessageId"), theLatencyValueEntriesFound);
+                        this.FinaliseForMessageId(theMessageId, theLatencyValueEntriesFound);
                     }
                 }
             }
@@ -434,14 +435,16 @@ namespace Analysis.LatencyAnalysis
                     Constants.BestCaseLatency,
                     Constants.WorstCaseLatency);
 
+            ulong theNumberOfMessagePairs = 0;
+
+            double theMinTimestampDifference = double.MaxValue;
+            double theMaxTimestampDifference = double.MinValue;
+
             ulong theMinTimestampPacketNumber = 0;
             ulong theMaxTimestampPacketNumber = 0;
 
             ulong theMinTimestampSequenceNumber = 0;
             ulong theMaxTimestampSequenceNumber = 0;
-
-            double theMinTimestampDifference = double.MaxValue;
-            double theMaxTimestampDifference = double.MinValue;
 
             ulong theNumberOfTimestampDifferenceInstances = 0;
             double theTotalOfTimestampDifferences = 0;
@@ -452,14 +455,15 @@ namespace Analysis.LatencyAnalysis
 
             foreach (DictionaryKeyValuePairType theRow in theRows)
             {
+                // Keep a running total of the number of message pairs
+                ++theNumberOfMessagePairs;
+
                 double theTimestampDifference = theRow.Value.TimestampDifference;
 
                 if (!theHistogram.AddValue(theTimestampDifference))
                 {
                     theOutOfRangeLatencies.Add(
-                        "The message pair with a Message Id of " +
-                        string.Format("{0,5}", theMessageId.ToString()) +
-                        " for packet number " +
+                        "The message pair for packet number " +
                         string.Format("{0,7}", theRow.Value.FirstInstancePacketNumber.ToString()) +
                         " and sequence number " +
                         string.Format("{0,7}", theRow.Key.SequenceNumber.ToString()) +
@@ -468,7 +472,7 @@ namespace Analysis.LatencyAnalysis
                         " ms");
                 }
 
-                // Keep a running total to allow for averaging
+                // Keep a running total of the timestamp differences to allow for averaging
                 ++theNumberOfTimestampDifferenceInstances;
                 theTotalOfTimestampDifferences += theTimestampDifference;
 
@@ -487,14 +491,21 @@ namespace Analysis.LatencyAnalysis
                 }
             }
 
+            this.theDebugInformation.WriteTextLine(
+                "The number of message pairs with a Message Id of " +
+                string.Format("{0,5}", theMessageId.ToString()) +
+                " was " +
+                theNumberOfMessagePairs.ToString());
+
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
-                theAverageTimestampDifference = theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
+                theAverageTimestampDifference =
+                    theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
+
+                this.theDebugInformation.WriteBlankLine();
 
                 this.theDebugInformation.WriteTextLine(
-                    "The minimum latency for message pairs with a Message Id of " +
-                    string.Format("{0,5}", theMessageId.ToString()) +
-                    " was " +
+                    "The minimum latency was " +
                     string.Format("{0,18}", theMinTimestampDifference.ToString()) +
                     " ms for packet number " +
                     string.Format("{0,7}", theMinTimestampPacketNumber.ToString()) +
@@ -502,9 +513,7 @@ namespace Analysis.LatencyAnalysis
                     string.Format("{0,7}", theMinTimestampSequenceNumber.ToString()));
 
                 this.theDebugInformation.WriteTextLine(
-                    "The maximum latency for message pairs with a Message Id of " +
-                    string.Format("{0,5}", theMessageId.ToString()) +
-                    " was " +
+                    "The maximum latency was " +
                     string.Format("{0,18}", theMaxTimestampDifference.ToString()) +
                     " ms for packet number " +
                     string.Format("{0,7}", theMaxTimestampPacketNumber.ToString()) +
@@ -512,28 +521,27 @@ namespace Analysis.LatencyAnalysis
                     string.Format("{0,7}", theMaxTimestampSequenceNumber.ToString()));
 
                 this.theDebugInformation.WriteTextLine(
-                    "The average latency for message pairs with a Message Id of " +
-                    string.Format("{0,5}", theMessageId.ToString()) +
-                    " was " +
+                    "The average latency was " +
                     string.Format("{0,18}", theAverageTimestampDifference.ToString()) +
                     " ms");
 
-                this.theDebugInformation.WriteBlankLine();
+                if (this.outputHistogram)
+                {
+                    //// Output the histogram
 
-                //// Output the histogram
+                    this.theDebugInformation.WriteBlankLine();
 
-                this.theDebugInformation.WriteTextLine(
-                    "The histogram (" +
-                    Constants.BinsPerMillisecond.ToString() +
-                    " bins per millisecond) for latency values for messages with a Message Id of " +
-                    string.Format("{0,5}", theMessageId.ToString()) +
-                    " is:");
+                    this.theDebugInformation.WriteTextLine(
+                        "The histogram (" +
+                        Constants.BinsPerMillisecond.ToString() +
+                        " bins per millisecond) for latency values is:");
 
-                this.theDebugInformation.WriteBlankLine();
+                    this.theDebugInformation.WriteBlankLine();
 
-                theHistogram.OutputValues();
+                    theHistogram.OutputValues();
+                }
 
-                if (theOutOfRangeLatencies.Count > 0)
+                if (theOutOfRangeLatencies.Any())
                 {
                     this.theDebugInformation.WriteBlankLine();
 

@@ -11,7 +11,7 @@
 namespace Analysis.TimeAnalysis
 {
     using System.Data; // Required to be able to use AsEnumerable method
-    using System.Linq; // Required to be able to use Count method
+    using System.Linq; // Required to be able to use Any method
 
     /// <summary>
     /// This class provides the time analysis processing
@@ -23,6 +23,11 @@ namespace Analysis.TimeAnalysis
         /// The object that provides for the logging of debug information
         /// </summary>
         private Analysis.DebugInformation theDebugInformation;
+
+        /// <summary>
+        /// Boolean flag that indicates whether to output the histograms
+        /// </summary>
+        private bool outputHistograms;
 
         /// <summary>
         /// Boolean flag that indicates whether to output additional information
@@ -48,11 +53,14 @@ namespace Analysis.TimeAnalysis
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="outputHistograms">Boolean flag that indicates whether to output the histograms</param>
         /// <param name="outputAdditionalInformation">Boolean flag that indicates whether to output additional information</param>
         /// <param name="theSelectedPacketCaptureFile">The path of the selected packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputHistograms, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
         {
             this.theDebugInformation = theDebugInformation;
+
+            this.outputHistograms = outputHistograms;
 
             this.outputAdditionalInformation = outputAdditionalInformation;
 
@@ -218,17 +226,19 @@ namespace Analysis.TimeAnalysis
                     Constants.MaxNegativeTimeDifference,
                     Constants.MaxPositiveTimeDifference);
 
-            ulong theMinTimestampDifferencePacketNumber = 0;
-            ulong theMaxTimestampDifferencePacketNumber = 0;
-
-            ulong theMinTimeDifferencePacketNumber = 0;
-            ulong theMaxTimeDifferencePacketNumber = 0;
+            ulong theNumberOfMessages = 0;
 
             double theMinTimestampDifference = double.MaxValue;
             double theMaxTimestampDifference = double.MinValue;
 
             double theMinTimeDifference = double.MaxValue;
             double theMaxTimeDifference = double.MinValue;
+
+            ulong theMinTimestampDifferencePacketNumber = 0;
+            ulong theMaxTimestampDifferencePacketNumber = 0;
+
+            ulong theMinTimeDifferencePacketNumber = 0;
+            ulong theMaxTimeDifferencePacketNumber = 0;
 
             double theLastTimestamp = 0.0;
             double theLastTime = 0.0;
@@ -257,11 +267,18 @@ namespace Analysis.TimeAnalysis
 
             foreach (System.Data.DataRow theTimeValuesRow in theTimeValuesRowsFound)
             {
+                // Keep a running total of the number of time-supplying messages
+                ++theNumberOfMessages;
+
+                ulong thePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
+                double thePacketTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
+                double thePacketTime = theTimeValuesRow.Field<double>("PacketTime");
+
                 // Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
                 if (!theFirstRowProcessed)
                 {
-                    theLastTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
-                    theLastTime = theTimeValuesRow.Field<double>("PacketTime");
+                    theLastTimestamp = thePacketTimestamp;
+                    theLastTime = thePacketTime;
 
                     // The first row is always marked as processed
                     theTimeValuesRow["Processed"] = true;
@@ -271,87 +288,93 @@ namespace Analysis.TimeAnalysis
                     continue;
                 }
 
-                // The timestamp
+                //// The timestamp
+
+                double theAbsoluteTimestampDifference =
+                    System.Math.Abs((thePacketTimestamp - theLastTimestamp) * 1000.0); // Milliseconds
+
+                double theTimestampDifference =
+                    ((thePacketTimestamp - theLastTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
+
+                if (theAbsoluteTimestampDifference > Constants.MinTimestampDifference)
                 {
-                    double theAbsoluteTimestampDifference = System.Math.Abs((theTimeValuesRow.Field<double>("PacketTimestamp") - theLastTimestamp) * 1000.0);
-                    double theTimestampDifference = ((theTimeValuesRow.Field<double>("PacketTimestamp") - theLastTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
+                    // Only those time messages in the chosen range will be marked as processed
+                    // This should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
+                    theTimeValuesRow["Processed"] = true;
 
-                    if (theAbsoluteTimestampDifference > Constants.MinTimestampDifference)
+                    // Keep a running total of the timestamp differences to allow for averaging
+                    ++theNumberOfTimestampDifferenceInstances;
+                    theTotalOfTimestampDifferences += theTimestampDifference;
+
+                    if (!theTimestampHistogram.AddValue(theTimestampDifference))
                     {
-                        // Only those time messages in the chosen range will be marked as processed
-                        // This should prevent the processing of duplicates of a time message (e.g. if port mirroring results in two copies of the time message)
-                        theTimeValuesRow["Processed"] = true;
-
-                        // Keep a running total to allow for averaging
-                        ++theNumberOfTimestampDifferenceInstances;
-                        theTotalOfTimestampDifferences += theTimestampDifference;
-
-                        if (!theTimestampHistogram.AddValue(theTimestampDifference))
-                        {
-                            theOutOfRangeTimestamps.Add(
-                                "The time message with packet number " +
-                                string.Format("{0,7}", theTimeValuesRow.Field<ulong>("PacketNumber").ToString()) +
-                                " has an out of range timestamp difference of " +
-                                string.Format("{0,18}", theTimestampDifference.ToString()) +
-                                " ms");
-                        }
-
-                        if (theMinTimestampDifference > theTimestampDifference)
-                        {
-                            theMinTimestampDifference = theTimestampDifference;
-                            theMinTimestampDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
-                        }
-
-                        if (theMaxTimestampDifference < theTimestampDifference)
-                        {
-                            theMaxTimestampDifference = theTimestampDifference;
-                            theMaxTimestampDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
-                        }
-
-                        theLastTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
-
-                        //// The time
-
-                        double theTimeDifference = ((theTimeValuesRow.Field<double>("PacketTime") - theLastTime) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds;
-
-                        ++theNumberOfTimeDifferenceInstances;
-                        theTotalOfTimeDifferences += theTimeDifference;
-
-                        if (!theTimeHistogram.AddValue(theTimeDifference))
-                        {
-                            theOutOfRangeTimes.Add(
-                                "The time message with packet number " +
-                                string.Format("{0,7}", theTimeValuesRow.Field<ulong>("PacketNumber").ToString()) +
-                                " has an out of range time difference of " +
-                                string.Format("{0,18}", theTimeDifference.ToString()) +
-                                " ms");
-                        }
-
-                        if (theMinTimeDifference > theTimeDifference)
-                        {
-                            theMinTimeDifference = theTimeDifference;
-                            theMinTimeDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
-                        }
-
-                        if (theMaxTimeDifference < theTimeDifference)
-                        {
-                            theMaxTimeDifference = theTimeDifference;
-                            theMaxTimeDifferencePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
-                        }
-
-                        theLastTime = theTimeValuesRow.Field<double>("PacketTime");
+                        theOutOfRangeTimestamps.Add(
+                            "The time-supplying message with packet number " +
+                            string.Format("{0,7}", thePacketNumber.ToString()) +
+                            " has an out of range timestamp difference of " +
+                            string.Format("{0,18}", theTimestampDifference.ToString()) +
+                            " ms");
                     }
+
+                    if (theMinTimestampDifference > theTimestampDifference)
+                    {
+                        theMinTimestampDifference = theTimestampDifference;
+                        theMinTimestampDifferencePacketNumber = thePacketNumber;
+                    }
+
+                    if (theMaxTimestampDifference < theTimestampDifference)
+                    {
+                        theMaxTimestampDifference = theTimestampDifference;
+                        theMaxTimestampDifferencePacketNumber = thePacketNumber;
+                    }
+
+                    theLastTimestamp = thePacketTimestamp;
+
+                    //// The time
+
+                    double theTimeDifference =
+                        ((thePacketTime - theLastTime) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds
+
+                    ++theNumberOfTimeDifferenceInstances;
+                    theTotalOfTimeDifferences += theTimeDifference;
+
+                    if (!theTimeHistogram.AddValue(theTimeDifference))
+                    {
+                        theOutOfRangeTimes.Add(
+                            "The time-supplying message with packet number " +
+                            string.Format("{0,7}", thePacketNumber.ToString()) +
+                            " has an out of range time difference of " +
+                            string.Format("{0,18}", theTimeDifference.ToString()) +
+                            " ms");
+                    }
+
+                    if (theMinTimeDifference > theTimeDifference)
+                    {
+                        theMinTimeDifference = theTimeDifference;
+                        theMinTimeDifferencePacketNumber = thePacketNumber;
+                    }
+
+                    if (theMaxTimeDifference < theTimeDifference)
+                    {
+                        theMaxTimeDifference = theTimeDifference;
+                        theMaxTimeDifferencePacketNumber = thePacketNumber;
+                    }
+
+                    theLastTime = thePacketTime;
                 }
             }
 
+            this.theDebugInformation.WriteTextLine(
+                "The number of time-supplying messages was " +
+                theNumberOfMessages.ToString());
+
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
-                theAverageTimestampDifference = theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
-                theAverageTimeDifference = theTotalOfTimeDifferences / theNumberOfTimeDifferenceInstances;
+                theAverageTimestampDifference =
+                    theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
 
-                this.theDebugInformation.WriteTextLine(
-                    "The number of time messages was " +
-                    theNumberOfTimestampDifferenceInstances.ToString());
+                theAverageTimeDifference =
+                    theTotalOfTimeDifferences / theNumberOfTimeDifferenceInstances;
 
                 this.theDebugInformation.WriteBlankLine();
 
@@ -372,20 +395,23 @@ namespace Analysis.TimeAnalysis
                     string.Format("{0,18}", theAverageTimestampDifference.ToString()) +
                     " ms");
 
-                this.theDebugInformation.WriteBlankLine();
+                if (this.outputHistograms)
+                {
+                    //// Output the histogram
 
-                //// Output the histogram
+                    this.theDebugInformation.WriteBlankLine();
 
-                this.theDebugInformation.WriteTextLine(
-                    "The histogram (" +
-                    Constants.TimestampBinsPerMillisecond.ToString() +
-                    " bins per millisecond) for timestamp values is:");
+                    this.theDebugInformation.WriteTextLine(
+                        "The histogram (" +
+                        Constants.TimestampBinsPerMillisecond.ToString() +
+                        " bins per millisecond) for timestamp difference values is:");
 
-                this.theDebugInformation.WriteBlankLine();
+                    this.theDebugInformation.WriteBlankLine();
 
-                theTimestampHistogram.OutputValues();
+                    theTimestampHistogram.OutputValues();
+                }
 
-                if (theOutOfRangeTimestamps.Count > 0)
+                if (theOutOfRangeTimestamps.Any())
                 {
                     this.theDebugInformation.WriteBlankLine();
 
@@ -419,20 +445,23 @@ namespace Analysis.TimeAnalysis
                     string.Format("{0,18}", theAverageTimeDifference.ToString()) +
                     " ms");
 
-                this.theDebugInformation.WriteBlankLine();
+                if (this.outputHistograms)
+                {
+                    //// Output the histogram
 
-                //// Output the histogram
+                    this.theDebugInformation.WriteBlankLine();
 
-                this.theDebugInformation.WriteTextLine(
-                    "The histogram (" +
-                    Constants.TimeBinsPerMillisecond.ToString() +
-                    " bins per millisecond) for time values is:");
+                    this.theDebugInformation.WriteTextLine(
+                        "The histogram (" +
+                        Constants.TimeBinsPerMillisecond.ToString() +
+                        " bins per millisecond) for time difference values is:");
 
-                this.theDebugInformation.WriteBlankLine();
+                    this.theDebugInformation.WriteBlankLine();
 
-                theTimeHistogram.OutputValues();
+                    theTimeHistogram.OutputValues();
+                }
 
-                if (theOutOfRangeTimes.Count > 0)
+                if (theOutOfRangeTimes.Any())
                 {
                     this.theDebugInformation.WriteBlankLine();
 
@@ -475,39 +504,45 @@ namespace Analysis.TimeAnalysis
 
                 foreach (System.Data.DataRow theTimeValuesRow in theTimeValuesRowsFound)
                 {
+                    ulong thePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
+                    double thePacketTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
+                    double thePacketTime = theTimeValuesRow.Field<double>("PacketTime");
+
                     if (theTimeValuesRow.Field<bool>("Processed"))
                     {
                         string theOutputAdditionalInformationLine = null;
-
-                        double theCurrentPacketTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
-
-                        double theCurrentPacketTime = theTimeValuesRow.Field<double>("PacketTime");
 
                         if (thePreviousPacketTimestamp == null || thePreviousPacketTime == null)
                         {
                             // If this is the first time message then there is no previous time message and so just output the timestamp and time
                             theOutputAdditionalInformationLine = string.Format(
                                 "{0},{1,18},{2,18}{3}",
-                                theTimeValuesRow.Field<ulong>("PacketNumber").ToString(),
-                                theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
-                                theTimeValuesRow.Field<double>("PacketTime").ToString(),
+                                thePacketNumber.ToString(),
+                                thePacketTimestamp.ToString(),
+                                thePacketTime.ToString(),
                                 System.Environment.NewLine);
                         }
                         else
                         {
+                            double theTimestampDifference =
+                                ((thePacketTimestamp - (double)thePreviousPacketTimestamp) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds
+
+                            double theTimeDifference =
+                                ((thePacketTime - (double)thePreviousPacketTime) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds
+
                             // If this is another time message then also calculate the differences in timestamp and time from the previous time message and output them along with the timestamp and time
                             theOutputAdditionalInformationLine = string.Format(
                                 "{0},{1,18},{2,18},,{3,18},{4,18}{5}",
-                                theTimeValuesRow.Field<ulong>("PacketNumber").ToString(),
-                                theTimeValuesRow.Field<double>("PacketTimestamp").ToString(),
-                                theTimeValuesRow.Field<double>("PacketTime").ToString(),
-                                (((theCurrentPacketTimestamp - thePreviousPacketTimestamp) * 1000.0) - Constants.ExpectedTimeDifference).ToString(), // Milliseconds
-                                (((theCurrentPacketTime - thePreviousPacketTime) * 1000.0) - Constants.ExpectedTimeDifference).ToString(), // Milliseconds
+                                thePacketNumber.ToString(),
+                                thePacketTimestamp.ToString(),
+                                thePacketTime.ToString(),
+                                theTimestampDifference,
+                                theTimeDifference,
                                 System.Environment.NewLine);
                         }
 
-                        thePreviousPacketTimestamp = theCurrentPacketTimestamp;
-                        thePreviousPacketTime = theCurrentPacketTime;
+                        thePreviousPacketTimestamp = thePacketTimestamp;
+                        thePreviousPacketTime = thePacketTime;
 
                         theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationLine);
                     }

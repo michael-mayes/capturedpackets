@@ -37,10 +37,12 @@ namespace EthernetFrame.IPPacket.TCPPacket
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
+        /// <param name="performBurstAnalysisProcessing">The flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
+        /// <param name="theBurstAnalysisProcessing">The object that provides the burst analysis processing for data read from the packet capture</param>
         /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool useAlternativeSequenceNumber, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing)
+        /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
+        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performBurstAnalysisProcessing, Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, bool useAlternativeSequenceNumber)
         {
             this.theDebugInformation = theDebugInformation;
 
@@ -67,12 +69,21 @@ namespace EthernetFrame.IPPacket.TCPPacket
             ushort theTCPPacketDestinationPort = 0;
 
             // Process the TCP packet header
-            theResult = this.ProcessTCPPacketHeader(theIPPacketPayloadLength, out theTCPPacketPayloadLength, out theTCPPacketSourcePort, out theTCPPacketDestinationPort);
+            theResult = this.ProcessTCPPacketHeader(
+                theIPPacketPayloadLength,
+                out theTCPPacketPayloadLength,
+                out theTCPPacketSourcePort,
+                out theTCPPacketDestinationPort);
 
             if (theResult)
             {
                 // Process the payload of the TCP packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the TCP packet header
-                theResult = this.ProcessTCPPacketPayload(thePacketNumber, thePacketTimestamp, theTCPPacketPayloadLength, theTCPPacketSourcePort, theTCPPacketDestinationPort);
+                theResult = this.ProcessTCPPacketPayload(
+                    thePacketNumber,
+                    thePacketTimestamp,
+                    theTCPPacketPayloadLength,
+                    theTCPPacketSourcePort,
+                    theTCPPacketDestinationPort);
             }
 
             return theResult;
@@ -112,7 +123,8 @@ namespace EthernetFrame.IPPacket.TCPPacket
             // Need to first extract the length value from the combined TCP packet header length, reserved fields and NS flag field
             // We want the higher four bits from the combined TCP packet header length, reserved fields and NS flag field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
             // The extracted length value is the length of the TCP packet header in 32-bit words so multiply by four to get the actual length in bytes of the TCP packet header
-            ushort theTCPPacketHeaderLength = (ushort)(((this.theTCPPacketHeader.DataOffsetAndReservedAndNSFlag & 0xF0) >> 4) * 4);
+            ushort theTCPPacketHeaderLength =
+                (ushort)(((this.theTCPPacketHeader.DataOffsetAndReservedAndNSFlag & 0xF0) >> 4) * 4);
 
             // Validate the TCP packet header
             theResult = this.ValidateTCPPacketHeader(theTCPPacketHeaderLength);
@@ -120,7 +132,8 @@ namespace EthernetFrame.IPPacket.TCPPacket
             if (theResult)
             {
                 // Set up the output parameter for the length of the payload of the TCP packet, which is the total length of the TCP packet minus the length of the TCP packet header just calculated
-                theTCPPacketPayloadLength = (ushort)(theIPPacketPayloadLength - theTCPPacketHeaderLength);
+                theTCPPacketPayloadLength =
+                    (ushort)(theIPPacketPayloadLength - theTCPPacketHeaderLength);
 
                 // Set up the output parameters for source port and destination port using the value read from the TCP packet header
                 theTCPPacketSourcePort = this.theTCPPacketHeader.SourcePort;
