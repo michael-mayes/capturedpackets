@@ -171,7 +171,9 @@ namespace Analysis.LatencyAnalysis
 
             Structures.DictionaryValue theDictionaryValueFound;
 
-            bool theEntryFound = this.theDictionary.TryGetValue(theDictionaryKey, out theDictionaryValueFound);
+            bool theEntryFound = this.theDictionary.TryGetValue(
+                theDictionaryKey,
+                out theDictionaryValueFound);
 
             if (!theEntryFound)
             {
@@ -222,7 +224,8 @@ namespace Analysis.LatencyAnalysis
                 if (thePacketTimestamp > theDictionaryValueFound.FirstInstancePacketTimestamp)
                 {
                     theDictionaryValueFound.SecondInstancePacketTimestamp = thePacketTimestamp;
-                    theDictionaryValueFound.TimestampDifference = (thePacketTimestamp - theDictionaryValueFound.FirstInstancePacketTimestamp) * 1000.0; // Milliseconds
+                    theDictionaryValueFound.TimestampDifference =
+                        (thePacketTimestamp - theDictionaryValueFound.FirstInstancePacketTimestamp) * 1000.0; // Milliseconds
                     theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
                 else if (thePacketTimestamp == theDictionaryValueFound.FirstInstancePacketTimestamp)
@@ -250,7 +253,9 @@ namespace Analysis.LatencyAnalysis
                 this.RegisterEncounteredHostId(theHostId);
 
                 // Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
-                this.RegisterEncounteredMessageId(theHostId, theMessageId);
+                this.RegisterEncounteredMessageId(
+                    theHostId,
+                    theMessageId);
             }
         }
 
@@ -311,7 +316,8 @@ namespace Analysis.LatencyAnalysis
 
             theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
 
-            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
+            System.Data.DataRow theHostIdDataRowFound =
+                this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
 
             if (theHostIdDataRowFound == null)
             {
@@ -320,7 +326,8 @@ namespace Analysis.LatencyAnalysis
                     string.Format("{0,3}", theHostId) +
                     " - adding this Host Id to the latency analysis");
 
-                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
+                System.Data.DataRow theHostIdRowToAdd =
+                    this.theHostIdsTable.NewRow();
 
                 theHostIdRowToAdd["HostId"] = theHostId;
 
@@ -340,7 +347,8 @@ namespace Analysis.LatencyAnalysis
             theMessageIdRowFindObject[0] = theHostId.ToString(); // Primary key (part one)
             theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
 
-            System.Data.DataRow theMessageIdDataRowFound = this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
+            System.Data.DataRow theMessageIdDataRowFound =
+                this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
 
             if (theMessageIdDataRowFound == null)
             {
@@ -351,7 +359,8 @@ namespace Analysis.LatencyAnalysis
                     string.Format("{0,3}", theHostId) +
                     " - adding this Message Id/Host Id combination to the latency analysis");
 
-                System.Data.DataRow theMessageIdRowToAdd = this.theMessageIdsTable.NewRow();
+                System.Data.DataRow theMessageIdRowToAdd =
+                    this.theMessageIdsTable.NewRow();
 
                 theMessageIdRowToAdd["HostId"] = theHostId;
                 theMessageIdRowToAdd["MessageId"] = theMessageId;
@@ -415,7 +424,9 @@ namespace Analysis.LatencyAnalysis
                             this.theDebugInformation.WriteBlankLine();
                         }
 
-                        this.FinaliseForMessageId(theMessageId, theLatencyValueEntriesFound);
+                        this.FinaliseForMessageId(
+                            theMessageId,
+                            theLatencyValueEntriesFound);
                     }
                 }
             }
@@ -576,13 +587,14 @@ namespace Analysis.LatencyAnalysis
                     "Latency (ms)",
                     System.Environment.NewLine);
 
-                theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationTitleLine);
+                theOutputAdditionalInformationLines.Append(
+                    theOutputAdditionalInformationTitleLine);
 
                 //// Add a line to the debug output file for each of the processed message pairs
 
                 foreach (DictionaryKeyValuePairType theRow in theRows)
                 {
-                    string outputDebugLine = string.Format(
+                    string theOutputAdditionalInformationLine = string.Format(
                         "{0,7},{1,7},{2,7},{3,18},{4,18},,{5,18}{6}",
                         theRow.Value.FirstInstancePacketNumber.ToString(),
                         theRow.Value.SecondInstancePacketNumber.ToString(),
@@ -592,7 +604,8 @@ namespace Analysis.LatencyAnalysis
                         theRow.Value.TimestampDifference.ToString(),
                         System.Environment.NewLine);
 
-                    theOutputAdditionalInformationLines.Append(outputDebugLine);
+                    theOutputAdditionalInformationLines.Append(
+                        theOutputAdditionalInformationLine);
                 }
 
                 System.IO.File.WriteAllText(

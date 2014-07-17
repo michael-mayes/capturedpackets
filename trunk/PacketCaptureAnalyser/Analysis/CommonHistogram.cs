@@ -70,22 +70,31 @@ namespace Analysis
 
             if (theMinAllowedValue == theMaxAllowedValue)
             {
-                this.theDebugInformation.WriteErrorEvent("The minimum and maximum allowed values for the histogram are equal!!!");
+                this.theDebugInformation.WriteErrorEvent(
+                    "The minimum and maximum allowed values for the histogram are equal!!!");
 
-                throw new System.ArgumentException("Error: The minimum and maximum allowed values for the histogram are equal!!!");
+                throw new System.ArgumentException(
+                    "Error: The minimum and maximum allowed values for the histogram are equal!!!");
             }
 
             this.theValueBinCounts = new uint[theNumOfValueBins];
 
             if (theMaxAllowedValue > theMinAllowedValue)
             {
-                this.CalculateValueBinBoundaries(theNumOfValueBins, theMinAllowedValue, theMaxAllowedValue);
+                this.CalculateValueBinBoundaries(
+                    theNumOfValueBins,
+                    theMinAllowedValue,
+                    theMaxAllowedValue);
             }
             else
             {
-                this.theDebugInformation.WriteErrorEvent("The minimum value is greater than the maximum value!");
+                this.theDebugInformation.WriteErrorEvent(
+                    "The minimum value is greater than the maximum value!");
 
-                this.CalculateValueBinBoundaries(theNumOfValueBins, theMaxAllowedValue, theMinAllowedValue);
+                this.CalculateValueBinBoundaries(
+                    theNumOfValueBins,
+                    theMaxAllowedValue,
+                    theMinAllowedValue);
             }
         }
 
@@ -154,6 +163,7 @@ namespace Analysis
                     if (theValue < this.theValueBinBoundaries[i + 1])
                     {
                         ++this.theValueBinCounts[i];
+
                         break;
                     }
                 }
@@ -212,7 +222,8 @@ namespace Analysis
                     {
                         theFirstPercentileFound = true;
 
-                        this.theDebugInformation.WriteTextLine(new string('+', 144) + "  1%");
+                        this.theDebugInformation.WriteTextLine(
+                            new string('+', 144) + "  1%");
                     }
                 }
 
@@ -220,22 +231,26 @@ namespace Analysis
 
                 if (this.theValueBinBoundaries[i] >= 0.0)
                 {
-                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i].ToString(" 00.00000"));
+                    this.theDebugInformation.WriteTextElement(
+                        string.Format("{0,11: ###0.00000}", this.theValueBinBoundaries[i]));
                 }
                 else
                 {
-                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i].ToString("00.00000"));
+                    this.theDebugInformation.WriteTextElement(
+                        string.Format("{0,11:###0.00000}", this.theValueBinBoundaries[i]));
                 }
 
                 this.theDebugInformation.WriteTextElement(" to ");
 
                 if (this.theValueBinBoundaries[i + 1] >= 0.0)
                 {
-                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i + 1].ToString(" 00.00000"));
+                    this.theDebugInformation.WriteTextElement(
+                        string.Format("{0,11: ###0.00000}", this.theValueBinBoundaries[i + 1]));
                 }
                 else
                 {
-                    this.theDebugInformation.WriteTextElement(this.theValueBinBoundaries[i + 1].ToString("00.00000"));
+                    this.theDebugInformation.WriteTextElement(
+                        string.Format("{0,11:###0.00000}", this.theValueBinBoundaries[i + 1]));
                 }
 
                 this.theDebugInformation.WriteTextElement(" | ");
@@ -243,7 +258,8 @@ namespace Analysis
                 // Calculated a scaled count for this bin based on the percentage of the total number of values across all bins that is in this bin
                 // The scaling of the count will the ensure that the output does not exceed 120 columns to ensure it fits on screen
                 // Perform the calculations using floating point values to prevent rounding to zero due to integer division
-                int theScaledBinCount = (int)(((float)this.theValueBinCounts[i] / (float)this.theNumberOfValuesAcrossAllBins) * 120.0);
+                int theScaledBinCount =
+                    (int)(((float)this.theValueBinCounts[i] / (float)this.theNumberOfValuesAcrossAllBins) * 120.0);
 
                 // Make sure that at least a single ) character is always output for a bin with a non-zero count
                 if (this.theValueBinCounts[i] > 0 && theScaledBinCount == 0)
@@ -252,14 +268,16 @@ namespace Analysis
                 }
 
                 // Output a number of ) characters for this bin based on the scaled count
-                this.theDebugInformation.WriteTextElement(new string(')', theScaledBinCount));
+                this.theDebugInformation.WriteTextElement(
+                    new string(')', theScaledBinCount));
 
                 // Except if there are no entries, leave a space after the last ) character
                 // for this bin for clarity and then write out the number of entries in this
                 // bin (the real value, not the scaled value)
                 if (this.theValueBinCounts[i] > 0)
                 {
-                    this.theDebugInformation.WriteTextElement(" " + this.theValueBinCounts[i]);
+                    this.theDebugInformation.WriteTextElement(
+                        " " + this.theValueBinCounts[i]);
                 }
 
                 // Complete the line for this bin
@@ -272,7 +290,8 @@ namespace Analysis
                     {
                         theNinetyNinthPercentileFound = true;
 
-                        this.theDebugInformation.WriteTextLine(new string('+', 144) + " 99%");
+                        this.theDebugInformation.WriteTextLine(
+                            new string('+', 144) + " 99%");
                     }
                 }
 
@@ -287,7 +306,8 @@ namespace Analysis
             {
                 this.theDebugInformation.WriteBlankLine();
 
-                this.theDebugInformation.WriteTextLine("Number of values lower than bins: " +
+                this.theDebugInformation.WriteTextLine(
+                    "Number of values lower than bins: " +
                     this.theNumberOfValuesLowerThanBins.ToString());
             }
 
@@ -295,7 +315,8 @@ namespace Analysis
             {
                 this.theDebugInformation.WriteBlankLine();
 
-                this.theDebugInformation.WriteTextLine("Number of values higher than bins: " +
+                this.theDebugInformation.WriteTextLine(
+                    "Number of values higher than bins: " +
                     this.theNumberOfValuesHigherThanBins.ToString());
             }
         }
@@ -316,11 +337,13 @@ namespace Analysis
 
             this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1] = theMaxAllowedValue;
 
-            double theSizeOfValueBins = (theMaxAllowedValue - theMinAllowedValue) / theNumOfValueBins;
+            double theSizeOfValueBins =
+                (theMaxAllowedValue - theMinAllowedValue) / theNumOfValueBins;
 
             for (int i = 1; i < this.theValueBinBoundaries.Length - 1; ++i)
             {
-                this.theValueBinBoundaries[i] = this.theValueBinBoundaries[0] + (i * theSizeOfValueBins);
+                this.theValueBinBoundaries[i] =
+                    this.theValueBinBoundaries[0] + (i * theSizeOfValueBins);
             }
 
             // Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values

@@ -145,7 +145,8 @@ namespace Analysis.BurstAnalysis
         {
             //// Add the supplied timestamp and time to the datatable
 
-            System.Data.DataRow theTimestampValuesRowToAdd = this.theTimestampValuesTable.NewRow();
+            System.Data.DataRow theTimestampValuesRowToAdd =
+                this.theTimestampValuesTable.NewRow();
 
             theTimestampValuesRowToAdd["HostId"] = theHostId;
             theTimestampValuesRowToAdd["IsReliable"] = isReliable;
@@ -161,7 +162,9 @@ namespace Analysis.BurstAnalysis
             this.RegisterEncounteredHostId(theHostId);
 
             // Add the supplied message Id to the set of those encountered during the burst analysis if not already in there
-            this.RegisterEncounteredMessageId(theHostId, theMessageId);
+            this.RegisterEncounteredMessageId(
+                theHostId,
+                theMessageId);
         }
 
         /// <summary>
@@ -222,16 +225,18 @@ namespace Analysis.BurstAnalysis
 
             theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
 
-            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
+            System.Data.DataRow theHostIdDataRowFound =
+                this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
 
             if (theHostIdDataRowFound == null)
             {
                 this.theDebugInformation.WriteInformationEvent(
-                    "Found a message for a Host Id " +
+                    "Found a data-supplying message for a Host Id " +
                     string.Format("{0,3}", theHostId) +
                     " - adding this Host Id to the burst analysis");
 
-                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
+                System.Data.DataRow theHostIdRowToAdd =
+                    this.theHostIdsTable.NewRow();
 
                 theHostIdRowToAdd["HostId"] = theHostId;
 
@@ -251,18 +256,20 @@ namespace Analysis.BurstAnalysis
             theMessageIdRowFindObject[0] = theHostId.ToString(); // Primary key (part one)
             theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
 
-            System.Data.DataRow theMessageIdDataRowFound = this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
+            System.Data.DataRow theMessageIdDataRowFound =
+                this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
 
             if (theMessageIdDataRowFound == null)
             {
                 this.theDebugInformation.WriteInformationEvent(
-                    "Found a message with a Message Id " +
+                    "Found a data-supplying message with a Message Id " +
                     string.Format("{0,5}", theMessageId) +
                     " for a Host Id " +
                     string.Format("{0,3}", theHostId) +
                     " - adding this Message Id/Host Id combination to the burst analysis");
 
-                System.Data.DataRow theMessageIdRowToAdd = this.theMessageIdsTable.NewRow();
+                System.Data.DataRow theMessageIdRowToAdd =
+                    this.theMessageIdsTable.NewRow();
 
                 theMessageIdRowToAdd["HostId"] = theHostId;
                 theMessageIdRowToAdd["MessageId"] = theMessageId;
@@ -329,7 +336,11 @@ namespace Analysis.BurstAnalysis
                                 this.theDebugInformation.WriteBlankLine();
                             }
 
-                            this.FinaliseForMessageId(theHostId, isOutgoing, theMessageId, theTimestampValueRowsFound);
+                            this.FinaliseForMessageId(
+                                theHostId,
+                                isOutgoing,
+                                theMessageId,
+                                theTimestampValueRowsFound);
                         }
                     }
                 }
@@ -537,7 +548,8 @@ namespace Analysis.BurstAnalysis
                     "Packet Timestamp Delta (ms)",
                     System.Environment.NewLine);
 
-                theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationTitleLine);
+                theOutputAdditionalInformationLines.Append(
+                    theOutputAdditionalInformationTitleLine);
 
                 double? thePreviousPacketTimestamp = null;
 
@@ -580,7 +592,8 @@ namespace Analysis.BurstAnalysis
 
                     thePreviousPacketTimestamp = thePacketTimestamp;
 
-                    theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationLine);
+                    theOutputAdditionalInformationLines.Append(
+                        theOutputAdditionalInformationLine);
                 }
 
                 if (isOutgoing)
