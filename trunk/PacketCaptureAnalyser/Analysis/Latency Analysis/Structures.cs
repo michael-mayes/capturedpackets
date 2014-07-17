@@ -155,14 +155,14 @@ namespace Analysis.LatencyAnalysis
             public ulong SecondInstancePacketNumber;
 
             /// <summary>
-            /// The timestamp for the first instance of the message
+            /// The packet timestamp for the first instance of the message
             /// </summary>
-            public double FirstInstanceTimestamp;
+            public double FirstInstancePacketTimestamp;
 
             /// <summary>
-            /// The timestamp for the second instance of the message
+            /// The packet timestamp for the second instance of the message
             /// </summary>
-            public double SecondInstanceTimestamp;
+            public double SecondInstancePacketTimestamp;
 
             /// <summary>
             /// The difference between the timestamps for the first and second instances of the message
@@ -187,8 +187,8 @@ namespace Analysis.LatencyAnalysis
                 this.SecondInstanceFound = false;
                 this.FirstInstancePacketNumber = thePacketNumber;
                 this.SecondInstancePacketNumber = 0;
-                this.FirstInstanceTimestamp = thePacketTimestamp;
-                this.SecondInstanceTimestamp = 0.0;
+                this.FirstInstancePacketTimestamp = thePacketTimestamp;
+                this.SecondInstancePacketTimestamp = 0.0;
                 this.TimestampDifference = 0.0;
                 this.TimestampDifferenceCalculated = false;
             }
@@ -220,8 +220,8 @@ namespace Analysis.LatencyAnalysis
                     a.SecondInstanceFound == b.SecondInstanceFound &&
                     a.FirstInstancePacketNumber == b.FirstInstancePacketNumber &&
                     a.SecondInstancePacketNumber == b.SecondInstancePacketNumber &&
-                    a.FirstInstanceTimestamp == b.FirstInstanceTimestamp &&
-                    a.SecondInstanceTimestamp == b.SecondInstanceTimestamp &&
+                    a.FirstInstancePacketTimestamp == b.FirstInstancePacketTimestamp &&
+                    a.SecondInstancePacketTimestamp == b.SecondInstancePacketTimestamp &&
                     a.TimestampDifference == b.TimestampDifference &&
                     a.TimestampDifferenceCalculated == b.TimestampDifferenceCalculated;
             }
@@ -256,8 +256,8 @@ namespace Analysis.LatencyAnalysis
                         this.SecondInstanceFound == value.SecondInstanceFound &&
                         this.FirstInstancePacketNumber == value.FirstInstancePacketNumber &&
                         this.SecondInstancePacketNumber == value.SecondInstancePacketNumber &&
-                        this.FirstInstanceTimestamp == value.FirstInstanceTimestamp &&
-                        this.SecondInstanceTimestamp == value.SecondInstanceTimestamp &&
+                        this.FirstInstancePacketTimestamp == value.FirstInstancePacketTimestamp &&
+                        this.SecondInstancePacketTimestamp == value.SecondInstancePacketTimestamp &&
                         this.TimestampDifference == value.TimestampDifference &&
                         this.TimestampDifferenceCalculated == value.TimestampDifferenceCalculated;
                 }
@@ -280,8 +280,8 @@ namespace Analysis.LatencyAnalysis
                     this.SecondInstanceFound.GetHashCode() ^
                     this.FirstInstancePacketNumber.GetHashCode() ^
                     this.SecondInstancePacketNumber.GetHashCode() ^
-                    this.FirstInstanceTimestamp.GetHashCode() ^
-                    this.SecondInstanceTimestamp.GetHashCode() ^
+                    this.FirstInstancePacketTimestamp.GetHashCode() ^
+                    this.SecondInstancePacketTimestamp.GetHashCode() ^
                     this.TimestampDifference.GetHashCode() ^
                     this.TimestampDifferenceCalculated.GetHashCode();
             }
