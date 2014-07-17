@@ -219,15 +219,15 @@ namespace Analysis.LatencyAnalysis
                 theDictionaryValueFound.SecondInstanceFound = true;
                 theDictionaryValueFound.SecondInstancePacketNumber = thePacketNumber;
 
-                if (thePacketTimestamp > theDictionaryValueFound.FirstInstanceTimestamp)
+                if (thePacketTimestamp > theDictionaryValueFound.FirstInstancePacketTimestamp)
                 {
-                    theDictionaryValueFound.SecondInstanceTimestamp = thePacketTimestamp;
-                    theDictionaryValueFound.TimestampDifference = (thePacketTimestamp - theDictionaryValueFound.FirstInstanceTimestamp) * 1000.0; // Milliseconds
+                    theDictionaryValueFound.SecondInstancePacketTimestamp = thePacketTimestamp;
+                    theDictionaryValueFound.TimestampDifference = (thePacketTimestamp - theDictionaryValueFound.FirstInstancePacketTimestamp) * 1000.0; // Milliseconds
                     theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
-                else if (thePacketTimestamp == theDictionaryValueFound.FirstInstanceTimestamp)
+                else if (thePacketTimestamp == theDictionaryValueFound.FirstInstancePacketTimestamp)
                 {
-                    theDictionaryValueFound.SecondInstanceTimestamp = 0.0;
+                    theDictionaryValueFound.SecondInstancePacketTimestamp = 0.0;
                     theDictionaryValueFound.TimestampDifference = 0.0;
                     theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
@@ -567,10 +567,12 @@ namespace Analysis.LatencyAnalysis
                 //// Add a column titles line to the debug output file
 
                 string theOutputAdditionalInformationTitleLine = string.Format(
-                    "{0},{1},{2},{3}{4}",
+                    "{0},{1},{2},{3},{4},,{5}{6}",
                     "First Packet Number",
                     "Second Packet Number",
                     "Sequence Number",
+                    "First Packet Timestamp",
+                    "Second Packet Timestamp",
                     "Latency (ms)",
                     System.Environment.NewLine);
 
@@ -581,10 +583,12 @@ namespace Analysis.LatencyAnalysis
                 foreach (DictionaryKeyValuePairType theRow in theRows)
                 {
                     string outputDebugLine = string.Format(
-                        "{0,7},{1,7},{2,7},{3,18}{4}",
+                        "{0,7},{1,7},{2,7},{3,18},{4,18},,{5,18}{6}",
                         theRow.Value.FirstInstancePacketNumber.ToString(),
                         theRow.Value.SecondInstancePacketNumber.ToString(),
                         theRow.Key.SequenceNumber.ToString(),
+                        theRow.Value.FirstInstancePacketTimestamp.ToString(),
+                        theRow.Value.SecondInstancePacketTimestamp.ToString(),
                         theRow.Value.TimestampDifference.ToString(),
                         System.Environment.NewLine);
 
