@@ -116,12 +116,10 @@ namespace Analysis.TimeAnalysis
         /// <param name="thePacketTime">The time for the packet read from the packet capture</param>
         public void RegisterTimeMessageReceipt(byte theHostId, ulong thePacketNumber, double thePacketTimestamp, double thePacketTime)
         {
-            // Add the supplied Host Id to the set of those encountered during the time analysis if not already in there
-            this.RegisterEncounteredHostId(theHostId);
-
             //// Add the supplied timestamp and time to the datatable
 
-            System.Data.DataRow theTimeValuesRowToAdd = this.theTimeValuesTable.NewRow();
+            System.Data.DataRow theTimeValuesRowToAdd =
+                this.theTimeValuesTable.NewRow();
 
             theTimeValuesRowToAdd["HostId"] = theHostId;
             theTimeValuesRowToAdd["PacketNumber"] = thePacketNumber;
@@ -130,6 +128,9 @@ namespace Analysis.TimeAnalysis
             theTimeValuesRowToAdd["Processed"] = false;
 
             this.theTimeValuesTable.Rows.Add(theTimeValuesRowToAdd);
+
+            // Add the supplied Host Id to the set of those encountered during the time analysis if not already in there
+            this.RegisterEncounteredHostId(theHostId);
         }
 
         /// <summary>
@@ -189,7 +190,8 @@ namespace Analysis.TimeAnalysis
 
             theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
 
-            System.Data.DataRow theHostIdDataRowFound = this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
+            System.Data.DataRow theHostIdDataRowFound =
+                this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
 
             if (theHostIdDataRowFound == null)
             {
@@ -198,7 +200,8 @@ namespace Analysis.TimeAnalysis
                     string.Format("{0,3}", theHostId) +
                     " - adding this Host Id to the time analysis");
 
-                System.Data.DataRow theHostIdRowToAdd = this.theHostIdsTable.NewRow();
+                System.Data.DataRow theHostIdRowToAdd =
+                    this.theHostIdsTable.NewRow();
 
                 theHostIdRowToAdd["HostId"] = theHostId;
 
@@ -335,6 +338,7 @@ namespace Analysis.TimeAnalysis
                     double theTimeDifference =
                         ((thePacketTime - theLastTime) * 1000.0) - Constants.ExpectedTimeDifference; // Milliseconds
 
+                    // Keep a running total of the time differences to allow for averaging
                     ++theNumberOfTimeDifferenceInstances;
                     theTotalOfTimeDifferences += theTimeDifference;
 
@@ -495,7 +499,8 @@ namespace Analysis.TimeAnalysis
                     "Message Time Delta (ms)",
                     System.Environment.NewLine);
 
-                theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationTitleLine);
+                theOutputAdditionalInformationLines.Append(
+                    theOutputAdditionalInformationTitleLine);
 
                 double? thePreviousPacketTimestamp = null;
                 double? thePreviousPacketTime = null;
@@ -544,7 +549,8 @@ namespace Analysis.TimeAnalysis
                         thePreviousPacketTimestamp = thePacketTimestamp;
                         thePreviousPacketTime = thePacketTime;
 
-                        theOutputAdditionalInformationLines.Append(theOutputAdditionalInformationLine);
+                        theOutputAdditionalInformationLines.Append(
+                            theOutputAdditionalInformationLine);
                     }
                 }
 
