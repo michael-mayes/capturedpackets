@@ -130,7 +130,8 @@ namespace Analysis.TimeAnalysis
             this.theTimeValuesTable.Rows.Add(theTimeValuesRowToAdd);
 
             // Add the supplied Host Id to the set of those encountered during the time analysis if not already in there
-            this.RegisterEncounteredHostId(theHostId);
+            this.RegisterEncounteredHostId(
+                theHostId);
         }
 
         /// <summary>

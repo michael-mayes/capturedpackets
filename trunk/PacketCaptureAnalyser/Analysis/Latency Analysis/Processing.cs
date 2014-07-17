@@ -250,7 +250,8 @@ namespace Analysis.LatencyAnalysis
                 this.theDictionary[theDictionaryKey] = theDictionaryValueFound;
 
                 // Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
-                this.RegisterEncounteredHostId(theHostId);
+                this.RegisterEncounteredHostId(
+                    theHostId);
 
                 // Add the supplied message Id to the set of those encountered during the latency analysis if not already in there
                 this.RegisterEncounteredMessageId(

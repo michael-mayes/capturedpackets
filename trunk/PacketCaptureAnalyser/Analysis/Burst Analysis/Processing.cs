@@ -159,7 +159,8 @@ namespace Analysis.BurstAnalysis
             this.theTimestampValuesTable.Rows.Add(theTimestampValuesRowToAdd);
 
             // Add the supplied Host Id to the set of those encountered during the burst analysis if not already in there
-            this.RegisterEncounteredHostId(theHostId);
+            this.RegisterEncounteredHostId(
+                theHostId);
 
             // Add the supplied message Id to the set of those encountered during the burst analysis if not already in there
             this.RegisterEncounteredMessageId(
