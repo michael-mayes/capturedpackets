@@ -1,6 +1,6 @@
 ﻿// %PCMS_HEADER_SUBSTITUTION_START% %PM%    %PR%  %PRT% %PCMS_HEADER_SUBSTITUTION_END% //
-// $Id: Processing.cs 245 2014-07-10 21:36:09Z michaelmayes $
-// $URL: https://svn.code.sf.net/p/capturedpackets/code/trunk/PacketCaptureAnalyser/Analysis/Time%20Analysis/Processing.cs $
+// $Id$
+// $URL$
 // <copyright file="Processing.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>

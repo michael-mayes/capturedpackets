@@ -1,6 +1,6 @@
 ﻿// %PCMS_HEADER_SUBSTITUTION_START% %PM%    %PR%  %PRT% %PCMS_HEADER_SUBSTITUTION_END% //
-// $Id: Constants.cs 231 2014-07-06 23:05:41Z michaelmayes $
-// $URL: https://svn.code.sf.net/p/capturedpackets/code/trunk/PacketCaptureAnalyser/Analysis/Time%20Analysis/Constants.cs $
+// $Id$
+// $URL$
 // <copyright file="Constants.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>
