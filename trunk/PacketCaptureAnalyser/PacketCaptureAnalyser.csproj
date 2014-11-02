@@ -84,6 +84,9 @@
     <Compile Include="Analysis\Latency Analysis\Processing.cs" />
     <Compile Include="Analysis\Time Analysis\Constants.cs" />
     <Compile Include="Analysis\Time Analysis\Processing.cs" />
+    <Compile Include="Ethernet Frame\RARP Packet\Constants.cs" />
+    <Compile Include="Ethernet Frame\RARP Packet\Processing.cs" />
+    <Compile Include="Ethernet Frame\RARP Packet\Structures.cs" />
     <Compile Include="Packet Capture\CommonConstants.cs" />
     <Compile Include="Packet Capture\CommonProcessing.cs" />
     <Compile Include="Packet Capture\PCAP Packet Capture\Constants.cs" />

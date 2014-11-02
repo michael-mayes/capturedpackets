@@ -46,13 +46,17 @@ namespace Analysis
         public DebugInformation(string theOutputFilePath, bool enableDebugInformation, bool enableInformationEvents, bool redirectDebugInformationToOutput)
         {
             // Delete any existing output files with the selected name to ape the clearing of all text from the output window
-            if (System.IO.File.Exists(theOutputFilePath))
+            if (System.IO.File.Exists(
+                theOutputFilePath))
             {
                 // Reset the attributes of the existing output file to ensure that it can be deleted
-                System.IO.File.SetAttributes(theOutputFilePath, System.IO.FileAttributes.Normal);
+                System.IO.File.SetAttributes(
+                    theOutputFilePath,
+                    System.IO.FileAttributes.Normal);
 
                 // Then delete the existing output file
-                System.IO.File.Delete(theOutputFilePath);
+                System.IO.File.Delete(
+                    theOutputFilePath);
             }
 
             this.theOutputFilePath = theOutputFilePath;
@@ -74,7 +78,8 @@ namespace Analysis
                 }
 
                 // Redirect any text added to the output window to the output file
-                System.Diagnostics.Trace.Listeners.Add(this.theOutputWindowListener);
+                System.Diagnostics.Trace.Listeners.Add(
+                    this.theOutputWindowListener);
             }
         }
 
@@ -92,7 +97,8 @@ namespace Analysis
                     this.theOutputWindowListener.Flush();
                     this.theOutputWindowListener.Close();
 
-                    System.Diagnostics.Debug.Listeners.Remove(this.theOutputWindowListener);
+                    System.Diagnostics.Debug.Listeners.Remove(
+                        this.theOutputWindowListener);
 
                     // Dispose any resources allocated to the trace listener if instructed
                     this.theOutputWindowListener.Dispose();
@@ -118,7 +124,8 @@ namespace Analysis
         {
             if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.WriteLine("Test:  " +
+                System.Diagnostics.Trace.WriteLine(
+                    "Test:  " +
                     theTestRunEvent);
             }
         }
@@ -129,9 +136,11 @@ namespace Analysis
         /// <param name="theInformationEvent">The information string to be written as a new line to the list of listeners</param>
         public void WriteInformationEvent(string theInformationEvent)
         {
-            if (this.enableDebugInformation && this.enableInformationEvents)
+            if (this.enableDebugInformation &&
+                this.enableInformationEvents)
             {
-                System.Diagnostics.Trace.WriteLine("Info:  " +
+                System.Diagnostics.Trace.WriteLine(
+                    "Info:  " +
                     theInformationEvent);
             }
         }
@@ -144,7 +153,8 @@ namespace Analysis
         {
             if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.WriteLine("Error: " +
+                System.Diagnostics.Trace.WriteLine(
+                    "Error: " +
                     theErrorEvent);
             }
         }
@@ -157,7 +167,8 @@ namespace Analysis
         {
             if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.Write(theTextElement);
+                System.Diagnostics.Trace.Write(
+                    theTextElement);
             }
         }
 
@@ -169,7 +180,8 @@ namespace Analysis
         {
             if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.WriteLine(theTextLine);
+                System.Diagnostics.Trace.WriteLine(
+                    theTextLine);
             }
         }
 
@@ -180,7 +192,8 @@ namespace Analysis
         {
             if (this.enableDebugInformation)
             {
-                System.Diagnostics.Trace.Write(System.Environment.NewLine);
+                System.Diagnostics.Trace.Write(
+                    System.Environment.NewLine);
             }
         }
 
@@ -194,15 +207,18 @@ namespace Analysis
                 // Flush output to the output file and then close it
                 this.theOutputWindowListener.Flush();
 
-                if (System.IO.File.Exists(this.theOutputFilePath))
+                if (System.IO.File.Exists(
+                    this.theOutputFilePath))
                 {
                     try
                     {
-                        System.Diagnostics.Process.Start(this.theOutputFilePath);
+                        System.Diagnostics.Process.Start(
+                            this.theOutputFilePath);
                     }
                     catch (System.ComponentModel.Win32Exception f)
                     {
-                        this.WriteErrorEvent("The exception " +
+                        this.WriteErrorEvent(
+                            "The exception " +
                             f.GetType().Name +
                             " with the following message: " +
                             f.Message +

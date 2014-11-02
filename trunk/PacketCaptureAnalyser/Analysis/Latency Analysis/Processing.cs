@@ -141,19 +141,19 @@ namespace Analysis.LatencyAnalysis
         /// <param name="thePacketTimestamp">The timestamp read from the packet capture</param>
         public void RegisterMessageReceipt(byte theHostId, bool isReliable, ulong theSequenceNumber, ulong theMessageId, ulong thePacketNumber, double thePacketTimestamp)
         {
-            // Do not process messages where the sequence number is not populated as we would not be able match message pairs using them
+            // Do not process messages where the sequence number is not populated (or is invalid) as we would not be able match message pairs using them
             if (theSequenceNumber == 0)
             {
                 return;
             }
 
-            // Do not process messages where the message Id is not populated as we would not be able match message pairs using them
+            // Do not process messages where the message Id is not populated (or is invalid) as we would not be able match message pairs using them
             if (theHostId == 0)
             {
                 return;
             }
 
-            // Do not process messages where the message Id is not populated as we would not be able match message pairs using them
+            // Do not process messages where the message Id is not populated (or is invalid) as we would not be able match message pairs using them
             if (theMessageId == 0)
             {
                 return;
@@ -224,14 +224,18 @@ namespace Analysis.LatencyAnalysis
                 if (thePacketTimestamp > theDictionaryValueFound.FirstInstancePacketTimestamp)
                 {
                     theDictionaryValueFound.SecondInstancePacketTimestamp = thePacketTimestamp;
+
                     theDictionaryValueFound.TimestampDifference =
                         (thePacketTimestamp - theDictionaryValueFound.FirstInstancePacketTimestamp) * 1000.0; // Milliseconds
+
                     theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
                 else if (thePacketTimestamp == theDictionaryValueFound.FirstInstancePacketTimestamp)
                 {
                     theDictionaryValueFound.SecondInstancePacketTimestamp = 0.0;
+
                     theDictionaryValueFound.TimestampDifference = 0.0;
+
                     theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
                 else
@@ -247,7 +251,8 @@ namespace Analysis.LatencyAnalysis
                 }
 
                 // Update the values in the dictionary entry
-                this.theDictionary[theDictionaryKey] = theDictionaryValueFound;
+                this.theDictionary[theDictionaryKey] =
+                    theDictionaryValueFound;
 
                 // Add the supplied host Id to the set of those encountered during the latency analysis if not already in there
                 this.RegisterEncounteredHostId(
@@ -318,7 +323,8 @@ namespace Analysis.LatencyAnalysis
             theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
 
             System.Data.DataRow theHostIdDataRowFound =
-                this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
+                this.theHostIdsTable.Rows.Find(
+                theHostIdRowFindObject);
 
             if (theHostIdDataRowFound == null)
             {
@@ -332,7 +338,8 @@ namespace Analysis.LatencyAnalysis
 
                 theHostIdRowToAdd["HostId"] = theHostId;
 
-                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
+                this.theHostIdsTable.Rows.Add(
+                    theHostIdRowToAdd);
             }
         }
 
@@ -349,7 +356,8 @@ namespace Analysis.LatencyAnalysis
             theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
 
             System.Data.DataRow theMessageIdDataRowFound =
-                this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
+                this.theMessageIdsTable.Rows.Find(
+                theMessageIdRowFindObject);
 
             if (theMessageIdDataRowFound == null)
             {
@@ -366,7 +374,8 @@ namespace Analysis.LatencyAnalysis
                 theMessageIdRowToAdd["HostId"] = theHostId;
                 theMessageIdRowToAdd["MessageId"] = theMessageId;
 
-                this.theMessageIdsTable.Rows.Add(theMessageIdRowToAdd);
+                this.theMessageIdsTable.Rows.Add(
+                    theMessageIdRowToAdd);
             }
         }
 
@@ -484,8 +493,10 @@ namespace Analysis.LatencyAnalysis
                         " ms");
                 }
 
-                // Keep a running total of the timestamp differences to allow for averaging
+                //// Keep a running total of the timestamp differences to allow for averaging
+
                 ++theNumberOfTimestampDifferenceInstances;
+
                 theTotalOfTimestampDifferences += theTimestampDifference;
 
                 if (theMinTimestampDifference > theTimestampDifference)
@@ -512,7 +523,8 @@ namespace Analysis.LatencyAnalysis
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
                 theAverageTimestampDifference =
-                    theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
+                    theTotalOfTimestampDifferences /
+                    theNumberOfTimestampDifferenceInstances;
 
                 this.theDebugInformation.WriteBlankLine();
 
@@ -546,7 +558,7 @@ namespace Analysis.LatencyAnalysis
                     this.theDebugInformation.WriteTextLine(
                         "The histogram (" +
                         Constants.BinsPerMillisecond.ToString() +
-                        " bins per millisecond) for latency values is:");
+                        " bins per millisecond) for the latencies is:");
 
                     this.theDebugInformation.WriteBlankLine();
 
@@ -557,7 +569,7 @@ namespace Analysis.LatencyAnalysis
                 {
                     this.theDebugInformation.WriteBlankLine();
 
-                    // Output the data for any message pairs with out of range latencies
+                    // Output the data for any message pair with an out of range latency
                     foreach (string theString in theOutOfRangeLatencies)
                     {
                         this.theDebugInformation.WriteTextLine(theString);
@@ -567,11 +579,13 @@ namespace Analysis.LatencyAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
-            this.theDebugInformation.WriteTextLine(new string('-', 144));
+            this.theDebugInformation.WriteTextLine(
+                new string('-', 144));
 
             this.theDebugInformation.WriteBlankLine();
 
-            if (this.outputAdditionalInformation)
+            if (this.outputAdditionalInformation &&
+                theNumberOfTimestampDifferenceInstances > 0)
             {
                 System.Text.StringBuilder theOutputAdditionalInformationLines =
                     new System.Text.StringBuilder();

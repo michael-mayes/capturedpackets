@@ -35,11 +35,11 @@ namespace EthernetFrame.IPPacket.TCPPacket
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="performBurstAnalysisProcessing">The flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
+        /// <param name="performBurstAnalysisProcessing">Boolean flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
         /// <param name="theBurstAnalysisProcessing">The object that provides the burst analysis processing for data read from the packet capture</param>
-        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
         /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performBurstAnalysisProcessing, Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, bool useAlternativeSequenceNumber)
@@ -127,7 +127,8 @@ namespace EthernetFrame.IPPacket.TCPPacket
                 (ushort)(((this.theTCPPacketHeader.DataOffsetAndReservedAndNSFlag & 0xF0) >> 4) * 4);
 
             // Validate the TCP packet header
-            theResult = this.ValidateTCPPacketHeader(theTCPPacketHeaderLength);
+            theResult = this.ValidateTCPPacketHeader(
+                theTCPPacketHeaderLength);
 
             if (theResult)
             {
@@ -144,7 +145,8 @@ namespace EthernetFrame.IPPacket.TCPPacket
                     // The TCP packet contains a header length which is greater than the minimum and so contains extra Options bytes at the end (e.g. timestamps from the capture application)
 
                     // Just read off these remaining Options bytes of the TCP packet header from the packet capture so we can move on
-                    this.theBinaryReader.ReadBytes(theTCPPacketHeaderLength - Constants.HeaderMinimumLength);
+                    this.theBinaryReader.ReadBytes(
+                        theTCPPacketHeaderLength - Constants.HeaderMinimumLength);
                 }
             }
             else
@@ -180,7 +182,8 @@ namespace EthernetFrame.IPPacket.TCPPacket
                 {
                     // Just read off the remaining bytes of the TCP packet from the packet capture so we can move on
                     // The remaining length is the supplied length of the TCP packet payload
-                    this.theBinaryReader.ReadBytes(theTCPPacketPayloadLength);
+                    this.theBinaryReader.ReadBytes(
+                        theTCPPacketPayloadLength);
                 }
             }
 

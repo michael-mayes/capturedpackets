@@ -35,11 +35,11 @@ namespace EthernetFrame.IPPacket.UDPDatagram
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="performBurstAnalysisProcessing">The flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
+        /// <param name="performBurstAnalysisProcessing">Boolean flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
         /// <param name="theBurstAnalysisProcessing">The object that provides the burst analysis processing for data read from the packet capture</param>
-        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
         /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performBurstAnalysisProcessing, Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, bool useAlternativeSequenceNumber)
@@ -115,7 +115,8 @@ namespace EthernetFrame.IPPacket.UDPDatagram
             this.theUDPDatagramHeader.Checksum = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
             // Validate the UDP datagram header
-            theResult = this.ValidateUDPDatagramHeader(theIPPacketPayloadLength);
+            theResult = this.ValidateUDPDatagramHeader(
+                theIPPacketPayloadLength);
 
             if (theResult)
             {
@@ -155,7 +156,8 @@ namespace EthernetFrame.IPPacket.UDPDatagram
                         {
                             // Just read off the remaining bytes of the UDP datagram from the packet capture so we can move on
                             // The remaining length is the supplied length of the UDP datagram payload
-                            this.theBinaryReader.ReadBytes(theUDPDatagramPayloadLength);
+                            this.theBinaryReader.ReadBytes(
+                                theUDPDatagramPayloadLength);
 
                             break;
                         }

@@ -1,5 +1,4 @@
-﻿// %PCMS_HEADER_SUBSTITUTION_START% %PM%    %PR%  %PRT% %PCMS_HEADER_SUBSTITUTION_END% //
-// $Id$
+﻿// $Id$
 // $URL$
 // <copyright file="Processing.cs" company="Public Domain">
 //     Released into the public domain
@@ -143,6 +142,18 @@ namespace Analysis.BurstAnalysis
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         public void RegisterMessageReceipt(byte theHostId, bool isReliable, bool isOutgoing, ulong theSequenceNumber, ulong theMessageId, ulong thePacketNumber, double thePacketTimestamp)
         {
+            // Do not process messages where the message Id is not populated (or is invalid)
+            if (theHostId == 0)
+            {
+                return;
+            }
+
+            // Do not process messages where the message Id is not populated (or is invalid)
+            if (theMessageId == 0)
+            {
+                return;
+            }
+
             //// Add the supplied timestamp and time to the datatable
 
             System.Data.DataRow theTimestampValuesRowToAdd =
@@ -156,7 +167,8 @@ namespace Analysis.BurstAnalysis
             theTimestampValuesRowToAdd["PacketNumber"] = thePacketNumber;
             theTimestampValuesRowToAdd["PacketTimestamp"] = thePacketTimestamp;
 
-            this.theTimestampValuesTable.Rows.Add(theTimestampValuesRowToAdd);
+            this.theTimestampValuesTable.Rows.Add(
+                theTimestampValuesRowToAdd);
 
             // Add the supplied Host Id to the set of those encountered during the burst analysis if not already in there
             this.RegisterEncounteredHostId(
@@ -227,7 +239,8 @@ namespace Analysis.BurstAnalysis
             theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
 
             System.Data.DataRow theHostIdDataRowFound =
-                this.theHostIdsTable.Rows.Find(theHostIdRowFindObject);
+                this.theHostIdsTable.Rows.Find(
+                theHostIdRowFindObject);
 
             if (theHostIdDataRowFound == null)
             {
@@ -241,7 +254,8 @@ namespace Analysis.BurstAnalysis
 
                 theHostIdRowToAdd["HostId"] = theHostId;
 
-                this.theHostIdsTable.Rows.Add(theHostIdRowToAdd);
+                this.theHostIdsTable.Rows.Add(
+                    theHostIdRowToAdd);
             }
         }
 
@@ -258,7 +272,8 @@ namespace Analysis.BurstAnalysis
             theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
 
             System.Data.DataRow theMessageIdDataRowFound =
-                this.theMessageIdsTable.Rows.Find(theMessageIdRowFindObject);
+                this.theMessageIdsTable.Rows.Find(
+                theMessageIdRowFindObject);
 
             if (theMessageIdDataRowFound == null)
             {
@@ -275,7 +290,8 @@ namespace Analysis.BurstAnalysis
                 theMessageIdRowToAdd["HostId"] = theHostId;
                 theMessageIdRowToAdd["MessageId"] = theMessageId;
 
-                this.theMessageIdsTable.Rows.Add(theMessageIdRowToAdd);
+                this.theMessageIdsTable.Rows.Add(
+                    theMessageIdRowToAdd);
             }
         }
 
@@ -410,8 +426,10 @@ namespace Analysis.BurstAnalysis
                 double theTimestampDifference =
                     (thePacketTimestamp - theLastTimestamp) * 1000.0; // Milliseconds
 
-                // Keep a running total of the timestamp differences to allow for averaging
+                //// Keep a running total of the timestamp differences to allow for averaging
+
                 ++theNumberOfTimestampDifferenceInstances;
+
                 theTotalOfTimestampDifferences += theTimestampDifference;
 
                 if (!theTimestampHistogram.AddValue(theTimestampDifference))
@@ -463,7 +481,8 @@ namespace Analysis.BurstAnalysis
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
                 theAverageTimestampDifference =
-                    theTotalOfTimestampDifferences / theNumberOfTimestampDifferenceInstances;
+                    theTotalOfTimestampDifferences /
+                    theNumberOfTimestampDifferenceInstances;
 
                 this.theDebugInformation.WriteBlankLine();
 
@@ -492,7 +511,9 @@ namespace Analysis.BurstAnalysis
                 {
                     this.theDebugInformation.WriteBlankLine();
 
-                    double theMessageRate = 1.0 / (theAverageTimestampDifference / 1000.0); // Hertz
+                    double theMessageRate =
+                        1.0 /
+                        (theAverageTimestampDifference / 1000.0); // Hertz
 
                     this.theDebugInformation.WriteTextLine(
                         "The average message rate was " +
@@ -509,7 +530,7 @@ namespace Analysis.BurstAnalysis
                     this.theDebugInformation.WriteTextLine(
                         "The histogram (" +
                         Constants.BinsPerMillisecond.ToString() +
-                        " bins per millisecond) for timestamp difference values is:");
+                        " bins per millisecond) for the timestamp differences is:");
 
                     this.theDebugInformation.WriteBlankLine();
 
@@ -530,11 +551,13 @@ namespace Analysis.BurstAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
-            this.theDebugInformation.WriteTextLine(new string('-', 144));
+            this.theDebugInformation.WriteTextLine(
+                new string('-', 144));
 
             this.theDebugInformation.WriteBlankLine();
 
-            if (this.outputAdditionalInformation)
+            if (this.outputAdditionalInformation &&
+                theNumberOfTimestampDifferenceInstances > 0)
             {
                 System.Text.StringBuilder theOutputAdditionalInformationLines =
                     new System.Text.StringBuilder();
@@ -554,7 +577,7 @@ namespace Analysis.BurstAnalysis
 
                 double? thePreviousPacketTimestamp = null;
 
-                //// Add a line to the debug output file for each of the processed time messages
+                //// Add a line to the debug output file for each of the processed messages
 
                 foreach (System.Data.DataRow theTimestampValuesRow in theRows)
                 {
@@ -568,7 +591,7 @@ namespace Analysis.BurstAnalysis
 
                     if (thePreviousPacketTimestamp == null)
                     {
-                        // If this is the first time message then there is no previous time message and so just output the timestamp and time
+                        // If this is the first message then there is no previous message and so just output the timestamp
                         theOutputAdditionalInformationLine = string.Format(
                             "{0},{1},{2,18}{3}",
                             thePacketNumber.ToString(),
@@ -581,7 +604,7 @@ namespace Analysis.BurstAnalysis
                         double theTimestampDifference =
                             (thePacketTimestamp - (double)thePreviousPacketTimestamp) * 1000.0; // Milliseconds
 
-                        // If this is another time message then also calculate the differences in timestamp and time from the previous time message and output them along with the timestamp and time
+                        // If this is another message then also calculate the difference in timestamp from the previous message and output it along with the timestamp
                         theOutputAdditionalInformationLine = string.Format(
                             "{0},{1},{2,18},,{3,18}{4}",
                             thePacketNumber.ToString(),

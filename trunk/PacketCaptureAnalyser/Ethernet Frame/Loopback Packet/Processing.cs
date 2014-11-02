@@ -52,21 +52,22 @@ namespace EthernetFrame.LoopbackPacket
         /// <returns>Boolean flag that indicates whether the Loopback packet could be processed</returns>
         public bool Process(long theEthernetFrameLength)
         {
-            if (theEthernetFrameLength < (Constants.HeaderLength + Constants.PayloadLength))
-            {
-                this.theDebugInformation.WriteErrorEvent("The length of the Ethernet frame is lower than the length of the Loopback packet!!!");
+            bool theResult = true;
 
-                return false;
+            // Validate the Loopback packet
+            theResult = this.ValidateLoopbackPacket(
+                theEthernetFrameLength);
+
+            if (theResult)
+            {
+                // Process the Loopback packet header
+                this.ProcessLoopbackPacketHeader();
+
+                // Process the payload of the Loopback packet
+                this.ProcessLoopbackPacketPayload();
             }
 
-            // Process the Loopback packet header
-            this.ProcessLoopbackPacketHeader();
-
-            // Just read off the remaining bytes of the Loopback packet from the packet capture so we can move on
-            // The remaining length to read off is the length of the payload of the Loopback packet
-            this.theBinaryReader.ReadBytes(Constants.PayloadLength);
-
-            return true;
+            return theResult;
         }
 
         /// <summary>
@@ -78,6 +79,37 @@ namespace EthernetFrame.LoopbackPacket
             this.theLoopbackPacketHeader.SkipCount = this.theBinaryReader.ReadUInt16();
             this.theLoopbackPacketHeader.Function = this.theBinaryReader.ReadUInt16();
             this.theLoopbackPacketHeader.ReceiptNumber = this.theBinaryReader.ReadUInt16();
+        }
+
+        /// <summary>
+        /// Processes the payload of the Loopback packet
+        /// </summary>
+        private void ProcessLoopbackPacketPayload()
+        {
+            // Just read off the remaining bytes of the Loopback packet from the packet capture so we can move on
+            // The remaining length to read off is the length of the payload of the Loopback packet
+            this.theBinaryReader.ReadBytes(
+                Constants.PayloadLength);
+        }
+
+        /// <summary>
+        /// Validates the Loopback packet
+        /// </summary>
+        /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
+        /// <returns>Boolean flag that indicates whether the Loopback packet is valid</returns>
+        private bool ValidateLoopbackPacket(long theEthernetFrameLength)
+        {
+            bool theResult = true;
+
+            if (theEthernetFrameLength < (Constants.HeaderLength + Constants.PayloadLength))
+            {
+                this.theDebugInformation.WriteErrorEvent(
+                    "The length of the Ethernet frame is lower than the length of the Loopback packet!!!");
+
+                theResult = false;
+            }
+
+            return theResult;
         }
     }
 }

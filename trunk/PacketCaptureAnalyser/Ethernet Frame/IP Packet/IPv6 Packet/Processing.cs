@@ -45,11 +45,11 @@ namespace EthernetFrame.IPPacket.IPv6Packet
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="performLatencyAnalysisProcessing">The flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
+        /// <param name="performLatencyAnalysisProcessing">Boolean flag that indicates whether to perform latency analysis processing for data read from the packet capture</param>
         /// <param name="theLatencyAnalysisProcessing">The object that provides the latency analysis processing for data read from the packet capture</param>
-        /// <param name="performBurstAnalysisProcessing">The flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
+        /// <param name="performBurstAnalysisProcessing">Boolean flag that indicates whether to perform burst analysis processing for data read from the packet capture</param>
         /// <param name="theBurstAnalysisProcessing">The object that provides the burst analysis processing for data read from the packet capture</param>
-        /// <param name="performTimeAnalysisProcessing">The flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
+        /// <param name="performTimeAnalysisProcessing">Boolean flag that indicates whether to perform time analysis processing for data read from the packet capture</param>
         /// <param name="theTimeAnalysisProcessing">The object that provides the time analysis processing for data read from the packet capture</param>
         /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
         public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performBurstAnalysisProcessing, Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, bool useAlternativeSequenceNumber)
@@ -103,12 +103,19 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             byte theIPv6PacketProtocol;
 
             // Process the IP v6 packet header
-            theResult = this.ProcessIPv6PacketHeader(theEthernetFrameLength, out theIPv6PacketPayloadLength, out theIPv6PacketProtocol);
+            theResult = this.ProcessIPv6PacketHeader(
+                theEthernetFrameLength,
+                out theIPv6PacketPayloadLength,
+                out theIPv6PacketProtocol);
 
             if (theResult)
             {
                 // Process the payload of the IP v6 packet, supplying the length of the payload and the values for the source port and the destination port as returned by the processing of the IP v6 packet header
-                theResult = this.ProcessIPv6PacketPayload(thePacketNumber, thePacketTimestamp, theIPv6PacketPayloadLength, theIPv6PacketProtocol);
+                theResult = this.ProcessIPv6PacketPayload(
+                    thePacketNumber,
+                    thePacketTimestamp,
+                    theIPv6PacketPayloadLength,
+                    theIPv6PacketProtocol);
             }
 
             return theResult;
@@ -146,18 +153,24 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             // Determine the version of the IP v6 packet header
             // Need to first extract the version value from the combined IP packet version and traffic class field
             // We want the higher four bits from the combined IP packet version and traffic class field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
-            ushort theIPv6PacketHeaderVersion = (ushort)((this.theIPv6PacketHeader.VersionAndTrafficClass & 0xF0) >> 4);
+            ushort theIPv6PacketHeaderVersion =
+                (ushort)((this.theIPv6PacketHeader.VersionAndTrafficClass & 0xF0) >> 4);
 
             // Validate the IP v6 packet header
-            theResult = this.ValidateIPv6PacketHeader(theEthernetFrameLength, this.theIPv6PacketHeader, theIPv6PacketHeaderVersion);
+            theResult = this.ValidateIPv6PacketHeader(
+                theEthernetFrameLength,
+                this.theIPv6PacketHeader,
+                theIPv6PacketHeaderVersion);
 
             if (theResult)
             {
                 // Set up the output parameter for the length of the payload of the IP v6 packet (e.g. a TCP packet), which is the total length of the IP v6 packet minus the length of the IP v6 packet header just calculated
-                theIPv6PacketPayloadLength = this.theIPv6PacketHeader.PayloadLength;
+                theIPv6PacketPayloadLength =
+                    this.theIPv6PacketHeader.PayloadLength;
 
                 // Set up the output parameter for the protocol for the IP v6 packet
-                theIPv6PacketProtocol = this.theIPv6PacketHeader.NextHeader;
+                theIPv6PacketProtocol =
+                    this.theIPv6PacketHeader.NextHeader;
             }
 
             return theResult;
@@ -181,7 +194,10 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                 case (byte)Constants.Protocol.TCP:
                     {
                         // We have got an IP v6 packet containing an TCP packet so process it
-                        theResult = this.theTCPPacketProcessing.ProcessTCPPacket(thePacketNumber, thePacketTimestamp, theIPv6PacketPayloadLength);
+                        theResult = this.theTCPPacketProcessing.ProcessTCPPacket(
+                            thePacketNumber,
+                            thePacketTimestamp,
+                            theIPv6PacketPayloadLength);
 
                         break;
                     }
@@ -189,7 +205,10 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                 case (byte)Constants.Protocol.UDP:
                     {
                         // We have got an IP v6 packet containing an UDP datagram so process it
-                        theResult = this.theUDPDatagramProcessing.ProcessUDPDatagram(thePacketNumber, thePacketTimestamp, theIPv6PacketPayloadLength);
+                        theResult = this.theUDPDatagramProcessing.ProcessUDPDatagram(
+                            thePacketNumber,
+                            thePacketTimestamp,
+                            theIPv6PacketPayloadLength);
 
                         break;
                     }
@@ -200,10 +219,12 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
                         //// Processing of IP v6 packets containing an ICMP v6 packet is not currently supported!
 
-                        this.theDebugInformation.WriteInformationEvent("The IP v6 packet contains an ICMP v6 packet, which is not currently supported!");
+                        this.theDebugInformation.WriteInformationEvent(
+                            "The IP v6 packet contains an ICMP v6 packet, which is not currently supported!");
 
                         // Just read off the bytes for the ICMP v6 packet from the packet capture so we can move on
-                        this.theBinaryReader.ReadBytes(theIPv6PacketPayloadLength);
+                        this.theBinaryReader.ReadBytes(
+                            theIPv6PacketPayloadLength);
 
                         break;
                     }
@@ -215,7 +236,8 @@ namespace EthernetFrame.IPPacket.IPv6Packet
                         // Processing of IP v6 packets containing a Cisco EIGRP packet is not currently supported!
 
                         // Just record the event and fall through as later processing will read off the remaining payload so we can move on
-                        this.theDebugInformation.WriteInformationEvent("The IP v6 packet contains a Cisco EIGRP packet which is not currently supported!");
+                        this.theDebugInformation.WriteInformationEvent(
+                            "The IP v6 packet contains a Cisco EIGRP packet which is not currently supported!");
 
                         break;
                     }
@@ -226,7 +248,8 @@ namespace EthernetFrame.IPPacket.IPv6Packet
 
                         //// Processing of packets with network data link types not enumerated above are obviously not currently supported!
 
-                        this.theDebugInformation.WriteErrorEvent("The IP v6 packet contains an unexpected protocol of " +
+                        this.theDebugInformation.WriteErrorEvent(
+                            "The IP v6 packet contains an unexpected protocol of " +
                             string.Format("{0:X}", theIPv6PacketProtocol) +
                             "!!!");
 
@@ -255,7 +278,8 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             {
                 //// We have got an IP v6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
 
-                this.theDebugInformation.WriteErrorEvent("The IP v6 packet indicates a total length of " +
+                this.theDebugInformation.WriteErrorEvent(
+                    "The IP v6 packet indicates a total length of " +
                     (this.theIPv6PacketHeader.PayloadLength + Constants.HeaderLength).ToString() +
                     " bytes that is greater than the length of " +
                     theEthernetFrameLength.ToString() +
@@ -269,7 +293,8 @@ namespace EthernetFrame.IPPacket.IPv6Packet
             {
                 //// We have got an IP v6 packet header containing an unknown version
 
-                this.theDebugInformation.WriteErrorEvent("The IP v6 packet header contains an unexpected version of " +
+                this.theDebugInformation.WriteErrorEvent(
+                    "The IP v6 packet header contains an unexpected version of " +
                     theIPv6PacketHeaderVersion.ToString() +
                     "!!!");
 
