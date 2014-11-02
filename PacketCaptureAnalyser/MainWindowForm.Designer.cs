@@ -454,7 +454,7 @@ namespace PacketCaptureAnalyser
             // 
             this.theEnableDebugInformationCheckBox.AutoSize = true;
             this.theEnableDebugInformationCheckBox.Enabled = false;
-            this.theEnableDebugInformationCheckBox.Location = new System.Drawing.Point(3, 19);
+            this.theEnableDebugInformationCheckBox.Location = new System.Drawing.Point(6, 19);
             this.theEnableDebugInformationCheckBox.Name = "theEnableDebugInformationCheckBox";
             this.theEnableDebugInformationCheckBox.Size = new System.Drawing.Size(59, 17);
             this.theEnableDebugInformationCheckBox.TabIndex = 0;

@@ -253,16 +253,25 @@ namespace Analysis
                         string.Format("{0,11:###0.00000}", this.theValueBinBoundaries[i + 1]));
                 }
 
-                this.theDebugInformation.WriteTextElement(" | ");
+                this.theDebugInformation.WriteTextElement(" |");
+
+                // Except if there are no entries, leave a space before the first ) character
+                // for this bin for clarity
+                if (this.theValueBinCounts[i] > 0)
+                {
+                    this.theDebugInformation.WriteTextElement(" ");
+                }
 
                 // Calculated a scaled count for this bin based on the percentage of the total number of values across all bins that is in this bin
-                // The scaling of the count will the ensure that the output does not exceed 120 columns to ensure it fits on screen
+                // The scaling of the count will the ensure that the output does not exceed 115 columns to ensure it fits on screen
                 // Perform the calculations using floating point values to prevent rounding to zero due to integer division
                 int theScaledBinCount =
-                    (int)(((float)this.theValueBinCounts[i] / (float)this.theNumberOfValuesAcrossAllBins) * 120.0);
+                    (int)(((float)this.theValueBinCounts[i] /
+                    (float)this.theNumberOfValuesAcrossAllBins) * 115.0);
 
                 // Make sure that at least a single ) character is always output for a bin with a non-zero count
-                if (this.theValueBinCounts[i] > 0 && theScaledBinCount == 0)
+                if (this.theValueBinCounts[i] > 0 &&
+                    theScaledBinCount == 0)
                 {
                     theScaledBinCount = 1;
                 }
@@ -331,11 +340,14 @@ namespace Analysis
         /// <param name="theMaxAllowedValue">The maximum value allowed to be added to the bins for the histogram</param>
         private void CalculateValueBinBoundaries(uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
         {
-            this.theValueBinBoundaries = new double[theNumOfValueBins + 1];
+            this.theValueBinBoundaries =
+                new double[theNumOfValueBins + 1];
 
-            this.theValueBinBoundaries[0] = theMinAllowedValue;
+            this.theValueBinBoundaries[0] =
+                theMinAllowedValue;
 
-            this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1] = theMaxAllowedValue;
+            this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1] =
+                theMaxAllowedValue;
 
             double theSizeOfValueBins =
                 (theMaxAllowedValue - theMinAllowedValue) / theNumOfValueBins;
@@ -343,7 +355,8 @@ namespace Analysis
             for (int i = 1; i < this.theValueBinBoundaries.Length - 1; ++i)
             {
                 this.theValueBinBoundaries[i] =
-                    this.theValueBinBoundaries[0] + (i * theSizeOfValueBins);
+                    this.theValueBinBoundaries[0] +
+                    (i * theSizeOfValueBins);
             }
 
             // Check that the calculated bin boundaries are a strictly monotonically increasing sequence of values
@@ -367,9 +380,11 @@ namespace Analysis
                         theBinBoundaries[i + 1].ToString() +
                         "!!!";
 
-                    this.theDebugInformation.WriteErrorEvent(theExceptionMessage);
+                    this.theDebugInformation.WriteErrorEvent(
+                        theExceptionMessage);
 
-                    throw new System.ArgumentException(theExceptionMessage);
+                    throw new System.ArgumentException(
+                        theExceptionMessage);
                 }
             }
         }

@@ -45,6 +45,15 @@ namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         {
             // There is no separate header for the IGMP v2 packet
 
+            // Processes the payload of the IGMP v2 packet
+            this.ProcessIGMPv2PacketPayload();
+        }
+
+        /// <summary>
+        /// Processes the payload of the IGMP v2 packet
+        /// </summary>
+        private void ProcessIGMPv2PacketPayload()
+        {
             // Just read off the bytes for the IGMP v2 packet from the packet capture so we can move on
             this.theIGMPv2Packet.Type = this.theBinaryReader.ReadByte();
             this.theIGMPv2Packet.MaxResponseTime = this.theBinaryReader.ReadByte();

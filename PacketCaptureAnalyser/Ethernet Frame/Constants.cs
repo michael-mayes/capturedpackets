@@ -58,6 +58,11 @@ namespace EthernetFrame
             Loopback = 0x9000,
 
             /// <summary>
+            /// Ethernet frame containing a RARP packet
+            /// </summary>
+            RARP = 0x8035,
+
+            /// <summary>
             /// Ethernet frame with a VLAN tag (IEEE 802.1Q)
             /// </summary>
             VLANTagged = 0x8100

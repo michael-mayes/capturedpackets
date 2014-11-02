@@ -52,15 +52,28 @@ namespace EthernetFrame.ARPPacket
         /// <returns>Boolean flag that indicates whether the ARP packet could be processed</returns>
         public bool ProcessARPPacket(long theEthernetFrameLength)
         {
-            if (theEthernetFrameLength < Constants.PacketLength)
-            {
-                this.theDebugInformation.WriteErrorEvent("The length of the Ethernet frame is lower than the length of the ARP packet!!!");
+            bool theResult = true;
 
-                return false;
+            // Validate the ARP packet
+            theResult = this.ValidateARPPacket(
+                theEthernetFrameLength);
+
+            if (theResult)
+            {
+                // There is no separate header for the ARP packet
+
+                // Processes the payload of the ARP packet
+                this.ProcessARPPacketPayload();
             }
 
-            // There is no separate header for the ARP packet
+            return theResult;
+        }
 
+        /// <summary>
+        /// Processes the payload of the ARP packet
+        /// </summary>
+        private void ProcessARPPacketPayload()
+        {
             // Just read off the bytes for the ARP packet from the packet capture so we can move on
             this.theARPPacket.HardwareType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
             this.theARPPacket.ProtocolType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
@@ -73,8 +86,26 @@ namespace EthernetFrame.ARPPacket
             this.theARPPacket.TargetHardwareAddressHigh = this.theBinaryReader.ReadUInt32();
             this.theARPPacket.TargetHardwareAddressLow = this.theBinaryReader.ReadUInt16();
             this.theARPPacket.TargetProtocolAddress = (uint)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt32());
+        }
 
-            return true;
+        /// <summary>
+        /// Validates the ARP packet
+        /// </summary>
+        /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
+        /// <returns>Boolean flag that indicates whether the ARP packet is valid</returns>
+        private bool ValidateARPPacket(long theEthernetFrameLength)
+        {
+            bool theResult = true;
+
+            if (theEthernetFrameLength < Constants.PacketLength)
+            {
+                this.theDebugInformation.WriteErrorEvent(
+                    "The length of the Ethernet frame is lower than the length of the ARP packet!!!");
+
+                theResult = false;
+            }
+
+            return theResult;
         }
     }
 }

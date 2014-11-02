@@ -1,5 +1,4 @@
-﻿// %PCMS_HEADER_SUBSTITUTION_START% %PM%    %PR%  %PRT% %PCMS_HEADER_SUBSTITUTION_END% //
-// $Id$
+﻿// $Id$
 // $URL$
 // <copyright file="Constants.cs" company="Public Domain">
 //     Released into the public domain
@@ -26,7 +25,7 @@ namespace Analysis.BurstAnalysis
         /// <summary>
         /// The minimum timestamp difference to be shown in the histogram
         /// </summary>
-        public const double MaxTimestampDifference = 1200.0; // Milliseconds
+        public const double MaxTimestampDifference = 15000.0; // Milliseconds
 
         //// Value bins
 

@@ -52,15 +52,28 @@ namespace EthernetFrame.LLDPPacket
         /// <returns>Boolean flag that indicates whether the LLDP packet could be processed</returns>
         public bool ProcessLLDPPacket(long theEthernetFrameLength)
         {
-            if (theEthernetFrameLength < Constants.PacketLength)
-            {
-                this.theDebugInformation.WriteErrorEvent("The length of the Ethernet frame is lower than the length of the LLDP packet!!!");
+            bool theResult = true;
 
-                return false;
+            // Validate the LLDP packet
+            theResult = this.ValidateLLDPPacket(
+                theEthernetFrameLength);
+
+            if (theResult)
+            {
+                // There is no separate header for the LLDP packet
+
+                // Process the payload of the LLDP packet
+                this.ProcessLLDPPacketPayload();
             }
 
-            // There is no separate header for the LLDP packet
+            return theResult;
+        }
 
+        /// <summary>
+        /// Processes the payload of the LLDP packet
+        /// </summary>
+        private void ProcessLLDPPacketPayload()
+        {
             // Just read off the bytes for the LLDP packet from the packet capture so we can move on
             this.theLLDPPacket.UnusedField1 = this.theBinaryReader.ReadUInt64();
             this.theLLDPPacket.UnusedField2 = this.theBinaryReader.ReadUInt64();
@@ -69,8 +82,26 @@ namespace EthernetFrame.LLDPPacket
             this.theLLDPPacket.UnusedField5 = this.theBinaryReader.ReadUInt64();
             this.theLLDPPacket.UnusedField6 = this.theBinaryReader.ReadUInt32();
             this.theLLDPPacket.UnusedField7 = this.theBinaryReader.ReadUInt16();
+        }
 
-            return true;
+        /// <summary>
+        /// Validates the LLDP packet
+        /// </summary>
+        /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
+        /// <returns>Boolean flag that indicates whether the LLDP packet is valid</returns>
+        private bool ValidateLLDPPacket(long theEthernetFrameLength)
+        {
+            bool theResult = true;
+
+            if (theEthernetFrameLength < Constants.PacketLength)
+            {
+                this.theDebugInformation.WriteErrorEvent(
+                    "The length of the Ethernet frame is lower than the length of the LLDP packet!!!");
+
+                theResult = false;
+            }
+
+            return theResult;
         }
     }
 }
