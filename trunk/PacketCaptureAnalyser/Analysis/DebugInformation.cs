@@ -86,29 +86,6 @@ namespace Analysis
         /// <summary>
         /// Clean up any resources used by the debug information class
         /// </summary>
-        /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
-        public virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (this.enableDebugInformation)
-                {
-                    // Flush output to the output file and then close it
-                    this.theOutputWindowListener.Flush();
-                    this.theOutputWindowListener.Close();
-
-                    System.Diagnostics.Debug.Listeners.Remove(
-                        this.theOutputWindowListener);
-
-                    // Dispose any resources allocated to the trace listener if instructed
-                    this.theOutputWindowListener.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Clean up any resources used by the debug information class
-        /// </summary>
         public void Dispose()
         {
             this.Dispose(true);
@@ -226,6 +203,29 @@ namespace Analysis
                             System.IO.Path.GetFileName(this.theOutputFilePath) +
                             " output file!!!");
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clean up any resources used by the debug information class
+        /// </summary>
+        /// <param name="disposing">Boolean flag that indicates whether the method call comes from a Dispose method (its value is true) or from the garbage collector (its value is false)</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.enableDebugInformation)
+                {
+                    // Flush output to the output file and then close it
+                    this.theOutputWindowListener.Flush();
+                    this.theOutputWindowListener.Close();
+
+                    System.Diagnostics.Debug.Listeners.Remove(
+                        this.theOutputWindowListener);
+
+                    // Dispose any resources allocated to the trace listener if instructed
+                    this.theOutputWindowListener.Dispose();
                 }
             }
         }

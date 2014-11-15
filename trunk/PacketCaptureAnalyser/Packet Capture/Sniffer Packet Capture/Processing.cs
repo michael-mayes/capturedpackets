@@ -112,10 +112,11 @@ namespace PacketCapture.SnifferPackageCapture
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the Sniffer packet record header could be processed</returns>
-        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
@@ -124,6 +125,9 @@ namespace PacketCapture.SnifferPackageCapture
 
             // Provide a default value to the output parameter for the timestamp
             thePacketTimestamp = 0.0;
+
+            // Always increment the number for the packet read from the packet capture for a Sniffer packet
+            ++thePacketNumber;
 
             // Create an instance of the Sniffer packet record header
             Structures.RecordHeaderStructure theRecordHeader =
