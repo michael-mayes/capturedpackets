@@ -1,5 +1,5 @@
-// $Id
-// $URL
+// $Id$
+// $URL$
 // <copyright file="MainWindowFormConstants.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>
