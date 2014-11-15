@@ -501,9 +501,9 @@ namespace PacketCaptureAnalyser
             // Check if this is an expected type for a packet capture
             // Determine the type of the packet capture from the file extension
             // Does the file extension match one of the expected values for a packet capture?
-            if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Contains) ||
-                MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Contains) ||
-                MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Contains))
+            if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Equals) ||
+                MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Equals) ||
+                MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Equals))
             {
                 // This file is a supported type for a packet capture
                 // Any changes to this set of supported types should also be reflected to the Selected Packet Capture For Analysis dialog!
@@ -546,7 +546,7 @@ namespace PacketCaptureAnalyser
                     {
                         case (uint)PacketCapture.PCAPNGPackageCapture.Constants.BlockType.SectionHeaderBlock:
                             {
-                                if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Contains))
+                                if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Equals))
                                 {
                                     // This is a PCAP Next Generation packet capture
                                     this.theSelectedPacketCaptureType =
@@ -571,7 +571,7 @@ namespace PacketCaptureAnalyser
                         case (uint)PacketCapture.PCAPPackageCapture.Constants.LittleEndianMagicNumber:
                         case (uint)PacketCapture.PCAPPackageCapture.Constants.BigEndianMagicNumber:
                             {
-                                if (MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Contains))
+                                if (MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Equals))
                                 {
                                     // This is a PCAP packet capture
                                     this.theSelectedPacketCaptureType =
@@ -582,7 +582,7 @@ namespace PacketCaptureAnalyser
                                     System.Diagnostics.Debug.WriteLine(
                                         "The " +
                                         System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                        " packet capture should be a PCAP capture based on its initial bytes, but its file extension " +
+                                        " packet capture should be a PCAP packet capture based on its initial bytes, but its file extension " +
                                         theFileExtension +
                                         " is incorrect for that type of packet capture!!!");
 
@@ -595,7 +595,7 @@ namespace PacketCaptureAnalyser
 
                         case (uint)PacketCapture.SnifferPackageCapture.Constants.ExpectedMagicNumberHighest:
                             {
-                                if (MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Contains))
+                                if (MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Equals))
                                 {
                                     // This is an NA Sniffer (DOS) packet capture
                                     this.theSelectedPacketCaptureType =
