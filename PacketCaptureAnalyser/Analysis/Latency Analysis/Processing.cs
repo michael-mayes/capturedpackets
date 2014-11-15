@@ -221,18 +221,9 @@ namespace Analysis.LatencyAnalysis
                 theDictionaryValueFound.SecondInstanceFound = true;
                 theDictionaryValueFound.SecondInstancePacketNumber = thePacketNumber;
 
-                if (thePacketTimestamp > theDictionaryValueFound.FirstInstancePacketTimestamp)
+                if (thePacketTimestamp == theDictionaryValueFound.FirstInstancePacketTimestamp)
                 {
                     theDictionaryValueFound.SecondInstancePacketTimestamp = thePacketTimestamp;
-
-                    theDictionaryValueFound.TimestampDifference =
-                        (thePacketTimestamp - theDictionaryValueFound.FirstInstancePacketTimestamp) * 1000.0; // Milliseconds
-
-                    theDictionaryValueFound.TimestampDifferenceCalculated = true;
-                }
-                else if (thePacketTimestamp == theDictionaryValueFound.FirstInstancePacketTimestamp)
-                {
-                    theDictionaryValueFound.SecondInstancePacketTimestamp = 0.0;
 
                     theDictionaryValueFound.TimestampDifference = 0.0;
 
@@ -240,14 +231,12 @@ namespace Analysis.LatencyAnalysis
                 }
                 else
                 {
-                    this.theDebugInformation.WriteErrorEvent(
-                        "Found the row for the Host Id " +
-                        string.Format("{0,3}", theHostId) +
-                        " and the sequence number " +
-                        string.Format("{0,7}", theSequenceNumber.ToString()) +
-                        ", but the timestamp of the first message is higher than that of the second message!!!");
+                    theDictionaryValueFound.SecondInstancePacketTimestamp = thePacketTimestamp;
 
-                    theDictionaryValueFound.TimestampDifferenceCalculated = false;
+                    theDictionaryValueFound.TimestampDifference =
+                        (thePacketTimestamp - theDictionaryValueFound.FirstInstancePacketTimestamp) * 1000.0; // Milliseconds
+
+                    theDictionaryValueFound.TimestampDifferenceCalculated = true;
                 }
 
                 // Update the values in the dictionary entry

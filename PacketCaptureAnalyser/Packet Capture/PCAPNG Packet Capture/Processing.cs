@@ -141,10 +141,11 @@ namespace PacketCapture.PCAPNGPackageCapture
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the PCAP Next Generation block header could be processed</returns>
-        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
@@ -166,6 +167,8 @@ namespace PacketCapture.PCAPNGPackageCapture
                     {
                         //// We have got a PCAP Next Generation interface description block
 
+                        //// Do not increment the number for the packet read from the packet capture for a PCAP Next Generation interface description block as it will not show in Wireshark and so would confuse comparisons with other formats
+
                         theResult = this.ProcessInterfaceDescriptionBlock(
                             theBinaryReader,
                             out thePacketPayloadLength);
@@ -176,6 +179,9 @@ namespace PacketCapture.PCAPNGPackageCapture
                 case (uint)Constants.BlockType.PacketBlock:
                     {
                         //// We have got a PCAP Next Generation packet block
+
+                        // Increment the number for the packet read from the packet capture for a PCAP Next Generation packet block
+                        ++thePacketNumber;
 
                         theResult = this.ProcessPacketBlock(
                             theBinaryReader,
@@ -189,6 +195,9 @@ namespace PacketCapture.PCAPNGPackageCapture
                     {
                         //// We have got a PCAP Next Generation simple packet block
 
+                        // Increment the number for the packet read from the packet capture for a PCAP Next Generation simple packet block
+                        ++thePacketNumber;
+
                         theResult = this.ProcessSimplePacketBlock(
                             theBinaryReader,
                             out thePacketPayloadLength);
@@ -199,6 +208,9 @@ namespace PacketCapture.PCAPNGPackageCapture
                 case (uint)Constants.BlockType.EnhancedPacketBlock:
                     {
                         //// We have got a PCAP Next Generation enhanced packet block
+
+                        // Increment the number for the packet read from the packet capture for a PCAP Next Generation enhanced packet block
+                        ++thePacketNumber;
 
                         theResult = this.ProcessEnhancedPacketBlock(
                             theBinaryReader,
@@ -212,6 +224,8 @@ namespace PacketCapture.PCAPNGPackageCapture
                     {
                         //// We have got a PCAP Next Generation interface statistics block
 
+                        //// Do not increment the number for the packet read from the packet capture for a PCAP Next Generation interface statistics block as it will not show in Wireshark and so would confuse comparisons with other formats
+
                         theResult = this.ProcessInterfaceStatisticsBlock(
                             theBinaryReader,
                             out thePacketPayloadLength,
@@ -222,6 +236,9 @@ namespace PacketCapture.PCAPNGPackageCapture
 
                 default:
                     {
+                        // Increment the number for the packet read from the packet capture for an unknow PCAP Next Generation block
+                        ++thePacketNumber;
+
                         // We have got an PCAP Next Generation packet capture packet containing an unknown Block Type
                         this.TheDebugInformation.WriteErrorEvent(
                             "The PCAP Next Generation packet capture block contains an unexpected Block Type of 0x" +

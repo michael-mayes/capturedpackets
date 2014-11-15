@@ -344,10 +344,11 @@ namespace PacketCapture
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
         /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
+        /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the packet header could be processed</returns>
-        protected abstract bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, out long thePacketPayloadLength, out double thePacketTimestamp);
+        protected abstract bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp);
 
         //// Private methods
 
@@ -412,14 +413,6 @@ namespace PacketCapture
 
                 while (theBinaryReader.BaseStream.Position < theStreamLength && theResult)
                 {
-                    ++theNumberOfPacketsProcessed;
-
-                    //// Restore the following lines if you want indication of progress through the packet capture or want to tie an error condition to a particular packet
-
-                    // theDebugInformation.WriteInformationEvent
-                    //     ("Started processing of packet number " +
-                    //     theNumberOfPacketsProcessed.ToString());
-
                     // Check whether the end of the packet capture has been reached
                     if (theBinaryReader.BaseStream.Position < theStreamLength)
                     {
@@ -427,12 +420,19 @@ namespace PacketCapture
                             theBinaryReader,
                             thePacketCaptureNetworkDataLinkType,
                             thePacketCaptureTimestampAccuracy,
+                            ref theNumberOfPacketsProcessed,
                             out thePacketPayloadLength,
                             out thePacketTimestamp))
                         {
                             // Check whether the end of the packet capture has been reached
                             if (theBinaryReader.BaseStream.Position < theStreamLength)
                             {
+                                //// Restore the following lines if you want indication of progress through the packet capture or want to tie an error condition to a particular packet
+
+                                //// theDebugInformation.WriteInformationEvent
+                                ////     ("Started processing of packet number " +
+                                ////     theNumberOfPacketsProcessed.ToString());
+
                                 switch (thePacketCaptureNetworkDataLinkType)
                                 {
                                     case (uint)CommonConstants.NetworkDataLinkType.NullLoopBack:
