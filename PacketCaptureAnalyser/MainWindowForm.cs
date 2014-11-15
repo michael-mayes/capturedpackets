@@ -557,7 +557,9 @@ namespace PacketCaptureAnalyser
                                     System.Diagnostics.Debug.WriteLine(
                                         "The " +
                                         System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                        " packet capture should be a PCAP Next Generation packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
+                                        " packet capture should be a PCAP Next Generation packet capture based on its initial bytes, but its file extension " +
+                                        theFileExtension +
+                                        " is incorrect for that type of packet capture!!!");
 
                                     this.theSelectedPacketCaptureType =
                                         MainWindowFormConstants.PacketCaptureType.Incorrect;
@@ -580,7 +582,9 @@ namespace PacketCaptureAnalyser
                                     System.Diagnostics.Debug.WriteLine(
                                         "The " +
                                         System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                        " packet capture should be a PCAP packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
+                                        " packet capture should be a PCAP capture based on its initial bytes, but its file extension " +
+                                        theFileExtension +
+                                        " is incorrect for that type of packet capture!!!");
 
                                     this.theSelectedPacketCaptureType =
                                         MainWindowFormConstants.PacketCaptureType.Incorrect;
@@ -602,7 +606,9 @@ namespace PacketCaptureAnalyser
                                     System.Diagnostics.Debug.WriteLine(
                                         "The " +
                                         System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                        " packet capture should be an NA Sniffer (DOS) packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
+                                        " packet capture should be an NA Sniffer (DOS) packet capture based on its initial bytes, but its file extension " +
+                                        theFileExtension +
+                                        " is incorrect for that type of packet capture!!!");
 
                                     this.theSelectedPacketCaptureType =
                                         MainWindowFormConstants.PacketCaptureType.Incorrect;
