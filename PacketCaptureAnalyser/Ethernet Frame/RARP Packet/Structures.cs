@@ -1,5 +1,5 @@
-﻿// $Id: Structures.cs 233 2014-07-07 22:43:27Z michaelmayes $
-// $URL: https://svn.code.sf.net/p/capturedpackets/code/trunk/PacketCaptureAnalyser/Ethernet%20Frame/RARP%20Packet/Structures.cs $
+﻿// $Id$
+// $URL$
 // <copyright file="Structures.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>

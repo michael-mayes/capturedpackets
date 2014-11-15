@@ -1,5 +1,5 @@
-﻿// $Id: Constants.cs 231 2014-07-06 23:05:41Z michaelmayes $
-// $URL: https://svn.code.sf.net/p/capturedpackets/code/trunk/PacketCaptureAnalyser/Ethernet%20Frame/RARP%20Packet/Constants.cs $
+﻿// $Id$
+// $URL$
 // <copyright file="Constants.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>

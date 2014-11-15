@@ -1,5 +1,5 @@
-﻿// $Id: Processing.cs 234 2014-07-08 22:32:06Z michaelmayes $
-// $URL: https://svn.code.sf.net/p/capturedpackets/code/trunk/PacketCaptureAnalyser/Ethernet%20Frame/RARP%20Packet/Processing.cs $
+﻿// $Id$
+// $URL$
 // <copyright file="Processing.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>
