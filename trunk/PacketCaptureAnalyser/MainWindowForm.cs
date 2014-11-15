@@ -10,6 +10,8 @@
 
 namespace PacketCaptureAnalyser
 {
+    using System.Linq; // Required to be able to use Any method
+
     /// <summary>
     /// This class provides the main window form
     /// </summary>
@@ -494,30 +496,22 @@ namespace PacketCaptureAnalyser
         {
             bool theResult = true;
 
+            string theFileExtension = System.IO.Path.GetExtension(thePath);
+
             // Check if this is an expected type for a packet capture
             // Determine the type of the packet capture from the file extension
             // Does the file extension match one of the expected values for a packet capture?
-            switch (System.IO.Path.GetExtension(thePath))
+            if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Contains) ||
+                MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Contains) ||
+                MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Contains))
             {
-                case ".pcapng":
-                case ".ntar":
-                case ".pcap":
-                case ".libpcap":
-                case ".cap":
-                case ".enc":
-                    {
-                        // This file is a supported type for a packet capture
-                        // Any changes to this set of supported types should also be reflected to the Selected Packet Capture For Analysis dialog!
-                        break;
-                    }
-
-                default:
-                    {
-                        // This file is an unsupported type for a packet capture
-                        theResult = false;
-
-                        break;
-                    }
+                // This file is a supported type for a packet capture
+                // Any changes to this set of supported types should also be reflected to the Selected Packet Capture For Analysis dialog!
+            }
+            else
+            {
+                // This file is an unsupported type for a packet capture
+                theResult = false;
             }
 
             return theResult;
@@ -546,34 +540,27 @@ namespace PacketCaptureAnalyser
                     // The resources for the file stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
                     theFileStream = null;
 
+                    string theFileExtension = System.IO.Path.GetExtension(this.theSelectedPacketCapturePath);
+
                     switch (theBinaryReader.ReadUInt32())
                     {
                         case (uint)PacketCapture.PCAPNGPackageCapture.Constants.BlockType.SectionHeaderBlock:
                             {
-                                switch (System.IO.Path.GetExtension(this.theSelectedPacketCapturePath))
+                                if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Contains))
                                 {
-                                    case ".pcapng":
-                                    case ".ntar":
-                                        {
-                                            // This is a PCAP Next Generation packet capture
-                                            this.theSelectedPacketCaptureType =
-                                                MainWindowFormConstants.PacketCaptureType.PCAPNextGeneration;
+                                    // This is a PCAP Next Generation packet capture
+                                    this.theSelectedPacketCaptureType =
+                                        MainWindowFormConstants.PacketCaptureType.PCAPNextGeneration;
+                                }
+                                else
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        "The " +
+                                        System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                                        " packet capture should be a PCAP Next Generation packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
 
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-                                            System.Diagnostics.Debug.WriteLine(
-                                                "The " +
-                                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                                " packet capture should be a PCAP Next Generation packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
-
-                                            this.theSelectedPacketCaptureType =
-                                                MainWindowFormConstants.PacketCaptureType.Incorrect;
-
-                                            break;
-                                        }
+                                    this.theSelectedPacketCaptureType =
+                                        MainWindowFormConstants.PacketCaptureType.Incorrect;
                                 }
 
                                 break;
@@ -582,31 +569,21 @@ namespace PacketCaptureAnalyser
                         case (uint)PacketCapture.PCAPPackageCapture.Constants.LittleEndianMagicNumber:
                         case (uint)PacketCapture.PCAPPackageCapture.Constants.BigEndianMagicNumber:
                             {
-                                switch (System.IO.Path.GetExtension(this.theSelectedPacketCapturePath))
+                                if (MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Contains))
                                 {
-                                    case ".pcap":
-                                    case ".libpcap":
-                                    case ".cap":
-                                        {
-                                            // This is a PCAP packet capture
-                                            this.theSelectedPacketCaptureType =
-                                                MainWindowFormConstants.PacketCaptureType.PCAP;
+                                    // This is a PCAP packet capture
+                                    this.theSelectedPacketCaptureType =
+                                        MainWindowFormConstants.PacketCaptureType.PCAP;
+                                }
+                                else
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        "The " +
+                                        System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                                        " packet capture should be a PCAP packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
 
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-                                            System.Diagnostics.Debug.WriteLine(
-                                                "The " +
-                                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                                " packet capture should be a PCAP packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
-
-                                            this.theSelectedPacketCaptureType =
-                                                MainWindowFormConstants.PacketCaptureType.Incorrect;
-
-                                            break;
-                                        }
+                                    this.theSelectedPacketCaptureType =
+                                        MainWindowFormConstants.PacketCaptureType.Incorrect;
                                 }
 
                                 break;
@@ -614,29 +591,21 @@ namespace PacketCaptureAnalyser
 
                         case (uint)PacketCapture.SnifferPackageCapture.Constants.ExpectedMagicNumberHighest:
                             {
-                                switch (System.IO.Path.GetExtension(this.theSelectedPacketCapturePath))
+                                if (MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Contains))
                                 {
-                                    case ".enc":
-                                        {
-                                            // This is an NA Sniffer (DOS) packet capture
-                                            this.theSelectedPacketCaptureType =
-                                                MainWindowFormConstants.PacketCaptureType.NASnifferDOS;
+                                    // This is an NA Sniffer (DOS) packet capture
+                                    this.theSelectedPacketCaptureType =
+                                        MainWindowFormConstants.PacketCaptureType.NASnifferDOS;
+                                }
+                                else
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        "The " +
+                                        System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                                        " packet capture should be an NA Sniffer (DOS) packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
 
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-                                            System.Diagnostics.Debug.WriteLine(
-                                                "The " +
-                                                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                                                " packet capture should be an NA Sniffer (DOS) packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
-
-                                            this.theSelectedPacketCaptureType =
-                                                MainWindowFormConstants.PacketCaptureType.Incorrect;
-
-                                            break;
-                                        }
+                                    this.theSelectedPacketCaptureType =
+                                        MainWindowFormConstants.PacketCaptureType.Incorrect;
                                 }
 
                                 break;
