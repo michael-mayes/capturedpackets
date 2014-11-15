@@ -305,10 +305,6 @@ namespace PacketCaptureAnalyser
                 // Update the window to reflect the selected packet capture
                 this.ReflectSelectedPacketCapture(theFiles[0], sender);
             }
-            else
-            {
-                // This file is either an unsupported type for a packet capture or is another type of file
-            }
         }
 
         //// Packet capture support functions
