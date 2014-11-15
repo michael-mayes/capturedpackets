@@ -227,16 +227,24 @@ namespace PacketCapture
                     }
                     else
                     {
-                        // Create a memory stream to read the packet capture from the byte array
-                        using (System.IO.MemoryStream theMemoryStream =
-                            new System.IO.MemoryStream(theBytes))
+                        // Declare a memory stream to read the packet capture from the byte array
+                        System.IO.MemoryStream theMemoryStream = null;
+
+                        // Use a try/finally pattern to avoid multiple disposals of a resource
+                        try
                         {
+                            // Create a memory stream to read the packet capture from the byte array
+                            theMemoryStream = new System.IO.MemoryStream(theBytes);
+
                             this.theProgressWindowForm.ProgressBar = 80;
 
                             // Open a binary reader for the memory stream for the packet capture
                             using (System.IO.BinaryReader theBinaryReader =
                                 new System.IO.BinaryReader(theMemoryStream))
                             {
+                                // The resources for the memory stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
+                                theMemoryStream = null;
+
                                 this.theProgressWindowForm.ProgressBar = 90;
 
                                 // Ensure that the position of the binary reader is set to the beginning of the memory stream
@@ -267,6 +275,14 @@ namespace PacketCapture
                                 {
                                     theResult = false;
                                 }
+                            }
+                        }
+                        finally
+                        {
+                            // Dispose of the resources for the memory stream for the packet capture if this action has not already taken place above
+                            if (theMemoryStream != null)
+                            {
+                                theMemoryStream.Dispose();
                             }
                         }
                     }

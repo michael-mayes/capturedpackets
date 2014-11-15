@@ -472,14 +472,22 @@ namespace PacketCaptureAnalyser
         {
             //// Determine the type of the packet capture
 
-            // Open a file stream for the packet capture for reading
-            using (System.IO.FileStream theFileStream =
-                System.IO.File.OpenRead(this.theSelectedPacketCapturePath))
+            // Declare a file stream for the packet capture for reading
+            System.IO.FileStream theFileStream = null;
+
+            // Use a try/finally pattern to avoid multiple disposals of a resource
+            try
             {
+                // Open a file stream for the packet capture for reading
+                theFileStream = System.IO.File.OpenRead(this.theSelectedPacketCapturePath);
+
                 // Open a binary reader for the file stream for the packet capture
                 using (System.IO.BinaryReader theBinaryReader =
                     new System.IO.BinaryReader(theFileStream))
                 {
+                    // The resources for the file stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
+                    theFileStream = null;
+
                     switch (theBinaryReader.ReadUInt32())
                     {
                         case (uint)PacketCapture.PCAPNGPackageCapture.Constants.BlockType.SectionHeaderBlock:
@@ -519,6 +527,14 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
                     }
+                }
+            }
+            finally
+            {
+                // Dispose of the resources for the file stream for the packet capture if this action has not already taken place above
+                if (theFileStream != null)
+                {
+                    theFileStream.Dispose();
                 }
             }
         }
@@ -605,10 +621,15 @@ namespace PacketCaptureAnalyser
         {
             bool theResult = true;
 
-            // Create an instance of the progress window form
-            using (ProgressWindowForm theProgressWindowForm =
-                new PacketCaptureAnalyser.ProgressWindowForm())
+            // Declare an instance of the progress window form
+            ProgressWindowForm theProgressWindowForm = null;
+
+            // Use a try/finally pattern to avoid multiple disposals of a resource
+            try
             {
+                // Create an instance of the progress window form
+                theProgressWindowForm = new PacketCaptureAnalyser.ProgressWindowForm();
+
                 // Show the progress window form now the analysis has started
                 theProgressWindowForm.Show();
                 theProgressWindowForm.Activate();
@@ -1002,6 +1023,9 @@ namespace PacketCaptureAnalyser
                         // Hide and close the progress window form now the analysis has completed
                         theProgressWindowForm.Hide();
                         theProgressWindowForm.Close();
+
+                        // The resources for the progress window form will have been disposed by closing it so prevent the finally clause performing an additional disposal
+                        theProgressWindowForm = null;
                     }
 
                     //// Dependent on the result of the processing above, display a message box to indicate success or otherwise
@@ -1074,6 +1098,14 @@ namespace PacketCaptureAnalyser
                     {
                         theDebugInformation.Open();
                     }
+                }
+            }
+            finally
+            {
+                // Dispose of the resources for the progress window form if this action has not already taken place above
+                if (theProgressWindowForm != null)
+                {
+                    theProgressWindowForm.Dispose();
                 }
             }
         }
