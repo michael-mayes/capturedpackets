@@ -18,7 +18,7 @@ namespace EthernetFrame
         /// <summary>
         /// Ethernet frame header
         /// </summary>
-        [System.Runtime.InteropServices.StructLayout
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "SourceMACAddressHigh", Justification = "Only applies to the IA-64 target architecture which is not used by this application"), System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.HeaderLength)]
         public struct HeaderStructure
