@@ -18,7 +18,9 @@ namespace EthernetFrame.ARPPacket
         /// <summary>
         /// ARP packet
         /// </summary>
-        [System.Runtime.InteropServices.StructLayout
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "TargetHardwareAddressHigh", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "SenderProtocolAddress", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.PacketLength)]
         public struct PacketStructure

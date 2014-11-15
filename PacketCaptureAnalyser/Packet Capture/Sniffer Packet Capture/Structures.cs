@@ -18,7 +18,14 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// Sniffer packet capture global header
         /// </summary>
-        [System.Runtime.InteropServices.StructLayout
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "Reserved", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "VersionMajor", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "VersionMinor", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "Time", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "RecordType", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "RecordLength", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "Date", Justification = "Only applies to the IA-64 target architecture which is not used by this application"),
+        System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.GlobalHeaderLength)]
         public struct GlobalHeaderStructure
@@ -123,7 +130,7 @@ namespace PacketCapture.SnifferPackageCapture
         /// <summary>
         /// Sniffer packet capture record header
         /// </summary>
-        [System.Runtime.InteropServices.StructLayout
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1900:ValueTypeFieldsShouldBePortable", MessageId = "RecordLength", Justification = "Only applies to IA-64 which is not used by this application"), System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = Constants.RecordHeaderLength)]
         public struct RecordHeaderStructure
