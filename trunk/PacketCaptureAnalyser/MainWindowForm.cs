@@ -23,7 +23,7 @@ namespace PacketCaptureAnalyser
         /// <summary>
         /// The type of the selected packet capture
         /// </summary>
-        private MainWindowFormPacketCaptureTypeEnumeration theSelectedPacketCaptureType;
+        private MainWindowFormConstants.PacketCaptureType theSelectedPacketCaptureType;
 
         /// <summary>
         /// Initializes a new instance of the MainWindowForm class
@@ -34,37 +34,6 @@ namespace PacketCaptureAnalyser
 
             // Clear the selected packet capture on window form creation
             this.ClearSelectedPacketCapture(this);
-        }
-
-        /// <summary>
-        /// Enumerated list of the types of packet captures supported by the main window form
-        /// </summary>
-        private enum MainWindowFormPacketCaptureTypeEnumeration
-        {
-            /// <summary>
-            /// PCAP Next Generation capture
-            /// </summary>
-            PCAPNextGeneration = 0,
-
-            /// <summary>
-            /// PCAP packet capture
-            /// </summary>
-            PCAP = 1,
-
-            /// <summary>
-            /// NA Sniffer (DOS) packet capture
-            /// </summary>
-            NASnifferDOS = 2,
-
-            /// <summary>
-            /// Invalid value for type of packet capture
-            /// </summary>
-            Incorrect = 3,
-
-            /// <summary>
-            /// Unknown value for type of packet capture
-            /// </summary>
-            Unknown = 4
         }
 
         //// Button and checkbox click actions
@@ -329,7 +298,7 @@ namespace PacketCaptureAnalyser
 
             switch (this.theSelectedPacketCaptureType)
             {
-                case MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration:
+                case MainWindowFormConstants.PacketCaptureType.PCAPNextGeneration:
                     {
                         //// Analysis of a PCAP Next Generation packet capture is supported
 
@@ -359,7 +328,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureTypeEnumeration.PCAP:
+                case MainWindowFormConstants.PacketCaptureType.PCAP:
                     {
                         //// Analysis of a PCAP packet capture is supported
 
@@ -389,7 +358,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
+                case MainWindowFormConstants.PacketCaptureType.NASnifferDOS:
                     {
                         //// Analysis of an NA Sniffer (DOS) packet capture is supported
 
@@ -419,7 +388,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureTypeEnumeration.Incorrect:
+                case MainWindowFormConstants.PacketCaptureType.Incorrect:
                     {
                         //// Analysis of this packet capture is not supported
 
@@ -449,7 +418,7 @@ namespace PacketCaptureAnalyser
                         break;
                     }
 
-                case MainWindowFormPacketCaptureTypeEnumeration.Unknown:
+                case MainWindowFormConstants.PacketCaptureType.Unknown:
                 default:
                     {
                         //// Analysis of this packet capture is not supported
@@ -491,7 +460,7 @@ namespace PacketCaptureAnalyser
             this.theSelectedPacketCapturePath = null;
 
             this.theSelectedPacketCaptureType =
-                MainWindowFormPacketCaptureTypeEnumeration.Unknown;
+                MainWindowFormConstants.PacketCaptureType.Unknown;
 
             // Disable the "Selected Packet Capture" group box
             this.theSelectedPacketCaptureGroupBox.Enabled = false;
@@ -588,7 +557,7 @@ namespace PacketCaptureAnalyser
                                         {
                                             // This is a PCAP Next Generation packet capture
                                             this.theSelectedPacketCaptureType =
-                                                MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration;
+                                                MainWindowFormConstants.PacketCaptureType.PCAPNextGeneration;
 
                                             break;
                                         }
@@ -601,7 +570,7 @@ namespace PacketCaptureAnalyser
                                                 " packet capture should be a PCAP Next Generation packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
 
                                             this.theSelectedPacketCaptureType =
-                                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
+                                                MainWindowFormConstants.PacketCaptureType.Incorrect;
 
                                             break;
                                         }
@@ -621,7 +590,7 @@ namespace PacketCaptureAnalyser
                                         {
                                             // This is a PCAP packet capture
                                             this.theSelectedPacketCaptureType =
-                                                MainWindowFormPacketCaptureTypeEnumeration.PCAP;
+                                                MainWindowFormConstants.PacketCaptureType.PCAP;
 
                                             break;
                                         }
@@ -634,7 +603,7 @@ namespace PacketCaptureAnalyser
                                                 " packet capture should be a PCAP packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
 
                                             this.theSelectedPacketCaptureType =
-                                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
+                                                MainWindowFormConstants.PacketCaptureType.Incorrect;
 
                                             break;
                                         }
@@ -651,7 +620,7 @@ namespace PacketCaptureAnalyser
                                         {
                                             // This is an NA Sniffer (DOS) packet capture
                                             this.theSelectedPacketCaptureType =
-                                                MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS;
+                                                MainWindowFormConstants.PacketCaptureType.NASnifferDOS;
 
                                             break;
                                         }
@@ -664,7 +633,7 @@ namespace PacketCaptureAnalyser
                                                 " packet capture should be an NA Sniffer (DOS) packet capture based on its initial bytes, but its file extension is incorrect for the type of packet capture!!!");
 
                                             this.theSelectedPacketCaptureType =
-                                                MainWindowFormPacketCaptureTypeEnumeration.Incorrect;
+                                                MainWindowFormConstants.PacketCaptureType.Incorrect;
 
                                             break;
                                         }
@@ -677,7 +646,7 @@ namespace PacketCaptureAnalyser
                             {
                                 // This packet capture is either an unsupported form of packet capture or is another type of file
                                 this.theSelectedPacketCaptureType =
-                                    MainWindowFormPacketCaptureTypeEnumeration.Unknown;
+                                    MainWindowFormConstants.PacketCaptureType.Unknown;
 
                                 break;
                             }
@@ -805,7 +774,7 @@ namespace PacketCaptureAnalyser
 
                     switch (this.theSelectedPacketCaptureType)
                     {
-                        case MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration:
+                        case MainWindowFormConstants.PacketCaptureType.PCAPNextGeneration:
                             {
                                 theDebugInformation.WriteInformationEvent(
                                     "This is a PCAP Next Generation packet capture");
@@ -831,7 +800,7 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case MainWindowFormPacketCaptureTypeEnumeration.PCAP:
+                        case MainWindowFormConstants.PacketCaptureType.PCAP:
                             {
                                 theDebugInformation.WriteInformationEvent(
                                     "This is a PCAP packet capture");
@@ -857,7 +826,7 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case MainWindowFormPacketCaptureTypeEnumeration.NASnifferDOS:
+                        case MainWindowFormConstants.PacketCaptureType.NASnifferDOS:
                             {
                                 theDebugInformation.WriteInformationEvent(
                                     "This is an NA Sniffer (DOS) packet capture");
@@ -883,13 +852,12 @@ namespace PacketCaptureAnalyser
                                 break;
                             }
 
-                        case MainWindowFormPacketCaptureTypeEnumeration.Unknown:
                         default:
                             {
                                 theDebugInformation.WriteErrorEvent(
                                     "The" +
                                     thePacketCaptureFileName +
-                                    " packet capture is of an unknown type!!!");
+                                    " packet capture is of an unknown or incorrect type!!!");
 
                                 theResult = false;
 
