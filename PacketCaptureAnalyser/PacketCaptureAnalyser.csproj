@@ -104,8 +104,8 @@
     <Compile Include="Ethernet Frame\Constants.cs" />
     <Compile Include="Ethernet Frame\Structures.cs" />
     <Compile Include="Ethernet Frame\Processing.cs" />
-    <Compile Include="MainWindowForm.cs">
-    <Compile Include="MainWindowFormConstants.cs" />
+    <Compile Include="MainWindowForm.cs" />
+    <Compile Include="MainWindowFormConstants.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainWindowForm.Designer.cs">
