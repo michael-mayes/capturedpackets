@@ -599,6 +599,7 @@ namespace PacketCaptureAnalyser
             // 
             // MainWindowForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(378, 596);
@@ -618,6 +619,8 @@ namespace PacketCaptureAnalyser
             this.Name = "MainWindowForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Packet Capture Analyser";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainWindowForm_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainWindowForm_DragEnter);
             this.theLatencyAnalysisGroupBox.ResumeLayout(false);
             this.theLatencyAnalysisGroupBox.PerformLayout();
             this.theDebugInformationGroupBox.ResumeLayout(false);
