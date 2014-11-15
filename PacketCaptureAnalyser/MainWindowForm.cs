@@ -67,7 +67,7 @@ namespace PacketCaptureAnalyser
             Unknown = 4
         }
 
-        //// Button and label click actions
+        //// Button and checkbox click actions
 
         /// <summary>
         /// Processes the button click event for the "Select Packet Capture" button
@@ -82,23 +82,8 @@ namespace PacketCaptureAnalyser
 
             if (theSelectedPacketCaptureDialogResult == System.Windows.Forms.DialogResult.OK)
             {
-                // Read the path of the selected packet capture and store it for use by later processing
-                this.theSelectedPacketCapturePath =
-                    this.theSelectedPacketCaptureForAnalysisDialog.FileName;
-
-                // Determine the type of the packet capture
-                this.DeterminePacketCaptureType();
-
-                // Check the type of the packet capture
-                this.CheckPacketCaptureType();
-
                 // Update the window to reflect the selected packet capture
-                this.ReflectSelectedPacketCapture(sender);
-
-                System.Diagnostics.Debug.WriteLine(
-                    "Selection of the " +
-                    System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
-                    " packet capture");
+                this.ReflectSelectedPacketCapture(this.theSelectedPacketCaptureForAnalysisDialog.FileName, sender);
             }
         }
 
@@ -268,14 +253,116 @@ namespace PacketCaptureAnalyser
             this.Close();
         }
 
+        //// Drag and drop actions
+
+        /// <summary>
+        /// Processes the drag enter event on dragging a file into the main window form
+        /// </summary>
+        /// <param name="sender">The sender for the drag enter event</param>
+        /// <param name="e">The arguments for the drag enter event</param>
+        private void MainWindowForm_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            // Get the set of the files dragged and dropped into the main window form
+            // Will only use the first of the set as single file processing is the existing pattern for this application
+            string[] theFiles = (string[])e.Data.GetData(System.Windows.Forms.DataFormats.FileDrop);
+
+            //// Check the type of the packet capture
+
+            // Determine the expected type of the packet capture from the file extension
+            switch (System.IO.Path.GetExtension(theFiles[0]))
+            {
+                case ".pcapng":
+                case ".ntar":
+                case ".pcap":
+                case ".libpcap":
+                case ".cap":
+                case ".enc":
+                    {
+                        // This file is either a supported form of packet capture so start so allow the drag into the main window form
+                        if (e.Data.GetDataPresent(System.Windows.Forms.DataFormats.FileDrop))
+                        {
+                            e.Effect = System.Windows.Forms.DragDropEffects.Copy;
+                        }
+                        else
+                        {
+                            e.Effect = System.Windows.Forms.DragDropEffects.None;
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        // This file is either an unsupported form of packet capture or is another type of file so prevent the drag into the main window form
+                        e.Effect = System.Windows.Forms.DragDropEffects.None;
+
+                        break;
+                    }
+            }
+        }
+
+        /// <summary>
+        /// Processes the drag drop event on dropping a file into the main window form
+        /// </summary>
+        /// <param name="sender">The sender for the drag drop event</param>
+        /// <param name="e">The arguments for the drag drop event</param>
+        private void MainWindowForm_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+            // Get the set of the files dragged and dropped into the main window form
+            // Will only use the first of the set as single file processing is the existing pattern for this application
+            string[] theFiles = (string[])e.Data.GetData(System.Windows.Forms.DataFormats.FileDrop);
+
+            //// Check the type of the packet capture
+
+            // Determine the expected type of the packet capture from the file extension
+            switch (System.IO.Path.GetExtension(theFiles[0]))
+            {
+                case ".pcapng":
+                case ".ntar":
+                case ".pcap":
+                case ".libpcap":
+                case ".cap":
+                case ".enc":
+                    {
+                        // This file is either a supported form of packet capture so start processing it
+
+                        // Update the window to reflect the selected packet capture
+                        this.ReflectSelectedPacketCapture(theFiles[0], sender);
+
+                        break;
+                    }
+
+                default:
+                    {
+                        // This file is either an unsupported form of packet capture or is another type of file
+                        break;
+                    }
+            }
+        }
+
         //// Packet capture support functions
 
         /// <summary>
-        /// Reflects the currently selected packet capture by setting up the associated items accordingly
+        /// Reflects the selection of the indicated packet capture by setting up the associated items accordingly
         /// </summary>
+        /// <param name="thePath">The path of the selected packet capture</param>
         /// <param name="sender">The sender for the initiating event</param>
-        private void ReflectSelectedPacketCapture(object sender)
+        private void ReflectSelectedPacketCapture(string thePath, object sender)
         {
+            // Store the path of the indicated packet capture for use by later processing
+            this.theSelectedPacketCapturePath = thePath;
+
+            // Determine the type of the packet capture
+            this.DeterminePacketCaptureType();
+
+            // Check the type of the packet capture
+            this.CheckPacketCaptureType();
+
+            System.Diagnostics.Debug.WriteLine(
+                "Selection of the " +
+                System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
+                " packet capture");
+
             switch (this.theSelectedPacketCaptureType)
             {
                 case MainWindowFormPacketCaptureTypeEnumeration.PCAPNextGeneration:
