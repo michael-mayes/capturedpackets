@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrame.RARPPacket
+namespace PacketCaptureAnalyser.EthernetFrame.RARPPacket
 {
     /// <summary>
     /// This class provides constants for use by the RARP packet processing

@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace Analysis.LatencyAnalysis
+namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
 {
     /// <summary>
     /// This class provides structures for use by the latency analysis processing

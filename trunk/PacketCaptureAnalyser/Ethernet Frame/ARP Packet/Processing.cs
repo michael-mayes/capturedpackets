@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrame.ARPPacket
+namespace PacketCaptureAnalyser.EthernetFrame.ARPPacket
 {
     /// <summary>
     /// This class provides the ARP packet processing

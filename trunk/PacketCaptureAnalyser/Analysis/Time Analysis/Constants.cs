@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace Analysis.TimeAnalysis
+namespace PacketCaptureAnalyser.Analysis.TimeAnalysis
 {
     /// <summary>
     /// This class provides constants for use by the time analysis processing

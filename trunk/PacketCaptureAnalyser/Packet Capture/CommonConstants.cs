@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCapture
+namespace PacketCaptureAnalyser.PacketCapture
 {
     /// <summary>
     /// This class provides constants for use by the common packet capture processing

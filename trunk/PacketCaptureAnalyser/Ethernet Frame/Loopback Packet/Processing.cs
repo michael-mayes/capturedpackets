@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrame.LoopbackPacket
+namespace PacketCaptureAnalyser.EthernetFrame.LoopbackPacket
 {
     /// <summary>
     /// This class provides the Loopback packet processing

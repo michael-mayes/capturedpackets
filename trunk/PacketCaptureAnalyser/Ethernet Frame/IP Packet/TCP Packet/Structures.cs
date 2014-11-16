@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrame.IPPacket.TCPPacket
+namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
 {
     /// <summary>
     /// This class provides structures for use by the TCP packet processing
