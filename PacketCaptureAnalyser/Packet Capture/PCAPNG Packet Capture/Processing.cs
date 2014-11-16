@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCapture.PCAPNGPackageCapture
+namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
 {
     /// <summary>
     /// This class provides the PCAP Next Generation packet capture processing
@@ -36,7 +36,7 @@ namespace PacketCapture.PCAPNGPackageCapture
         /// <param name="theSelectedPacketCapturePath">The path of the selected packet capture</param>
         /// <param name="useAlternativeSequenceNumber">Boolean flag that indicates whether to use the alternative sequence number in the data read from the packet capture, required for legacy recordings</param>
         /// <param name="minimizeMemoryUsage">Boolean flag that indicates whether to perform reading from the packet capture using a method that will minimize memory usage, possibly at the expense of increased processing time</param>
-        public Processing(PacketCaptureAnalyser.ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performBurstAnalysisProcessing, Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string theSelectedPacketCapturePath, bool useAlternativeSequenceNumber, bool minimizeMemoryUsage) :
+        public Processing(ProgressWindowForm theProgressWindowForm, Analysis.DebugInformation theDebugInformation, bool performLatencyAnalysisProcessing, Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing, bool performBurstAnalysisProcessing, Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing, bool performTimeAnalysisProcessing, Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing, string theSelectedPacketCapturePath, bool useAlternativeSequenceNumber, bool minimizeMemoryUsage) :
             base(
             theProgressWindowForm,
             theDebugInformation,

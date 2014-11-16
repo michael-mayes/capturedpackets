@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
+namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
 {
     /// <summary>
     /// This class provides the ICMP v4 packet processing

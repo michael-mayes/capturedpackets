@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
+namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
 {
     /// <summary>
     /// This class provides constants for use by the IGMP v2 packet processing

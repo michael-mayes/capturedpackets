@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCapture.PCAPNGPackageCapture
+namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
 {
     /// <summary>
     /// This class provides constants for use by the PCAP Next Generation packet capture processing

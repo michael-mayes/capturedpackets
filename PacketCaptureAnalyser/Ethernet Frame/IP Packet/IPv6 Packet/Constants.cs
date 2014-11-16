@@ -8,7 +8,7 @@
 // unencumbered software released into the public domain as detailed in
 // the UNLICENSE file in the top level directory of this distribution
 
-namespace EthernetFrame.IPPacket.IPv6Packet
+namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
 {
     /// <summary>
     /// This class provides constants for use by the IP v6 packet processing
