@@ -229,10 +229,13 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
 
                 default:
                     {
-                        // Increment the number for the packet read from the packet capture for an unknow PCAP Next Generation block
+                        //// We have got a PCAP Next Generation packet capture block containing an unknown Block Type
+
+                        // Increment the number for the packet read from the packet capture for an unknown PCAP Next Generation block
                         ++thePacketNumber;
 
-                        // We have got an PCAP Next Generation packet capture packet containing an unknown Block Type
+                        //// Processing of PCAP Next Generation packet capture blocks with Block Types not enumerated above is obviously not currently supported!
+
                         this.TheDebugInformation.WriteErrorEvent(
                             "The PCAP Next Generation packet capture block contains an unexpected Block Type of 0x" +
                             string.Format("{0:X}", theBlockType) +
