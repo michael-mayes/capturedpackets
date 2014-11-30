@@ -70,83 +70,31 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
             // Set up the output parameter for the timestamp accuracy - not used for PCAP Next Generation packet captures so default to zero
             thePacketCaptureTimestampAccuracy = 0.0;
 
-            // Create the single instance of the PCAP Next Generation packet capture section header block
-            Structures.SectionHeaderBlockStructure theSectionHeaderBlock =
-                new Structures.SectionHeaderBlockStructure();
+            // Provide a default value to the output parameter for the length of the PCAP Next Generation block payload
+            long thePacketPayloadLength = 0;
 
-            // Read the block type for the PCAP Next Generation packet capture
-            theSectionHeaderBlock.BlockType =
-                theBinaryReader.ReadUInt32();
+            // Peek a view at the block type for the PCAP Next Generation block
+            uint theBlockType = theBinaryReader.ReadUInt32();
 
-            // Check this first block type for the PCAP Next Generation packet capture to ensure that it starts with a section header block
-            switch (theSectionHeaderBlock.BlockType)
+            // Wind back the binary stream by four to hide that we have just peeked a view at the block type
+            theBinaryReader.BaseStream.Position -= 4;
+
+            // It is expected that the PCAP Next Generation packet capture starts with a PCAP Next Generation section header block
+            if (theBlockType != (uint)Constants.BlockType.SectionHeaderBlock)
             {
-                case (uint)Constants.BlockType.SectionHeaderBlock:
-                    {
-                        // The PCAP Next Generation packet capture starts with a section header block, which is correct
-                        break;
-                    }
+                // We have got an PCAP Next Generation packet capture that does not start with a section header block
+                this.TheDebugInformation.WriteErrorEvent(
+                    "The PCAP Next Generation packet capture does not start with a section header block!!!");
 
-                default:
-                    {
-                        // We have got an PCAP Next Generation packet capture that does not start with a section header block
-                        this.TheDebugInformation.WriteErrorEvent(
-                            "The PCAP Next Generation packet capture does not start with a section header block!!!");
-
-                        theResult = false;
-
-                        break;
-                    }
+                theResult = false;
             }
 
             if (theResult)
             {
-                // Read the block total length for the PCAP Next Generation packet capture section header block, adjusting it up to the next even four byte boundary
-                theSectionHeaderBlock.BlockTotalLength =
-                    this.AdjustBlockTotalLength(theBinaryReader.ReadUInt32());
-
-                // Read the magic number of the PCAP Next Generation packet capture section header block from the packet capture
-                theSectionHeaderBlock.ByteOrderMagic =
-                    theBinaryReader.ReadUInt32();
-
-                // The endianism of the remainder of the values in the PCAP Next Generation packet capture section header block will be corrected to little endian if the magic number indicates big endian representation
-                if (theSectionHeaderBlock.ByteOrderMagic == Constants.LittleEndianByteOrderMagic)
-                {
-                    this.TheDebugInformation.WriteInformationEvent(
-                        "The PCAP Next Generation packet capture contains the little endian byte-order magic");
-
-                    this.isTheSectionHeaderBlockLittleEndian = true;
-                }
-                else if (theSectionHeaderBlock.ByteOrderMagic == Constants.BigEndianByteOrderMagic)
-                {
-                    this.TheDebugInformation.WriteInformationEvent(
-                        "The PCAP Next Generation packet capture contains the big endian byte-order magic");
-
-                    this.isTheSectionHeaderBlockLittleEndian = false;
-                }
-
-                // Read the remainder of the PCAP Next Generation packet capture section header block from the packet capture
-                if (this.isTheSectionHeaderBlockLittleEndian)
-                {
-                    theSectionHeaderBlock.MajorVersion = theBinaryReader.ReadUInt16();
-                    theSectionHeaderBlock.MinorVersion = theBinaryReader.ReadUInt16();
-                    theSectionHeaderBlock.SectionLength = theBinaryReader.ReadUInt64();
-                }
-                else
-                {
-                    theSectionHeaderBlock.MajorVersion = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
-                    theSectionHeaderBlock.MinorVersion = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
-                    theSectionHeaderBlock.SectionLength = (ulong)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt64());
-                }
-
-                // Just read the bytes off the remaining bytes from the section header block so we can continue
-                theBinaryReader.ReadBytes(
-                    (int)(theSectionHeaderBlock.BlockTotalLength -
-                    (uint)Constants.BlockTotalLength.SectionHeaderBlock));
-
-                // Validate fields from the PCAP Next Generation packet capture section header block
-                theResult = this.ValidateSectionHeaderBlock(
-                    theSectionHeaderBlock);
+                // Process the PCAP Next Generation section header block
+                theResult = this.ProcessSectionHeaderBlock(
+                    theBinaryReader,
+                    out thePacketPayloadLength);
 
                 if (theResult)
                 {
@@ -209,6 +157,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
 
                         //// Do not increment the number for the packet read from the packet capture for a PCAP Next Generation interface description block as it will not show in Wireshark and so would confuse comparisons with other formats
 
+                        // Process the PCAP Next Generation interface description block
                         theResult = this.ProcessInterfaceDescriptionBlock(
                             theBinaryReader,
                             out thePacketPayloadLength);
@@ -223,6 +172,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
                         // Increment the number for the packet read from the packet capture for a PCAP Next Generation packet block
                         ++thePacketNumber;
 
+                        // Process the PCAP Next Generation packet block
                         theResult = this.ProcessPacketBlock(
                             theBinaryReader,
                             out thePacketPayloadLength,
@@ -238,6 +188,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
                         // Increment the number for the packet read from the packet capture for a PCAP Next Generation simple packet block
                         ++thePacketNumber;
 
+                        // Process the PCAP Next Generation simple packet block
                         theResult = this.ProcessSimplePacketBlock(
                             theBinaryReader,
                             out thePacketPayloadLength);
@@ -252,6 +203,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
                         // Increment the number for the packet read from the packet capture for a PCAP Next Generation enhanced packet block
                         ++thePacketNumber;
 
+                        // Process the PCAP Next Generation enhanced packet block
                         theResult = this.ProcessEnhancedPacketBlock(
                             theBinaryReader,
                             out thePacketPayloadLength,
@@ -266,6 +218,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
 
                         //// Do not increment the number for the packet read from the packet capture for a PCAP Next Generation interface statistics block as it will not show in Wireshark and so would confuse comparisons with other formats
 
+                        // Process the PCAP Next Generation interface statistics block
                         theResult = this.ProcessInterfaceStatisticsBlock(
                             theBinaryReader,
                             out thePacketPayloadLength,
@@ -297,66 +250,80 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         //// Private methods - provide methods specific to PCAP Next Generation packet captures, not required to derive from the abstract base class
 
         /// <summary>
-        /// Validates the PCAP Next Generation packet capture section header block
+        /// Process a PCAP Next Generation section header block
         /// </summary>
-        /// <param name="theSectionHeaderBlock">The PCAP Next Generation packet capture section header block</param>
-        /// <returns>Boolean flag that indicates whether the PCAP Next Generation packet capture section header block is valid</returns>
-        private bool ValidateSectionHeaderBlock(Structures.SectionHeaderBlockStructure theSectionHeaderBlock)
+        /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
+        /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
+        /// <returns>Boolean flag that indicates whether the PCAP Next Generation section header block could be processed</returns>
+        private bool ProcessSectionHeaderBlock(System.IO.BinaryReader theBinaryReader, out long thePacketPayloadLength)
         {
             bool theResult = true;
 
-            //// Validate fields from the PCAP Next Generation packet capture section header block
+            // We have got a PCAP Next Generation section header block
 
-            if (theSectionHeaderBlock.BlockType != (uint)Constants.BlockType.SectionHeaderBlock)
+            // Provide a default value to the output parameter for the length of the PCAP Next Generation block payload
+            thePacketPayloadLength = 0;
+
+            // Create the single instance of the PCAP Next Generation packet capture section header block
+            Structures.SectionHeaderBlockStructure theSectionHeaderBlock =
+                new Structures.SectionHeaderBlockStructure();
+
+            // Read the block type for the PCAP Next Generation packet capture
+            theSectionHeaderBlock.BlockType =
+                theBinaryReader.ReadUInt32();
+
+            // Read the block total length for the PCAP Next Generation packet capture section header block, adjusting it up to the next even four byte boundary
+            theSectionHeaderBlock.BlockTotalLength =
+                this.AdjustBlockTotalLength(theBinaryReader.ReadUInt32());
+
+            // Read the magic number of the PCAP Next Generation packet capture section header block from the packet capture
+            theSectionHeaderBlock.ByteOrderMagic =
+                theBinaryReader.ReadUInt32();
+
+            // The endianism of the remainder of the values in the PCAP Next Generation packet capture section header block will be corrected to little endian if the magic number indicates big endian representation
+            if (theSectionHeaderBlock.ByteOrderMagic == Constants.LittleEndianByteOrderMagic)
             {
-                this.TheDebugInformation.WriteErrorEvent(
-                    "The PCAP Next Generation packet capture section header block does not contain the expected block type, is " +
-                    theSectionHeaderBlock.BlockType.ToString() +
-                    " not " +
-                    Constants.BlockType.SectionHeaderBlock.ToString() +
-                    "!!!");
+                this.TheDebugInformation.WriteInformationEvent(
+                    "The PCAP Next Generation packet capture contains the little endian byte-order magic");
 
-                theResult = false;
+                this.isTheSectionHeaderBlockLittleEndian = true;
+            }
+            else if (theSectionHeaderBlock.ByteOrderMagic == Constants.BigEndianByteOrderMagic)
+            {
+                this.TheDebugInformation.WriteInformationEvent(
+                    "The PCAP Next Generation packet capture contains the big endian byte-order magic");
+
+                this.isTheSectionHeaderBlockLittleEndian = false;
             }
 
-            if (theSectionHeaderBlock.ByteOrderMagic != Constants.LittleEndianByteOrderMagic &&
-                theSectionHeaderBlock.ByteOrderMagic != Constants.BigEndianByteOrderMagic)
+            // Read the remainder of the PCAP Next Generation packet capture section header block from the packet capture
+            if (this.isTheSectionHeaderBlockLittleEndian)
             {
-                this.TheDebugInformation.WriteErrorEvent(
-                    "The PCAP Next Generation packet capture section header block does not contain the expected magic number, is " +
-                    theSectionHeaderBlock.ByteOrderMagic.ToString() +
-                    " not " +
-                    Constants.LittleEndianByteOrderMagic.ToString() +
-                    " or " +
-                    Constants.BigEndianByteOrderMagic.ToString() +
-                    "!!!");
-
-                theResult = false;
+                theSectionHeaderBlock.MajorVersion = theBinaryReader.ReadUInt16();
+                theSectionHeaderBlock.MinorVersion = theBinaryReader.ReadUInt16();
+                theSectionHeaderBlock.SectionLength = theBinaryReader.ReadUInt64();
+            }
+            else
+            {
+                theSectionHeaderBlock.MajorVersion = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
+                theSectionHeaderBlock.MinorVersion = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
+                theSectionHeaderBlock.SectionLength = (ulong)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt64());
             }
 
-            if (theSectionHeaderBlock.MajorVersion != Constants.ExpectedMajorVersion)
-            {
-                this.TheDebugInformation.WriteErrorEvent(
-                    "The PCAP Next Generation packet capture section header block does not contain the expected major version number, is " +
-                    theSectionHeaderBlock.MajorVersion.ToString() +
-                    " not " +
-                    Constants.ExpectedMajorVersion.ToString() +
-                    "!!!");
+            // The PCAP Next Generation section header block does not contain an Ethernet frame
+            // Just read the bytes off the remaining bytes from the PCAP Next Generation section header block so we can continue
+            theBinaryReader.ReadBytes(
+                (int)(theSectionHeaderBlock.BlockTotalLength -
+                (uint)Constants.BlockTotalLength.SectionHeaderBlock));
 
-                theResult = false;
-            }
+            // Validate fields from the PCAP Next Generation packet capture section header block
+            theResult = this.ValidateSectionHeaderBlock(
+                theSectionHeaderBlock);
 
-            if (theSectionHeaderBlock.MinorVersion != Constants.ExpectedMinorVersion)
-            {
-                this.TheDebugInformation.WriteErrorEvent(
-                    "The PCAP Next Generation packet capture section header block does not contain the expected minor version number, is " +
-                    theSectionHeaderBlock.MinorVersion.ToString() +
-                    " not " +
-                    Constants.ExpectedMinorVersion.ToString() +
-                    "!!!");
-
-                theResult = false;
-            }
+            // The PCAP Next Generation section header block does not contain an Ethernet frame
+            // Set up the output parameter for the length of the PCAP Next Generation packet capture packet payload
+            // Set this output parameter to a value of zero to prevent any attempt to process an Ethernet frame from the PCAP Next Generation packet capture packet payload
+            thePacketPayloadLength = 0;
 
             return theResult;
         }
@@ -631,6 +598,71 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
             thePacketTimestamp =
                 ((theInterfaceStatisticsBlock.TimestampHigh * 4294967296) +
                 theInterfaceStatisticsBlock.TimestampLow) / 1000000.0;
+
+            return theResult;
+        }
+
+        /// <summary>
+        /// Validates the PCAP Next Generation packet capture section header block
+        /// </summary>
+        /// <param name="theSectionHeaderBlock">The PCAP Next Generation packet capture section header block</param>
+        /// <returns>Boolean flag that indicates whether the PCAP Next Generation packet capture section header block is valid</returns>
+        private bool ValidateSectionHeaderBlock(Structures.SectionHeaderBlockStructure theSectionHeaderBlock)
+        {
+            bool theResult = true;
+
+            //// Validate fields from the PCAP Next Generation packet capture section header block
+
+            if (theSectionHeaderBlock.BlockType != (uint)Constants.BlockType.SectionHeaderBlock)
+            {
+                this.TheDebugInformation.WriteErrorEvent(
+                    "The PCAP Next Generation packet capture section header block does not contain the expected block type, is " +
+                    theSectionHeaderBlock.BlockType.ToString() +
+                    " not " +
+                    Constants.BlockType.SectionHeaderBlock.ToString() +
+                    "!!!");
+
+                theResult = false;
+            }
+
+            if (theSectionHeaderBlock.ByteOrderMagic != Constants.LittleEndianByteOrderMagic &&
+                theSectionHeaderBlock.ByteOrderMagic != Constants.BigEndianByteOrderMagic)
+            {
+                this.TheDebugInformation.WriteErrorEvent(
+                    "The PCAP Next Generation packet capture section header block does not contain the expected magic number, is " +
+                    theSectionHeaderBlock.ByteOrderMagic.ToString() +
+                    " not " +
+                    Constants.LittleEndianByteOrderMagic.ToString() +
+                    " or " +
+                    Constants.BigEndianByteOrderMagic.ToString() +
+                    "!!!");
+
+                theResult = false;
+            }
+
+            if (theSectionHeaderBlock.MajorVersion != Constants.ExpectedMajorVersion)
+            {
+                this.TheDebugInformation.WriteErrorEvent(
+                    "The PCAP Next Generation packet capture section header block does not contain the expected major version number, is " +
+                    theSectionHeaderBlock.MajorVersion.ToString() +
+                    " not " +
+                    Constants.ExpectedMajorVersion.ToString() +
+                    "!!!");
+
+                theResult = false;
+            }
+
+            if (theSectionHeaderBlock.MinorVersion != Constants.ExpectedMinorVersion)
+            {
+                this.TheDebugInformation.WriteErrorEvent(
+                    "The PCAP Next Generation packet capture section header block does not contain the expected minor version number, is " +
+                    theSectionHeaderBlock.MinorVersion.ToString() +
+                    " not " +
+                    Constants.ExpectedMinorVersion.ToString() +
+                    "!!!");
+
+                theResult = false;
+            }
 
             return theResult;
         }
