@@ -16,12 +16,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
     public class Structures
     {
         /// <summary>
-        /// PCAP Next Generation packet capture section header block
+        /// PCAP Next Generation section header block
         /// </summary>
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = (int)Constants.BlockTotalLength.SectionHeaderBlock)]
-
         public struct SectionHeaderBlockStructure
         {
             /// <summary>
@@ -67,7 +66,6 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = (int)Constants.BlockTotalLength.InterfaceDescriptionBlock)]
-
         public struct InterfaceDescriptionBlockStructure
         {
             /// <summary>
@@ -107,7 +105,6 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = (int)Constants.BlockTotalLength.PacketBlock)]
-
         public struct PacketBlockStructure
         {
             /// <summary>
@@ -165,7 +162,6 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = (int)Constants.BlockTotalLength.SimplePacketBlock)]
-
         public struct SimplePacketBlockStructure
         {
             /// <summary>
@@ -193,7 +189,6 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         [System.Runtime.InteropServices.StructLayout
             (System.Runtime.InteropServices.LayoutKind.Explicit,
             Size = (int)Constants.BlockTotalLength.EnhancedPacketBlock)]
-
         public struct EnhancedPacketBlockStructure
         {
             /// <summary>
@@ -237,6 +232,39 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
             /// </summary>
             [System.Runtime.InteropServices.FieldOffset(24)]
             public uint PacketLength;
+        }
+
+        /// <summary>
+        /// PCAP Next Generation name resolution block
+        /// </summary>
+        [System.Runtime.InteropServices.StructLayout
+            (System.Runtime.InteropServices.LayoutKind.Explicit,
+            Size = (int)Constants.BlockTotalLength.NameResolutionBlock)]
+        public struct NameResolutionBlockStructure
+        {
+            /// <summary>
+            /// Block type
+            /// </summary>
+            [System.Runtime.InteropServices.FieldOffset(0)]
+            public uint BlockType;
+
+            /// <summary>
+            /// Block total length
+            /// </summary>
+            [System.Runtime.InteropServices.FieldOffset(4)]
+            public uint BlockTotalLength;
+
+            /// <summary>
+            /// Record type
+            /// </summary>
+            [System.Runtime.InteropServices.FieldOffset(8)]
+            public ushort RecordType;
+
+            /// <summary>
+            /// Record length
+            /// </summary>
+            [System.Runtime.InteropServices.FieldOffset(10)]
+            public ushort RecordLength;
         }
 
         /// <summary>

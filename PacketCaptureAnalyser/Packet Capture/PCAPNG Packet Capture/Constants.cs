@@ -43,7 +43,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         public enum BlockType : uint
         {
             /// <summary>
-            /// PCAP Next Generation packet capture section header
+            /// PCAP Next Generation section header block
             /// </summary>
             SectionHeaderBlock = 0x0a0d0d0a,
 
@@ -68,6 +68,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
             EnhancedPacketBlock = 0x00000006,
 
             /// <summary>
+            /// PCAP Next Generation name resolution block
+            /// </summary>
+            NameResolutionBlock = 0x00000004,
+
+            /// <summary>
             /// PCAP Next Generation interface statistics block
             /// </summary>
             InterfaceStatisticsBlock = 0x00000005
@@ -79,7 +84,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         public enum BlockTotalLength : uint
         {
             /// <summary>
-            /// PCAP Next Generation packet capture section header block length
+            /// PCAP Next Generation section header block length
             /// </summary>
             SectionHeaderBlock = 24,
 
@@ -102,6 +107,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
             /// PCAP Next Generation enhanced packet block length
             /// </summary>
             EnhancedPacketBlock = 28,
+
+            /// <summary>
+            /// PCAP Next Generation name resolution block length
+            /// </summary>
+            NameResolutionBlock = 12,
 
             /// <summary>
             /// PCAP Next Generation interface statistics block length
