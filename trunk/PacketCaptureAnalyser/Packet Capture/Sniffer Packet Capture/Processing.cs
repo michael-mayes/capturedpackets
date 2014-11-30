@@ -126,9 +126,6 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             // Provide a default value to the output parameter for the timestamp
             thePacketTimestamp = 0.0;
 
-            // Always increment the number for the packet read from the packet capture for a Sniffer packet
-            ++thePacketNumber;
-
             // Create an instance of the Sniffer packet record header
             Structures.RecordHeaderStructure theRecordHeader =
                 new Structures.RecordHeaderStructure();
@@ -145,6 +142,11 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
                 {
                     case (ushort)Constants.RecordHeaderSnifferRecordType.Type2RecordType:
                         {
+                            //// We have got a Sniffer type 2 data record
+
+                            // Increment the number for the packet read from the packet capture for a Sniffer type 2 data record
+                            ++thePacketNumber;
+
                             // Create an instance of the Sniffer type 2 data record
                             Structures.SnifferType2RecordStructure theType2Record =
                                 new Structures.SnifferType2RecordStructure();
@@ -177,7 +179,12 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
 
                     case (ushort)Constants.RecordHeaderSnifferRecordType.EndOfFileRecordType:
                         {
-                            // No further reading required for the Sniffer end of file data record as it only consists of the Sniffer packet capture record header!
+                            //// We have got a Sniffer end of file record
+
+                            //// No further reading required for the Sniffer end of file record as it only consists of the Sniffer packet capture record header!
+
+                            //// Do not increment the number for the packet read from the packet capture for a Sniffer end of file record as it will not show in Wireshark and so would confuse comparisons with other formats
+
                             break;
                         }
 
@@ -185,7 +192,10 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
                         {
                             //// We have got an Sniffer packet capture containing an unknown record type
 
-                            //// Processing of Sniffer packet captures with record types not enumerated above are obviously not currently supported!
+                            // Increment the number for the packet read from the packet capture for an unknown Sniffer packet capture record
+                            ++thePacketNumber;
+
+                            //// Processing of Sniffer packet captures with record types not enumerated above is obviously not currently supported!
 
                             this.TheDebugInformation.WriteErrorEvent(
                                 "The Sniffer packet capture contains an unexpected record type of " +
