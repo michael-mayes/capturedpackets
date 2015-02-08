@@ -186,7 +186,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
             // Validate the IP v4 packet header
             theResult = this.ValidateIPv4PacketHeader(
                 theEthernetFrameLength,
-                this.theIPv4PacketHeader,
                 theIPv4PacketHeaderVersion,
                 theIPv4PacketHeaderLength);
 
@@ -242,8 +241,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
                 case (byte)Constants.Protocol.IGMP:
                     {
                         // We have got an IP v4 packet containing an IGMP v2 packet so process it
-                        this.theIGMPv2PacketProcessing.ProcessIGMPv2Packet(
-                            theIPv4PacketPayloadLength);
+                        this.theIGMPv2PacketProcessing.ProcessIGMPv2Packet();
 
                         break;
                     }
@@ -291,7 +289,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
 
                         this.theDebugInformation.WriteErrorEvent(
                             "The IP v4 packet contains an unexpected protocol of " +
-                            string.Format("{0:X}", theIPv4Protocol) +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", theIPv4Protocol) +
                             "!!!");
 
                         theResult = false;
@@ -307,11 +305,10 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
         /// Validates the IP v4 packet header
         /// </summary>
         /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
-        /// <param name="theIPv4Header">The IP v4 packet header read from the packet capture</param>
         /// <param name="theIPv4HeaderVersion">The version of the IP v4 packet header</param>
         /// <param name="theIPv4HeaderLength">The length of the IP v4 packet header</param>
         /// <returns>Boolean flag that indicates whether the IP v4 packet header is valid</returns>
-        private bool ValidateIPv4PacketHeader(long theEthernetFrameLength, Structures.HeaderStructure theIPv4Header, ushort theIPv4HeaderVersion, ushort theIPv4HeaderLength)
+        private bool ValidateIPv4PacketHeader(long theEthernetFrameLength, ushort theIPv4HeaderVersion, ushort theIPv4HeaderLength)
         {
             bool theResult = true;
 
@@ -322,9 +319,9 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
 
                 this.theDebugInformation.WriteErrorEvent(
                     "The IP v4 packet indicates a total length of " +
-                    this.theIPv4PacketHeader.TotalLength.ToString() +
+                    this.theIPv4PacketHeader.TotalLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes that is greater than the length of " +
-                    theEthernetFrameLength.ToString() +
+                    theEthernetFrameLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes in the Ethernet frame!!!");
 
                 theResult = false;
@@ -337,7 +334,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
 
                 this.theDebugInformation.WriteErrorEvent(
                     "The IP v4 packet header contains an unexpected version of " +
-                    theIPv4HeaderVersion.ToString() +
+                    theIPv4HeaderVersion.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -351,11 +348,11 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
 
                 this.theDebugInformation.WriteErrorEvent(
                     "The IP v4 packet header contains a header length " +
-                    theIPv4HeaderLength.ToString() +
+                    theIPv4HeaderLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " which is outside the range " +
-                    Constants.HeaderMinimumLength.ToString() +
+                    Constants.HeaderMinimumLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " to " +
-                    Constants.HeaderMaximumLength.ToString() +
+                    Constants.HeaderMaximumLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;

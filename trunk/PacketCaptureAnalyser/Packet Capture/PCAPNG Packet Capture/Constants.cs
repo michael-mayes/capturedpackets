@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
     /// <summary>
     /// This class provides constants for use by the PCAP Next Generation packet capture processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// PCAP Next Generation packet capture section header block
 
@@ -42,6 +42,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         /// </summary>
         public enum BlockType : uint
         {
+            /// <summary>
+            /// Default value
+            /// </summary>
+            None = 0,
+
             /// <summary>
             /// PCAP Next Generation section header block
             /// </summary>
@@ -83,6 +88,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
         /// </summary>
         public enum BlockTotalLength : uint
         {
+            /// <summary>
+            /// Default value
+            /// </summary>
+            None = 0,
+
             /// <summary>
             /// PCAP Next Generation section header block length
             /// </summary>

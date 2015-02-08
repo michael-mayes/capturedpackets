@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
     /// <summary>
     /// This class provides structures for use by the ICMP v4 packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// ICMP v4 packet header

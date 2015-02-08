@@ -204,11 +204,11 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
             {
                 this.theDebugInformation.WriteErrorEvent(
                     "The TCP packet contains a header length " +
-                    theTCPPacketHeaderLength.ToString() +
+                    theTCPPacketHeaderLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " which is outside the range " +
-                    Constants.HeaderMinimumLength.ToString() +
+                    Constants.HeaderMinimumLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " to " +
-                    Constants.HeaderMaximumLength.ToString() +
+                    Constants.HeaderMaximumLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;

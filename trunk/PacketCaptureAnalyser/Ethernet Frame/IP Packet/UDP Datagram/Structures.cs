@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
     /// <summary>
     /// This class provides structures for use by the UDP datagram processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// UDP datagram header

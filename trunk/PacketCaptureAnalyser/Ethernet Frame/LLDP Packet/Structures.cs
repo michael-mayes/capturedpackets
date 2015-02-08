@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.LLDPPacket
     /// <summary>
     /// This class provides structures for use by the LLDP packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// LLDP packet

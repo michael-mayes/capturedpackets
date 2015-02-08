@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
     /// <summary>
     /// This class provides structures for use by the Sniffer packet capture processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// Sniffer packet capture global header

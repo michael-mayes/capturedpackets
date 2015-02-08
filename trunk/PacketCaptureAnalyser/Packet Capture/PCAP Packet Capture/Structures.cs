@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
     /// <summary>
     /// This class provides structures for use by the PCAP packet capture processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// PCAP packet capture global header

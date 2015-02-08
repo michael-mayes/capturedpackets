@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser
     /// <summary>
     /// This class provides constants for use by the main window form processing
     /// </summary>
-    public class MainWindowFormConstants
+    public static class MainWindowFormConstants
     {
         /// <summary>
         /// The expected set of fixed extensions for a PCAP Next Generation packet capture

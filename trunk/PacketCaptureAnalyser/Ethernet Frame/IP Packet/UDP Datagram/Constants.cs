@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
     /// <summary>
     /// This class provides constants for use by the UDP datagram packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// UDP datagram header
 

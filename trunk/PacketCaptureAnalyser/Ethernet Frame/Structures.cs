@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame
     /// <summary>
     /// This class provides structures for use by the Ethernet frame processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// Ethernet frame header

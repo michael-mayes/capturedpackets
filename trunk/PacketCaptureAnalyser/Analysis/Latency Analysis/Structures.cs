@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
     /// <summary>
     /// This class provides structures for use by the latency analysis processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// Dictionary Key

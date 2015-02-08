@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame
     /// <summary>
     /// This class provides constants for use by the Ethernet frame processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// Ethernet frame header
 
@@ -27,6 +27,11 @@ namespace PacketCaptureAnalyser.EthernetFrame
         /// </summary>
         public enum HeaderEthernetFrameType : ushort
         {
+            /// <summary>
+            /// Default value
+            /// </summary>
+            None = 0,
+
             /// <summary>
             /// Minimum value for type of an Ethernet frame - lower values indicate length for an IEEE 802.3 Ethernet frame
             /// </summary>

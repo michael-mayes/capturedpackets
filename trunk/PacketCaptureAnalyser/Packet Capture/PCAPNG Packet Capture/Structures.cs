@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPNGPackageCapture
     /// <summary>
     /// This class provides structures for use by the PCAP Next Generation packet capture processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// PCAP Next Generation section header block

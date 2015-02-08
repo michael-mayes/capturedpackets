@@ -246,9 +246,9 @@ namespace PacketCaptureAnalyser.EthernetFrame
                             // The type for this Ethernet frame has an unknown value
                             this.theDebugInformation.WriteInformationEvent(
                                 "The Ethernet frame in packet number " +
-                                string.Format("{0,7}", thePacketNumber.ToString()) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " contains an unexpected type of 0x" +
-                                string.Format("{0:X}", this.theEthernetFrameType) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", this.theEthernetFrameType) +
                                 "! - Attempt to recover and continue processing");
                         }
 
@@ -343,7 +343,7 @@ namespace PacketCaptureAnalyser.EthernetFrame
 
                         this.theDebugInformation.WriteInformationEvent(
                             "The Ethernet frame in packet number " +
-                            string.Format("{0,7}", thePacketNumber.ToString()) +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                             " contains a second VLAN tag!" +
                             " - Attempt to recover and continue processing");
 
@@ -396,7 +396,7 @@ namespace PacketCaptureAnalyser.EthernetFrame
             {
                 this.theDebugInformation.WriteInformationEvent(
                     "Processing of the payload of the Ethernet frame in packet number " +
-                    string.Format("{0,7}", thePacketNumber.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " encountered an error!" +
                     " - Attempt to recover and continue processing");
             }
@@ -431,11 +431,11 @@ namespace PacketCaptureAnalyser.EthernetFrame
                     // Warn about the error condition having arisen
                     this.theDebugInformation.WriteInformationEvent(
                         "The length " +
-                        this.theEthernetFrameLength.ToString() +
+                        this.theEthernetFrameLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                         " of the Ethernet frame in packet number " +
-                        string.Format("{0,7}", thePacketNumber.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " does not match the progression " +
-                        theStreamPositionDifference.ToString() +
+                        theStreamPositionDifference.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                         " through the stream!" +
                         " - Attempt to recover and continue processing");
                 }

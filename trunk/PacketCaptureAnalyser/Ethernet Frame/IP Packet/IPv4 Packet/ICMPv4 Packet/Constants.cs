@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
     /// <summary>
     /// This class provides constants for use by the ICMP v4 packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// ICMP v4 packet header
 

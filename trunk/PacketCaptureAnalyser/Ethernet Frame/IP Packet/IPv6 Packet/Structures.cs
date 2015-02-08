@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
     /// <summary>
     /// This class provides structures for use by the IP v6 packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// IP v6 packet header
