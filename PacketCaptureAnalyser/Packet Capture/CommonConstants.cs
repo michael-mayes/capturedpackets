@@ -13,8 +13,8 @@ namespace PacketCaptureAnalyser.PacketCapture
     /// <summary>
     /// This class provides constants for use by the common packet capture processing
     /// </summary>
-    public class CommonConstants
-    {
+    public static class CommonConstants
+    {        
         /// <summary>
         /// Network data link type/Network encapsulation type
         /// </summary>
@@ -23,7 +23,7 @@ namespace PacketCaptureAnalyser.PacketCapture
             /// <summary>
             /// Null/Loopback network data link type
             /// </summary>
-            NullLoopBack = 0,
+            NullLoopback = 0,
 
             /// <summary>
             /// Ethernet network data link type

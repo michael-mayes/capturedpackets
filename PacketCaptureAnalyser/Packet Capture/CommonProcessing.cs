@@ -147,27 +147,6 @@ namespace PacketCaptureAnalyser.PacketCapture
 
                     this.theProgressWindowForm.ProgressBar = 65;
 
-                    System.IO.FileStream theFileStream = null;
-
-                    byte[] theBytes = null;
-
-                    // If there is a need to minimize memory usage then sacrifice the significant processing
-                    // speed improvements that come from the up front read of the whole file into an array
-                    if (this.minimizeMemoryUsage)
-                    {
-                        // Open a file stream for the packet capture for reading
-                        theFileStream = System.IO.File.OpenRead(
-                            this.theSelectedPacketCapturePath);
-                    }
-                    else
-                    {
-                        // Read all the bytes from the packet capture into an array
-                        theBytes = System.IO.File.ReadAllBytes(
-                            this.theSelectedPacketCapturePath);
-                    }
-
-                    this.theProgressWindowForm.ProgressBar = 70;
-
                     //// Compute the duration between the start and the end times
 
                     System.DateTime theEndTime = System.DateTime.Now;
@@ -178,7 +157,7 @@ namespace PacketCaptureAnalyser.PacketCapture
                         "Reading of all bytes from the " +
                         System.IO.Path.GetFileName(this.theSelectedPacketCapturePath) +
                         " packet capture completed in " +
-                        theDuration.Seconds.ToString() +
+                        theDuration.Seconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                         " seconds");
 
                     this.theProgressWindowForm.ProgressBar = 75;
@@ -189,39 +168,60 @@ namespace PacketCaptureAnalyser.PacketCapture
                     {
                         this.theProgressWindowForm.ProgressBar = 80;
 
-                        // Open a binary reader for the file stream for the packet capture
-                        using (System.IO.BinaryReader theBinaryReader =
-                            new System.IO.BinaryReader(theFileStream))
+                        System.IO.FileStream theFileStream = null;
+
+                        // Use a try/finally pattern to avoid multiple disposals of a resource
+                        try
                         {
-                            this.theProgressWindowForm.ProgressBar = 90;
+                            // Open a file stream for the packet capture for reading
+                            theFileStream = System.IO.File.OpenRead(
+                                this.theSelectedPacketCapturePath);
 
-                            // Ensure that the position of the binary reader is set to the beginning of the memory stream
-                            theBinaryReader.BaseStream.Position = 0;
-
-                            // Declare an entity to be used for the network data link type extracted from the packet capture global header
-                            uint theNetworkDataLinkType = 0;
-
-                            // Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
-                            double theTimestampAccuracy = 0.0;
-
-                            this.theProgressWindowForm.ProgressBar = 95;
-
-                            // Only continue reading from the packet capture if the packet capture global header was read successfully
-                            if (this.ProcessPacketCaptureGlobalHeader(
-                                theBinaryReader,
-                                out theNetworkDataLinkType,
-                                out theTimestampAccuracy))
+                            // Open a binary reader for the file stream for the packet capture
+                            using (System.IO.BinaryReader theBinaryReader =
+                                new System.IO.BinaryReader(theFileStream))
                             {
-                                this.theProgressWindowForm.ProgressBar = 100;
+                                // The resources for the file stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
+                                theFileStream = null;
 
-                                theResult = this.ProcessPackets(
+                                this.theProgressWindowForm.ProgressBar = 90;
+
+                                // Ensure that the position of the binary reader is set to the beginning of the memory stream
+                                theBinaryReader.BaseStream.Position = 0;
+
+                                // Declare an entity to be used for the network data link type extracted from the packet capture global header
+                                uint theNetworkDataLinkType = 0;
+
+                                // Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
+                                double theTimestampAccuracy = 0.0;
+
+                                this.theProgressWindowForm.ProgressBar = 95;
+
+                                // Only continue reading from the packet capture if the packet capture global header was read successfully
+                                if (this.ProcessPacketCaptureGlobalHeader(
                                     theBinaryReader,
-                                    theNetworkDataLinkType,
-                                    theTimestampAccuracy);
+                                    out theNetworkDataLinkType,
+                                    out theTimestampAccuracy))
+                                {
+                                    this.theProgressWindowForm.ProgressBar = 100;
+
+                                    theResult = this.ProcessPackets(
+                                        theBinaryReader,
+                                        theNetworkDataLinkType,
+                                        theTimestampAccuracy);
+                                }
+                                else
+                                {
+                                    theResult = false;
+                                }
                             }
-                            else
+                        }
+                        finally
+                        {
+                            // Dispose of the resources for the file stream for the packet capture if this action has not already taken place above
+                            if (theFileStream != null)
                             {
-                                theResult = false;
+                                theFileStream.Dispose();
                             }
                         }
                     }
@@ -233,6 +233,13 @@ namespace PacketCaptureAnalyser.PacketCapture
                         // Use a try/finally pattern to avoid multiple disposals of a resource
                         try
                         {
+                            // If there is a need to minimize memory usage then sacrifice the significant processing
+                            // speed improvements that come from the up front read of the whole file into an array
+
+                            // Read all the bytes from the packet capture into an array
+                            byte[]  theBytes = System.IO.File.ReadAllBytes(
+                                this.theSelectedPacketCapturePath);
+
                             // Create a memory stream to read the packet capture from the byte array
                             theMemoryStream = new System.IO.MemoryStream(theBytes);
 
@@ -447,11 +454,11 @@ namespace PacketCaptureAnalyser.PacketCapture
 
                                 //// theDebugInformation.WriteInformationEvent
                                 ////     ("Started processing of packet number " +
-                                ////     theNumberOfPacketsProcessed.ToString());
+                                ////     theNumberOfPacketsProcessed.ToString(System.Globalization.CultureInfo.CurrentCulture));
 
                                 switch (thePacketCaptureNetworkDataLinkType)
                                 {
-                                    case (uint)CommonConstants.NetworkDataLinkType.NullLoopBack:
+                                    case (uint)CommonConstants.NetworkDataLinkType.NullLoopback:
                                     case (uint)CommonConstants.NetworkDataLinkType.CiscoHDLC:
                                         {
                                             // Just read the bytes off from the packet capture so we can continue
@@ -477,7 +484,7 @@ namespace PacketCaptureAnalyser.PacketCapture
 
                                             this.theDebugInformation.WriteErrorEvent(
                                                 "Processing of the packet number " +
-                                                theNumberOfPacketsProcessed.ToString() +
+                                                theNumberOfPacketsProcessed.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                                                 " failed during processing of packet header with unknown datalink type!!!");
 
                                             break;
@@ -496,7 +503,7 @@ namespace PacketCaptureAnalyser.PacketCapture
 
                             this.theDebugInformation.WriteErrorEvent(
                                 "Processing of the packet number " +
-                                theNumberOfPacketsProcessed.ToString() +
+                                theNumberOfPacketsProcessed.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                                 " failed during processing of Ethernet frame!!!");
 
                             // Stop looping as there has been an error!!!
@@ -543,9 +550,9 @@ namespace PacketCaptureAnalyser.PacketCapture
 
                 this.theDebugInformation.WriteInformationEvent(
                     "Parsing of " +
-                    theNumberOfPacketsProcessed.ToString() +
+                    theNumberOfPacketsProcessed.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " packets completed in " +
-                    theDuration.TotalSeconds.ToString() +
+                    theDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " seconds");
             }
 

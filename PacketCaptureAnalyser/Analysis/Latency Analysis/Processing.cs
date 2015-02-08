@@ -85,9 +85,11 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
 
             // Create a datatable to hold the set of host Ids encountered during the latency analysis
             this.theHostIdsTable = new System.Data.DataTable();
+            this.theHostIdsTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
 
             // Create a datatable to hold the set of message Ids encountered during the latency analysis
             this.theMessageIdsTable = new System.Data.DataTable();
+            this.theMessageIdsTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
         }
 
         /// <summary>
@@ -198,9 +200,9 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
                 {
                     this.theDebugInformation.WriteErrorEvent(
                         "Found the row for the Host Id " +
-                        string.Format("{0,3}", theHostId) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostId) +
                         " and the sequence number " +
-                        string.Format("{0,7}", theSequenceNumber.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " but the FirstInstanceFound flag is not set!!!");
 
                     return;
@@ -210,9 +212,9 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
                 {
                     this.theDebugInformation.WriteErrorEvent(
                         "Found the row for the Host Id " +
-                        string.Format("{0,3}", theHostId) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostId) +
                         " and the sequence number " +
-                        string.Format("{0,7}", theSequenceNumber.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " but the SecondInstanceFound flag is already set!!!");
 
                     return;
@@ -278,7 +280,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             {
                 this.theDebugInformation.WriteTextLine(
                     "Host Id " +
-                    string.Format("{0,3}", theHostIdRow.Field<byte>("HostId").ToString()));
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostIdRow.Field<byte>("HostId").ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine("===========");
                 this.theDebugInformation.WriteBlankLine();
@@ -309,7 +311,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
         {
             object[] theHostIdRowFindObject = new object[1];
 
-            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
+            theHostIdRowFindObject[0] = theHostId.ToString(System.Globalization.CultureInfo.CurrentCulture); // Primary key
 
             System.Data.DataRow theHostIdDataRowFound =
                 this.theHostIdsTable.Rows.Find(
@@ -319,7 +321,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             {
                 this.theDebugInformation.WriteInformationEvent(
                     "Found a pair of data-supplying messages for a Host Id " +
-                    string.Format("{0,3}", theHostId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostId) +
                     " - adding this Host Id to the latency analysis");
 
                 System.Data.DataRow theHostIdRowToAdd =
@@ -341,8 +343,8 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
         {
             object[] theMessageIdRowFindObject = new object[2];
 
-            theMessageIdRowFindObject[0] = theHostId.ToString(); // Primary key (part one)
-            theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
+            theMessageIdRowFindObject[0] = theHostId.ToString(System.Globalization.CultureInfo.CurrentCulture); // Primary key (part one)
+            theMessageIdRowFindObject[1] = theMessageId.ToString(System.Globalization.CultureInfo.CurrentCulture); // Primary key (part two)
 
             System.Data.DataRow theMessageIdDataRowFound =
                 this.theMessageIdsTable.Rows.Find(
@@ -352,9 +354,9 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             {
                 this.theDebugInformation.WriteInformationEvent(
                     "Found a pair of data-supplying messages with a Message Id " +
-                    string.Format("{0,5}", theMessageId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,5}", theMessageId) +
                     " for a Host Id " +
-                    string.Format("{0,3}", theHostId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostId) +
                     " - adding this Message Id/Host Id combination to the latency analysis");
 
                 System.Data.DataRow theMessageIdRowToAdd =
@@ -474,11 +476,11 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
                 {
                     theOutOfRangeLatencies.Add(
                         "The message pair for packet number " +
-                        string.Format("{0,7}", theRow.Value.FirstInstancePacketNumber.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theRow.Value.FirstInstancePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " and sequence number " +
-                        string.Format("{0,7}", theRow.Key.SequenceNumber.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theRow.Key.SequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " has an out of range latency of " +
-                        string.Format("{0,18}", theRow.Value.TimestampDifference.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theRow.Value.TimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " ms");
                 }
 
@@ -505,9 +507,9 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
 
             this.theDebugInformation.WriteTextLine(
                 "The number of message pairs with a Message Id of " +
-                string.Format("{0,5}", theMessageId.ToString()) +
+                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,5}", theMessageId.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                 " was " +
-                theNumberOfMessagePairs.ToString());
+                theNumberOfMessagePairs.ToString(System.Globalization.CultureInfo.CurrentCulture));
 
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
@@ -519,23 +521,23 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum latency was " +
-                    string.Format("{0,18}", theMinTimestampDifference.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
-                    string.Format("{0,7}", theMinTimestampPacketNumber.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
-                    string.Format("{0,7}", theMinTimestampSequenceNumber.ToString()));
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimestampSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum latency was " +
-                    string.Format("{0,18}", theMaxTimestampDifference.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
-                    string.Format("{0,7}", theMaxTimestampPacketNumber.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
-                    string.Format("{0,7}", theMaxTimestampSequenceNumber.ToString()));
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimestampSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The average latency was " +
-                    string.Format("{0,18}", theAverageTimestampDifference.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms");
 
                 if (this.outputHistogram)
@@ -546,7 +548,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
 
                     this.theDebugInformation.WriteTextLine(
                         "The histogram (" +
-                        Constants.BinsPerMillisecond.ToString() +
+                        Constants.BinsPerMillisecond.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                         " bins per millisecond) for the latencies is:");
 
                     this.theDebugInformation.WriteBlankLine();
@@ -582,6 +584,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
                 //// Add a column titles line to the debug output file
 
                 string theOutputAdditionalInformationTitleLine = string.Format(
+                    System.Globalization.CultureInfo.CurrentCulture, 
                     "{0},{1},{2},{3},{4},,{5}{6}",
                     "First Packet Number",
                     "Second Packet Number",
@@ -599,13 +602,14 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
                 foreach (DictionaryKeyValuePairType theRow in theRows)
                 {
                     string theOutputAdditionalInformationLine = string.Format(
+                        System.Globalization.CultureInfo.CurrentCulture, 
                         "{0,7},{1,7},{2,7},{3,18},{4,18},,{5,18}{6}",
-                        theRow.Value.FirstInstancePacketNumber.ToString(),
-                        theRow.Value.SecondInstancePacketNumber.ToString(),
-                        theRow.Key.SequenceNumber.ToString(),
-                        theRow.Value.FirstInstancePacketTimestamp.ToString(),
-                        theRow.Value.SecondInstancePacketTimestamp.ToString(),
-                        theRow.Value.TimestampDifference.ToString(),
+                        theRow.Value.FirstInstancePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                        theRow.Value.SecondInstancePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                        theRow.Key.SequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                        theRow.Value.FirstInstancePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                        theRow.Value.SecondInstancePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                        theRow.Value.TimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture),
                         System.Environment.NewLine);
 
                     theOutputAdditionalInformationLines.Append(

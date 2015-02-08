@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.Analysis.TimeAnalysis
     /// <summary>
     /// This class provides constants for use by the time analysis processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// Timestamp differences
 

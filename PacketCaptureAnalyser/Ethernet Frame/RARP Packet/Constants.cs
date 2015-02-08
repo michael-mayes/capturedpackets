@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.RARPPacket
     /// <summary>
     /// This class provides constants for use by the RARP packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// RARP packet
 

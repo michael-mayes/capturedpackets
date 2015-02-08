@@ -159,7 +159,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
             // Validate the IP v6 packet header
             theResult = this.ValidateIPv6PacketHeader(
                 theEthernetFrameLength,
-                this.theIPv6PacketHeader,
                 theIPv6PacketHeaderVersion);
 
             if (theResult)
@@ -250,7 +249,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
 
                         this.theDebugInformation.WriteErrorEvent(
                             "The IP v6 packet contains an unexpected protocol of " +
-                            string.Format("{0:X}", theIPv6PacketProtocol) +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", theIPv6PacketProtocol) +
                             "!!!");
 
                         theResult = false;
@@ -266,10 +265,9 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
         /// Validates the IP v6 packet header
         /// </summary>
         /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
-        /// <param name="theIPv6PacketHeader">The IP v6 packet header</param>
         /// <param name="theIPv6PacketHeaderVersion">The version of the IP v6 packet header</param>
         /// <returns>Boolean flag that indicates whether the IP v6 packet header is valid</returns>
-        private bool ValidateIPv6PacketHeader(long theEthernetFrameLength, Structures.HeaderStructure theIPv6PacketHeader, ushort theIPv6PacketHeaderVersion)
+        private bool ValidateIPv6PacketHeader(long theEthernetFrameLength, ushort theIPv6PacketHeaderVersion)
         {
             bool theResult = true;
 
@@ -280,9 +278,9 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
 
                 this.theDebugInformation.WriteErrorEvent(
                     "The IP v6 packet indicates a total length of " +
-                    (this.theIPv6PacketHeader.PayloadLength + Constants.HeaderLength).ToString() +
+                    (this.theIPv6PacketHeader.PayloadLength + Constants.HeaderLength).ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes that is greater than the length of " +
-                    theEthernetFrameLength.ToString() +
+                    theEthernetFrameLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes in the Ethernet frame!!!");
 
                 theResult = false;
@@ -295,7 +293,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
 
                 this.theDebugInformation.WriteErrorEvent(
                     "The IP v6 packet header contains an unexpected version of " +
-                    theIPv6PacketHeaderVersion.ToString() +
+                    theIPv6PacketHeaderVersion.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;

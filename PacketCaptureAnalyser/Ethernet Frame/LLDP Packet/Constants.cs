@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.LLDPPacket
     /// <summary>
     /// This class provides constants for use by the LLDP packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// LLDP packet
 

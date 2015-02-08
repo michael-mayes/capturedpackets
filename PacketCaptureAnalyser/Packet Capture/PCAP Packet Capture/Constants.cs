@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
     /// <summary>
     /// This class provides constants for use by the PCAP packet capture processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// PCAP packet capture global header
 

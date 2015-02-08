@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
     /// <summary>
     /// This class provides constants for use by the IP v6 packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// IP v6 packet header
 
@@ -32,6 +32,11 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
         /// </summary>
         public enum Protocol : byte
         {
+            /// <summary>
+            /// Default value
+            /// </summary>
+            None = 0,
+
             /// <summary>
             /// TCP - Transmission Control Protocol (RFC 793)
             /// </summary>

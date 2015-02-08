@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.LoopbackPacket
     /// <summary>
     /// This class provides structures for use by the Loopback packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// Loopback packet header

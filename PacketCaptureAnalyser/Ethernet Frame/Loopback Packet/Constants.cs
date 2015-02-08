@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.LoopbackPacket
     /// <summary>
     /// This class provides constants for use by the Loopback packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// Loopback packet header
 

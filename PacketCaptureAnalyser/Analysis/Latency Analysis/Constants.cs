@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
     /// <summary>
     /// This class provides constants for use by the latency analysis processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// Latencies
 

@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
     /// <summary>
     /// This class provides structures for use by the TCP packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// TCP packet header

@@ -181,9 +181,9 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
             {
                 this.theDebugInformation.WriteErrorEvent(
                     "The UDP datagram header indicates a total length " +
-                    this.theUDPDatagramHeader.Length.ToString() +
+                    this.theUDPDatagramHeader.Length.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " which is not equal to the length of the UDP datagram within the IP packet of " +
-                    theIPPacketPayloadLength.ToString() +
+                    theIPPacketPayloadLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " !!!");
 
                 theResult = false;
@@ -194,9 +194,9 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
             {
                 this.theDebugInformation.WriteErrorEvent(
                     "The UDP datagram contains an unexpected header length, is " +
-                    this.theUDPDatagramHeader.Length.ToString() +
+                    this.theUDPDatagramHeader.Length.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.HeaderLength.ToString() +
+                    Constants.HeaderLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " or above!!!");
 
                 theResult = false;

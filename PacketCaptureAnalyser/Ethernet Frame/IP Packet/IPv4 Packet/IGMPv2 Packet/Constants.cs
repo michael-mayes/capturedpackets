@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
     /// <summary>
     /// This class provides constants for use by the IGMP v2 packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// IGMP v2 packet
 

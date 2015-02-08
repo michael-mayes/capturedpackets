@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
     /// <summary>
     /// This class provides structures for use by the IGMP v2 packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// IGMP v2 packet

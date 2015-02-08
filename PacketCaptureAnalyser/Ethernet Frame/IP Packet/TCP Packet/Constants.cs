@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
     /// <summary>
     /// This class provides constants for use by the TCP packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// TCP packet header
 
@@ -95,7 +95,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
         /// <param name="theByte">The byte to be examined</param>
         /// <param name="theFlag">The flag to be examined within the byte</param>
         /// <returns>Boolean flag which indicates whether the supplied flag is set in the supplied byte</returns>
-        public bool IsFlagSet(byte theByte, Flags theFlag)
+        public static bool IsFlagSet(byte theByte, Flags theFlag)
         {
             int theShift = Flags.FIN - theFlag;
 

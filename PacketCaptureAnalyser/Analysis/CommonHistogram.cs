@@ -66,6 +66,11 @@ namespace PacketCaptureAnalyser.Analysis
         /// <param name="theMaxAllowedValue">The maximum value allowed to be added to the bins for the histogram</param>
         public CommonHistogram(Analysis.DebugInformation theDebugInformation, uint theNumOfValueBins, double theMinAllowedValue, double theMaxAllowedValue)
         {
+            if (theDebugInformation == null)
+            {
+                throw new System.ArgumentNullException("theDebugInformation");
+            }
+
             this.theDebugInformation = theDebugInformation;
 
             if (theMinAllowedValue == theMaxAllowedValue)
@@ -101,21 +106,27 @@ namespace PacketCaptureAnalyser.Analysis
         //// Public accessor methods
 
         /// <summary>
-        /// Returns the minimum value allowed to be added to the bins for the histogram
+        /// Gets the minimum value allowed to be added to the bins for the histogram
         /// </summary>
         /// <returns>The minimum value allowed to be added to the bins for the histogram</returns>
-        public double GetMinAllowedValue()
+        public double MinAllowedValue
         {
-            return this.theValueBinBoundaries[0];
+            get
+            {
+                return this.theValueBinBoundaries[0];
+            }
         }
 
         /// <summary>
-        /// Returns the maximum value allowed to be added to the bins for the histogram
+        /// Gets the maximum value allowed to be added to the bins for the histogram
         /// </summary>
         /// <returns>The maximum value allowed to be added to the bins for the histogram</returns>
-        public double GetMaxAllowedValue()
+        public double MaxAllowedValue
         {
-            return this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1];
+            get
+            {
+                return this.theValueBinBoundaries[this.theValueBinBoundaries.Length - 1];
+            }
         }
 
         /// <summary>
@@ -129,25 +140,25 @@ namespace PacketCaptureAnalyser.Analysis
 
             // Check if the value is the lowest valid value encountered since the creation or reset of the histogram
             if (this.theMinValueEncountered > theValue &&
-                theValue >= this.GetMinAllowedValue())
+                theValue >= this.MinAllowedValue)
             {
                 this.theMinValueEncountered = theValue;
             }
 
             // Check if the value is the highest valid value encountered since the creation or reset of the histogram
             if (this.theMaxValueEncountered < theValue &&
-                theValue <= this.GetMaxAllowedValue())
+                theValue <= this.MaxAllowedValue)
             {
                 this.theMaxValueEncountered = theValue;
             }
 
-            if (theValue < this.GetMinAllowedValue())
+            if (theValue < this.MinAllowedValue)
             {
                 ++this.theNumberOfValuesLowerThanBins;
 
                 theResult = false;
             }
-            else if (theValue > this.GetMaxAllowedValue())
+            else if (theValue > this.MaxAllowedValue)
             {
                 ++this.theNumberOfValuesHigherThanBins;
 
@@ -232,12 +243,12 @@ namespace PacketCaptureAnalyser.Analysis
                 if (this.theValueBinBoundaries[i] >= 0.0)
                 {
                     this.theDebugInformation.WriteTextElement(
-                        string.Format("{0,11: ###0.00000}", this.theValueBinBoundaries[i]));
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,11: ###0.00000}", this.theValueBinBoundaries[i]));
                 }
                 else
                 {
                     this.theDebugInformation.WriteTextElement(
-                        string.Format("{0,11:###0.00000}", this.theValueBinBoundaries[i]));
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,11:###0.00000}", this.theValueBinBoundaries[i]));
                 }
 
                 this.theDebugInformation.WriteTextElement(" to ");
@@ -245,12 +256,12 @@ namespace PacketCaptureAnalyser.Analysis
                 if (this.theValueBinBoundaries[i + 1] >= 0.0)
                 {
                     this.theDebugInformation.WriteTextElement(
-                        string.Format("{0,11: ###0.00000}", this.theValueBinBoundaries[i + 1]));
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,11: ###0.00000}", this.theValueBinBoundaries[i + 1]));
                 }
                 else
                 {
                     this.theDebugInformation.WriteTextElement(
-                        string.Format("{0,11:###0.00000}", this.theValueBinBoundaries[i + 1]));
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,11:###0.00000}", this.theValueBinBoundaries[i + 1]));
                 }
 
                 this.theDebugInformation.WriteTextElement(" |");
@@ -317,7 +328,7 @@ namespace PacketCaptureAnalyser.Analysis
 
                 this.theDebugInformation.WriteTextLine(
                     "Number of values lower than bins: " +
-                    this.theNumberOfValuesLowerThanBins.ToString());
+                    this.theNumberOfValuesLowerThanBins.ToString(System.Globalization.CultureInfo.CurrentCulture));
             }
 
             if (this.theNumberOfValuesHigherThanBins > 0)
@@ -326,7 +337,7 @@ namespace PacketCaptureAnalyser.Analysis
 
                 this.theDebugInformation.WriteTextLine(
                     "Number of values higher than bins: " +
-                    this.theNumberOfValuesHigherThanBins.ToString());
+                    this.theNumberOfValuesHigherThanBins.ToString(System.Globalization.CultureInfo.CurrentCulture));
             }
         }
 
@@ -375,9 +386,9 @@ namespace PacketCaptureAnalyser.Analysis
                 {
                     string theExceptionMessage =
                         "Bin boundary " +
-                        theBinBoundaries[i].ToString() +
+                        theBinBoundaries[i].ToString(System.Globalization.CultureInfo.CurrentCulture) +
                         " is >= Bin boundary " +
-                        theBinBoundaries[i + 1].ToString() +
+                        theBinBoundaries[i + 1].ToString(System.Globalization.CultureInfo.CurrentCulture) +
                         "!!!";
 
                     this.theDebugInformation.WriteErrorEvent(

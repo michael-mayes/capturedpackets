@@ -40,8 +40,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         /// <summary>
         /// Processes an IGMP v2 packet
         /// </summary>
-        /// <param name="theIPv4PacketPayloadLength">The length of the payload of the IP v4 packet</param>
-        public void ProcessIGMPv2Packet(ushort theIPv4PacketPayloadLength)
+        public void ProcessIGMPv2Packet()
         {
             // There is no separate header for the IGMP v2 packet
 

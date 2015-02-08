@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
     /// <summary>
     /// This class provides constants for use by the burst analysis processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// Timestamps
 

@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.ARPPacket
     /// <summary>
     /// This class provides structures for use by the ARP packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// ARP packet

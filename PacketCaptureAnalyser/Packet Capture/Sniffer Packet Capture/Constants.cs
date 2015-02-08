@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
     /// <summary>
     /// This class provides constants for use by the Sniffer packet capture processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// Sniffer packet capture global header
 
@@ -83,6 +83,11 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
         /// </summary>
         public enum RecordHeaderSnifferRecordType : ushort
         {
+            /// <summary>
+            /// Default value
+            /// </summary>
+            None = 0,
+
             /// <summary>
             /// Version record type
             /// </summary>

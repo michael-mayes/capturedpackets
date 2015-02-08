@@ -63,6 +63,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
         {
             bool theResult = true;
 
+            if (theBinaryReader == null)
+            {
+                throw new System.ArgumentNullException("theBinaryReader");
+            }
+
             // Provide a default value for the output parameter for the network datalink type
             thePacketCaptureNetworkDataLinkType =
                 (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
@@ -141,6 +146,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
         {
             bool theResult = true;
 
+            if (theBinaryReader == null)
+            {
+                throw new System.ArgumentNullException("theBinaryReader");
+            }
+
             // Provide a default value to the output parameter for the length of the PCAP packet payload
             thePacketPayloadLength = 0;
 
@@ -184,7 +194,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
                             break;
                         }
 
-                    case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack:
+                    case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopback:
                     case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC:
                     default:
                         {
@@ -220,11 +230,11 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The PCAP packet capture global header does not contain the expected magic number, is " +
-                    theGlobalHeader.MagicNumber.ToString() +
+                    theGlobalHeader.MagicNumber.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.LittleEndianMagicNumber.ToString() +
+                    Constants.LittleEndianMagicNumber.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " or " +
-                    Constants.BigEndianMagicNumber.ToString() +
+                    Constants.BigEndianMagicNumber.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -234,9 +244,9 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The PCAP packet capture global header does not contain the expected major version number, is " +
-                    theGlobalHeader.VersionMajor.ToString() +
+                    theGlobalHeader.VersionMajor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.ExpectedVersionMajor.ToString() +
+                    Constants.ExpectedVersionMajor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -246,9 +256,9 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The PCAP packet capture global header does not contain the expected minor version number, is " +
-                    theGlobalHeader.VersionMinor.ToString() +
+                    theGlobalHeader.VersionMinor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.ExpectedVersionMinor.ToString() +
+                    Constants.ExpectedVersionMinor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -256,7 +266,7 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
 
             switch (theGlobalHeader.NetworkDataLinkType)
             {
-                case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack:
+                case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopback:
                 case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet:
                 case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC:
                     {
@@ -267,9 +277,9 @@ namespace PacketCaptureAnalyser.PacketCapture.PCAPPackageCapture
                     {
                         this.TheDebugInformation.WriteErrorEvent(
                             "The PCAP packet capture global header does not contain the expected network data link type, is " +
-                            theGlobalHeader.NetworkDataLinkType.ToString() +
+                            theGlobalHeader.NetworkDataLinkType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                             " not " +
-                            PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack.ToString() +
+                            PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopback.ToString() +
                             " or " +
                             PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet.ToString() +
                             " or " +

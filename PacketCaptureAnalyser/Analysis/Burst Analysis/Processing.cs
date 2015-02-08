@@ -73,12 +73,15 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
 
             // Create a datatable to hold the timestamp values for messages
             this.theTimestampValuesTable = new System.Data.DataTable();
+            this.theTimestampValuesTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
 
             // Create a datatable to hold the set of host Ids encountered during the burst analysis
             this.theHostIdsTable = new System.Data.DataTable();
+            this.theHostIdsTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
 
             // Create a datatable to hold the set of message Ids encountered during the burst analysis
             this.theMessageIdsTable = new System.Data.DataTable();
+            this.theMessageIdsTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
         }
 
         /// <summary>
@@ -204,7 +207,7 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
             {
                 this.theDebugInformation.WriteTextLine(
                     "Host Id " +
-                    string.Format("{0,3}", theHostIdRow.Field<byte>("HostId").ToString()));
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostIdRow.Field<byte>("HostId").ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine("===========");
                 this.theDebugInformation.WriteBlankLine();
@@ -236,7 +239,7 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
         {
             object[] theHostIdRowFindObject = new object[1];
 
-            theHostIdRowFindObject[0] = theHostId.ToString(); // Primary key
+            theHostIdRowFindObject[0] = theHostId.ToString(System.Globalization.CultureInfo.CurrentCulture); // Primary key
 
             System.Data.DataRow theHostIdDataRowFound =
                 this.theHostIdsTable.Rows.Find(
@@ -246,7 +249,7 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
             {
                 this.theDebugInformation.WriteInformationEvent(
                     "Found a data-supplying message for a Host Id " +
-                    string.Format("{0,3}", theHostId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostId) +
                     " - adding this Host Id to the burst analysis");
 
                 System.Data.DataRow theHostIdRowToAdd =
@@ -268,8 +271,8 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
         {
             object[] theMessageIdRowFindObject = new object[2];
 
-            theMessageIdRowFindObject[0] = theHostId.ToString(); // Primary key (part one)
-            theMessageIdRowFindObject[1] = theMessageId.ToString(); // Primary key (part two)
+            theMessageIdRowFindObject[0] = theHostId.ToString(System.Globalization.CultureInfo.CurrentCulture); // Primary key (part one)
+            theMessageIdRowFindObject[1] = theMessageId.ToString(System.Globalization.CultureInfo.CurrentCulture); // Primary key (part two)
 
             System.Data.DataRow theMessageIdDataRowFound =
                 this.theMessageIdsTable.Rows.Find(
@@ -279,9 +282,9 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
             {
                 this.theDebugInformation.WriteInformationEvent(
                     "Found a data-supplying message with a Message Id " +
-                    string.Format("{0,5}", theMessageId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,5}", theMessageId) +
                     " for a Host Id " +
-                    string.Format("{0,3}", theHostId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,3}", theHostId) +
                     " - adding this Message Id/Host Id combination to the burst analysis");
 
                 System.Data.DataRow theMessageIdRowToAdd =
@@ -436,11 +439,11 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
                 {
                     theOutOfRangeTimestamps.Add(
                         "The message for packet number " +
-                        string.Format("{0,7}", thePacketNumber.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " and sequence number " +
-                        string.Format("{0,7}", theSequenceNumber.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " has an out of range timestamp difference of " +
-                        string.Format("{0,18}", theTimestampDifference.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " ms");
                 }
 
@@ -465,17 +468,17 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
             {
                 this.theDebugInformation.WriteTextLine(
                     "The number of outgoing messages with a Message Id of " +
-                    string.Format("{0,5}", theMessageId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,5}", theMessageId) +
                     " was " +
-                    theNumberOfMessages.ToString());
+                    theNumberOfMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
             }
             else
             {
                 this.theDebugInformation.WriteTextLine(
                     "The number of incoming messages with a Message Id of " +
-                    string.Format("{0,5}", theMessageId) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,5}", theMessageId) +
                     " was " +
-                    theNumberOfMessages.ToString());
+                    theNumberOfMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
             }
 
             if (theNumberOfTimestampDifferenceInstances > 0)
@@ -488,23 +491,23 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum timestamp difference was " +
-                    string.Format("{0,18}", theMinTimestampDifference.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
-                    string.Format("{0,7}", theMinTimestampPacketNumber.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
-                    string.Format("{0,7}", theMinTimestampSequenceNumber.ToString()));
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimestampSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum timestamp difference was " +
-                    string.Format("{0,18}", theMaxTimestampDifference.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
-                    string.Format("{0,7}", theMaxTimestampPacketNumber.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
-                    string.Format("{0,7}", theMaxTimestampSequenceNumber.ToString()));
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimestampSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The average timestamp difference was " +
-                    string.Format("{0,18}", theAverageTimestampDifference.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms");
 
                 if (theAverageTimestampDifference > 0)
@@ -517,7 +520,7 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
 
                     this.theDebugInformation.WriteTextLine(
                         "The average message rate was " +
-                        string.Format("{0,18}", theMessageRate.ToString()) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMessageRate.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " Hz");
                 }
 
@@ -529,7 +532,7 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
 
                     this.theDebugInformation.WriteTextLine(
                         "The histogram (" +
-                        Constants.BinsPerMillisecond.ToString() +
+                        Constants.BinsPerMillisecond.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                         " bins per millisecond) for the timestamp differences is:");
 
                     this.theDebugInformation.WriteBlankLine();
@@ -565,6 +568,7 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
                 //// Add a column titles line to the debug output file
 
                 string theOutputAdditionalInformationTitleLine = string.Format(
+                    System.Globalization.CultureInfo.CurrentCulture, 
                     "{0},{1},{2},,{3}{4}",
                     "Packet Number",
                     "Sequence Number",
@@ -587,16 +591,15 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
 
                     string theOutputAdditionalInformationLine = null;
 
-                    double theCurrentPacketTimestamp = thePacketTimestamp;
-
                     if (thePreviousPacketTimestamp == null)
                     {
                         // If this is the first message then there is no previous message and so just output the timestamp
                         theOutputAdditionalInformationLine = string.Format(
+                            System.Globalization.CultureInfo.CurrentCulture, 
                             "{0},{1},{2,18}{3}",
-                            thePacketNumber.ToString(),
-                            theSequenceNumber.ToString(),
-                            thePacketTimestamp.ToString(),
+                            thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                            theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                            thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             System.Environment.NewLine);
                     }
                     else
@@ -606,10 +609,11 @@ namespace PacketCaptureAnalyser.Analysis.BurstAnalysis
 
                         // If this is another message then also calculate the difference in timestamp from the previous message and output it along with the timestamp
                         theOutputAdditionalInformationLine = string.Format(
+                            System.Globalization.CultureInfo.CurrentCulture, 
                             "{0},{1},{2,18},,{3,18}{4}",
-                            thePacketNumber.ToString(),
-                            theSequenceNumber.ToString(),
-                            thePacketTimestamp.ToString(),
+                            thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                            theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
+                            thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             theTimestampDifference,
                             System.Environment.NewLine);
                     }

@@ -58,6 +58,11 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
         {
             bool theResult = true;
 
+            if (theBinaryReader == null)
+            {
+                throw new System.ArgumentNullException("theBinaryReader");
+            }
+
             // Provide a default value for the output parameter for the network datalink type
             thePacketCaptureNetworkDataLinkType =
                 (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
@@ -119,6 +124,11 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
         protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
+
+            if (theBinaryReader == null)
+            {
+                throw new System.ArgumentNullException("theBinaryReader");
+            }
 
             // Provide a default value to the output parameter for the length of the Sniffer packet payload
             thePacketPayloadLength = 0;
@@ -199,7 +209,7 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
 
                             this.TheDebugInformation.WriteErrorEvent(
                                 "The Sniffer packet capture contains an unexpected record type of " +
-                                theRecordHeader.RecordType.ToString() +
+                                theRecordHeader.RecordType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                                 "!!!");
 
                             theResult = false;
@@ -229,9 +239,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected high bytes for the magic number, is " +
-                    string.Format("{0:X}", theGlobalHeader.MagicNumberHigh.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", theGlobalHeader.MagicNumberHigh.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " not " +
-                    string.Format("{0:X}", Constants.ExpectedMagicNumberHigh.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", Constants.ExpectedMagicNumberHigh.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     "!!!");
 
                 theResult = false;
@@ -241,9 +251,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected low bytes for the magic number, is " +
-                    string.Format("{0:X}", theGlobalHeader.MagicNumberLow.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", theGlobalHeader.MagicNumberLow.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " not " +
-                    string.Format("{0:X}", Constants.ExpectedMagicNumberLow.ToString()) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", Constants.ExpectedMagicNumberLow.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     "!!!");
 
                 theResult = false;
@@ -253,9 +263,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected magic number terminating character, is " +
-                    theGlobalHeader.MagicNumberTerminator.ToString() +
+                    theGlobalHeader.MagicNumberTerminator.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.ExpectedMagicNumberTerminator.ToString() +
+                    Constants.ExpectedMagicNumberTerminator.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -265,7 +275,7 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected record type, is " +
-                    theGlobalHeader.RecordType.ToString() +
+                    theGlobalHeader.RecordType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
                     Constants.RecordHeaderSnifferRecordType.VersionRecordType.ToString() +
                     "!!!");
@@ -277,9 +287,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected major version number, is " +
-                    theGlobalHeader.VersionMajor.ToString() +
+                    theGlobalHeader.VersionMajor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.ExpectedVersionMajor.ToString() +
+                    Constants.ExpectedVersionMajor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -289,9 +299,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected minor version number, is " +
-                    theGlobalHeader.VersionMinor.ToString() +
+                    theGlobalHeader.VersionMinor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.ExpectedVersionMinor.ToString() +
+                    Constants.ExpectedVersionMinor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -301,9 +311,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected record type, is " +
-                    theGlobalHeader.Type.ToString() +
+                    theGlobalHeader.Type.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.ExpectedType.ToString() +
+                    Constants.ExpectedType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -311,7 +321,7 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
 
             switch (theGlobalHeader.NetworkEncapsulationType)
             {
-                case (byte)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack:
+                case (byte)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopback:
                 case (byte)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet:
                 case (byte)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC:
                     {
@@ -322,9 +332,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
                     {
                         this.TheDebugInformation.WriteErrorEvent(
                             "The Sniffer packet capture global header does not contain the expected network encapsulation type, is " +
-                            theGlobalHeader.NetworkEncapsulationType.ToString() +
+                            theGlobalHeader.NetworkEncapsulationType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                             " not " +
-                            PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopBack.ToString() +
+                            PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopback.ToString() +
                             " or " +
                             PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet.ToString() +
                             " or " +
@@ -341,9 +351,9 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The Sniffer packet capture global header does not contain the expected format version, is " +
-                    theGlobalHeader.FormatVersion.ToString() +
+                    theGlobalHeader.FormatVersion.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
-                    Constants.ExpectedFormatVersion.ToString() +
+                    Constants.ExpectedFormatVersion.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
 
                 theResult = false;
@@ -375,7 +385,7 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
                     {
                         this.TheDebugInformation.WriteErrorEvent(
                             "The Sniffer packet capture record header does not contain the expected type, is " +
-                            theRecordHeader.RecordType.ToString() +
+                            theRecordHeader.RecordType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                             "!!!");
 
                         theResult = false;
@@ -452,7 +462,7 @@ namespace PacketCaptureAnalyser.PacketCapture.SnifferPackageCapture
                     {
                         this.TheDebugInformation.WriteErrorEvent(
                             "The Sniffer packet capture contains an unexpected timestamp unit " +
-                            thePacketCaptureTimestampUnits.ToString() +
+                            thePacketCaptureTimestampUnits.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                             "!!!");
 
                         thePacketCaptureTimestampAccuracy = 0.0;

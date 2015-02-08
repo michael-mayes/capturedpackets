@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.RARPPacket
     /// <summary>
     /// This class provides structures for use by the RARP packet processing
     /// </summary>
-    public class Structures
+    public static class Structures
     {
         /// <summary>
         /// RARP packet

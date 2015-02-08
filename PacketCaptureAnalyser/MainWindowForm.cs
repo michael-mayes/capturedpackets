@@ -38,6 +38,38 @@ namespace PacketCaptureAnalyser
             this.ClearSelectedPacketCapture(this);
         }
 
+        //// Packet capture type
+
+        /// <summary>
+        /// Checks if the indicated packet capture has an expected type
+        /// </summary>
+        /// <param name="thePath">The path of the packet capture</param>
+        /// <returns>>Boolean flag that indicates whether the indicated packet capture has an expected type</returns>
+        private static bool IsExpectedPacketCaptureType(string thePath)
+        {
+            bool theResult = true;
+
+            string theFileExtension = System.IO.Path.GetExtension(thePath);
+
+            // Check if this is an expected type for a packet capture
+            // Determine the type of the packet capture from the file extension
+            // Does the file extension match one of the expected values for a packet capture?
+            if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Equals) ||
+                MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Equals) ||
+                MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Equals))
+            {
+                // This file is a supported type for a packet capture
+                // Any changes to this set of supported types should also be reflected to the Selected Packet Capture For Analysis dialog!
+            }
+            else
+            {
+                // This file is an unsupported type for a packet capture
+                theResult = false;
+            }
+
+            return theResult;
+        }
+
         //// Button and checkbox click actions
 
         /// <summary>
@@ -238,7 +270,7 @@ namespace PacketCaptureAnalyser
             string[] theFiles = (string[])e.Data.GetData(System.Windows.Forms.DataFormats.FileDrop);
 
             // Check if this is an expected type for a packet capture
-            if (this.IsExpectedPacketCaptureType(theFiles[0]))
+            if (IsExpectedPacketCaptureType(theFiles[0]))
             {
                 // This file is a supported type for a packet capture so start so allow the drag into the main window form
                 if (e.Data.GetDataPresent(System.Windows.Forms.DataFormats.FileDrop))
@@ -269,7 +301,7 @@ namespace PacketCaptureAnalyser
             string[] theFiles = (string[])e.Data.GetData(System.Windows.Forms.DataFormats.FileDrop);
 
             // Check if this is an expected type for a packet capture
-            if (this.IsExpectedPacketCaptureType(theFiles[0]))
+            if (IsExpectedPacketCaptureType(theFiles[0]))
             {
                 // This file is a supported type for a packet capture so start processing it
 
@@ -486,36 +518,6 @@ namespace PacketCaptureAnalyser
         }
 
         //// Packet capture type
-
-        /// <summary>
-        /// Checks if the indicated packet capture has an expected type
-        /// </summary>
-        /// <param name="thePath">The path of the packet capture</param>
-        /// <returns>>Boolean flag that indicates whether the indicated packet capture has an expected type</returns>
-        private bool IsExpectedPacketCaptureType(string thePath)
-        {
-            bool theResult = true;
-
-            string theFileExtension = System.IO.Path.GetExtension(thePath);
-
-            // Check if this is an expected type for a packet capture
-            // Determine the type of the packet capture from the file extension
-            // Does the file extension match one of the expected values for a packet capture?
-            if (MainWindowFormConstants.ExpectedPCAPNextGenerationPacketCaptureFileExtensions.Any(theFileExtension.Equals) ||
-                MainWindowFormConstants.ExpectedPCAPPacketCaptureFileExtensions.Any(theFileExtension.Equals) ||
-                MainWindowFormConstants.ExpectedNASnifferDOSPacketCaptureFileExtensions.Any(theFileExtension.Equals))
-            {
-                // This file is a supported type for a packet capture
-                // Any changes to this set of supported types should also be reflected to the Selected Packet Capture For Analysis dialog!
-            }
-            else
-            {
-                // This file is an unsupported type for a packet capture
-                theResult = false;
-            }
-
-            return theResult;
-        }
 
         /// <summary>
         /// Determines the type of the packet capture from the initial bytes and ensure that it is of the expected type for the file extension
@@ -918,7 +920,7 @@ namespace PacketCaptureAnalyser
                                 "Latency analysis for the " +
                                 thePacketCaptureFileName +
                                 " packet capture completed in " +
-                                theLatencyAnalysisDuration.TotalSeconds.ToString() +
+                                theLatencyAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                                 " seconds");
 
                             theProgressWindowForm.ProgressBar += 20 / theScaling;
@@ -962,7 +964,7 @@ namespace PacketCaptureAnalyser
                                 "Burst analysis for the " +
                                 thePacketCaptureFileName +
                                 " packet capture completed in " +
-                                theBurstAnalysisDuration.TotalSeconds.ToString() +
+                                theBurstAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                                 " seconds");
 
                             //// theProgressWindowForm.ProgressBar += 20 / theScaling;
@@ -1006,7 +1008,7 @@ namespace PacketCaptureAnalyser
                                 "Time analysis for the " +
                                 thePacketCaptureFileName +
                                 " packet capture completed in " +
-                                theTimeAnalysisDuration.TotalSeconds.ToString() +
+                                theTimeAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                                 " seconds");
 
                             theProgressWindowForm.ProgressBar += 20 / theScaling;
@@ -1114,6 +1116,23 @@ namespace PacketCaptureAnalyser
                                 System.Windows.Forms.MessageBoxButtons.OK,
                                 System.Windows.Forms.MessageBoxIcon.Error);
                         }
+                    }
+
+                    //// Dispose of the resources for the analysis processing if these actions have not already taken place above
+
+                    if (theLatencyAnalysisProcessing != null)
+                    {
+                        theLatencyAnalysisProcessing.Dispose();
+                    }
+
+                    if (theBurstAnalysisProcessing != null)
+                    {
+                        theBurstAnalysisProcessing.Dispose();
+                    }
+
+                    if (theTimeAnalysisProcessing != null)
+                    {
+                        theTimeAnalysisProcessing.Dispose();
                     }
 
                     // Dependent on the button selection at the message box, open the output file

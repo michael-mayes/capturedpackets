@@ -13,7 +13,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
     /// <summary>
     /// This class provides constants for use by the IP v4 packet processing
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         //// IP v4 packet header
 
@@ -37,6 +37,11 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
         /// </summary>
         public enum Protocol : byte
         {
+            /// <summary>
+            /// Default value
+            /// </summary>
+            None = 0,
+
             /// <summary>
             /// ICMP v4 - Internet Control Message Protocol version 4 for IP v4 (RFC 792)
             /// </summary>
