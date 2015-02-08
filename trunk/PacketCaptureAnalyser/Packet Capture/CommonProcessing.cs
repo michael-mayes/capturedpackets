@@ -237,7 +237,7 @@ namespace PacketCaptureAnalyser.PacketCapture
                             // speed improvements that come from the up front read of the whole file into an array
 
                             // Read all the bytes from the packet capture into an array
-                            byte[]  theBytes = System.IO.File.ReadAllBytes(
+                            byte[] theBytes = System.IO.File.ReadAllBytes(
                                 this.theSelectedPacketCapturePath);
 
                             // Create a memory stream to read the packet capture from the byte array
