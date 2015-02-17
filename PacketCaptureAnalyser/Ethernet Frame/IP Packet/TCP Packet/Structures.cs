@@ -75,7 +75,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
             [System.Runtime.InteropServices.FieldOffset(18)]
             public ushort UrgentPointer;
 
-            //// There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the TCP packet header length field
+            //// There may be a options field of 0 - 40 bytes at the end of the structure dependent on the value of the TCP packet header length field
         }
     }
 }

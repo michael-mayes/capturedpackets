@@ -1,4 +1,4 @@
-﻿// <copyright file="Processing.cs" company="Public Domain">
+// <copyright file="Processing.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>
 

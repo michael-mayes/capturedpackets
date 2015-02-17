@@ -1,4 +1,4 @@
-﻿// <copyright file="Constants.cs" company="Public Domain">
+// <copyright file="Constants.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>
 

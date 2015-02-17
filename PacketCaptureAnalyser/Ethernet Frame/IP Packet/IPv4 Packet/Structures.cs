@@ -81,7 +81,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
             [System.Runtime.InteropServices.FieldOffset(16)]
             public int DestinationAddress;
 
-            //// There may be a options field of 0 – 40 bytes at the end of the structure dependent on the value of the IP v4 packet header length field
+            //// There may be a options field of 0 - 40 bytes at the end of the structure dependent on the value of the IP v4 packet header length field
         }
     }
 }
