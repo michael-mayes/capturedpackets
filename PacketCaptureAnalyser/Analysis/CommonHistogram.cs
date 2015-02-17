@@ -1,5 +1,3 @@
-// $Id$
-// $URL$
 // <copyright file="CommonHistogram.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>

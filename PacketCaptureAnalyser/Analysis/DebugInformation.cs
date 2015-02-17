@@ -1,5 +1,3 @@
-// $Id$
-// $URL$
 // <copyright file="DebugInformation.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>

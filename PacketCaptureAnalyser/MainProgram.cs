@@ -1,5 +1,3 @@
-// $Id$
-// $URL$
 // <copyright file="MainProgram.cs" company="Public Domain">
 //     Released into the public domain
 // </copyright>
