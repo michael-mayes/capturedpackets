@@ -16,7 +16,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
         /// <summary>
         /// Dictionary Key
         /// </summary>
-        public struct DictionaryKey
+        public struct DictionaryKey : System.IEquatable<DictionaryKey>
         {
             /// <summary>
             /// The host Id for the message in the dictionary value looked up by this dictionary key
@@ -88,19 +88,39 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             /// <summary>
             /// Determines whether the current and supplied dictionary keys are equal
             /// </summary>
+            /// <param name="other">The dictionary key to be compared with the current dictionary key</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary keys are equal</returns>
+            public bool Equals(DictionaryKey other)
+            {
+                // The two dictionary keys are deemed identical if the fields of each are identical
+                return
+                    this.HostId == other.HostId &&
+                    this.IsReliable == other.IsReliable &&
+                    this.SequenceNumber == other.SequenceNumber;
+            }
+
+            /// <summary>
+            /// Determines whether the current and supplied dictionary keys are equal
+            /// </summary>
             /// <param name="obj">The dictionary key to be compared with the current dictionary key</param>
             /// <returns>Boolean flag that indicates whether the two dictionary keys are equal</returns>
             public override bool Equals(object obj)
             {
+                // If the supplied dictionary key is null then return false
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                // If the supplied dictionary key has a different type to the current dictionary key then return false
+                if (GetType() != obj.GetType())
+                {
+                    return false;
+                }
+
                 if (obj is DictionaryKey)
                 {
-                    DictionaryKey key = (DictionaryKey)obj;
-
-                    // The two dictionary keys are deemed identical if the fields of each are identical
-                    return
-                        this.HostId == key.HostId &&
-                        this.IsReliable == key.IsReliable &&
-                        this.SequenceNumber == key.SequenceNumber;
+                    return Equals((DictionaryKey)obj);
                 }
                 else
                 {
@@ -125,7 +145,7 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
         /// <summary>
         /// Dictionary Value
         /// </summary>
-        public struct DictionaryValue
+        public struct DictionaryValue : System.IEquatable<DictionaryValue>
         {
             /// <summary>
             /// The identifier for the type of message in the dictionary value
@@ -239,25 +259,45 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             /// <summary>
             /// Determines whether the current and supplied dictionary values are equal
             /// </summary>
+            /// <param name="other">The dictionary value to be compared with the current dictionary value</param>
+            /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
+            public bool Equals(DictionaryValue other)
+            {
+                // The two dictionary values are deemed identical if the fields of each are identical
+                return
+                    this.MessageId == other.MessageId &&
+                    this.FirstInstanceFound == other.FirstInstanceFound &&
+                    this.SecondInstanceFound == other.SecondInstanceFound &&
+                    this.FirstInstancePacketNumber == other.FirstInstancePacketNumber &&
+                    this.SecondInstancePacketNumber == other.SecondInstancePacketNumber &&
+                    this.FirstInstancePacketTimestamp == other.FirstInstancePacketTimestamp &&
+                    this.SecondInstancePacketTimestamp == other.SecondInstancePacketTimestamp &&
+                    this.TimestampDifference == other.TimestampDifference &&
+                    this.TimestampDifferenceCalculated == other.TimestampDifferenceCalculated;
+            }
+
+            /// <summary>
+            /// Determines whether the current and supplied dictionary values are equal
+            /// </summary>
             /// <param name="obj">The dictionary value to be compared with the current dictionary value</param>
             /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
             public override bool Equals(object obj)
             {
+                // If the dictionary value is null then return false
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                // If the supplied dictionary value has a different type to the current dictionary key then return false
+                if (GetType() != obj.GetType())
+                {
+                    return false;
+                }
+
                 if (obj is DictionaryValue)
                 {
-                    DictionaryValue value = (DictionaryValue)obj;
-
-                    // The two dictionary values are deemed identical if the fields of each are identical
-                    return
-                        this.MessageId == value.MessageId &&
-                        this.FirstInstanceFound == value.FirstInstanceFound &&
-                        this.SecondInstanceFound == value.SecondInstanceFound &&
-                        this.FirstInstancePacketNumber == value.FirstInstancePacketNumber &&
-                        this.SecondInstancePacketNumber == value.SecondInstancePacketNumber &&
-                        this.FirstInstancePacketTimestamp == value.FirstInstancePacketTimestamp &&
-                        this.SecondInstancePacketTimestamp == value.SecondInstancePacketTimestamp &&
-                        this.TimestampDifference == value.TimestampDifference &&
-                        this.TimestampDifferenceCalculated == value.TimestampDifferenceCalculated;
+                    return Equals((DictionaryValue)obj);
                 }
                 else
                 {
