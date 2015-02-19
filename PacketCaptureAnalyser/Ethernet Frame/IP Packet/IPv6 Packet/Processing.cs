@@ -212,16 +212,13 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
 
                 case (byte)Constants.Protocol.ICMPv6:
                     {
-                        //// We have got an IP v6 packet containing an ICMP v6 packet
+                        // We have got an IP v6 packet containing an ICMP v6 packet
 
-                        //// Processing of IP v6 packets containing an ICMP v6 packet is not currently supported!
+                        // Processing of IP v6 packets containing an ICMP v6 packet is not currently supported!
 
+                        // Just record the event and fall through as later processing will read off the remaining payload so we can move on
                         this.theDebugInformation.WriteInformationEvent(
                             "The IP v6 packet contains an ICMP v6 packet, which is not currently supported!");
-
-                        // Just read off the bytes for the ICMP v6 packet from the packet capture so we can move on
-                        this.theBinaryReader.ReadBytes(
-                            theIPv6PacketPayloadLength);
 
                         break;
                     }
