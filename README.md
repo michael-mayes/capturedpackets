@@ -3,6 +3,8 @@ Analysis in C# of packets captured from network using libpcap/WinPcap
 
 Developed under Microsoft Visual Studio 2010/12/13 and .Net Framework 4.0/4.5 for Windows XP and later, but also successfully demonstrated under Mono for Linux
 
+No warnings from StyleCop. Large number of warnings from FxCop addressed, but an equally large number remain
+
 The application can fully process a wide selection of PCAP NG, PCAP and NA Sniffer packet captures and can fully unpack a range of frames, packets and datagrams therein, but the unpacked data is not utilised in the configured version of the code
 
 Without additional knowledge of the structure of the messages, the application cannot handle multiple messages within a TCP packet
