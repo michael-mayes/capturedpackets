@@ -98,14 +98,14 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
                 }
 
                 // If the supplied dictionary key has a different type to the current dictionary key then return false
-                if (GetType() != obj.GetType())
+                if (this.GetType() != obj.GetType())
                 {
                     return false;
                 }
 
                 if (obj is DictionaryKey)
                 {
-                    return Equals((DictionaryKey)obj);
+                    return this.Equals((DictionaryKey)obj);
                 }
                 else
                 {
@@ -254,14 +254,14 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
                 }
 
                 // If the supplied dictionary value has a different type to the current dictionary key then return false
-                if (GetType() != obj.GetType())
+                if (this.GetType() != obj.GetType())
                 {
                     return false;
                 }
 
                 if (obj is DictionaryValue)
                 {
-                    return Equals((DictionaryValue)obj);
+                    return this.Equals((DictionaryValue)obj);
                 }
                 else
                 {
