@@ -1,6 +1,8 @@
 # capturedpackets
 Analysis in C# of packets captured from network using libpcap/WinPcap
 
+It is free and unencumbered software released into the public domain as detailed in the UNLICENSE file in the top level directory of the distribution
+
 Developed under Microsoft Visual Studio 2010/12/13 and .Net Framework 4.0/4.5 for Windows XP and later, but also successfully demonstrated under Mono for Linux
 
 No warnings from StyleCop. Large number of warnings from FxCop addressed, but an equally large number remain
