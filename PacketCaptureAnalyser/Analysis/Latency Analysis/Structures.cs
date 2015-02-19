@@ -54,23 +54,8 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary keys are equal</returns>
             public static bool operator ==(DictionaryKey a, DictionaryKey b)
             {
-                // If both dictionary keys are null, or both are same instance, return true
-                if (object.ReferenceEquals(a, b))
-                {
-                    return true;
-                }
-
-                // If one dictionary key is null, but not both, return false
-                if (((object)a == null) || ((object)b == null))
-                {
-                    return false;
-                }
-
-                // Otherwise the two dictionary keys are deemed identical if the fields of each are identical
-                return
-                    a.HostId == b.HostId &&
-                    a.IsReliable == b.IsReliable &&
-                    a.SequenceNumber == b.SequenceNumber;
+                // Call the Equals operator to compare the two supplied dictionary keys
+                return a.Equals(b);
             }
 
             /// <summary>
@@ -81,8 +66,8 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary keys are different</returns>
             public static bool operator !=(DictionaryKey a, DictionaryKey b)
             {
-                // Call the == operator and take a ! of the returned value
-                return !(a == b);
+                // Call the Equals operator to compare the two supplied dictionary keys and take a ! of the returned value
+                return !a.Equals(b);
             }
 
             /// <summary>
@@ -219,29 +204,8 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
             public static bool operator ==(DictionaryValue a, DictionaryValue b)
             {
-                // If both dictionary values are null, or both are same instance, return true
-                if (object.ReferenceEquals(a, b))
-                {
-                    return true;
-                }
-
-                // If one dictionary value is null, but not both, return false
-                if (((object)a == null) || ((object)b == null))
-                {
-                    return false;
-                }
-
-                // Otherwise the two dictionary values are deemed identical if the fields of each are identical
-                return
-                    a.MessageId == b.MessageId &&
-                    a.FirstInstanceFound == b.FirstInstanceFound &&
-                    a.SecondInstanceFound == b.SecondInstanceFound &&
-                    a.FirstInstancePacketNumber == b.FirstInstancePacketNumber &&
-                    a.SecondInstancePacketNumber == b.SecondInstancePacketNumber &&
-                    a.FirstInstancePacketTimestamp == b.FirstInstancePacketTimestamp &&
-                    a.SecondInstancePacketTimestamp == b.SecondInstancePacketTimestamp &&
-                    a.TimestampDifference == b.TimestampDifference &&
-                    a.TimestampDifferenceCalculated == b.TimestampDifferenceCalculated;
+                // Call the Equals operator to compare the two supplied dictionary values
+                return a.Equals(b);
             }
 
             /// <summary>
@@ -252,8 +216,8 @@ namespace PacketCaptureAnalyser.Analysis.LatencyAnalysis
             /// <returns>Boolean flag that indicates whether the two dictionary values are different</returns>
             public static bool operator !=(DictionaryValue a, DictionaryValue b)
             {
-                // Call the == operator and take a ! of the returned value
-                return !(a == b);
+                // Call the Equals operator to compare the two supplied dictionary values and take a ! of the returned value
+                return !a.Equals(b);
             }
 
             /// <summary>
