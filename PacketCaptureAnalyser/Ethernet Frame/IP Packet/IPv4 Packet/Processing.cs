@@ -44,6 +44,11 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv4Packet
         private UDPDatagram.Processing theUDPDatagramProcessing;
 
         /// <summary>
+        /// The reusable instance of the processing class for EIGRP packets
+        /// </summary>
+        private EIGRPPacket.Processing theEIGRPPacketProcessing;
+
+        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
@@ -90,6 +95,8 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv4Packet
                     performTimeAnalysisProcessing,
                     theTimeAnalysisProcessing,
                     useAlternativeSequenceNumber);
+
+            this.theEIGRPPacketProcessing = new EIGRPPacket.Processing(theBinaryReader);
         }
 
         /// <summary>
@@ -276,13 +283,9 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv4Packet
 
                 case (byte)Constants.Protocol.EIGRP:
                     {
-                        // We have got an IP v4 packet containing a Cisco EIGRP packet
-
-                        // Processing of IP v4 packets containing a Cisco EIGRP packet is not currently supported!
-
-                        // Just record the event and fall through as later processing will read off the remaining payload so we can move on
-                        this.theDebugInformation.WriteInformationEvent(
-                            "The IP v4 packet contains a Cisco EIGRP packet which is not currently supported!");
+                        // We have got an IP v4 packet containing a Cisco EIGRP packet so process it
+                        this.theEIGRPPacketProcessing.ProcessEIGRPPacket(
+                            theIPv4PacketPayloadLength);
 
                         break;
                     }
