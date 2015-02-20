@@ -9,6 +9,8 @@ No warnings from StyleCop. Large number of warnings from FxCop addressed, but an
 
 The application can fully process a wide selection of PCAP NG, PCAP and NA Sniffer packet captures and can fully unpack a range of frames, packets and datagrams therein, but the unpacked data is not utilised in the configured version of the code
 
+The set of structures and constants for different types of Ethernet frames and IP packets are no longer required by this application, but have been preserved in the new [packetstructures](https://github.com/michael-mayes/packetstructures) repository
+
 Without additional knowledge of the structure of the messages, the application cannot handle multiple messages within a TCP packet
 
 The code can perform latency analysis for packet round trips across a network, time and burst analysis for time messages on a network, and burst analysis for message on a network, but you must add in RegisterMessageReceipt and RegisterTimeMessageReceipt calls, respectively, into specific message handling to utilise this functionality.
