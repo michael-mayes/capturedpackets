@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the UDP datagram header
-        /// </summary>
-        private Structures.HeaderStructure theUDPDatagramHeader;
-
-        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
@@ -45,9 +40,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the UDP datagram header
-            this.theUDPDatagramHeader = new Structures.HeaderStructure();
         }
 
         /// <summary>
@@ -107,24 +99,29 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
             theUDPDatagramDestinationPort = 0;
 
             // Read the values for the UDP datagram header from the packet capture
-            this.theUDPDatagramHeader.SourcePort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theUDPDatagramHeader.DestinationPort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theUDPDatagramHeader.Length = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theUDPDatagramHeader.Checksum = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Set up the output parameter for source port using the value read from the UDP datagram header
+            theUDPDatagramSourcePort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Set up the output parameter for destination port using the value read from the UDP datagram header
+            theUDPDatagramDestinationPort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Store the length of the UDP datagram header for use below
+            ushort theUDPDatagramHeaderLength = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Just read off the bytes for the UDP datagram header checksum from the packet capture so we can move on
+            this.theBinaryReader.ReadInt16();
 
             // Validate the UDP datagram header
             theResult = this.ValidateUDPDatagramHeader(
-                theIPPacketPayloadLength);
+                theIPPacketPayloadLength,
+                theUDPDatagramHeaderLength);
 
             if (theResult)
             {
                 // Set up the output parameter for the length of the payload of the UDP datagram, which is the total length of the UDP datagram read from the UDP datagram header minus the length of the UDP datagram header
                 theUDPDatagramPayloadLength =
                     (ushort)(theIPPacketPayloadLength - Constants.HeaderLength);
-
-                // Set up the output parameters for source port and destination port using the value read from the UDP datagram header
-                theUDPDatagramSourcePort = this.theUDPDatagramHeader.SourcePort;
-                theUDPDatagramDestinationPort = this.theUDPDatagramHeader.DestinationPort;
             }
 
             return theResult;
@@ -169,17 +166,18 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
         /// Validates the UDP datagram header
         /// </summary>
         /// <param name="theIPPacketPayloadLength">The length of the payload of the IP v4/v6 packet</param>
+        /// <param name="theUDPDatagramHeaderLength">The length in the UDP datagram header</param>
         /// <returns>Boolean flag that indicates whether the UDP datagram header is valid</returns>
-        private bool ValidateUDPDatagramHeader(ushort theIPPacketPayloadLength)
+        private bool ValidateUDPDatagramHeader(ushort theIPPacketPayloadLength, ushort theUDPDatagramHeaderLength)
         {
             bool theResult = true;
 
             // The length in the UDP datagram header includes both the header itself and the payload so should equal the length of the UDP datagram payload in the IP packet
-            if (this.theUDPDatagramHeader.Length != theIPPacketPayloadLength)
+            if (theUDPDatagramHeaderLength != theIPPacketPayloadLength)
             {
                 this.theDebugInformation.WriteErrorEvent(
                     "The UDP datagram header indicates a total length " +
-                    this.theUDPDatagramHeader.Length.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    theUDPDatagramHeaderLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " which is not equal to the length of the UDP datagram within the IP packet of " +
                     theIPPacketPayloadLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " !!!");
@@ -188,11 +186,11 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.UDPDatagram
             }
 
             // The length in the UDP datagram header includes both the header itself and the payload so the minimum length is that of just the header
-            if (this.theUDPDatagramHeader.Length < Constants.HeaderLength)
+            if (theUDPDatagramHeaderLength < Constants.HeaderLength)
             {
                 this.theDebugInformation.WriteErrorEvent(
                     "The UDP datagram contains an unexpected header length, is " +
-                    this.theUDPDatagramHeader.Length.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    theUDPDatagramHeaderLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
                     Constants.HeaderLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " or above!!!");

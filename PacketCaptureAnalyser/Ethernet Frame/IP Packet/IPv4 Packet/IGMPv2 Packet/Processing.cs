@@ -19,20 +19,12 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the IGMP v2 packet
-        /// </summary>
-        private Structures.PacketStructure theIGMPv2Packet;
-
-        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         public Processing(System.IO.BinaryReader theBinaryReader)
         {
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the IGMP v2 packet
-            this.theIGMPv2Packet = new Structures.PacketStructure();
         }
 
         /// <summary>
@@ -52,10 +44,8 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         private void ProcessIGMPv2PacketPayload()
         {
             // Just read off the bytes for the IGMP v2 packet from the packet capture so we can move on
-            this.theIGMPv2Packet.Type = this.theBinaryReader.ReadByte();
-            this.theIGMPv2Packet.MaxResponseTime = this.theBinaryReader.ReadByte();
-            this.theIGMPv2Packet.Checksum = this.theBinaryReader.ReadUInt16();
-            this.theIGMPv2Packet.GroupAddress = this.theBinaryReader.ReadUInt32();
+            this.theBinaryReader.ReadBytes(
+			    Constants.PacketLength);
         }
     }
 }

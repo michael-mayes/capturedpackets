@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.RARPPacket
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the RARP packet
-        /// </summary>
-        private Structures.PacketStructure theRARPPacket;
-
-        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
@@ -38,9 +33,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.RARPPacket
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the RARP packet
-            this.theRARPPacket = new Structures.PacketStructure();
         }
 
         /// <summary>
@@ -73,17 +65,8 @@ namespace PacketCaptureAnalyser.EthernetFrame.RARPPacket
         private void ProcessRARPPacketPayload()
         {
             // Just read off the bytes for the RARP packet from the packet capture so we can move on
-            this.theRARPPacket.HardwareType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theRARPPacket.ProtocolType = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theRARPPacket.HardwareAddressLength = this.theBinaryReader.ReadByte();
-            this.theRARPPacket.ProtocolAddressLength = this.theBinaryReader.ReadByte();
-            this.theRARPPacket.Operation = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theRARPPacket.SenderHardwareAddressHigh = this.theBinaryReader.ReadUInt32();
-            this.theRARPPacket.SenderHardwareAddressLow = this.theBinaryReader.ReadUInt16();
-            this.theRARPPacket.SenderProtocolAddress = (uint)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt32());
-            this.theRARPPacket.TargetHardwareAddressHigh = this.theBinaryReader.ReadUInt32();
-            this.theRARPPacket.TargetHardwareAddressLow = this.theBinaryReader.ReadUInt16();
-            this.theRARPPacket.TargetProtocolAddress = (uint)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt32());
+            this.theBinaryReader.ReadBytes(
+                Constants.PacketLength);
         }
 
         /// <summary>

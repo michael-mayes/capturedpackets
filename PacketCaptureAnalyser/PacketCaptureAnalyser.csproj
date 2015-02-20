@@ -56,14 +56,11 @@
     <Compile Include="Analysis\DebugInformation.cs" />
     <Compile Include="Analysis\Latency Analysis\Structures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Processing.cs" />
-    <Compile Include="Ethernet Frame\ARP Packet\Structures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\Processing.cs" />
-    <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\Structures.cs" />
     <Compile Include="Ethernet Frame\Loopback Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\Loopback Packet\Processing.cs" />
-    <Compile Include="Ethernet Frame\Loopback Packet\Structures.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\ICMPv4 Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\IGMPv2 Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\TCP Packet\Constants.cs" />
@@ -72,13 +69,8 @@
     <Compile Include="Ethernet Frame\IP Packet\UDP Datagram\Processing.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\IGMPv2 Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\ICMPv4 Packet\Processing.cs" />
-    <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\IGMPv2 Packet\Structures.cs" />
-    <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\ICMPv4 Packet\Structures.cs" />
-    <Compile Include="Ethernet Frame\IP Packet\TCP Packet\Structures.cs" />
-    <Compile Include="Ethernet Frame\IP Packet\UDP Datagram\Structures.cs" />
     <Compile Include="Ethernet Frame\LLDP Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\LLDP Packet\Processing.cs" />
-    <Compile Include="Ethernet Frame\LLDP Packet\Structures.cs" />
     <Compile Include="Analysis\CommonHistogram.cs" />
     <Compile Include="Analysis\Latency Analysis\Constants.cs" />
     <Compile Include="Analysis\Latency Analysis\Processing.cs" />
@@ -86,7 +78,6 @@
     <Compile Include="Analysis\Time Analysis\Processing.cs" />
     <Compile Include="Ethernet Frame\RARP Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\RARP Packet\Processing.cs" />
-    <Compile Include="Ethernet Frame\RARP Packet\Structures.cs" />
     <Compile Include="Packet Capture\CommonConstants.cs" />
     <Compile Include="Packet Capture\CommonProcessing.cs" />
     <Compile Include="Packet Capture\PCAP Packet Capture\Constants.cs" />
@@ -98,11 +89,9 @@
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\Processing.cs" />
     <Compile Include="Packet Capture\PCAP Packet Capture\Processing.cs" />
-    <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\Structures.cs" />
     <Compile Include="Packet Capture\Sniffer Packet Capture\Constants.cs" />
     <Compile Include="Packet Capture\PCAP Packet Capture\Structures.cs" />
     <Compile Include="Ethernet Frame\Constants.cs" />
-    <Compile Include="Ethernet Frame\Structures.cs" />
     <Compile Include="Ethernet Frame\Processing.cs" />
     <Compile Include="MainWindowForm.cs">
       <SubType>Form</SubType>

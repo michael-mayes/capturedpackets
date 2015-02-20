@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the IP v6 packet header
-        /// </summary>
-        private Structures.HeaderStructure theIPv6PacketHeader;
-
-        /// <summary>
         /// The reusable instance of the processing class for TCP packets
         /// </summary>
         private TCPPacket.Processing theTCPPacketProcessing;
@@ -55,9 +50,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the IP v6 packet header
-            this.theIPv6PacketHeader = new Structures.HeaderStructure();
 
             //// Create instances of the processing classes for each protocol
 
@@ -137,38 +129,43 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
             theIPv6PacketProtocol = 0;
 
             // Read the values for the IP v6 packet header from the packet capture
-            this.theIPv6PacketHeader.VersionAndTrafficClass = this.theBinaryReader.ReadByte();
-            this.theIPv6PacketHeader.TrafficClassAndFlowLabel = this.theBinaryReader.ReadByte();
-            this.theIPv6PacketHeader.FlowLabel = this.theBinaryReader.ReadUInt16();
-            this.theIPv6PacketHeader.PayloadLength = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theIPv6PacketHeader.NextHeader = this.theBinaryReader.ReadByte();
-            this.theIPv6PacketHeader.HopLimit = this.theBinaryReader.ReadByte();
-            this.theIPv6PacketHeader.SourceAddressHigh = this.theBinaryReader.ReadInt64();
-            this.theIPv6PacketHeader.SourceAddressLow = this.theBinaryReader.ReadInt64();
-            this.theIPv6PacketHeader.DestinationAddressHigh = this.theBinaryReader.ReadInt64();
-            this.theIPv6PacketHeader.DestinationAddressLow = this.theBinaryReader.ReadInt64();
+
+            // Store the IP packet version and traffic class for use below
+            byte theVersionAndTrafficClass = this.theBinaryReader.ReadByte();
+
+            // Just read off the bytes for the IPv6 packet header traffic class and flow label from the packet capture so we can move on
+            this.theBinaryReader.ReadByte();
+            this.theBinaryReader.ReadUInt16();
+
+            // Set up the output parameter for the length of the payload of the IP v6 packet (e.g. a TCP packet), which is the total length of the IP v6 packet minus the length of the IP v6 packet header just calculated
+            theIPv6PacketPayloadLength =
+                (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Set up the output parameter for the protocol for the IP v6 packet
+            theIPv6PacketProtocol = this.theBinaryReader.ReadByte();
+
+            // Just read off the bytes for the IPv6 packet header hop limit from the packet capture so we can move on
+            this.theBinaryReader.ReadByte();
+
+            // Just read off the bytes for the IPv6 packet header hop limit from the packet capture so we can move on
+            this.theBinaryReader.ReadInt64(); // High bytes
+            this.theBinaryReader.ReadInt64(); // Low bytes
+
+            // Just read off the bytes for the IPv6 packet destination from the packet capture so we can move on
+            this.theBinaryReader.ReadInt64(); // High bytes
+            this.theBinaryReader.ReadInt64(); // Low bytes
 
             // Determine the version of the IP v6 packet header
             // Need to first extract the version value from the combined IP packet version and traffic class field
             // We want the higher four bits from the combined IP packet version and traffic class field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
             ushort theIPv6PacketHeaderVersion =
-                (ushort)((this.theIPv6PacketHeader.VersionAndTrafficClass & 0xF0) >> 4);
+                (ushort)((theVersionAndTrafficClass & 0xF0) >> 4);
 
             // Validate the IP v6 packet header
             theResult = this.ValidateIPv6PacketHeader(
                 theEthernetFrameLength,
-                theIPv6PacketHeaderVersion);
-
-            if (theResult)
-            {
-                // Set up the output parameter for the length of the payload of the IP v6 packet (e.g. a TCP packet), which is the total length of the IP v6 packet minus the length of the IP v6 packet header just calculated
-                theIPv6PacketPayloadLength =
-                    this.theIPv6PacketHeader.PayloadLength;
-
-                // Set up the output parameter for the protocol for the IP v6 packet
-                theIPv6PacketProtocol =
-                    this.theIPv6PacketHeader.NextHeader;
-            }
+                theIPv6PacketHeaderVersion,
+                theIPv6PacketPayloadLength);
 
             return theResult;
         }
@@ -261,19 +258,20 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv6Packet
         /// </summary>
         /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
         /// <param name="theIPv6PacketHeaderVersion">The version of the IP v6 packet header</param>
+        /// <param name="theIPv6PacketPayloadLength">The payload length of the IP v6 packet</param>
         /// <returns>Boolean flag that indicates whether the IP v6 packet header is valid</returns>
-        private bool ValidateIPv6PacketHeader(long theEthernetFrameLength, ushort theIPv6PacketHeaderVersion)
+        private bool ValidateIPv6PacketHeader(long theEthernetFrameLength, ushort theIPv6PacketHeaderVersion, ushort theIPv6PacketPayloadLength)
         {
             bool theResult = true;
 
-            // Validate the version in the IP v6 packet header
-            if ((this.theIPv6PacketHeader.PayloadLength + Constants.HeaderLength) > theEthernetFrameLength)
+            // Validate the payload length in the IP v6 packet header
+            if ((theIPv6PacketPayloadLength + Constants.HeaderLength) > theEthernetFrameLength)
             {
-                //// We have got an IP v6 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
+                //// We have got an IP v6 packet containing a payload length that is higher than the payload in the Ethernet frame which is invalid
 
                 this.theDebugInformation.WriteErrorEvent(
                     "The IP v6 packet indicates a total length of " +
-                    (this.theIPv6PacketHeader.PayloadLength + Constants.HeaderLength).ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    (theIPv6PacketPayloadLength + Constants.HeaderLength).ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes that is greater than the length of " +
                     theEthernetFrameLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes in the Ethernet frame!!!");

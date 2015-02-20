@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the IP v4 packet header
-        /// </summary>
-        private Structures.HeaderStructure theIPv4PacketHeader;
-
-        /// <summary>
         /// The reusable instance of the processing class for ICMP v4 packets
         /// </summary>
         private ICMPv4Packet.Processing theICMPv4PacketProcessing;
@@ -65,9 +60,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the IP v4 packet header
-            this.theIPv4PacketHeader = new Structures.HeaderStructure();
 
             //// Create instances of the processing classes for each protocol
 
@@ -157,46 +149,62 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
             theIPv4PacketProtocol = 0;
 
             // Read the values for the IP v4 packet header from the packet capture
-            this.theIPv4PacketHeader.VersionAndHeaderLength = this.theBinaryReader.ReadByte();
-            this.theIPv4PacketHeader.TypeOfService = this.theBinaryReader.ReadByte();
-            this.theIPv4PacketHeader.TotalLength = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theIPv4PacketHeader.Identifier = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theIPv4PacketHeader.FlagsAndOffset = this.theBinaryReader.ReadUInt16();
-            this.theIPv4PacketHeader.TimeToLive = this.theBinaryReader.ReadByte();
-            this.theIPv4PacketHeader.Protocol = this.theBinaryReader.ReadByte();
-            this.theIPv4PacketHeader.HeaderChecksum = this.theBinaryReader.ReadUInt16();
-            this.theIPv4PacketHeader.SourceAddress = this.theBinaryReader.ReadInt32();
-            this.theIPv4PacketHeader.DestinationAddress = this.theBinaryReader.ReadInt32();
+
+            // Store the IP packet version and IP v4 packet header length for use below
+            byte theVersionAndHeaderLength = this.theBinaryReader.ReadByte();
+
+            // Just read off the bytes for the IP v4 packet header type of service from the packet capture so we can move on
+            this.theBinaryReader.ReadByte();
+
+            // Store the total length of the IP v4 packet for use below
+            ushort theIPv4PacketTotalLength = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Just read off the bytes for the IP v4 packet header identifier from the packet capture so we can move on
+            this.theBinaryReader.ReadInt16();
+
+            // Just read off the bytes for the IP v4 packet header flags and offset from the packet capture so we can move on
+            this.theBinaryReader.ReadUInt16();
+
+            // Just read off the bytes for the IP v4 packet header time to live from the packet capture so we can move on
+            this.theBinaryReader.ReadByte();
+
+            // Set up the output parameter for the protocol for the IP v4 packet
+            theIPv4PacketProtocol = this.theBinaryReader.ReadByte();
+
+            // Just read off the bytes for the IP v4 packet header checksum from the packet capture so we can move on
+            this.theBinaryReader.ReadUInt16();
+
+            // Just read off the bytes for the IP v4 packet header source address from the packet capture so we can move on
+            this.theBinaryReader.ReadInt32();
+
+            // Just read off the bytes for the IP v4 packet header destination address from the packet capture so we can move on
+            this.theBinaryReader.ReadInt32();
 
             // Determine the version of the IP v4 packet header
             // Need to first extract the version value from the combined IP version/IP header length field
             // We want the higher four bits from the combined IP version/IP header length field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
             ushort theIPv4PacketHeaderVersion =
-                (ushort)((this.theIPv4PacketHeader.VersionAndHeaderLength & 0xF0) >> 4);
+                (ushort)((theVersionAndHeaderLength & 0xF0) >> 4);
 
             // Determine the length of the IP v4 packet header
             // Need to first extract the length value from the combined IP version/IP header length field
             // We want the lower four bits from the combined IP version/IP header length field (as it's in a big endian representation) so do a bitwise OR with 0xF (i.e. 00001111 in binary)
             // The extracted length value is the length of the IP v4 packet header in 32-bit words so multiply by four to get the actual length in bytes of the IP v4 packet header
             theIPv4PacketHeaderLength =
-                (ushort)((this.theIPv4PacketHeader.VersionAndHeaderLength & 0xF) * 4);
+                (ushort)((theVersionAndHeaderLength & 0xF) * 4);
 
             // Validate the IP v4 packet header
             theResult = this.ValidateIPv4PacketHeader(
                 theEthernetFrameLength,
                 theIPv4PacketHeaderVersion,
-                theIPv4PacketHeaderLength);
+                theIPv4PacketHeaderLength,
+                theIPv4PacketTotalLength);
 
             if (theResult)
             {
                 // Set up the output parameter for the length of the payload of the IP v4 packet (e.g. a TCP packet), which is the total length of the IP v4 packet minus the length of the IP v4 packet header just calculated
                 theIPv4PacketPayloadLength =
-                    (ushort)(this.theIPv4PacketHeader.TotalLength -
-                    theIPv4PacketHeaderLength);
-
-                // Set up the output parameter for the protocol for the IP v4 packet
-                theIPv4PacketProtocol =
-                    this.theIPv4PacketHeader.Protocol;
+                    (ushort)(theIPv4PacketTotalLength - theIPv4PacketHeaderLength);
 
                 if (theIPv4PacketHeaderLength > Constants.HeaderMinimumLength)
                 {
@@ -305,19 +313,20 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet
         /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
         /// <param name="theIPv4HeaderVersion">The version of the IP v4 packet header</param>
         /// <param name="theIPv4HeaderLength">The length of the IP v4 packet header</param>
+        /// <param name="theIPv4PacketTotalLength">The total length of the IP v4 packet</param>
         /// <returns>Boolean flag that indicates whether the IP v4 packet header is valid</returns>
-        private bool ValidateIPv4PacketHeader(long theEthernetFrameLength, ushort theIPv4HeaderVersion, ushort theIPv4HeaderLength)
+        private bool ValidateIPv4PacketHeader(long theEthernetFrameLength, ushort theIPv4HeaderVersion, ushort theIPv4HeaderLength, ushort theIPv4PacketTotalLength)
         {
             bool theResult = true;
 
             // Validate the version in the IP v4 packet header
-            if (this.theIPv4PacketHeader.TotalLength > theEthernetFrameLength)
+            if (theIPv4PacketTotalLength > theEthernetFrameLength)
             {
-                //// We have got an IP v4 packet containing an length that is higher than the payload in the Ethernet frame which is invalid
+                //// We have got an IP v4 packet containing a total length that is higher than the payload in the Ethernet frame which is invalid
 
                 this.theDebugInformation.WriteErrorEvent(
                     "The IP v4 packet indicates a total length of " +
-                    this.theIPv4PacketHeader.TotalLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    theIPv4PacketTotalLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes that is greater than the length of " +
                     theEthernetFrameLength.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " bytes in the Ethernet frame!!!");

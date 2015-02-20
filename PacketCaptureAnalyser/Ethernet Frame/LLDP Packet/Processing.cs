@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.LLDPPacket
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the LLDP packet
-        /// </summary>
-        private Structures.PacketStructure theLLDPPacket;
-
-        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
@@ -38,9 +33,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.LLDPPacket
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the LLDP packet
-            this.theLLDPPacket = new Structures.PacketStructure();
         }
 
         /// <summary>
@@ -73,13 +65,8 @@ namespace PacketCaptureAnalyser.EthernetFrame.LLDPPacket
         private void ProcessLLDPPacketPayload()
         {
             // Just read off the bytes for the LLDP packet from the packet capture so we can move on
-            this.theLLDPPacket.UnusedField1 = this.theBinaryReader.ReadUInt64();
-            this.theLLDPPacket.UnusedField2 = this.theBinaryReader.ReadUInt64();
-            this.theLLDPPacket.UnusedField3 = this.theBinaryReader.ReadUInt64();
-            this.theLLDPPacket.UnusedField4 = this.theBinaryReader.ReadUInt64();
-            this.theLLDPPacket.UnusedField5 = this.theBinaryReader.ReadUInt64();
-            this.theLLDPPacket.UnusedField6 = this.theBinaryReader.ReadUInt32();
-            this.theLLDPPacket.UnusedField7 = this.theBinaryReader.ReadUInt16();
+            this.theBinaryReader.ReadBytes(
+			    Constants.PacketLength);
         }
 
         /// <summary>

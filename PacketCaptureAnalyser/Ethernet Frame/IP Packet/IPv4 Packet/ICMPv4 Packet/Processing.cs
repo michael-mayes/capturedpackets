@@ -19,20 +19,12 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the ICMP v4 packet header
-        /// </summary>
-        private Structures.HeaderStructure theICMPv4PacketHeader;
-
-        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
         public Processing(System.IO.BinaryReader theBinaryReader)
         {
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the ICMP v4 packet header
-            this.theICMPv4PacketHeader = new Structures.HeaderStructure();
         }
 
         /// <summary>
@@ -54,10 +46,9 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         /// </summary>
         private void ProcessICMPv4PacketHeader()
         {
-            // Read the values for the ICMP v4 packet header from the packet capture
-            this.theICMPv4PacketHeader.Type = this.theBinaryReader.ReadByte();
-            this.theICMPv4PacketHeader.Code = this.theBinaryReader.ReadByte();
-            this.theICMPv4PacketHeader.Checksum = this.theBinaryReader.ReadUInt16();
+            // Just read off the bytes for the ICMP v4 packet header from the packet capture so we can move on
+            this.theBinaryReader.ReadBytes(
+			    Constants.HeaderLength);
         }
 
         /// <summary>

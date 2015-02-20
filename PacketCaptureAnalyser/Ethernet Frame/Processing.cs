@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the Ethernet frame header
-        /// </summary>
-        private Structures.HeaderStructure theEthernetFrameHeader;
-
-        /// <summary>
         /// The length of the Ethernet frame
         /// </summary>
         private long theEthernetFrameLength;
@@ -85,9 +80,6 @@ namespace PacketCaptureAnalyser.EthernetFrame
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the Ethernet frame header
-            this.theEthernetFrameHeader = new Structures.HeaderStructure();
 
             //// Create instances of the processing classes for each supported type for an Ethernet frame
 
@@ -170,24 +162,20 @@ namespace PacketCaptureAnalyser.EthernetFrame
         private void ProcessEthernetFrameHeader()
         {
             // Read the Destination MAC Address for the Ethernet frame from the packet capture
-            this.theEthernetFrameHeader.DestinationMACAddressHigh = this.theBinaryReader.ReadUInt32();
-            this.theEthernetFrameHeader.DestinationMACAddressLow = this.theBinaryReader.ReadUInt16();
+            this.theBinaryReader.ReadUInt32(); // High bytes
+            this.theBinaryReader.ReadUInt16(); // Low bytes
 
             // Read the Source MAC Address for the Ethernet frame from the packet capture
-            this.theEthernetFrameHeader.SourceMACAddressHigh = this.theBinaryReader.ReadUInt32();
-            this.theEthernetFrameHeader.SourceMACAddressLow = this.theBinaryReader.ReadUInt16();
+            this.theBinaryReader.ReadUInt32(); // High bytes
+            this.theBinaryReader.ReadUInt16(); // Low bytes
 
-            // Read the type for the Ethernet frame from the packet capture
-            this.theEthernetFrameHeader.EthernetFrameType =
+            // Read and store the type of the Ethernet frame from the packet capture for use in further processing
+            this.theEthernetFrameType =
                 (ushort)System.Net.IPAddress.NetworkToHostOrder(
                 this.theBinaryReader.ReadInt16());
 
             // Reduce the length of the Ethernet frame to reflect that the two bytes for the type of the Ethernet frame would have been included
             this.theEthernetFrameLength -= 2;
-
-            // Store the type of the Ethernet frame for use in further processing
-            this.theEthernetFrameType =
-                this.theEthernetFrameHeader.EthernetFrameType;
         }
 
         /// <summary>

@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.LoopbackPacket
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the Loopback packet header
-        /// </summary>
-        private Structures.HeaderStructure theLoopbackPacketHeader;
-
-        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
@@ -38,9 +33,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.LoopbackPacket
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the Loopback packet header
-            this.theLoopbackPacketHeader = new Structures.HeaderStructure();
         }
 
         /// <summary>
@@ -73,10 +65,9 @@ namespace PacketCaptureAnalyser.EthernetFrame.LoopbackPacket
         /// </summary>
         private void ProcessLoopbackPacketHeader()
         {
-            // Read the values for the Loopback packet header from the packet capture
-            this.theLoopbackPacketHeader.SkipCount = this.theBinaryReader.ReadUInt16();
-            this.theLoopbackPacketHeader.Function = this.theBinaryReader.ReadUInt16();
-            this.theLoopbackPacketHeader.ReceiptNumber = this.theBinaryReader.ReadUInt16();
+            // Just read off the bytes for the Loopback packet header from the packet capture so we can move on
+            this.theBinaryReader.ReadBytes(
+                Constants.HeaderLength);
         }
 
         /// <summary>

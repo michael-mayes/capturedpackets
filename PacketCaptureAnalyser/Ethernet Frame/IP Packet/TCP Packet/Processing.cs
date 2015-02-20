@@ -24,11 +24,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
-        /// The reusable instance of the TCP packet header
-        /// </summary>
-        private Structures.HeaderStructure theTCPPacketHeader;
-
-        /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
@@ -45,9 +40,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // Create an instance of the TCP packet header
-            this.theTCPPacketHeader = new Structures.HeaderStructure();
         }
 
         /// <summary>
@@ -107,22 +99,40 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
             theTCPPacketDestinationPort = 0;
 
             // Read the values for the TCP packet header from the packet capture
-            this.theTCPPacketHeader.SourcePort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theTCPPacketHeader.DestinationPort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
-            this.theTCPPacketHeader.SequenceNumber = this.theBinaryReader.ReadUInt32();
-            this.theTCPPacketHeader.AcknowledgmentNumber = this.theBinaryReader.ReadUInt32();
-            this.theTCPPacketHeader.DataOffsetAndReservedAndNSFlag = this.theBinaryReader.ReadByte();
-            this.theTCPPacketHeader.Flags = this.theBinaryReader.ReadByte();
-            this.theTCPPacketHeader.WindowSize = this.theBinaryReader.ReadUInt16();
-            this.theTCPPacketHeader.Checksum = this.theBinaryReader.ReadUInt16();
-            this.theTCPPacketHeader.UrgentPointer = this.theBinaryReader.ReadUInt16();
+
+            // Set up the output parameter for source port using the value read from the TCP packet header
+            theTCPPacketSourcePort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Set up the output parameter for destination port using the value read from the TCP packet header
+            theTCPPacketDestinationPort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
+
+            // Just read off the bytes for the TCP packet header sequence number from the packet capture so we can move on
+            this.theBinaryReader.ReadUInt32();
+
+            // Just read off the bytes for the TCP packet header acknowledgment number from the packet capture so we can move on
+            this.theBinaryReader.ReadUInt32();
+
+            // Store the the TCP packet header length, reserved fields and NS flag for use below
+            byte theDataOffsetAndReservedAndNSFlag = this.theBinaryReader.ReadByte();
+
+            // Just read off the bytes for the TCP packet header flags from the packet capture so we can move on
+            this.theBinaryReader.ReadByte();
+
+            // Just read off the bytes for the TCP packet header window size from the packet capture so we can move on
+            this.theBinaryReader.ReadUInt16();
+
+            // Just read off the bytes for the TCP packet header checksum from the packet capture so we can move on
+            this.theBinaryReader.ReadUInt16();
+
+            // Just read off the bytes for the TCP packet header urgent pointer from the packet capture so we can move on
+            this.theBinaryReader.ReadUInt16();
 
             // Determine the length of the TCP packet header
             // Need to first extract the length value from the combined TCP packet header length, reserved fields and NS flag field
             // We want the higher four bits from the combined TCP packet header length, reserved fields and NS flag field (as it's in a big endian representation) so do a bitwise OR with 0xF0 (i.e. 11110000 in binary) and shift down by four bits
             // The extracted length value is the length of the TCP packet header in 32-bit words so multiply by four to get the actual length in bytes of the TCP packet header
             ushort theTCPPacketHeaderLength =
-                (ushort)(((this.theTCPPacketHeader.DataOffsetAndReservedAndNSFlag & 0xF0) >> 4) * 4);
+                (ushort)(((theDataOffsetAndReservedAndNSFlag & 0xF0) >> 4) * 4);
 
             // Validate the TCP packet header
             theResult = this.ValidateTCPPacketHeader(
@@ -133,10 +143,6 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.TCPPacket
                 // Set up the output parameter for the length of the payload of the TCP packet, which is the total length of the TCP packet minus the length of the TCP packet header just calculated
                 theTCPPacketPayloadLength =
                     (ushort)(theIPPacketPayloadLength - theTCPPacketHeaderLength);
-
-                // Set up the output parameters for source port and destination port using the value read from the TCP packet header
-                theTCPPacketSourcePort = this.theTCPPacketHeader.SourcePort;
-                theTCPPacketDestinationPort = this.theTCPPacketHeader.DestinationPort;
 
                 if (theTCPPacketHeaderLength > Constants.HeaderMinimumLength)
                 {
