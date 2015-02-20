@@ -41,9 +41,9 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv4Packet
             None = 0,
 
             /// <summary>
-            /// ICMP v4 - Internet Control Message Protocol version 4 for IP v4 (RFC 792)
+            /// ICMP - Internet Control Message Protocol (RFC 792)
             /// </summary>
-            ICMPv4 = 0x01,
+            ICMP = 0x01,
 
             /// <summary>
             /// IGMP - Internet Group Management Protocol (RFC 1112)

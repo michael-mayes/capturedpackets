@@ -235,7 +235,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv4Packet
             // Process the IP v4 packet based on the value indicated for the protocol in the the IP v4 packet header
             switch (theIPv4Protocol)
             {
-                case (byte)Constants.Protocol.ICMPv4:
+                case (byte)Constants.Protocol.ICMP:
                     {
                         // We have got an IP v4 packet containing an ICMP v4 packet so process it
                         this.theICMPv4PacketProcessing.ProcessICMPv4Packet(
