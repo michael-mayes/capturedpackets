@@ -24,6 +24,11 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
         private System.IO.BinaryReader theBinaryReader;
 
         /// <summary>
+        /// The reusable instance of the processing class for ICMP v6 packets
+        /// </summary>
+        private ICMPv6Packet.Processing theICMPv6PacketProcessing;
+
+        /// <summary>
         /// The reusable instance of the processing class for TCP packets
         /// </summary>
         private TCPPacket.Processing theTCPPacketProcessing;
@@ -52,6 +57,8 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
             this.theBinaryReader = theBinaryReader;
 
             //// Create instances of the processing classes for each protocol
+
+            this.theICMPv6PacketProcessing = new ICMPv6Packet.Processing(theBinaryReader);
 
             this.theTCPPacketProcessing =
                 new TCPPacket.Processing(
@@ -167,6 +174,65 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
                 theIPv6PacketHeaderVersion,
                 theIPv6PacketPayloadLength);
 
+            if (theResult)
+            {
+                // Process the IP v6 packet based on the value indicated for the protocol in the the IP v6 packet header
+                switch (theIPv6PacketProtocol)
+                {
+                    case (byte)Constants.Protocol.HopByHopOptions:
+                    case (byte)Constants.Protocol.DestinationOptions:
+                        {
+                            // We have got an IP v6 packet containing an options extension header
+
+                            // Set up the output parameter for the protocol for the IP v6 packet
+                            // again, this time based on the value in the options extension header
+                            theIPv6PacketProtocol = this.theBinaryReader.ReadByte();
+
+                            // Store the length of the options extension header from the packet capture for use below
+                            byte theOptionsLength = this.theBinaryReader.ReadByte();
+
+                            // Just read off the default bytes for the options and
+                            // padding from the packet capture so we can move on
+                            this.theBinaryReader.ReadUInt16();
+                            this.theBinaryReader.ReadUInt32();
+
+                            // Just read off the optional bytes for the options and padding
+                            // (if necessary) from the packet capture so we can move on
+                            this.theBinaryReader.ReadBytes(theOptionsLength);
+
+                            // Reduce the length of the IP v6 packet to reflect that the bytes for the options extension header would have been included
+                            theIPv6PacketPayloadLength -= (ushort)(8 + (8 * theOptionsLength));
+
+                            break;
+                        }
+
+                    case (byte)Constants.Protocol.TCP:
+                    case (byte)Constants.Protocol.UDP:
+                    case (byte)Constants.Protocol.ICMPv6:
+                    case (byte)Constants.Protocol.EIGRP:
+                        {
+                            // We have got an IP v6 packet containing a known protocol so continue processing
+                            break;
+                        }
+
+                    default:
+                        {
+                            //// We have got an IP v6 packet containing an unknown protocol
+
+                            //// Processing of packets with network data link types not enumerated above are obviously not currently supported!
+
+                            this.theDebugInformation.WriteErrorEvent(
+                                "The IP v6 packet contains an unexpected protocol of " +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0:X}", theIPv6PacketProtocol) +
+                                "!!!");
+
+                            theResult = false;
+
+                            break;
+                        }
+                }
+            }
+
             return theResult;
         }
 
@@ -209,13 +275,9 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
 
                 case (byte)Constants.Protocol.ICMPv6:
                     {
-                        // We have got an IP v6 packet containing an ICMP v6 packet
-
-                        // Processing of IP v6 packets containing an ICMP v6 packet is not currently supported!
-
-                        // Just record the event and fall through as later processing will read off the remaining payload so we can move on
-                        this.theDebugInformation.WriteInformationEvent(
-                            "The IP v6 packet contains an ICMP v6 packet, which is not currently supported!");
+                        // We have got an IP v6 packet containing an ICMP v6 packet so process it
+                        this.theICMPv6PacketProcessing.ProcessICMPv6Packet(
+                            theIPv6PacketPayloadLength);
 
                         break;
                     }

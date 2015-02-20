@@ -8,8 +8,8 @@
     <ProjectGuid>{41EF8B4E-E5CB-4384-83C9-D28930BD1F4F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PacketCaptureAnalyser</RootNamespace>
-    <AssemblyName>PacketCaptureAnalyser</AssemblyName>
+    <RootNamespace>PacketCaptureAnalyzer</RootNamespace>
+    <AssemblyName>PacketCaptureAnalyzer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -36,7 +36,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>PacketCaptureAnalyser.MainProgram</StartupObject>
+    <StartupObject>PacketCaptureAnalyzer.MainProgram</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -58,6 +58,8 @@
     <Compile Include="Ethernet Frame\ARP Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\Constants.cs" />
+    <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\ICMPv6 Packet\Constants.cs" />
+    <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\ICMPv6 Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\Loopback Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\Loopback Packet\Processing.cs" />

@@ -31,9 +31,9 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
         public enum Protocol : byte
         {
             /// <summary>
-            /// Default value
+            /// Hop-by-hop options for IP v6
             /// </summary>
-            None = 0,
+            HopByHopOptions = 0x00,
 
             /// <summary>
             /// TCP - Transmission Control Protocol (RFC 793)
@@ -49,6 +49,11 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
             /// ICMP v6 - Internet Control Message Protocol version 6 for IP v6 (RFC 4443, RFC 4884)
             /// </summary>
             ICMPv6 = 0x3A,
+
+            /// <summary>
+            /// Destination options for IP v6
+            /// </summary>
+            DestinationOptions = 0x3C,
 
             /// <summary>
             /// EIGRP - Cisco Enhanced Interior Gateway Routing Protocol (Proprietary)
