@@ -2,11 +2,11 @@
 //     Released into the public domain
 // </copyright>
 
-// This file is part of the C# Packet Capture application. It is free and
-// unencumbered software released into the public domain as detailed in
-// the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture Analyser application. It is
+// free and unencumbered software released into the public domain as detailed
+// in the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureAnalyser
+namespace PacketCaptureAnalyzer
 {
     using System.Linq; // Required to be able to use Any method
 
@@ -652,7 +652,7 @@ namespace PacketCaptureAnalyser
             try
             {
                 // Create an instance of the progress window form
-                theProgressWindowForm = new PacketCaptureAnalyser.ProgressWindowForm();
+                theProgressWindowForm = new PacketCaptureAnalyzer.ProgressWindowForm();
 
                 // Show the progress window form now the analysis has started
                 theProgressWindowForm.Show();

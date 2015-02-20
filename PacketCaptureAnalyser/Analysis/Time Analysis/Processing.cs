@@ -2,11 +2,11 @@
 //     Released into the public domain
 // </copyright>
 
-// This file is part of the C# Packet Capture application. It is free and
-// unencumbered software released into the public domain as detailed in
-// the UNLICENSE file in the top level directory of this distribution
+// This file is part of the C# Packet Capture Analyser application. It is
+// free and unencumbered software released into the public domain as detailed
+// in the UNLICENSE file in the top level directory of this distribution
 
-namespace PacketCaptureAnalyser.Analysis.TimeAnalysis
+namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 {
     using System.Data; // Required to be able to use AsEnumerable method
     using System.Linq; // Required to be able to use Any method
