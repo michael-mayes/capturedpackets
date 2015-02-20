@@ -33,6 +33,7 @@ Histograms can be output for the latency, time and burst analysis results
 * Extracts UDP datagrams
 * Extracts ICMPv4 packets
 * Extracts IGMPv2 packets
+* Extracts EIGRP packets
 * Extracts Configuration Test Protocol (Loopback) packets
 * Extracts LLDP packets
 * Handles spuriously exposed trailer bytes in packet capture
