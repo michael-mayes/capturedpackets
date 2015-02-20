@@ -48,7 +48,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.ICMPv4Packet
         {
             // Just read off the bytes for the ICMP v4 packet header from the packet capture so we can move on
             this.theBinaryReader.ReadBytes(
-			    Constants.HeaderLength);
+                Constants.HeaderLength);
         }
 
         /// <summary>

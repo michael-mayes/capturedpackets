@@ -66,7 +66,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.LLDPPacket
         {
             // Just read off the bytes for the LLDP packet from the packet capture so we can move on
             this.theBinaryReader.ReadBytes(
-			    Constants.PacketLength);
+                Constants.PacketLength);
         }
 
         /// <summary>

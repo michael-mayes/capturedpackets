@@ -45,7 +45,7 @@ namespace PacketCaptureAnalyser.EthernetFrame.IPPacket.IPv4Packet.IGMPv2Packet
         {
             // Just read off the bytes for the IGMP v2 packet from the packet capture so we can move on
             this.theBinaryReader.ReadBytes(
-			    Constants.PacketLength);
+                Constants.PacketLength);
         }
     }
 }
