@@ -695,7 +695,10 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPNGPackageCapture
         /// <summary>
         /// Validates the PCAP Next Generation section header block
         /// </summary>
-        /// <param name="theSectionHeaderBlock">The PCAP Next Generation section header block</param>
+        /// <param name="theBlockType">The block type in the PCAP Next Generation section header block</param>
+        /// <param name="theByteOrderMagic">The magic number in the PCAP Next Generation section header block</param>
+        /// <param name="theMajorVersion">The major version number in the PCAP Next Generation section header block</param>
+        /// <param name="theMinorVersion">The minor version number in the PCAP Next Generation section header block</param>
         /// <returns>Boolean flag that indicates whether the PCAP Next Generation section header block is valid</returns>
         private bool ValidateSectionHeaderBlock(uint theBlockType, uint theByteOrderMagic, ushort theMajorVersion, ushort theMinorVersion)
         {
