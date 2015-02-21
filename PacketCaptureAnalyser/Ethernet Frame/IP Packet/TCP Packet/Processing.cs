@@ -40,6 +40,15 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
+
+            // TODO Remove these statements once this method uses all its parameters
+            performLatencyAnalysisProcessing.GetType();
+            theLatencyAnalysisProcessing.GetType();
+            performBurstAnalysisProcessing.GetType();
+            theBurstAnalysisProcessing.GetType();
+            performTimeAnalysisProcessing.GetType();
+            theTimeAnalysisProcessing.GetType();
+            useAlternativeSequenceNumber.GetType();
         }
 
         /// <summary>
@@ -174,13 +183,20 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
         {
             bool theResult = true;
 
+            // TODO Remove these statements once this method uses all its parameters below
+            thePacketNumber.GetType();
+            thePacketTimestamp.GetType();
+            theTCPPacketPayloadLength.GetType();
+            theTCPPacketSourcePort.GetType();
+            theTCPPacketDestinationPort.GetType();
+
             // Only process this TCP packet if the payload has a non-zero payload length i.e. it actually includes data so is not part of the three-way handshake or a plain acknowledgement
             if (theTCPPacketPayloadLength > 0)
             {
                 // Change this logic statement to allow identification and processing of specific messages within the TCP packet
                 if (false)
                 {
-                    // Put code here to identify and process specific messages within the TCP packet
+                    // TODO Put code here to identify and process specific messages within the TCP packet
                 }
                 else
                 {

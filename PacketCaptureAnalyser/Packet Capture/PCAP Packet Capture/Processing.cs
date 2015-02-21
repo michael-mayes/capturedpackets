@@ -73,58 +73,70 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
             // Set up the output parameter for the timestamp accuracy - not used for PCAP packet captures so default to zero
             thePacketCaptureTimestampAccuracy = 0.0;
 
-            // Create the single instance of the PCAP packet capture global header
-            Structures.GlobalHeaderStructure theGlobalHeader =
-                new Structures.GlobalHeaderStructure();
-
             // Read the magic number of the PCAP packet capture global header from the packet capture
-            theGlobalHeader.MagicNumber = theBinaryReader.ReadUInt32();
+            uint theMagicNumber = theBinaryReader.ReadUInt32();
 
             // The endianism of the remainder of the values in the PCAP packet capture global header will be corrected to little endian if the magic number indicates big endian representation
-            if (theGlobalHeader.MagicNumber == Constants.LittleEndianMagicNumber)
+            if (theMagicNumber == Constants.LittleEndianMagicNumber)
             {
                 this.TheDebugInformation.WriteInformationEvent(
                     "The PCAP packet capture contains the little endian magic number");
 
                 this.isTheGlobalHeaderLittleEndian = true;
             }
-            else if (theGlobalHeader.MagicNumber == Constants.BigEndianMagicNumber)
+            else if (theMagicNumber == Constants.BigEndianMagicNumber)
             {
                 this.TheDebugInformation.WriteInformationEvent(
                     "The PCAP packet capture contains the big endian magic number");
 
                 this.isTheGlobalHeaderLittleEndian = false;
             }
+            else
+            {
+                this.TheDebugInformation.WriteErrorEvent(
+                    "The PCAP packet capture contains an unknown endian magic number");
 
-            // Read the remainder of the PCAP packet capture global header from the packet capture
+                // Assume little endian
+                this.isTheGlobalHeaderLittleEndian = true;
+            }
+
+            ushort theVersionMajor = 0;
+            ushort theVersionMinor = 0;
+            uint theNetworkDataLinkType = 0;
+
+            // Just read off the remainder of the PCAP packet capture global header from the packet capture so we can move on
+            // Some of the data will be stored for use below
             if (this.isTheGlobalHeaderLittleEndian)
             {
-                theGlobalHeader.VersionMajor = theBinaryReader.ReadUInt16();
-                theGlobalHeader.VersionMinor = theBinaryReader.ReadUInt16();
-                theGlobalHeader.ThisTimeZone = theBinaryReader.ReadInt32();
-                theGlobalHeader.SignificantFigures = theBinaryReader.ReadUInt32();
-                theGlobalHeader.SnapshotLength = theBinaryReader.ReadUInt32();
-                theGlobalHeader.NetworkDataLinkType = theBinaryReader.ReadUInt32();
+                theVersionMajor = theBinaryReader.ReadUInt16();
+                theVersionMinor = theBinaryReader.ReadUInt16();
+                theBinaryReader.ReadInt32(); // This time zone
+                theBinaryReader.ReadUInt32(); // Significant figures
+                theBinaryReader.ReadUInt32(); // Snapshot length
+                theNetworkDataLinkType = theBinaryReader.ReadUInt32();
             }
             else
             {
-                theGlobalHeader.VersionMajor = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
-                theGlobalHeader.VersionMinor = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
-                theGlobalHeader.ThisTimeZone = System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
-                theGlobalHeader.SignificantFigures = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
-                theGlobalHeader.SnapshotLength = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
-                theGlobalHeader.NetworkDataLinkType = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
+                theVersionMajor = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
+                theVersionMinor = (ushort)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt16());
+                theBinaryReader.ReadInt32(); // This time zone
+                theBinaryReader.ReadUInt32(); // Significant figures
+                theBinaryReader.ReadUInt32(); // Snapshot length
+                theNetworkDataLinkType = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
             }
 
             // Validate fields from the PCAP packet capture global header
             theResult = this.ValidateGlobalHeader(
-                theGlobalHeader);
+                theMagicNumber,
+                theVersionMajor,
+                theVersionMinor,
+                theNetworkDataLinkType);
 
             if (theResult)
             {
                 // Set up the output parameter for the network data link type
                 thePacketCaptureNetworkDataLinkType =
-                    theGlobalHeader.NetworkDataLinkType;
+                    theNetworkDataLinkType;
             }
 
             return theResult;
@@ -158,24 +170,25 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
             // Always increment the number for the packet read from the packet capture for a PCAP packet
             ++thePacketNumber;
 
-            // Create an instance of the PCAP packet header
-            Structures.HeaderStructure thePacketHeader =
-                new Structures.HeaderStructure();
+            uint theTimestampSeconds = 0;
+            uint theTimestampMicroseconds = 0;
+            uint theSavedLength = 0;
 
-            // Populate the PCAP packet header from the packet capture
+            // Just read off the remainder of the PCAP packet header from the packet capture so we can move on
+            // Some of the data will be stored for use below
             if (this.isTheGlobalHeaderLittleEndian)
             {
-                thePacketHeader.TimestampSeconds = theBinaryReader.ReadUInt32();
-                thePacketHeader.TimestampMicroseconds = theBinaryReader.ReadUInt32();
-                thePacketHeader.SavedLength = theBinaryReader.ReadUInt32();
-                thePacketHeader.ActualLength = theBinaryReader.ReadUInt32();
+                theTimestampSeconds = theBinaryReader.ReadUInt32();
+                theTimestampMicroseconds = theBinaryReader.ReadUInt32();
+                theSavedLength = theBinaryReader.ReadUInt32();
+                theBinaryReader.ReadUInt32(); // Actual length
             }
             else
             {
-                thePacketHeader.TimestampSeconds = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
-                thePacketHeader.TimestampMicroseconds = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
-                thePacketHeader.SavedLength = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
-                thePacketHeader.ActualLength = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
+                theTimestampSeconds = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
+                theTimestampMicroseconds = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
+                theSavedLength = (uint)System.Net.IPAddress.NetworkToHostOrder(theBinaryReader.ReadInt32());
+                theBinaryReader.ReadUInt32(); // Actual length
             }
 
             // No need to validate fields from the PCAP packet header
@@ -187,7 +200,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
                     case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet:
                         {
                             // Subtract the normal Ethernet trailer of twelve bytes as this would typically not be exposed in the packet capture
-                            thePacketPayloadLength = thePacketHeader.SavedLength - 12;
+                            thePacketPayloadLength = theSavedLength - 12;
 
                             break;
                         }
@@ -196,15 +209,15 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
                     case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.CiscoHDLC:
                     default:
                         {
-                            thePacketPayloadLength = thePacketHeader.SavedLength;
+                            thePacketPayloadLength = theSavedLength;
                             break;
                         }
                 }
 
                 // Set up the output parameter for the timestamp based on the timestamp values in seconds and microseconds
                 thePacketTimestamp =
-                    (double)thePacketHeader.TimestampSeconds +
-                    ((double)thePacketHeader.TimestampMicroseconds / 1000000.0);
+                    (double)theTimestampSeconds +
+                    ((double)theTimestampMicroseconds / 1000000.0);
             }
 
             return theResult;
@@ -217,18 +230,18 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
         /// </summary>
         /// <param name="theGlobalHeader">The PCAP packet capture global header</param>
         /// <returns>Boolean flag that indicates whether the PCAP packet capture global header is valid</returns>
-        private bool ValidateGlobalHeader(Structures.GlobalHeaderStructure theGlobalHeader)
+        private bool ValidateGlobalHeader(uint theMagicNumber, ushort theVersionMajor, ushort theVersionMinor, uint theNetworkDataLinkType)
         {
             bool theResult = true;
 
             //// Validate fields from the PCAP packet capture global header
 
-            if (theGlobalHeader.MagicNumber != Constants.LittleEndianMagicNumber &&
-                theGlobalHeader.MagicNumber != Constants.BigEndianMagicNumber)
+            if (theMagicNumber != Constants.LittleEndianMagicNumber &&
+                theMagicNumber != Constants.BigEndianMagicNumber)
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The PCAP packet capture global header does not contain the expected magic number, is " +
-                    theGlobalHeader.MagicNumber.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    theMagicNumber.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
                     Constants.LittleEndianMagicNumber.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " or " +
@@ -238,11 +251,11 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
                 theResult = false;
             }
 
-            if (theGlobalHeader.VersionMajor != Constants.ExpectedVersionMajor)
+            if (theVersionMajor != Constants.ExpectedVersionMajor)
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The PCAP packet capture global header does not contain the expected major version number, is " +
-                    theGlobalHeader.VersionMajor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    theVersionMajor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
                     Constants.ExpectedVersionMajor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
@@ -250,11 +263,11 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
                 theResult = false;
             }
 
-            if (theGlobalHeader.VersionMinor != Constants.ExpectedVersionMinor)
+            if (theVersionMinor != Constants.ExpectedVersionMinor)
             {
                 this.TheDebugInformation.WriteErrorEvent(
                     "The PCAP packet capture global header does not contain the expected minor version number, is " +
-                    theGlobalHeader.VersionMinor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    theVersionMinor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     " not " +
                     Constants.ExpectedVersionMinor.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                     "!!!");
@@ -262,7 +275,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
                 theResult = false;
             }
 
-            switch (theGlobalHeader.NetworkDataLinkType)
+            switch (theNetworkDataLinkType)
             {
                 case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopback:
                 case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet:
@@ -275,7 +288,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
                     {
                         this.TheDebugInformation.WriteErrorEvent(
                             "The PCAP packet capture global header does not contain the expected network data link type, is " +
-                            theGlobalHeader.NetworkDataLinkType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                            theNetworkDataLinkType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                             " not " +
                             PacketCapture.CommonConstants.NetworkDataLinkType.NullLoopback.ToString() +
                             " or " +

@@ -24,6 +24,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -91,12 +93,10 @@
     <Compile Include="Packet Capture\PCAPNG Packet Capture\Processing.cs" />
     <Compile Include="Packet Capture\PCAPNG Packet Capture\Structures.cs" />
     <Compile Include="Packet Capture\Sniffer Packet Capture\Processing.cs" />
-    <Compile Include="Packet Capture\Sniffer Packet Capture\Structures.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\Processing.cs" />
     <Compile Include="Packet Capture\PCAP Packet Capture\Processing.cs" />
     <Compile Include="Packet Capture\Sniffer Packet Capture\Constants.cs" />
-    <Compile Include="Packet Capture\PCAP Packet Capture\Structures.cs" />
     <Compile Include="Ethernet Frame\Constants.cs" />
     <Compile Include="Ethernet Frame\Processing.cs" />
     <Compile Include="MainWindowForm.cs">

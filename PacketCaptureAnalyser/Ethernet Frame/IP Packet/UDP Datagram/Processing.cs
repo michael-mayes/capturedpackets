@@ -40,6 +40,15 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
+
+            // TODO Remove these statements once this method uses all its parameters
+            performLatencyAnalysisProcessing.GetType();
+            theLatencyAnalysisProcessing.GetType();
+            performBurstAnalysisProcessing.GetType();
+            theBurstAnalysisProcessing.GetType();
+            performTimeAnalysisProcessing.GetType();
+            theTimeAnalysisProcessing.GetType();
+            useAlternativeSequenceNumber.GetType();
         }
 
         /// <summary>
@@ -139,6 +148,13 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
         private bool ProcessUDPDatagramPayload(ulong thePacketNumber, double thePacketTimestamp, ushort theUDPDatagramPayloadLength, ushort theUDPDatagramSourcePort, ushort theUDPDatagramDestinationPort)
         {
             bool theResult = true;
+
+            // TODO Remove these statements once this method uses all its parameters below
+            thePacketNumber.GetType();
+            thePacketTimestamp.GetType();
+            theUDPDatagramPayloadLength.GetType();
+            theUDPDatagramSourcePort.GetType();
+            theUDPDatagramDestinationPort.GetType();
 
             // Only process this UDP datagram if the payload has a non-zero payload length i.e. it actually includes data (unlikely to not include data, but retain check for consistency with TCP packet processing)
             if (theUDPDatagramPayloadLength > 0)
