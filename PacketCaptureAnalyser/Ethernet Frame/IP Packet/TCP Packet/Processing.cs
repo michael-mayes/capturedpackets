@@ -23,6 +23,15 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
         /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        // TODO Remove these suppressions once the method uses these parameters
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performLatencyAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theLatencyAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performBurstAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theBurstAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performTimeAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theTimeAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "useAlternativeSequenceNumber")]
+
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
@@ -40,15 +49,6 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // TODO Remove these statements once this method uses all its parameters
-            performLatencyAnalysisProcessing.GetType();
-            theLatencyAnalysisProcessing.GetType();
-            performBurstAnalysisProcessing.GetType();
-            theBurstAnalysisProcessing.GetType();
-            performTimeAnalysisProcessing.GetType();
-            theTimeAnalysisProcessing.GetType();
-            useAlternativeSequenceNumber.GetType();
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
             // Just read off the bytes for the TCP packet header acknowledgment number from the packet capture so we can move on
             this.theBinaryReader.ReadUInt32();
 
-            // Store the the TCP packet header length, reserved fields and NS flag for use below
+            // Read off and store the the TCP packet header length, reserved fields and NS flag for use below
             byte theDataOffsetAndReservedAndNSFlag = this.theBinaryReader.ReadByte();
 
             // Just read off the bytes for the TCP packet header flags from the packet capture so we can move on
@@ -170,6 +170,12 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
             return theResult;
         }
 
+        // TODO Remove these suppressions once the method uses these parameters
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketNumber")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketTimestamp")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theTCPPacketSourcePort")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theTCPPacketDestinationPort")]
+
         /// <summary>
         /// Processes the payload of the TCP packet
         /// </summary>
@@ -182,13 +188,6 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
         private bool ProcessTCPPacketPayload(ulong thePacketNumber, double thePacketTimestamp, ushort theTCPPacketPayloadLength, ushort theTCPPacketSourcePort, ushort theTCPPacketDestinationPort)
         {
             bool theResult = true;
-
-            // TODO Remove these statements once this method uses all its parameters below
-            thePacketNumber.GetType();
-            thePacketTimestamp.GetType();
-            theTCPPacketPayloadLength.GetType();
-            theTCPPacketSourcePort.GetType();
-            theTCPPacketDestinationPort.GetType();
 
             // Only process this TCP packet if the payload has a non-zero payload length i.e. it actually includes data so is not part of the three-way handshake or a plain acknowledgement
             if (theTCPPacketPayloadLength > 0)

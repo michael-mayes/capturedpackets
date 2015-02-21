@@ -139,7 +139,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
             // Provide a default value to the output parameter for the timestamp
             thePacketTimestamp = 0.0;
 
-            // Read and store the Sniffer packet record header type from the packet capture for use below
+            // Read off and store the Sniffer packet record header type from the packet capture for use below
             ushort theRecordType = theBinaryReader.ReadUInt16();
 
             // Just read off the Sniffer packet record header record length so we can move on

@@ -169,7 +169,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame
             this.theBinaryReader.ReadUInt32(); // High bytes
             this.theBinaryReader.ReadUInt16(); // Low bytes
 
-            // Read and store the type of the Ethernet frame from the packet capture for use in further processing
+            // Read off and store the type of the Ethernet frame from the packet capture for use in further processing
             this.theEthernetFrameType =
                 (ushort)System.Net.IPAddress.NetworkToHostOrder(
                 this.theBinaryReader.ReadInt16());

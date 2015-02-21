@@ -144,7 +144,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
 
             // Read the values for the IP v6 packet header from the packet capture
 
-            // Store the IP packet version and traffic class for use below
+            // Read off and store the IP packet version and traffic class for use below
             byte theVersionAndTrafficClass = this.theBinaryReader.ReadByte();
 
             // Just read off the bytes for the IPv6 packet header traffic class and flow label from the packet capture so we can move on
@@ -195,7 +195,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
                             // again, this time based on the value in the options extension header
                             theIPv6PacketProtocol = this.theBinaryReader.ReadByte();
 
-                            // Store the length of the options extension header from the packet capture for use below
+                            // Read off and store the length of the options extension header from the packet capture for use below
                             byte theOptionsLength = this.theBinaryReader.ReadByte();
 
                             // Just read off the default bytes for the options and

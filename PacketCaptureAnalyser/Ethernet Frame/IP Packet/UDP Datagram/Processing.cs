@@ -23,6 +23,15 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
         /// </summary>
         private System.IO.BinaryReader theBinaryReader;
 
+        // TODO Remove these suppressions once the method uses these parameters
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performLatencyAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theLatencyAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performBurstAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theBurstAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performTimeAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theTimeAnalysisProcessing")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "useAlternativeSequenceNumber")]
+
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
@@ -40,15 +49,6 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
             this.theDebugInformation = theDebugInformation;
 
             this.theBinaryReader = theBinaryReader;
-
-            // TODO Remove these statements once this method uses all its parameters
-            performLatencyAnalysisProcessing.GetType();
-            theLatencyAnalysisProcessing.GetType();
-            performBurstAnalysisProcessing.GetType();
-            theBurstAnalysisProcessing.GetType();
-            performTimeAnalysisProcessing.GetType();
-            theTimeAnalysisProcessing.GetType();
-            useAlternativeSequenceNumber.GetType();
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
             // Set up the output parameter for destination port using the value read from the UDP datagram header
             theUDPDatagramDestinationPort = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
-            // Store the length of the UDP datagram header for use below
+            // Read off and store the length of the UDP datagram header for use below
             ushort theUDPDatagramHeaderLength = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
             // Just read off the bytes for the UDP datagram header checksum from the packet capture so we can move on
@@ -136,6 +136,12 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
             return theResult;
         }
 
+        // TODO Remove these suppressions once the method uses these parameters
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketNumber")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketTimestamp")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theUDPDatagramSourcePort")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theUDPDatagramDestinationPort")]
+
         /// <summary>
         /// Processes the payload of the UDP datagram
         /// </summary>
@@ -148,13 +154,6 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
         private bool ProcessUDPDatagramPayload(ulong thePacketNumber, double thePacketTimestamp, ushort theUDPDatagramPayloadLength, ushort theUDPDatagramSourcePort, ushort theUDPDatagramDestinationPort)
         {
             bool theResult = true;
-
-            // TODO Remove these statements once this method uses all its parameters below
-            thePacketNumber.GetType();
-            thePacketTimestamp.GetType();
-            theUDPDatagramPayloadLength.GetType();
-            theUDPDatagramSourcePort.GetType();
-            theUDPDatagramDestinationPort.GetType();
 
             // Only process this UDP datagram if the payload has a non-zero payload length i.e. it actually includes data (unlikely to not include data, but retain check for consistency with TCP packet processing)
             if (theUDPDatagramPayloadLength > 0)

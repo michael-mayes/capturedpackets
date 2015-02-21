@@ -25,6 +25,9 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
         /// </summary>
         public const ushort HeaderMaximumLength = 60;
 
+        //// TODO Put extra port numbers in the following enumeration to
+        //// identify and process specific messages within the TCP packet
+
         /// <summary>
         /// TCP packet header port number
         /// </summary>
@@ -39,73 +42,6 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
             /// Maximum value
             /// </summary>
             DummyValueMax = 65535
-        }
-
-        /// <summary>
-        /// TCP packet header flags
-        /// </summary>
-        public enum Flags
-        {
-            /// <summary>
-            /// Congestion Window Reduced (CWR) flag
-            /// </summary>
-            CWR = 0,
-
-            /// <summary>
-            /// ECN-Echo flag
-            /// </summary>
-            ECE,
-
-            /// <summary>
-            /// Urgent flag
-            /// </summary>
-            URG,
-
-            /// <summary>
-            /// Acknowledgment flag
-            /// </summary>
-            ACK,
-
-            /// <summary>
-            /// Push flag
-            /// </summary>
-            PSH,
-
-            /// <summary>
-            /// Reset flag
-            /// </summary>
-            RST,
-
-            /// <summary>
-            /// Synchronize sequence numbers flag
-            /// </summary>
-            SYN,
-
-            /// <summary>
-            /// Finish the connection flag
-            /// </summary>
-            FIN
-        }
-
-        /// <summary>
-        /// Examines the supplied byte to determine whether the supplied flag is set
-        /// </summary>
-        /// <param name="theByte">The byte to be examined</param>
-        /// <param name="theFlag">The flag to be examined within the byte</param>
-        /// <returns>Boolean flag which indicates whether the supplied flag is set in the supplied byte</returns>
-        public static bool IsFlagSet(byte theByte, Flags theFlag)
-        {
-            int theShift = Flags.FIN - theFlag;
-
-            // Get a single bit in the proper position
-            byte theBitMask = (byte)(1 << theShift);
-
-            // Mask out the appropriate bit
-            byte theMaskedByte = (byte)(theByte & theBitMask);
-
-            // If masked != 0, then the masked out bit is 1
-            // Otherwise, masked will be 0
-            return theMaskedByte != 0;
         }
     }
 }

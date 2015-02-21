@@ -157,13 +157,13 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv4Packet
 
             // Read the values for the IP v4 packet header from the packet capture
 
-            // Store the IP packet version and IP v4 packet header length for use below
+            // Read off and store the IP packet version and IP v4 packet header length for use below
             byte theVersionAndHeaderLength = this.theBinaryReader.ReadByte();
 
             // Just read off the bytes for the IP v4 packet header type of service from the packet capture so we can move on
             this.theBinaryReader.ReadByte();
 
-            // Store the total length of the IP v4 packet for use below
+            // Read off and store the total length of the IP v4 packet for use below
             ushort theIPv4PacketTotalLength = (ushort)System.Net.IPAddress.NetworkToHostOrder(this.theBinaryReader.ReadInt16());
 
             // Just read off the bytes for the IP v4 packet header identifier from the packet capture so we can move on

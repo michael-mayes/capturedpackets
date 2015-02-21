@@ -20,6 +20,9 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
         /// </summary>
         public const ushort HeaderLength = 8;
 
+        //// TODO Put extra port numbers in the following enumeration to
+        //// identify and process specific messages within the UDP datagram
+
         /// <summary>
         /// Port number
         /// </summary>
