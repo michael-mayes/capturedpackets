@@ -91,7 +91,6 @@
     <Compile Include="Packet Capture\PCAP Packet Capture\Constants.cs" />
     <Compile Include="Packet Capture\PCAPNG Packet Capture\Constants.cs" />
     <Compile Include="Packet Capture\PCAPNG Packet Capture\Processing.cs" />
-    <Compile Include="Packet Capture\PCAPNG Packet Capture\Structures.cs" />
     <Compile Include="Packet Capture\Sniffer Packet Capture\Processing.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\Processing.cs" />
