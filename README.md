@@ -31,6 +31,7 @@ Histograms can be output for the latency, time and burst analysis results
 * Extracts ARP packets
 * Extracts TCP packets
 * Extracts UDP datagrams
+* Extracts ICMPv6 packets
 * Extracts ICMPv4 packets
 * Extracts IGMPv2 packets
 * Extracts EIGRP packets
