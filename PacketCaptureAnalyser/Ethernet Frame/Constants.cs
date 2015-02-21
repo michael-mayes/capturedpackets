@@ -23,7 +23,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame
         /// <summary>
         /// Type of an Ethernet frame - provided in little endian representation
         /// </summary>
-        public enum HeaderEthernetFrameType : ushort
+        public enum HeaderEthernetFrameType
         {
             /// <summary>
             /// Default value

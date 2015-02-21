@@ -28,7 +28,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
         /// <summary>
         /// TCP packet header port number
         /// </summary>
-        public enum PortNumber : ushort
+        public enum PortNumber
         {
             /// <summary>
             /// Minimum value
@@ -44,7 +44,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.TCPPacket
         /// <summary>
         /// TCP packet header flags
         /// </summary>
-        public enum Flags : byte
+        public enum Flags
         {
             /// <summary>
             /// Congestion Window Reduced (CWR) flag

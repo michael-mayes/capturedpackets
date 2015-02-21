@@ -16,7 +16,7 @@ namespace PacketCaptureAnalyzer.PacketCapture
         /// <summary>
         /// Network data link type/Network encapsulation type
         /// </summary>
-        public enum NetworkDataLinkType : ushort
+        public enum NetworkDataLinkType
         {
             /// <summary>
             /// Null/Loopback network data link type

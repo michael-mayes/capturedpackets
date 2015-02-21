@@ -79,7 +79,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
         /// <summary>
         /// Record type
         /// </summary>
-        public enum RecordHeaderSnifferRecordType : ushort
+        public enum RecordHeaderSnifferRecordType
         {
             /// <summary>
             /// Default value

@@ -33,7 +33,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv4Packet
         /// <summary>
         /// Protocol for payload of the IP v4 packet
         /// </summary>
-        public enum Protocol : byte
+        public enum Protocol
         {
             /// <summary>
             /// Default value

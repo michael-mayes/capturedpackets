@@ -23,7 +23,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
         /// <summary>
         /// Port number
         /// </summary>
-        public enum PortNumber : ushort
+        public enum PortNumber
         {
             /// <summary>
             /// Minimum value

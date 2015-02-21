@@ -38,7 +38,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPNGPackageCapture
         /// <summary>
         /// PCAP Next Generation packet capture block type
         /// </summary>
-        public enum BlockType : uint
+        public enum BlockType
         {
             /// <summary>
             /// Default value
@@ -84,7 +84,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPNGPackageCapture
         /// <summary>
         /// PCAP Next Generation packet capture block total length
         /// </summary>
-        public enum BlockTotalLength : uint
+        public enum BlockTotalLength
         {
             /// <summary>
             /// Default value

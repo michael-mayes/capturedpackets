@@ -391,7 +391,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
                     {
                         this.TheDebugInformation.WriteErrorEvent(
                             "The Sniffer packet capture record header does not contain the expected type, is " +
-                            theHeaderRecordType.ToString() +
+                            theHeaderRecordType.ToString(System.Globalization.CultureInfo.CurrentCulture) +
                             "!!!");
 
                         theResult = false;

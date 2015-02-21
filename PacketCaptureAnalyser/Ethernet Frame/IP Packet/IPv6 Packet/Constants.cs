@@ -28,7 +28,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.IPv6Packet
         /// <summary>
         /// Protocol for payload of the IP v6 packet
         /// </summary>
-        public enum Protocol : byte
+        public enum Protocol
         {
             /// <summary>
             /// Hop-by-hop options for IP v6
