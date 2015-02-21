@@ -225,7 +225,15 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
         /// <summary>
         /// Validates the Sniffer packet capture global header
         /// </summary>
-        /// <param name="theGlobalHeader">The Sniffer packet capture global header</param>
+        /// <param name="theMagicNumberHigh">The high bytes from the magic number in the Sniffer packet capture global header</param>
+        /// <param name="theMagicNumberLow">The low bytes from the magic number in the Sniffer packet capture global header</param>
+        /// <param name="theMagicNumberTerminator">The terminating byte from the magic number in the Sniffer packet capture global header</param>
+        /// <param name="theRecordType">The type of version records in Sniffer packet capture</param>
+        /// <param name="theVersionMajor">The major version number in the Sniffer packet capture global header</param>
+        /// <param name="theVersionMinor">The minor version number in the Sniffer packet capture global header</param>
+        /// <param name="theType">The type of records in the Sniffer packet capture</param>
+        /// <param name="theNetworkEncapsulationType">The type of network encapsulation in the Sniffer packet capture</param>
+        /// <param name="theFormatVersion">The format version in the Sniffer packet capture global header</param>
         /// <returns>Boolean flag that indicates whether the Sniffer packet capture global header is valid</returns>
         private bool ValidateGlobalHeader(ulong theMagicNumberHigh, ulong theMagicNumberLow, byte theMagicNumberTerminator, ushort theRecordType, short theVersionMajor, short theVersionMinor, sbyte theType, byte theNetworkEncapsulationType, sbyte theFormatVersion)
         {
@@ -363,7 +371,7 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
         /// <summary>
         /// Validates the Sniffer packet record header
         /// </summary>
-        /// <param name="theRecordHeader">The Sniffer packet record header</param>
+        /// <param name="theHeaderRecordType">The record type in the Sniffer packet record header</param>
         /// <returns>Boolean flag that indicates whether the Sniffer packet record header is valid</returns>
         private bool ValidateRecordHeader(ushort theHeaderRecordType)
         {

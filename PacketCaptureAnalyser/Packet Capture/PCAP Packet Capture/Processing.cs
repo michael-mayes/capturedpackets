@@ -228,7 +228,10 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
         /// <summary>
         /// Validates the PCAP packet capture global header
         /// </summary>
-        /// <param name="theGlobalHeader">The PCAP packet capture global header</param>
+        /// <param name="theMagicNumber">The magic number in the PCAP packet capture global header</param>
+        /// <param name="theVersionMajor">The major version number in the PCAP packet capture global header</param>
+        /// <param name="theVersionMinor">The minor version number in the PCAP packet capture global header</param>
+        /// <param name="theNetworkDataLinkType">The type of network encapsulation in the PCAP packet capture</param>
         /// <returns>Boolean flag that indicates whether the PCAP packet capture global header is valid</returns>
         private bool ValidateGlobalHeader(uint theMagicNumber, ushort theVersionMajor, ushort theVersionMinor, uint theNetworkDataLinkType)
         {
