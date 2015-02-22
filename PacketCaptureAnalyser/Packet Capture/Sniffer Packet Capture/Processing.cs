@@ -49,10 +49,8 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
         /// Processes the Sniffer packet capture global header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the Sniffer packet capture global header could be processed</returns>
-        protected override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
+        protected override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader)
         {
             bool theResult = true;
 
@@ -60,13 +58,6 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
             {
                 throw new System.ArgumentNullException("theBinaryReader");
             }
-
-            // Provide a default value for the output parameter for the network datalink type
-            thePacketCaptureNetworkDataLinkType =
-                (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
-
-            // Provide a default value to the output parameter for the timestamp accuracy
-            thePacketCaptureTimestampAccuracy = 0.0;
 
             // Just read off the data for the Sniffer packet capture global header from the packet capture so we can move on
             // Some of the data will be stored for use below
@@ -101,14 +92,20 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
 
             if (theResult)
             {
-                // Set up the output parameter for the network data link type
-                thePacketCaptureNetworkDataLinkType =
+                // Set up the value for the network data link type
+                this.PacketCaptureNetworkDataLinkType =
                     theNetworkEncapsulationType;
 
-                // Derive the output parameter for the timestamp accuracy (actually a timestamp slice for a Sniffer packet capture) from the timestamp units in the Sniffer packet capture global header
+                double thePacketCaptureTimestampAccuracy = 0.0;
+
+                // Derive the value for the timestamp accuracy (actually a timestamp slice for a Sniffer packet capture) from the timestamp units in the Sniffer packet capture global header
                 theResult = this.CalculateTimestampAccuracy(
                     theTimestampUnits,
                     out thePacketCaptureTimestampAccuracy);
+
+                // Set up the value for the timestamp accuracy
+                this.PacketCaptureTimestampAccuracy =
+                    thePacketCaptureTimestampAccuracy;
             }
 
             return theResult;
@@ -118,13 +115,11 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
         /// Processes the Sniffer packet record header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the Sniffer packet record header could be processed</returns>
-        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
@@ -178,9 +173,9 @@ namespace PacketCaptureAnalyzer.PacketCapture.SnifferPackageCapture
                             // This is the number of seconds passed on this particular day
                             // To match up with a timestamp displayed since epoch would have to get the value of the Date field from the Sniffer packet capture global header
                             thePacketTimestamp =
-                                (thePacketCaptureTimestampAccuracy * (theTimestampHigh * 4294967296)) +
-                                (thePacketCaptureTimestampAccuracy * (theTimestampMiddle * 65536)) +
-                                (thePacketCaptureTimestampAccuracy * theTimestampLow);
+                                (this.PacketCaptureTimestampAccuracy * (theTimestampHigh * 4294967296)) +
+                                (this.PacketCaptureTimestampAccuracy * (theTimestampMiddle * 65536)) +
+                                (this.PacketCaptureTimestampAccuracy * theTimestampLow);
 
                             break;
                         }

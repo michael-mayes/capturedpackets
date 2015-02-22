@@ -54,10 +54,8 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPNGPackageCapture
         /// Processes the PCAP Next Generation packet capture global header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the PCAP Next Generation packet capture global header could be processed</returns>
-        protected override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
+        protected override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader)
         {
             bool theResult = true;
 
@@ -65,13 +63,6 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPNGPackageCapture
             {
                 throw new System.ArgumentNullException("theBinaryReader");
             }
-
-            // Provide a default value for the output parameter for the network datalink type
-            thePacketCaptureNetworkDataLinkType =
-                (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
-
-            // Set up the output parameter for the timestamp accuracy - not used for PCAP Next Generation packet captures so default to zero
-            thePacketCaptureTimestampAccuracy = 0.0;
 
             // Provide a default value to the output parameter for the length of the PCAP Next Generation block payload
             long thePacketPayloadLength = 0;
@@ -101,8 +92,8 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPNGPackageCapture
 
                 if (theResult)
                 {
-                    // Set up the output parameter for the network data link type to the default value as it is not supplied by the section header block
-                    thePacketCaptureNetworkDataLinkType =
+                    // Set up the value for the network data link type to the default value as it is not supplied by the section header block
+                    this.PacketCaptureNetworkDataLinkType =
                         (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet;
                 }
             }
@@ -114,13 +105,11 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPNGPackageCapture
         /// Process the PCAP Next Generation block header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the PCAP Next Generation block header could be processed</returns>
-        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 

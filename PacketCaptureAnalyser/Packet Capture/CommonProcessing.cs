@@ -70,6 +70,16 @@ namespace PacketCaptureAnalyzer.PacketCapture
         /// </summary>
         private bool minimizeMemoryUsage;
 
+        /// <summary>
+        /// The network data link type read from the packet capture
+        /// </summary>
+        private uint thePacketCaptureNetworkDataLinkType;
+
+        /// <summary>
+        /// The accuracy of the timestamp read from the packet capture
+        /// </summary>
+        private double thePacketCaptureTimestampAccuracy;
+
         //// Concrete methods - cannot be overridden by a derived class
 
         /// <summary>
@@ -106,6 +116,13 @@ namespace PacketCaptureAnalyzer.PacketCapture
             this.useAlternativeSequenceNumber = useAlternativeSequenceNumber;
 
             this.minimizeMemoryUsage = minimizeMemoryUsage;
+
+            // Provide a default value for the network datalink type
+            this.thePacketCaptureNetworkDataLinkType =
+                (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
+
+            // Provide a default value for the timestamp accuracy - not used for PCAP Next Generation and PCAP packet captures so default to zero
+            this.thePacketCaptureTimestampAccuracy = 0.0;
         }
 
         /// <summary>
@@ -116,6 +133,38 @@ namespace PacketCaptureAnalyzer.PacketCapture
             get
             {
                 return this.theDebugInformation;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the network data link type read from the packet capture
+        /// </summary>
+        protected uint PacketCaptureNetworkDataLinkType
+        {
+            get
+            {
+                return this.thePacketCaptureNetworkDataLinkType;
+            }
+
+            set
+            {
+                this.thePacketCaptureNetworkDataLinkType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the accuracy of the timestamp read from the packet capture
+        /// </summary>
+        protected double PacketCaptureTimestampAccuracy
+        {
+            get
+            {
+                return this.thePacketCaptureTimestampAccuracy;
+            }
+
+            set
+            {
+                this.thePacketCaptureTimestampAccuracy = value;
             }
         }
 
@@ -187,26 +236,16 @@ namespace PacketCaptureAnalyzer.PacketCapture
                                 // Ensure that the position of the binary reader is set to the beginning of the memory stream
                                 theBinaryReader.BaseStream.Position = 0;
 
-                                // Declare an entity to be used for the network data link type extracted from the packet capture global header
-                                uint theNetworkDataLinkType = 0;
-
-                                // Declare an entity to be used for the timestamp accuracy extracted from the packet capture global header
-                                double theTimestampAccuracy = 0.0;
-
                                 this.theProgressWindowForm.ProgressBar = 95;
 
                                 // Only continue reading from the packet capture if the packet capture global header was read successfully
                                 if (this.ProcessPacketCaptureGlobalHeader(
-                                    theBinaryReader,
-                                    out theNetworkDataLinkType,
-                                    out theTimestampAccuracy))
+                                    theBinaryReader))
                                 {
                                     this.theProgressWindowForm.ProgressBar = 100;
 
                                     theResult = this.ProcessPackets(
-                                        theBinaryReader,
-                                        theNetworkDataLinkType,
-                                        theTimestampAccuracy);
+                                        theBinaryReader);
                                 }
                                 else
                                 {
@@ -255,26 +294,16 @@ namespace PacketCaptureAnalyzer.PacketCapture
                                 // Ensure that the position of the binary reader is set to the beginning of the memory stream
                                 theBinaryReader.BaseStream.Position = 0;
 
-                                // Declare an entity to be used for the network data link type extracted from the global header for the packet capture
-                                uint thePacketCaptureNetworkDataLinkType = 0;
-
-                                // Declare an entity to be used for the timestamp accuracy extracted from the global header for the packet capture
-                                double thePacketCaptureTimestampAccuracy = 0.0;
-
                                 this.theProgressWindowForm.ProgressBar = 95;
 
                                 // Only continue reading from the packet capture if the packet capture global header was read successfully
                                 if (this.ProcessPacketCaptureGlobalHeader(
-                                    theBinaryReader,
-                                    out thePacketCaptureNetworkDataLinkType,
-                                    out thePacketCaptureTimestampAccuracy))
+                                    theBinaryReader))
                                 {
                                     this.theProgressWindowForm.ProgressBar = 100;
 
                                     theResult = this.ProcessPackets(
-                                        theBinaryReader,
-                                        thePacketCaptureNetworkDataLinkType,
-                                        thePacketCaptureTimestampAccuracy);
+                                        theBinaryReader);
                                 }
                                 else
                                 {
@@ -354,22 +383,18 @@ namespace PacketCaptureAnalyzer.PacketCapture
         /// Processes the packet capture global header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the packet capture global header could be processed</returns>
-        protected abstract bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy);
+        protected abstract bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader);
 
         /// <summary>
         /// Processes the packet header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the packet header could be processed</returns>
-        protected abstract bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp);
+        protected abstract bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp);
 
         //// Private methods
 
@@ -377,10 +402,8 @@ namespace PacketCaptureAnalyzer.PacketCapture
         /// Processes packets from the selected packet capture
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the packets could be processed from the selected packet capture</returns>
-        private bool ProcessPackets(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy)
+        private bool ProcessPackets(System.IO.BinaryReader theBinaryReader)
         {
             bool theResult = true;
 
@@ -439,8 +462,6 @@ namespace PacketCaptureAnalyzer.PacketCapture
                     {
                         if (this.ProcessPacketHeader(
                             theBinaryReader,
-                            thePacketCaptureNetworkDataLinkType,
-                            thePacketCaptureTimestampAccuracy,
                             ref theNumberOfPacketsProcessed,
                             out thePacketPayloadLength,
                             out thePacketTimestamp))
@@ -454,7 +475,7 @@ namespace PacketCaptureAnalyzer.PacketCapture
                                 ////     ("Started processing of packet number " +
                                 ////     theNumberOfPacketsProcessed.ToString(System.Globalization.CultureInfo.CurrentCulture));
 
-                                switch (thePacketCaptureNetworkDataLinkType)
+                                switch (this.thePacketCaptureNetworkDataLinkType)
                                 {
                                     case (uint)CommonConstants.NetworkDataLinkType.NullLoopback:
                                     case (uint)CommonConstants.NetworkDataLinkType.CiscoHDLC:

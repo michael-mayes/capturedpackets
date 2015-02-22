@@ -54,10 +54,8 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
         /// Processes the PCAP packet capture global header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the PCAP packet capture global header could be processed</returns>
-        protected override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader, out uint thePacketCaptureNetworkDataLinkType, out double thePacketCaptureTimestampAccuracy)
+        protected override bool ProcessPacketCaptureGlobalHeader(System.IO.BinaryReader theBinaryReader)
         {
             bool theResult = true;
 
@@ -65,13 +63,6 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
             {
                 throw new System.ArgumentNullException("theBinaryReader");
             }
-
-            // Provide a default value for the output parameter for the network datalink type
-            thePacketCaptureNetworkDataLinkType =
-                (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Invalid;
-
-            // Set up the output parameter for the timestamp accuracy - not used for PCAP packet captures so default to zero
-            thePacketCaptureTimestampAccuracy = 0.0;
 
             // Read the magic number of the PCAP packet capture global header from the packet capture
             uint theMagicNumber = theBinaryReader.ReadUInt32();
@@ -134,8 +125,8 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
 
             if (theResult)
             {
-                // Set up the output parameter for the network data link type
-                thePacketCaptureNetworkDataLinkType =
+                // Set up the value for the network data link type
+                this.PacketCaptureNetworkDataLinkType =
                     theNetworkDataLinkType;
             }
 
@@ -146,13 +137,11 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
         /// Processes the PCAP packet header
         /// </summary>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        /// <param name="thePacketCaptureNetworkDataLinkType">The network data link type read from the packet capture</param>
-        /// <param name="thePacketCaptureTimestampAccuracy">The accuracy of the timestamp read from the packet capture</param>
         /// <param name="thePacketNumber">The number for the packet read from the packet capture</param>
         /// <param name="thePacketPayloadLength">The payload length of the packet read from the packet capture</param>
         /// <param name="thePacketTimestamp">The timestamp for the packet read from the packet capture</param>
         /// <returns>Boolean flag that indicates whether the PCAP packet header could be processed</returns>
-        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, uint thePacketCaptureNetworkDataLinkType, double thePacketCaptureTimestampAccuracy, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
+        protected override bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp)
         {
             bool theResult = true;
 
@@ -194,8 +183,8 @@ namespace PacketCaptureAnalyzer.PacketCapture.PCAPPackageCapture
             // No need to validate fields from the PCAP packet header
             if (theResult)
             {
-                // Set up the output parameter for the length of the PCAP packet capture packet payload
-                switch (thePacketCaptureNetworkDataLinkType)
+                // Set up the value for the length of the PCAP packet capture packet payload
+                switch (this.PacketCaptureNetworkDataLinkType)
                 {
                     case (uint)PacketCapture.CommonConstants.NetworkDataLinkType.Ethernet:
                         {
