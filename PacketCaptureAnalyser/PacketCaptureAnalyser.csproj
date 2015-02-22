@@ -56,7 +56,8 @@
     <Compile Include="Analysis\Burst Analysis\Constants.cs" />
     <Compile Include="Analysis\Burst Analysis\Processing.cs" />
     <Compile Include="Analysis\DebugInformation.cs" />
-    <Compile Include="Analysis\Latency Analysis\Structures.cs" />
+    <Compile Include="Analysis\Latency Analysis\DictionaryValue.cs" />
+    <Compile Include="Analysis\Latency Analysis\DictionaryKey.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\DEC DNA Remote Console Packet\Constants.cs" />
@@ -115,6 +116,11 @@
       <DependentUpon>ProgressWindowForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainWindowForm.resx">
@@ -123,6 +129,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressWindowForm.resx">
       <DependentUpon>ProgressWindowForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

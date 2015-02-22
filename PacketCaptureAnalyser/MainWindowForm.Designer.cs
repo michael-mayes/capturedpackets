@@ -191,7 +191,7 @@ namespace PacketCaptureAnalyzer
         /// <summary>
         /// The dialog box used to select a packet capture for analysis
         /// </summary>
-        private System.Windows.Forms.OpenFileDialog theSelectedPacketCaptureForAnalysisDialog;
+        private System.Windows.Forms.OpenFileDialog theSelectPacketCaptureForAnalysisDialog;
 
         /// <summary>
         /// Clean up any resources used by the main window form
@@ -217,7 +217,7 @@ namespace PacketCaptureAnalyzer
         {
             this.theRunAnalysisOnSelectedPackageCaptureButton = new System.Windows.Forms.Button();
             this.theExitButton = new System.Windows.Forms.Button();
-            this.theSelectedPacketCaptureForAnalysisDialog = new System.Windows.Forms.OpenFileDialog();
+            this.theSelectPacketCaptureForAnalysisDialog = new System.Windows.Forms.OpenFileDialog();
             this.theSelectPacketCaptureButton = new System.Windows.Forms.Button();
             this.theSelectedPacketCapturePathTextBox = new System.Windows.Forms.TextBox();
             this.theSelectedPacketCapturePathLabel = new System.Windows.Forms.Label();
@@ -260,7 +260,7 @@ namespace PacketCaptureAnalyzer
             this.theRunAnalysisOnSelectedPackageCaptureButton.Name = "theRunAnalysisOnSelectedPackageCaptureButton";
             this.theRunAnalysisOnSelectedPackageCaptureButton.Size = new System.Drawing.Size(357, 23);
             this.theRunAnalysisOnSelectedPackageCaptureButton.TabIndex = 10;
-            this.theRunAnalysisOnSelectedPackageCaptureButton.Text = "Run Analysis On Selected Packet Capture";
+            this.theRunAnalysisOnSelectedPackageCaptureButton.Text = global::PacketCaptureAnalyzer.Properties.Resources.RunAnalysisOnSelectedPacketCapture;
             this.theRunAnalysisOnSelectedPackageCaptureButton.UseVisualStyleBackColor = true;
             this.theRunAnalysisOnSelectedPackageCaptureButton.Click += new System.EventHandler(this.RunAnalysisOnPacketCaptureButton_Click);
             // 
@@ -270,15 +270,14 @@ namespace PacketCaptureAnalyzer
             this.theExitButton.Name = "theExitButton";
             this.theExitButton.Size = new System.Drawing.Size(357, 23);
             this.theExitButton.TabIndex = 11;
-            this.theExitButton.Text = "Exit";
+            this.theExitButton.Text = global::PacketCaptureAnalyzer.Properties.Resources.Exit;
             this.theExitButton.UseVisualStyleBackColor = true;
             this.theExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
-            // theSelectedPacketCaptureForAnalysisDialog
+            // theSelectPacketCaptureForAnalysisDialog
             // 
-            this.theSelectedPacketCaptureForAnalysisDialog.Filter = "Packet Captures (*pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.l" +
-    "ibpcap;*.enc;*.cap;*.ntar";
-            this.theSelectedPacketCaptureForAnalysisDialog.Title = "Select Packet Capture For Analysis";
+            this.theSelectPacketCaptureForAnalysisDialog.Filter = global::PacketCaptureAnalyzer.Properties.Resources.PacketCapturesFilter;
+            this.theSelectPacketCaptureForAnalysisDialog.Title = global::PacketCaptureAnalyzer.Properties.Resources.SelectPacketCaptureForAnalysis;
             // 
             // theSelectPacketCaptureButton
             // 
@@ -286,7 +285,7 @@ namespace PacketCaptureAnalyzer
             this.theSelectPacketCaptureButton.Name = "theSelectPacketCaptureButton";
             this.theSelectPacketCaptureButton.Size = new System.Drawing.Size(357, 23);
             this.theSelectPacketCaptureButton.TabIndex = 0;
-            this.theSelectPacketCaptureButton.Text = "Select Packet Capture";
+            this.theSelectPacketCaptureButton.Text = global::PacketCaptureAnalyzer.Properties.Resources.SelectPacketCapture;
             this.theSelectPacketCaptureButton.UseVisualStyleBackColor = true;
             this.theSelectPacketCaptureButton.Click += new System.EventHandler(this.SelectPacketCaptureButton_Click);
             // 
@@ -307,7 +306,7 @@ namespace PacketCaptureAnalyzer
             this.theSelectedPacketCapturePathLabel.Name = "theSelectedPacketCapturePathLabel";
             this.theSelectedPacketCapturePathLabel.Size = new System.Drawing.Size(29, 13);
             this.theSelectedPacketCapturePathLabel.TabIndex = 0;
-            this.theSelectedPacketCapturePathLabel.Text = "Path";
+            this.theSelectedPacketCapturePathLabel.Text = global::PacketCaptureAnalyzer.Properties.Resources.Path;
             // 
             // theSelectedPacketCaptureNameLabel
             // 
@@ -316,7 +315,7 @@ namespace PacketCaptureAnalyzer
             this.theSelectedPacketCaptureNameLabel.Name = "theSelectedPacketCaptureNameLabel";
             this.theSelectedPacketCaptureNameLabel.Size = new System.Drawing.Size(35, 13);
             this.theSelectedPacketCaptureNameLabel.TabIndex = 2;
-            this.theSelectedPacketCaptureNameLabel.Text = "Name";
+            this.theSelectedPacketCaptureNameLabel.Text = global::PacketCaptureAnalyzer.Properties.Resources.Name;
             // 
             // theSelectedPacketCaptureNameTextBox
             // 
@@ -335,7 +334,7 @@ namespace PacketCaptureAnalyzer
             this.theSelectedPacketCaptureTypeLabel.Name = "theSelectedPacketCaptureTypeLabel";
             this.theSelectedPacketCaptureTypeLabel.Size = new System.Drawing.Size(31, 13);
             this.theSelectedPacketCaptureTypeLabel.TabIndex = 4;
-            this.theSelectedPacketCaptureTypeLabel.Text = "Type";
+            this.theSelectedPacketCaptureTypeLabel.Text = global::PacketCaptureAnalyzer.Properties.Resources.Type;
             // 
             // theSelectedPacketCaptureTypeTextBox
             // 
@@ -354,7 +353,7 @@ namespace PacketCaptureAnalyzer
             this.theClearSelectedPacketCaptureButton.Name = "theClearSelectedPacketCaptureButton";
             this.theClearSelectedPacketCaptureButton.Size = new System.Drawing.Size(357, 23);
             this.theClearSelectedPacketCaptureButton.TabIndex = 2;
-            this.theClearSelectedPacketCaptureButton.Text = "Clear Selected Packet Capture";
+            this.theClearSelectedPacketCaptureButton.Text = global::PacketCaptureAnalyzer.Properties.Resources.ClearSelectedPacketCapture;
             this.theClearSelectedPacketCaptureButton.UseVisualStyleBackColor = true;
             this.theClearSelectedPacketCaptureButton.Click += new System.EventHandler(this.ClearSelectedPacketCaptureButton_Click);
             // 
@@ -365,7 +364,7 @@ namespace PacketCaptureAnalyzer
             this.theOpenSelectedPackageCaptureButton.Name = "theOpenSelectedPackageCaptureButton";
             this.theOpenSelectedPackageCaptureButton.Size = new System.Drawing.Size(357, 23);
             this.theOpenSelectedPackageCaptureButton.TabIndex = 3;
-            this.theOpenSelectedPackageCaptureButton.Text = "Open Selected Packet Capture";
+            this.theOpenSelectedPackageCaptureButton.Text = global::PacketCaptureAnalyzer.Properties.Resources.OpenSelectedPacketCapture;
             this.theOpenSelectedPackageCaptureButton.UseVisualStyleBackColor = true;
             this.theOpenSelectedPackageCaptureButton.Click += new System.EventHandler(this.OpenSelectedPackageCaptureButton_Click);
             // 
@@ -377,7 +376,7 @@ namespace PacketCaptureAnalyzer
             this.thePerformLatencyAnalysisCheckBox.Name = "thePerformLatencyAnalysisCheckBox";
             this.thePerformLatencyAnalysisCheckBox.Size = new System.Drawing.Size(62, 17);
             this.thePerformLatencyAnalysisCheckBox.TabIndex = 0;
-            this.thePerformLatencyAnalysisCheckBox.Text = "Perform";
+            this.thePerformLatencyAnalysisCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.Perform;
             this.thePerformLatencyAnalysisCheckBox.UseVisualStyleBackColor = true;
             this.thePerformLatencyAnalysisCheckBox.CheckedChanged += new System.EventHandler(this.PerformLatencyAnalysisCheckBox_CheckedChanged);
             // 
@@ -389,7 +388,7 @@ namespace PacketCaptureAnalyzer
             this.thePerformTimeAnalysisCheckBox.Name = "thePerformTimeAnalysisCheckBox";
             this.thePerformTimeAnalysisCheckBox.Size = new System.Drawing.Size(62, 17);
             this.thePerformTimeAnalysisCheckBox.TabIndex = 0;
-            this.thePerformTimeAnalysisCheckBox.Text = "Perform";
+            this.thePerformTimeAnalysisCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.Perform;
             this.thePerformTimeAnalysisCheckBox.UseVisualStyleBackColor = true;
             this.thePerformTimeAnalysisCheckBox.CheckedChanged += new System.EventHandler(this.PerformTimeAnalysisCheckBox_CheckedChanged);
             // 
@@ -401,7 +400,7 @@ namespace PacketCaptureAnalyzer
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Name = "theOutputAdditionalLatencyAnalysisInformationCheckBox";
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Size = new System.Drawing.Size(162, 17);
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.TabIndex = 2;
-            this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Text = "Output Additional Information";
+            this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputAdditionalInformation;
             this.theOutputAdditionalLatencyAnalysisInformationCheckBox.UseVisualStyleBackColor = true;
             // 
             // theOutputAdditionalTimeAnalysisInformationCheckBox
@@ -412,7 +411,7 @@ namespace PacketCaptureAnalyzer
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Name = "theOutputAdditionalTimeAnalysisInformationCheckBox";
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Size = new System.Drawing.Size(162, 17);
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.TabIndex = 2;
-            this.theOutputAdditionalTimeAnalysisInformationCheckBox.Text = "Output Additional Information";
+            this.theOutputAdditionalTimeAnalysisInformationCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputAdditionalInformation;
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.UseVisualStyleBackColor = true;
             // 
             // theMinimizeMemoryUsageCheckBox
@@ -423,7 +422,7 @@ namespace PacketCaptureAnalyzer
             this.theMinimizeMemoryUsageCheckBox.Name = "theMinimizeMemoryUsageCheckBox";
             this.theMinimizeMemoryUsageCheckBox.Size = new System.Drawing.Size(346, 17);
             this.theMinimizeMemoryUsageCheckBox.TabIndex = 9;
-            this.theMinimizeMemoryUsageCheckBox.Text = "Minimize Memory Usage (Potentially Necessary For Very Large Files)";
+            this.theMinimizeMemoryUsageCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.MinimizeMemoryUsage;
             this.theMinimizeMemoryUsageCheckBox.UseVisualStyleBackColor = true;
             // 
             // theRedirectDebugInformationToOutputCheckBox
@@ -434,7 +433,7 @@ namespace PacketCaptureAnalyzer
             this.theRedirectDebugInformationToOutputCheckBox.Name = "theRedirectDebugInformationToOutputCheckBox";
             this.theRedirectDebugInformationToOutputCheckBox.Size = new System.Drawing.Size(117, 17);
             this.theRedirectDebugInformationToOutputCheckBox.TabIndex = 2;
-            this.theRedirectDebugInformationToOutputCheckBox.Text = "Redirect To Output";
+            this.theRedirectDebugInformationToOutputCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.RedirectToOutput;
             this.theRedirectDebugInformationToOutputCheckBox.UseVisualStyleBackColor = true;
             // 
             // theEnableInformationEventsInDebugInformationCheckBox
@@ -445,7 +444,7 @@ namespace PacketCaptureAnalyzer
             this.theEnableInformationEventsInDebugInformationCheckBox.Name = "theEnableInformationEventsInDebugInformationCheckBox";
             this.theEnableInformationEventsInDebugInformationCheckBox.Size = new System.Drawing.Size(150, 17);
             this.theEnableInformationEventsInDebugInformationCheckBox.TabIndex = 1;
-            this.theEnableInformationEventsInDebugInformationCheckBox.Text = "Enable Information Events";
+            this.theEnableInformationEventsInDebugInformationCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.EnableInformationEvents;
             this.theEnableInformationEventsInDebugInformationCheckBox.UseVisualStyleBackColor = true;
             // 
             // theEnableDebugInformationCheckBox
@@ -456,7 +455,7 @@ namespace PacketCaptureAnalyzer
             this.theEnableDebugInformationCheckBox.Name = "theEnableDebugInformationCheckBox";
             this.theEnableDebugInformationCheckBox.Size = new System.Drawing.Size(59, 17);
             this.theEnableDebugInformationCheckBox.TabIndex = 0;
-            this.theEnableDebugInformationCheckBox.Text = "Enable";
+            this.theEnableDebugInformationCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.Enable;
             this.theEnableDebugInformationCheckBox.UseVisualStyleBackColor = true;
             this.theEnableDebugInformationCheckBox.CheckedChanged += new System.EventHandler(this.EnableDebugInformationCheckBox_CheckedChanged);
             // 
@@ -468,7 +467,7 @@ namespace PacketCaptureAnalyzer
             this.theUseAlternativeSequenceNumberCheckBox.Name = "theUseAlternativeSequenceNumberCheckBox";
             this.theUseAlternativeSequenceNumberCheckBox.Size = new System.Drawing.Size(309, 17);
             this.theUseAlternativeSequenceNumberCheckBox.TabIndex = 8;
-            this.theUseAlternativeSequenceNumberCheckBox.Text = "Use Alternative Sequence Number (For Legacy Recordings)";
+            this.theUseAlternativeSequenceNumberCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.UseAlternativeSequenceNumber;
             this.theUseAlternativeSequenceNumberCheckBox.UseVisualStyleBackColor = true;
             // 
             // theLatencyAnalysisGroupBox
@@ -482,7 +481,7 @@ namespace PacketCaptureAnalyzer
             this.theLatencyAnalysisGroupBox.Size = new System.Drawing.Size(357, 67);
             this.theLatencyAnalysisGroupBox.TabIndex = 5;
             this.theLatencyAnalysisGroupBox.TabStop = false;
-            this.theLatencyAnalysisGroupBox.Text = "Latency Analysis";
+            this.theLatencyAnalysisGroupBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.LatencyAnalysis;
             // 
             // theOutputLatencyAnalysisHistogramCheckBox
             // 
@@ -492,7 +491,7 @@ namespace PacketCaptureAnalyzer
             this.theOutputLatencyAnalysisHistogramCheckBox.Name = "theOutputLatencyAnalysisHistogramCheckBox";
             this.theOutputLatencyAnalysisHistogramCheckBox.Size = new System.Drawing.Size(108, 17);
             this.theOutputLatencyAnalysisHistogramCheckBox.TabIndex = 1;
-            this.theOutputLatencyAnalysisHistogramCheckBox.Text = "Output Histogram";
+            this.theOutputLatencyAnalysisHistogramCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputHistogram;
             this.theOutputLatencyAnalysisHistogramCheckBox.UseVisualStyleBackColor = true;
             // 
             // theDebugInformationGroupBox
@@ -506,7 +505,7 @@ namespace PacketCaptureAnalyzer
             this.theDebugInformationGroupBox.Size = new System.Drawing.Size(357, 67);
             this.theDebugInformationGroupBox.TabIndex = 4;
             this.theDebugInformationGroupBox.TabStop = false;
-            this.theDebugInformationGroupBox.Text = "Debug Information";
+            this.theDebugInformationGroupBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.DebugInformation;
             // 
             // theTimeAnalysisGroupBox
             // 
@@ -519,7 +518,7 @@ namespace PacketCaptureAnalyzer
             this.theTimeAnalysisGroupBox.Size = new System.Drawing.Size(357, 64);
             this.theTimeAnalysisGroupBox.TabIndex = 7;
             this.theTimeAnalysisGroupBox.TabStop = false;
-            this.theTimeAnalysisGroupBox.Text = "Time Analysis";
+            this.theTimeAnalysisGroupBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.TimeAnalysis;
             // 
             // theOutputTimeAnalysisHistogramCheckBox
             // 
@@ -529,7 +528,7 @@ namespace PacketCaptureAnalyzer
             this.theOutputTimeAnalysisHistogramCheckBox.Name = "theOutputTimeAnalysisHistogramCheckBox";
             this.theOutputTimeAnalysisHistogramCheckBox.Size = new System.Drawing.Size(108, 17);
             this.theOutputTimeAnalysisHistogramCheckBox.TabIndex = 1;
-            this.theOutputTimeAnalysisHistogramCheckBox.Text = "Output Histogram";
+            this.theOutputTimeAnalysisHistogramCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputHistogram;
             this.theOutputTimeAnalysisHistogramCheckBox.UseVisualStyleBackColor = true;
             // 
             // theSelectedPacketCaptureGroupBox
@@ -546,7 +545,7 @@ namespace PacketCaptureAnalyzer
             this.theSelectedPacketCaptureGroupBox.Size = new System.Drawing.Size(357, 96);
             this.theSelectedPacketCaptureGroupBox.TabIndex = 1;
             this.theSelectedPacketCaptureGroupBox.TabStop = false;
-            this.theSelectedPacketCaptureGroupBox.Text = "Selected Packet Capture";
+            this.theSelectedPacketCaptureGroupBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.SelectedPacketCapture;
             // 
             // theBurstAnalysisGroupBox
             // 
@@ -559,7 +558,7 @@ namespace PacketCaptureAnalyzer
             this.theBurstAnalysisGroupBox.Size = new System.Drawing.Size(357, 66);
             this.theBurstAnalysisGroupBox.TabIndex = 6;
             this.theBurstAnalysisGroupBox.TabStop = false;
-            this.theBurstAnalysisGroupBox.Text = "Burst Analysis";
+            this.theBurstAnalysisGroupBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.BurstAnalysis;
             // 
             // theOutputBurstAnalysisHistogramCheckBox
             // 
@@ -569,7 +568,7 @@ namespace PacketCaptureAnalyzer
             this.theOutputBurstAnalysisHistogramCheckBox.Name = "theOutputBurstAnalysisHistogramCheckBox";
             this.theOutputBurstAnalysisHistogramCheckBox.Size = new System.Drawing.Size(108, 17);
             this.theOutputBurstAnalysisHistogramCheckBox.TabIndex = 1;
-            this.theOutputBurstAnalysisHistogramCheckBox.Text = "Output Histogram";
+            this.theOutputBurstAnalysisHistogramCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputHistogram;
             this.theOutputBurstAnalysisHistogramCheckBox.UseVisualStyleBackColor = true;
             // 
             // theOutputAdditionalBurstAnalysisInformationCheckBox
@@ -580,7 +579,7 @@ namespace PacketCaptureAnalyzer
             this.theOutputAdditionalBurstAnalysisInformationCheckBox.Name = "theOutputAdditionalBurstAnalysisInformationCheckBox";
             this.theOutputAdditionalBurstAnalysisInformationCheckBox.Size = new System.Drawing.Size(162, 17);
             this.theOutputAdditionalBurstAnalysisInformationCheckBox.TabIndex = 2;
-            this.theOutputAdditionalBurstAnalysisInformationCheckBox.Text = "Output Additional Information";
+            this.theOutputAdditionalBurstAnalysisInformationCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputAdditionalInformation;
             this.theOutputAdditionalBurstAnalysisInformationCheckBox.UseVisualStyleBackColor = true;
             // 
             // thePerformBurstAnalysisCheckBox
@@ -591,7 +590,7 @@ namespace PacketCaptureAnalyzer
             this.thePerformBurstAnalysisCheckBox.Name = "thePerformBurstAnalysisCheckBox";
             this.thePerformBurstAnalysisCheckBox.Size = new System.Drawing.Size(62, 17);
             this.thePerformBurstAnalysisCheckBox.TabIndex = 0;
-            this.thePerformBurstAnalysisCheckBox.Text = "Perform";
+            this.thePerformBurstAnalysisCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.Perform;
             this.thePerformBurstAnalysisCheckBox.UseVisualStyleBackColor = true;
             this.thePerformBurstAnalysisCheckBox.CheckedChanged += new System.EventHandler(this.PerformBurstAnalysisCheckBox_CheckedChanged);
             // 
@@ -616,7 +615,7 @@ namespace PacketCaptureAnalyzer
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "MainWindowForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Packet Capture Analyser";
+            this.Text = global::PacketCaptureAnalyzer.Properties.Resources.PacketCaptureAnalyser;
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainWindowForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainWindowForm_DragEnter);
             this.theLatencyAnalysisGroupBox.ResumeLayout(false);

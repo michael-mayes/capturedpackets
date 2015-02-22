@@ -13,10 +13,10 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
     // Create an alias for the enumerable for the dictionary to improve clarity of later code that uses it
     // Cannot nest using declarations so must use the declaration of the key value pair type in full again
-    using DictionaryEnumerableType = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Structures.DictionaryKey, Structures.DictionaryValue>>;
+    using DictionaryEnumerableType = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<DictionaryKey, DictionaryValue>>;
 
     // Create an alias for the key value pair for the dictionary to improve clarity of later code that uses it
-    using DictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<Structures.DictionaryKey, Structures.DictionaryValue>;
+    using DictionaryKeyValuePairType = System.Collections.Generic.KeyValuePair<DictionaryKey, DictionaryValue>;
 
     /// <summary>
     /// This class provides the latency analysis processing
@@ -27,8 +27,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
         /// <summary>
         /// The dictionary to hold the latency values for message pairings
         /// </summary>
-        private System.Collections.Generic.Dictionary<Structures.DictionaryKey,
-            Structures.DictionaryValue> theDictionary;
+        private System.Collections.Generic.Dictionary<DictionaryKey, DictionaryValue> theDictionary;
 
         /// <summary>
         /// The object that provides for the logging of debug information
@@ -79,7 +78,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
             // Create a dictionary to hold the latency values for message pairings
             this.theDictionary =
-                new System.Collections.Generic.Dictionary<Structures.DictionaryKey, Structures.DictionaryValue>();
+                new System.Collections.Generic.Dictionary<DictionaryKey, DictionaryValue>();
 
             // Create a datatable to hold the set of host Ids encountered during the latency analysis
             this.theHostIdsTable = new System.Data.DataTable();
@@ -161,15 +160,15 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
             //// Add the supplied sequence number and timestamp to latency values dictionary
 
-            Structures.DictionaryKey theDictionaryKey =
-                new Structures.DictionaryKey(
+            DictionaryKey theDictionaryKey =
+                new DictionaryKey(
                     theHostId,
                     isReliable,
                     theSequenceNumber);
 
             //// Check whether there is a dictionary entry for this key i.e. is this the first message of the pair
 
-            Structures.DictionaryValue theDictionaryValueFound;
+            DictionaryValue theDictionaryValueFound;
 
             bool theEntryFound = this.theDictionary.TryGetValue(
                 theDictionaryKey,
@@ -178,9 +177,9 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
             if (!theEntryFound)
             {
                 // If this is the first message of the pairing then create the new entry in the dictionary
-                Structures.DictionaryValue
+                DictionaryValue
                     theDictionaryValueToAdd =
-                    new Structures.DictionaryValue(
+                    new DictionaryValue(
                         theMessageId,
                         thePacketNumber,
                         thePacketTimestamp);

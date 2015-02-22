@@ -79,12 +79,12 @@ namespace PacketCaptureAnalyzer
         {
             // Open the packet capture selection dialog box
             System.Windows.Forms.DialogResult theSelectedPacketCaptureDialogResult =
-                this.theSelectedPacketCaptureForAnalysisDialog.ShowDialog();
+                this.theSelectPacketCaptureForAnalysisDialog.ShowDialog();
 
             if (theSelectedPacketCaptureDialogResult == System.Windows.Forms.DialogResult.OK)
             {
                 // Update the window to reflect the selected packet capture
-                this.ReflectSelectedPacketCapture(this.theSelectedPacketCaptureForAnalysisDialog.FileName, sender);
+                this.ReflectSelectedPacketCapture(this.theSelectPacketCaptureForAnalysisDialog.FileName, sender);
             }
         }
 
@@ -349,7 +349,7 @@ namespace PacketCaptureAnalyzer
 
                         // This is a PCAP Next Generation packet capture
                         this.theSelectedPacketCaptureTypeTextBox.Text =
-                            "PCAP Next Generation";
+                            Properties.Resources.PCAPNextGeneration;
 
                         // Enable the buttons
                         this.EnablePacketCaptureAnalysisButtons();
@@ -379,7 +379,7 @@ namespace PacketCaptureAnalyzer
 
                         // This is a PCAP packet capture
                         this.theSelectedPacketCaptureTypeTextBox.Text =
-                            "PCAP (libpcap/tcpdump)";
+                            Properties.Resources.PCAP;
 
                         // Enable the buttons
                         this.EnablePacketCaptureAnalysisButtons();
@@ -409,7 +409,7 @@ namespace PacketCaptureAnalyzer
 
                         // This is an NA Sniffer (DOS) packet capture
                         this.theSelectedPacketCaptureTypeTextBox.Text =
-                            "NA Sniffer (DOS)";
+                            Properties.Resources.NASnifferDOS;
 
                         // Enable the buttons
                         this.EnablePacketCaptureAnalysisButtons();
@@ -1062,13 +1062,11 @@ namespace PacketCaptureAnalyzer
                             // Display a message box to indicate analysis of the packet capture completed successfully and ask whether to open the output file
                             theMessageBoxResult =
                                 System.Windows.Forms.MessageBox.Show(
-                                "Analysis of the " +
-                                thePacketCaptureFileName +
-                                " packet capture completed successfully!" +
+                                Properties.Resources.AnalysisOfThePacketCaptureCompletedSuccessfully +
                                 System.Environment.NewLine +
                                 System.Environment.NewLine +
-                                "Do you want to open the output file?",
-                                "Run Analysis On Selected Packet Capture",
+                                Properties.Resources.DoYouWantToOpenTheOutputFile,
+                                Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.YesNo,
                                 System.Windows.Forms.MessageBoxIcon.Question);
                         }
@@ -1077,10 +1075,8 @@ namespace PacketCaptureAnalyzer
                             // Display a message box to indicate analysis of the packet capture completed successfully
                             theMessageBoxResult =
                                 System.Windows.Forms.MessageBox.Show(
-                                "Analysis of the " +
-                                thePacketCaptureFileName +
-                                " packet capture completed successfully!",
-                                "Run Analysis On Selected Packet Capture",
+                                Properties.Resources.AnalysisOfThePacketCaptureCompletedSuccessfully,
+                                Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.OK,
                                 System.Windows.Forms.MessageBoxIcon.Information);
                         }
@@ -1092,13 +1088,11 @@ namespace PacketCaptureAnalyzer
                             // Display a message box to indicate analysis of the packet capture failed and ask whether to open the output file
                             theMessageBoxResult =
                                 System.Windows.Forms.MessageBox.Show(
-                                "Analysis of the " +
-                                thePacketCaptureFileName +
-                                " packet capture failed!!!" +
+                                Properties.Resources.AnalysisOfThePacketCaptureFailed +
                                 System.Environment.NewLine +
                                 System.Environment.NewLine +
-                                "Do you want to open the output file?",
-                                "Run Analysis On Selected Packet Capture",
+                                Properties.Resources.DoYouWantToOpenTheOutputFile,
+                                Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.YesNo,
                                 System.Windows.Forms.MessageBoxIcon.Error);
                         }
@@ -1107,10 +1101,8 @@ namespace PacketCaptureAnalyzer
                             // Display a message box to indicate analysis of the packet capture failed
                             theMessageBoxResult =
                                 System.Windows.Forms.MessageBox.Show(
-                                "Analysis of the " +
-                                thePacketCaptureFileName +
-                                " packet capture failed!!!",
-                                "Run Analysis On Selected Packet Capture",
+                                Properties.Resources.AnalysisOfThePacketCaptureFailed,
+                                Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.OK,
                                 System.Windows.Forms.MessageBoxIcon.Error);
                         }

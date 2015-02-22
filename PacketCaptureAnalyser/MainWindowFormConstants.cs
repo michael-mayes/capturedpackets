@@ -14,21 +14,6 @@ namespace PacketCaptureAnalyzer
     public static class MainWindowFormConstants
     {
         /// <summary>
-        /// The expected set of fixed extensions for a PCAP Next Generation packet capture
-        /// </summary>
-        private static string[] theExpectedPCAPNextGenerationPacketCaptureFileExtensions = { ".pcapng", ".ntar" };
-
-        /// <summary>
-        /// The expected set of fixed extensions for a PCAP packet capture
-        /// </summary>
-        private static string[] theExpectedPCAPPacketCaptureFileExtensions = { ".pcap", ".libpcap", ".cap" };
-
-        /// <summary>
-        /// The expected set of fixed extensions for an NA Sniffer (DOS) packet capture
-        /// </summary>
-        private static string[] theExpectedNASnifferDOSPacketCaptureFileExtensions = { ".enc" };
-
-        /// <summary>
         /// Enumerated list of the types of packet captures supported by the main window form
         /// </summary>
         public enum PacketCaptureType
@@ -62,10 +47,25 @@ namespace PacketCaptureAnalyzer
         /// <summary>
         /// Gets the expected set of fixed extensions for a PCAP Next Generation packet capture
         /// </summary>
-        public static string[] ExpectedPCAPNextGenerationPacketCaptureFileExtensions
+        public static System.Collections.ObjectModel.ReadOnlyCollection<string> ExpectedPCAPNextGenerationPacketCaptureFileExtensions
         {
             get
             {
+                //// Set up the expected set of fixed extensions for a PCAP Next Generation packet capture
+                
+                System.Collections.ObjectModel.ReadOnlyCollection<string>
+                    theExpectedPCAPNextGenerationPacketCaptureFileExtensions;
+
+                System.Collections.Generic.List<string> theExpectedPCAPNextGenerationPacketCaptureFileExtensionsList =
+                    new System.Collections.Generic.List<string>();
+
+                theExpectedPCAPNextGenerationPacketCaptureFileExtensionsList.Add(".pcapng");
+                theExpectedPCAPNextGenerationPacketCaptureFileExtensionsList.Add(".ntar");
+
+                theExpectedPCAPNextGenerationPacketCaptureFileExtensions =
+                    new System.Collections.ObjectModel.ReadOnlyCollection<string>(
+                        theExpectedPCAPNextGenerationPacketCaptureFileExtensionsList);
+
                 return theExpectedPCAPNextGenerationPacketCaptureFileExtensions;
             }
         }
@@ -73,10 +73,26 @@ namespace PacketCaptureAnalyzer
         /// <summary>
         /// Gets the expected set of fixed extensions for a PCAP packet capture
         /// </summary>
-        public static string[] ExpectedPCAPPacketCaptureFileExtensions
+        public static System.Collections.ObjectModel.ReadOnlyCollection<string> ExpectedPCAPPacketCaptureFileExtensions
         {
             get
             {
+                //// Set up the expected set of fixed extensions for a PCAP packet capture
+                
+                System.Collections.ObjectModel.ReadOnlyCollection<string>
+                    theExpectedPCAPPacketCaptureFileExtensions;
+
+                System.Collections.Generic.List<string> theExpectedPCAPPacketCaptureFileExtensionsList =
+                    new System.Collections.Generic.List<string>();
+
+                theExpectedPCAPPacketCaptureFileExtensionsList.Add(".pcap");
+                theExpectedPCAPPacketCaptureFileExtensionsList.Add(".libpcap");
+                theExpectedPCAPPacketCaptureFileExtensionsList.Add(".cap");
+
+                theExpectedPCAPPacketCaptureFileExtensions =
+                    new System.Collections.ObjectModel.ReadOnlyCollection<string>(
+                        theExpectedPCAPPacketCaptureFileExtensionsList);
+
                 return theExpectedPCAPPacketCaptureFileExtensions;
             }
         }
@@ -84,10 +100,24 @@ namespace PacketCaptureAnalyzer
         /// <summary>
         /// Gets the expected set of fixed extensions for an NA Sniffer (DOS) packet capture
         /// </summary>
-        public static string[] ExpectedNASnifferDOSPacketCaptureFileExtensions
+        public static System.Collections.ObjectModel.ReadOnlyCollection<string> ExpectedNASnifferDOSPacketCaptureFileExtensions
         {
             get
             {
+                //// Set up the expected set of fixed extensions for a NA Sniffer (DOS) packet capture
+                
+                System.Collections.ObjectModel.ReadOnlyCollection<string>
+                    theExpectedNASnifferDOSPacketCaptureFileExtensions;
+
+                System.Collections.Generic.List<string> theExpectedNASnifferDOSPacketCaptureFileExtensionsList =
+                    new System.Collections.Generic.List<string>();
+
+                theExpectedNASnifferDOSPacketCaptureFileExtensionsList.Add(".enc");
+
+                theExpectedNASnifferDOSPacketCaptureFileExtensions =
+                    new System.Collections.ObjectModel.ReadOnlyCollection<string>(
+                        theExpectedNASnifferDOSPacketCaptureFileExtensionsList);
+
                 return theExpectedNASnifferDOSPacketCaptureFileExtensions;
             }
         }

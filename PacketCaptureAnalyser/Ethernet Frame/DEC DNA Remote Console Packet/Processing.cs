@@ -14,11 +14,6 @@ namespace PacketCaptureAnalyzer.EthernetFrame.DECDNARemoteConsolePacket
     public class Processing
     {
         /// <summary>
-        /// The object that provides for the logging of debug information
-        /// </summary>
-        private Analysis.DebugInformation theDebugInformation;
-
-        /// <summary>
         /// The object that provides for binary reading from the packet capture
         /// </summary>
         private System.IO.BinaryReader theBinaryReader;
@@ -26,12 +21,9 @@ namespace PacketCaptureAnalyzer.EthernetFrame.DECDNARemoteConsolePacket
         /// <summary>
         /// Initializes a new instance of the Processing class
         /// </summary>
-        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
         /// <param name="theBinaryReader">The object that provides for binary reading from the packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, System.IO.BinaryReader theBinaryReader)
+        public Processing(System.IO.BinaryReader theBinaryReader)
         {
-            this.theDebugInformation = theDebugInformation;
-
             this.theBinaryReader = theBinaryReader;
         }
 

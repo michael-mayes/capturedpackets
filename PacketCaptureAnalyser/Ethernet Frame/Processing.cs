@@ -95,7 +95,6 @@ namespace PacketCaptureAnalyzer.EthernetFrame
 
             this.theDECDNARemoteConsolePacketProcessing =
                 new DECDNARemoteConsolePacket.Processing(
-                    theDebugInformation,
                     theBinaryReader);
 
             this.theIPv4PacketProcessing =

@@ -117,10 +117,97 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="theSelectPacketCaptureForAnalysisDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>60</value>
-  </metadata>
+  <data name="AnalysisOfThePacketCaptureCompletedSuccessfully" xml:space="preserve">
+    <value>Analysis of the packet capture completed successfully!</value>
+  </data>
+  <data name="AnalysisOfThePacketCaptureFailed" xml:space="preserve">
+    <value>Analysis of the packet capture failed!!!</value>
+  </data>
+  <data name="BurstAnalysis" xml:space="preserve">
+    <value>Burst Analysis</value>
+  </data>
+  <data name="ClearSelectedPacketCapture" xml:space="preserve">
+    <value>Clear Selected Packet Capture</value>
+  </data>
+  <data name="DebugInformation" xml:space="preserve">
+    <value>Debug Information</value>
+  </data>
+  <data name="DoYouWantToOpenTheOutputFile" xml:space="preserve">
+    <value>Do you want to open the output file?</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="EnableInformationEvents" xml:space="preserve">
+    <value>Enable Information Events</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="LatencyAnalysis" xml:space="preserve">
+    <value>Latency Analysis</value>
+  </data>
+  <data name="MinimizeMemoryUsage" xml:space="preserve">
+    <value>Minimize Memory Usage (Potentially Necessary For Very Large Files)</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NASnifferDOS" xml:space="preserve">
+    <value>NA Sniffer (DOS)</value>
+  </data>
+  <data name="OpenSelectedPacketCapture" xml:space="preserve">
+    <value>Open Selected Packet Capture</value>
+  </data>
+  <data name="OutputAdditionalInformation" xml:space="preserve">
+    <value>Output Additional Information</value>
+  </data>
+  <data name="OutputHistogram" xml:space="preserve">
+    <value>Output Histogram</value>
+  </data>
+  <data name="PacketCaptureAnalyser" xml:space="preserve">
+    <value>Packet Capture Analyser</value>
+  </data>
+  <data name="PacketCapturesFilter" xml:space="preserve">
+    <value>Packet Captures (*pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.libpcap;*.enc;*.cap;*.ntar</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="PCAP" xml:space="preserve">
+    <value>PCAP (libpcap/tcpdump)</value>
+  </data>
+  <data name="PCAPNextGeneration" xml:space="preserve">
+    <value>PCAP Next Generation</value>
+  </data>
+  <data name="Perform" xml:space="preserve">
+    <value>Perform</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progress</value>
+  </data>
+  <data name="RedirectToOutput" xml:space="preserve">
+    <value>Redirect To Output</value>
+  </data>
+  <data name="RunAnalysisOnSelectedPacketCapture" xml:space="preserve">
+    <value>Run Analysis On Selected Packet Capture</value>
+  </data>
+  <data name="SelectedPacketCapture" xml:space="preserve">
+    <value>Selected Packet Capture</value>
+  </data>
+  <data name="SelectPacketCapture" xml:space="preserve">
+    <value>Select Packet Capture</value>
+  </data>
+  <data name="SelectPacketCaptureForAnalysis" xml:space="preserve">
+    <value>Select Packet Capture For Analysis</value>
+  </data>
+  <data name="TimeAnalysis" xml:space="preserve">
+    <value>Time Analysis</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="UseAlternativeSequenceNumber" xml:space="preserve">
+    <value>Use Alternative Sequence Number (For Legacy Recordings)</value>
+  </data>
 </root>
