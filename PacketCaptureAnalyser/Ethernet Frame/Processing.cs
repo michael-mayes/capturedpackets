@@ -170,11 +170,11 @@ namespace PacketCaptureAnalyzer.EthernetFrame
         /// </summary>
         private void ProcessEthernetFrameHeader()
         {
-            // Read the Destination MAC Address for the Ethernet frame from the packet capture
+            // Just read off the Destination MAC Address for the Ethernet frame from the packet capture so we can move on
             this.theBinaryReader.ReadUInt32(); // High bytes
             this.theBinaryReader.ReadUInt16(); // Low bytes
 
-            // Read the Source MAC Address for the Ethernet frame from the packet capture
+            // Just read off the Source MAC Address for the Ethernet frame from the packet capture so we can move on
             this.theBinaryReader.ReadUInt32(); // High bytes
             this.theBinaryReader.ReadUInt16(); // Low bytes
 
