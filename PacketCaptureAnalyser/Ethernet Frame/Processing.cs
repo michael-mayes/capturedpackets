@@ -281,7 +281,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame
 
                 case (ushort)Constants.HeaderEthernetFrameType.DECDNARemoteConsole:
                     {
-                        // We have got an Ethernet frame containing an ARP packet so process it
+                        // We have got an Ethernet frame containing a DEC DNA Remote Console packet so process it
                         thePacketProcessingResult =
                             this.theDECDNARemoteConsolePacketProcessing.ProcessDECDNARemoteConsolePacket();
 
