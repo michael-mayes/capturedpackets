@@ -41,6 +41,11 @@ namespace PacketCaptureAnalyzer.EthernetFrame
             ARP = 0x0806,
 
             /// <summary>
+            /// Ethernet frame containing a DEC DNA Remote Console packet
+            /// </summary>
+            DECDNARemoteConsole = 0x6002,
+
+            /// <summary>
             /// Ethernet frame containing an IP v4 packet
             /// </summary>
             IPv4 = 0x0800,

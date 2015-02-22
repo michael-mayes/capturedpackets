@@ -59,6 +59,8 @@
     <Compile Include="Analysis\Latency Analysis\Structures.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\ARP Packet\Constants.cs" />
+    <Compile Include="Ethernet Frame\DEC DNA Remote Console Packet\Constants.cs" />
+    <Compile Include="Ethernet Frame\DEC DNA Remote Console Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\EIGRP Packet\Constants.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv4 Packet\EIGRP Packet\Processing.cs" />
     <Compile Include="Ethernet Frame\IP Packet\IPv6 Packet\Constants.cs" />

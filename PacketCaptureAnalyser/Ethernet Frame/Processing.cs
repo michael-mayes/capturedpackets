@@ -39,6 +39,11 @@ namespace PacketCaptureAnalyzer.EthernetFrame
         private ARPPacket.Processing theARPPacketProcessing;
 
         /// <summary>
+        /// The reusable instance of the processing class for DEC DNA Remote Console packets
+        /// </summary>
+        private DECDNARemoteConsolePacket.Processing theDECDNARemoteConsolePacketProcessing;
+
+        /// <summary>
         /// The reusable instance of the processing class for IP v4 packets
         /// </summary>
         private IPPacket.IPv4Packet.Processing theIPv4PacketProcessing;
@@ -85,6 +90,11 @@ namespace PacketCaptureAnalyzer.EthernetFrame
 
             this.theARPPacketProcessing =
                 new ARPPacket.Processing(
+                    theDebugInformation,
+                    theBinaryReader);
+
+            this.theDECDNARemoteConsolePacketProcessing =
+                new DECDNARemoteConsolePacket.Processing(
                     theDebugInformation,
                     theBinaryReader);
 
@@ -187,6 +197,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame
             switch (this.theEthernetFrameType)
             {
                 case (ushort)Constants.HeaderEthernetFrameType.ARP:
+                case (ushort)Constants.HeaderEthernetFrameType.DECDNARemoteConsole:
                 case (ushort)Constants.HeaderEthernetFrameType.IPv4:
                 case (ushort)Constants.HeaderEthernetFrameType.IPv6:
                 case (ushort)Constants.HeaderEthernetFrameType.LLDP:
@@ -269,6 +280,15 @@ namespace PacketCaptureAnalyzer.EthernetFrame
                         break;
                     }
 
+                case (ushort)Constants.HeaderEthernetFrameType.DECDNARemoteConsole:
+                    {
+                        // We have got an Ethernet frame containing an ARP packet so process it
+                        thePacketProcessingResult =
+                            this.theDECDNARemoteConsolePacketProcessing.ProcessDECDNARemoteConsolePacket();
+
+                        break;
+                    }
+
                 case (ushort)Constants.HeaderEthernetFrameType.IPv4:
                     {
                         // We have got an Ethernet frame containing an IP v4 packet so process it
@@ -307,7 +327,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame
                     {
                         // We have got an Ethernet frame containing an Configuration Test Protocol (Loopback) packet so process it
                         thePacketProcessingResult =
-                            this.theLoopbackPacketProcessing.Process(
+                            this.theLoopbackPacketProcessing.ProcessLoopbackPacket(
                             this.theEthernetFrameLength);
 
                         break;

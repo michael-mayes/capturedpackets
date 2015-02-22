@@ -40,7 +40,7 @@ namespace PacketCaptureAnalyzer.EthernetFrame.LoopbackPacket
         /// </summary>
         /// <param name="theEthernetFrameLength">The length of the Ethernet frame</param>
         /// <returns>Boolean flag that indicates whether the Loopback packet could be processed</returns>
-        public bool Process(long theEthernetFrameLength)
+        public bool ProcessLoopbackPacket(long theEthernetFrameLength)
         {
             bool theResult = true;
 
