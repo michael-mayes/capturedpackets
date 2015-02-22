@@ -1055,6 +1055,16 @@ namespace PacketCaptureAnalyzer
 
                     System.Windows.Forms.DialogResult theMessageBoxResult;
 
+                    System.Windows.Forms.MessageBoxOptions theMessageBoxOptions =
+                        new System.Windows.Forms.MessageBoxOptions();
+
+                    if (System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+                    {
+                        theMessageBoxOptions |=
+                            System.Windows.Forms.MessageBoxOptions.RtlReading |
+                            System.Windows.Forms.MessageBoxOptions.RightAlign;
+                    }
+
                     if (theResult)
                     {
                         if (this.theEnableDebugInformationCheckBox.Checked)
@@ -1068,7 +1078,9 @@ namespace PacketCaptureAnalyzer
                                 Properties.Resources.DoYouWantToOpenTheOutputFile,
                                 Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.YesNo,
-                                System.Windows.Forms.MessageBoxIcon.Question);
+                                System.Windows.Forms.MessageBoxIcon.Question,
+                                System.Windows.Forms.MessageBoxDefaultButton.Button1,
+                                theMessageBoxOptions);
                         }
                         else
                         {
@@ -1078,7 +1090,9 @@ namespace PacketCaptureAnalyzer
                                 Properties.Resources.AnalysisOfThePacketCaptureCompletedSuccessfully,
                                 Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.OK,
-                                System.Windows.Forms.MessageBoxIcon.Information);
+                                System.Windows.Forms.MessageBoxIcon.Information,
+                                System.Windows.Forms.MessageBoxDefaultButton.Button1,
+                                theMessageBoxOptions);
                         }
                     }
                     else
@@ -1094,7 +1108,9 @@ namespace PacketCaptureAnalyzer
                                 Properties.Resources.DoYouWantToOpenTheOutputFile,
                                 Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.YesNo,
-                                System.Windows.Forms.MessageBoxIcon.Error);
+                                System.Windows.Forms.MessageBoxIcon.Error,
+                                System.Windows.Forms.MessageBoxDefaultButton.Button1,
+                                theMessageBoxOptions);
                         }
                         else
                         {
@@ -1104,7 +1120,9 @@ namespace PacketCaptureAnalyzer
                                 Properties.Resources.AnalysisOfThePacketCaptureFailed,
                                 Properties.Resources.RunAnalysisOnSelectedPacketCapture,
                                 System.Windows.Forms.MessageBoxButtons.OK,
-                                System.Windows.Forms.MessageBoxIcon.Error);
+                                System.Windows.Forms.MessageBoxIcon.Error,
+                                System.Windows.Forms.MessageBoxDefaultButton.Button1,
+                                theMessageBoxOptions);
                         }
                     }
 
