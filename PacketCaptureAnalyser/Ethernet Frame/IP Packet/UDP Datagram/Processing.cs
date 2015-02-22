@@ -24,13 +24,13 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
         private System.IO.BinaryReader theBinaryReader;
 
         // TODO Remove these suppressions once the method uses these parameters
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performLatencyAnalysisProcessing")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theLatencyAnalysisProcessing")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performBurstAnalysisProcessing")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theBurstAnalysisProcessing")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performTimeAnalysisProcessing")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theTimeAnalysisProcessing")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "useAlternativeSequenceNumber")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performLatencyAnalysisProcessing", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theLatencyAnalysisProcessing", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performBurstAnalysisProcessing", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theBurstAnalysisProcessing", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "performTimeAnalysisProcessing", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theTimeAnalysisProcessing", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "useAlternativeSequenceNumber", Justification = "Parameter not used as method is not fully implemented")]
 
         /// <summary>
         /// Initializes a new instance of the Processing class
@@ -137,10 +137,10 @@ namespace PacketCaptureAnalyzer.EthernetFrame.IPPacket.UDPDatagram
         }
 
         // TODO Remove these suppressions once the method uses these parameters
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketNumber")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketTimestamp")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theUDPDatagramSourcePort")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theUDPDatagramDestinationPort")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketNumber", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "thePacketTimestamp", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theUDPDatagramSourcePort", Justification = "Parameter not used as method is not fully implemented")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "theUDPDatagramDestinationPort", Justification = "Parameter not used as method is not fully implemented")]
 
         /// <summary>
         /// Processes the payload of the UDP datagram
