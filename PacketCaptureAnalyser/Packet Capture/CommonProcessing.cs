@@ -213,112 +213,13 @@ namespace PacketCaptureAnalyzer.PacketCapture
                     // open a memory stream to the array containing the up front read of the file and then open the binary reader on that
                     if (this.minimizeMemoryUsage)
                     {
-                        this.theProgressWindowForm.ProgressBar = 80;
-
-                        System.IO.FileStream theFileStream = null;
-
-                        // Use a try/finally pattern to avoid multiple disposals of a resource
-                        try
-                        {
-                            // Open a file stream for the packet capture for reading
-                            theFileStream = System.IO.File.OpenRead(
-                                this.theSelectedPacketCapturePath);
-
-                            // Open a binary reader for the file stream for the packet capture
-                            using (System.IO.BinaryReader theBinaryReader =
-                                new System.IO.BinaryReader(theFileStream))
-                            {
-                                // The resources for the file stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
-                                theFileStream = null;
-
-                                this.theProgressWindowForm.ProgressBar = 90;
-
-                                // Ensure that the position of the binary reader is set to the beginning of the memory stream
-                                theBinaryReader.BaseStream.Position = 0;
-
-                                this.theProgressWindowForm.ProgressBar = 95;
-
-                                // Only continue reading from the packet capture if the packet capture global header was read successfully
-                                if (this.ProcessPacketCaptureGlobalHeader(
-                                    theBinaryReader))
-                                {
-                                    this.theProgressWindowForm.ProgressBar = 100;
-
-                                    theResult = this.ProcessPackets(
-                                        theBinaryReader);
-                                }
-                                else
-                                {
-                                    theResult = false;
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            // Dispose of the resources for the file stream for the packet capture if this action has not already taken place above
-                            if (theFileStream != null)
-                            {
-                                theFileStream.Dispose();
-                            }
-                        }
+                        // Process the selected packet capture using minimal amounts of memory
+                        this.ProcessPacketCaptureUsingMinimalMemory();
                     }
                     else
                     {
-                        // Declare a memory stream to read the packet capture from the byte array
-                        System.IO.MemoryStream theMemoryStream = null;
-
-                        // Use a try/finally pattern to avoid multiple disposals of a resource
-                        try
-                        {
-                            // If there is a need to minimize memory usage then sacrifice the significant processing
-                            // speed improvements that come from the up front read of the whole file into an array
-
-                            // Read all the bytes from the packet capture into an array
-                            byte[] theBytes = System.IO.File.ReadAllBytes(
-                                this.theSelectedPacketCapturePath);
-
-                            // Create a memory stream to read the packet capture from the byte array
-                            theMemoryStream = new System.IO.MemoryStream(theBytes);
-
-                            this.theProgressWindowForm.ProgressBar = 80;
-
-                            // Open a binary reader for the memory stream for the packet capture
-                            using (System.IO.BinaryReader theBinaryReader =
-                                new System.IO.BinaryReader(theMemoryStream))
-                            {
-                                // The resources for the memory stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
-                                theMemoryStream = null;
-
-                                this.theProgressWindowForm.ProgressBar = 90;
-
-                                // Ensure that the position of the binary reader is set to the beginning of the memory stream
-                                theBinaryReader.BaseStream.Position = 0;
-
-                                this.theProgressWindowForm.ProgressBar = 95;
-
-                                // Only continue reading from the packet capture if the packet capture global header was read successfully
-                                if (this.ProcessPacketCaptureGlobalHeader(
-                                    theBinaryReader))
-                                {
-                                    this.theProgressWindowForm.ProgressBar = 100;
-
-                                    theResult = this.ProcessPackets(
-                                        theBinaryReader);
-                                }
-                                else
-                                {
-                                    theResult = false;
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            // Dispose of the resources for the memory stream for the packet capture if this action has not already taken place above
-                            if (theMemoryStream != null)
-                            {
-                                theMemoryStream.Dispose();
-                            }
-                        }
+                        // Process the selected packet capture using normal amounts of memory
+                        this.ProcessPacketCaptureUsingNormalMemory();
                     }
                 }
                 else
@@ -397,6 +298,137 @@ namespace PacketCaptureAnalyzer.PacketCapture
         protected abstract bool ProcessPacketHeader(System.IO.BinaryReader theBinaryReader, ref ulong thePacketNumber, out long thePacketPayloadLength, out double thePacketTimestamp);
 
         //// Private methods
+
+        /// <summary>
+        /// Processes the selected packet capture using minimal amounts of memory
+        /// </summary>
+        /// <returns>Boolean flag that indicates whether the selected packet capture could be processed</returns>
+        private bool ProcessPacketCaptureUsingMinimalMemory()
+        {
+            bool theResult = true;
+
+            this.theProgressWindowForm.ProgressBar = 80;
+
+            System.IO.FileStream theFileStream = null;
+
+            // Use a try/finally pattern to avoid multiple disposals of a resource
+            try
+            {
+                this.theProgressWindowForm.ProgressBar = 85;
+
+                // Open a file stream for the packet capture for reading
+                theFileStream = System.IO.File.OpenRead(
+                    this.theSelectedPacketCapturePath);
+
+                this.theProgressWindowForm.ProgressBar = 90;
+
+                // Open a binary reader for the file stream for the packet capture
+                using (System.IO.BinaryReader theBinaryReader =
+                    new System.IO.BinaryReader(theFileStream))
+                {
+                    // The resources for the file stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
+                    theFileStream = null;
+
+                    // Ensure that the position of the binary reader is set to the beginning of the memory stream
+                    theBinaryReader.BaseStream.Position = 0;
+
+                    this.theProgressWindowForm.ProgressBar = 95;
+
+                    // Only continue reading from the packet capture if the packet capture global header was read successfully
+                    if (this.ProcessPacketCaptureGlobalHeader(
+                        theBinaryReader))
+                    {
+                        this.theProgressWindowForm.ProgressBar = 100;
+
+                        theResult = this.ProcessPackets(
+                            theBinaryReader);
+                    }
+                    else
+                    {
+                        theResult = false;
+                    }
+                }
+            }
+            finally
+            {
+                // Dispose of the resources for the file stream for the packet capture if this action has not already taken place above
+                if (theFileStream != null)
+                {
+                    theFileStream.Dispose();
+                }
+            }
+
+            return theResult;
+        }
+
+        /// <summary>
+        /// Processes the selected packet capture using normal amounts of memory
+        /// </summary>
+        /// <returns>Boolean flag that indicates whether the selected packet capture could be processed</returns>
+        private bool ProcessPacketCaptureUsingNormalMemory()
+        {
+            bool theResult = true;
+
+            this.theProgressWindowForm.ProgressBar = 80;
+
+            // Declare a memory stream to read the packet capture from the byte array
+            System.IO.MemoryStream theMemoryStream = null;
+
+            // Use a try/finally pattern to avoid multiple disposals of a resource
+            try
+            {
+                // If there is a need to minimize memory usage then sacrifice the significant processing
+                // speed improvements that come from the up front read of the whole file into an array
+
+                // Read all the bytes from the packet capture into an array
+                byte[] theBytes = System.IO.File.ReadAllBytes(
+                    this.theSelectedPacketCapturePath);
+
+                this.theProgressWindowForm.ProgressBar = 85;
+
+                // Create a memory stream to read the packet capture from the byte array
+                theMemoryStream = new System.IO.MemoryStream(theBytes);
+
+                this.theProgressWindowForm.ProgressBar = 90;
+
+                // Open a binary reader for the memory stream for the packet capture
+                using (System.IO.BinaryReader theBinaryReader =
+                    new System.IO.BinaryReader(theMemoryStream))
+                {
+                    // The resources for the memory stream for the packet capture will be disposed of by the binary reader so set it back to null here to prevent the finally clause performing an additional disposal
+                    theMemoryStream = null;
+
+                    // Ensure that the position of the binary reader is set to the beginning of the memory stream
+                    theBinaryReader.BaseStream.Position = 0;
+
+                    this.theProgressWindowForm.ProgressBar = 95;
+
+                    // Only continue reading from the packet capture if the packet capture global header was read successfully
+                    if (this.ProcessPacketCaptureGlobalHeader(
+                        theBinaryReader))
+                    {
+                        this.theProgressWindowForm.ProgressBar = 100;
+
+                        theResult = this.ProcessPackets(
+                            theBinaryReader);
+                    }
+                    else
+                    {
+                        theResult = false;
+                    }
+                }
+            }
+            finally
+            {
+                // Dispose of the resources for the memory stream for the packet capture if this action has not already taken place above
+                if (theMemoryStream != null)
+                {
+                    theMemoryStream.Dispose();
+                }
+            }
+
+            return theResult;
+        }
 
         /// <summary>
         /// Processes packets from the selected packet capture
