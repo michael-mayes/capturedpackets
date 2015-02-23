@@ -26,6 +26,21 @@ namespace PacketCaptureAnalyzer
         private MainWindowFormConstants.PacketCaptureType theSelectedPacketCaptureType;
 
         /// <summary>
+        /// The class provides the latency analysis processing
+        /// </summary>
+        private Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing = null;
+
+        /// <summary>
+        /// The class provides the burst analysis processing
+        /// </summary>
+        private Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing = null;
+
+        /// <summary>
+        /// The class provides the time analysis processing
+        /// </summary>
+        private Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing = null;
+
+        /// <summary>
         /// Initializes a new instance of the MainWindowForm class
         /// </summary>
         public MainWindowForm()
@@ -665,6 +680,7 @@ namespace PacketCaptureAnalyzer
 
                 theProgressWindowForm.ProgressBar = 5;
 
+                // Obtain the name of the packet capture
                 string thePacketCaptureFileName =
                     System.IO.Path.GetFileName(
                     this.theSelectedPacketCapturePath);
@@ -693,152 +709,11 @@ namespace PacketCaptureAnalyzer
 
                     theDebugInformation.WriteBlankLine();
 
-                    Analysis.LatencyAnalysis.Processing theLatencyAnalysisProcessing = null;
-                    Analysis.BurstAnalysis.Processing theBurstAnalysisProcessing = null;
-                    Analysis.TimeAnalysis.Processing theTimeAnalysisProcessing = null;
-
-                    theProgressWindowForm.ProgressBar = 30;
-
-                    // Only perform the latency analysis if the check box was selected for it on the main window form
-                    if (this.thePerformLatencyAnalysisCheckBox.Checked)
-                    {
-                        theLatencyAnalysisProcessing =
-                            new Analysis.LatencyAnalysis.Processing(
-                                theDebugInformation,
-                                this.theOutputLatencyAnalysisHistogramCheckBox.Checked,
-                                this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked,
-                                this.theSelectedPacketCapturePath);
-
-                        // Initialise the functionality to perform latency analysis on the messages found
-                        theLatencyAnalysisProcessing.Create();
-                    }
-
-                    theProgressWindowForm.ProgressBar = 35;
-
-                    // Only perform the burst analysis if the check box was selected for it on the main window form
-                    if (this.thePerformBurstAnalysisCheckBox.Checked)
-                    {
-                        theBurstAnalysisProcessing =
-                            new Analysis.BurstAnalysis.Processing(
-                                theDebugInformation,
-                                this.theOutputBurstAnalysisHistogramCheckBox.Checked,
-                                this.theOutputAdditionalBurstAnalysisInformationCheckBox.Checked,
-                                this.theSelectedPacketCapturePath);
-
-                        // Initialise the functionality to perform burst analysis on the messages found
-                        theBurstAnalysisProcessing.Create();
-                    }
-
-                    theProgressWindowForm.ProgressBar = 40;
-
-                    // Only perform the time analysis if the check box was selected for it on the main window form
-                    if (this.thePerformTimeAnalysisCheckBox.Checked)
-                    {
-                        theTimeAnalysisProcessing =
-                            new Analysis.TimeAnalysis.Processing(
-                                theDebugInformation,
-                                this.theOutputTimeAnalysisHistogramCheckBox.Checked,
-                                this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked,
-                                this.theSelectedPacketCapturePath);
-
-                        // Initialise the functionality to perform time analysis on the messages found
-                        theTimeAnalysisProcessing.Create();
-                    }
-
-                    theProgressWindowForm.ProgressBar = 45;
-
-                    switch (this.theSelectedPacketCaptureType)
-                    {
-                        case MainWindowFormConstants.PacketCaptureType.PCAPNextGeneration:
-                            {
-                                theDebugInformation.WriteInformationEvent(
-                                    "This is a PCAP Next Generation packet capture");
-
-                                PacketCapture.PCAPNGPackageCapture.Processing thePCAPNGPackageCaptureProcessing =
-                                    new PacketCapture.PCAPNGPackageCapture.Processing(
-                                        theProgressWindowForm,
-                                        theDebugInformation,
-                                        this.thePerformLatencyAnalysisCheckBox.Checked,
-                                        theLatencyAnalysisProcessing,
-                                        this.thePerformBurstAnalysisCheckBox.Checked,
-                                        theBurstAnalysisProcessing,
-                                        this.thePerformTimeAnalysisCheckBox.Checked,
-                                        theTimeAnalysisProcessing,
-                                        this.theSelectedPacketCapturePath,
-                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
-                                        this.theMinimizeMemoryUsageCheckBox.Checked);
-
-                                theProgressWindowForm.ProgressBar = 50;
-
-                                theResult = thePCAPNGPackageCaptureProcessing.ProcessPacketCapture();
-
-                                break;
-                            }
-
-                        case MainWindowFormConstants.PacketCaptureType.PCAP:
-                            {
-                                theDebugInformation.WriteInformationEvent(
-                                    "This is a PCAP packet capture");
-
-                                PacketCapture.PCAPPackageCapture.Processing thePCAPPackageCaptureProcessing =
-                                    new PacketCapture.PCAPPackageCapture.Processing(
-                                        theProgressWindowForm,
-                                        theDebugInformation,
-                                        this.thePerformLatencyAnalysisCheckBox.Checked,
-                                        theLatencyAnalysisProcessing,
-                                        this.thePerformBurstAnalysisCheckBox.Checked,
-                                        theBurstAnalysisProcessing,
-                                        this.thePerformTimeAnalysisCheckBox.Checked,
-                                        theTimeAnalysisProcessing,
-                                        this.theSelectedPacketCapturePath,
-                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
-                                        this.theMinimizeMemoryUsageCheckBox.Checked);
-
-                                theProgressWindowForm.ProgressBar = 50;
-
-                                theResult = thePCAPPackageCaptureProcessing.ProcessPacketCapture();
-
-                                break;
-                            }
-
-                        case MainWindowFormConstants.PacketCaptureType.NASnifferDOS:
-                            {
-                                theDebugInformation.WriteInformationEvent(
-                                    "This is an NA Sniffer (DOS) packet capture");
-
-                                PacketCapture.SnifferPackageCapture.Processing theSnifferPackageCaptureProcessing =
-                                    new PacketCapture.SnifferPackageCapture.Processing(
-                                        theProgressWindowForm,
-                                        theDebugInformation,
-                                        this.thePerformLatencyAnalysisCheckBox.Checked,
-                                        theLatencyAnalysisProcessing,
-                                        this.thePerformBurstAnalysisCheckBox.Checked,
-                                        theBurstAnalysisProcessing,
-                                        this.thePerformTimeAnalysisCheckBox.Checked,
-                                        theTimeAnalysisProcessing,
-                                        this.theSelectedPacketCapturePath,
-                                        this.theUseAlternativeSequenceNumberCheckBox.Checked,
-                                        this.theMinimizeMemoryUsageCheckBox.Checked);
-
-                                theProgressWindowForm.ProgressBar = 50;
-
-                                theResult = theSnifferPackageCaptureProcessing.ProcessPacketCapture();
-
-                                break;
-                            }
-
-                        default:
-                            {
-                                theDebugInformation.WriteErrorEvent(
-                                    "The" +
-                                    thePacketCaptureFileName +
-                                    " packet capture is of an unknown or incorrect type!!!");
-
-                                theResult = false;
-
-                                break;
-                            }
-                    }
+                    // Perform the actions to initialize the analysis of the packet capture
+                    theResult = this.InitialiseAnalysisForPacketCapture(
+                        theDebugInformation,
+                        theProgressWindowForm,
+                        thePacketCaptureFileName);
 
                     // Dependent on the result of the processing above, display a debug message to indicate success or otherwise
                     if (theResult)
@@ -849,168 +724,11 @@ namespace PacketCaptureAnalyzer
                             thePacketCaptureFileName +
                             " packet capture completed successfully");
 
-                        int theScaling = 0;
-
-                        if (this.thePerformLatencyAnalysisCheckBox.Checked ||
-                            this.thePerformTimeAnalysisCheckBox.Checked ||
-                            this.thePerformBurstAnalysisCheckBox.Checked)
-                        {
-                            // Update the label now the analysis of the packet capture has started - the progress bar will stay at zero
-                            theProgressWindowForm.ProgressBarLabel = "Performing Analysis Of Packet Capture";
-                            theProgressWindowForm.ProgressBar = 0;
-                            theProgressWindowForm.Refresh();
-
-                            // Calculate the scaling to use for the progress bar
-                            if (this.thePerformLatencyAnalysisCheckBox.Checked &&
-                                !this.thePerformTimeAnalysisCheckBox.Checked)
-                            {
-                                // Only one set of analysis will be run
-                                theScaling = 1;
-                            }
-                            else if (!this.thePerformLatencyAnalysisCheckBox.Checked &&
-                                this.thePerformTimeAnalysisCheckBox.Checked)
-                            {
-                                // Only one set of analysis will be run
-                                theScaling = 1;
-                            }
-                            else
-                            {
-                                // Both sets of analysis will be run
-                                theScaling = 2;
-                            }
-                        }
-
-                        // Only perform the latency analysis if the check box was selected for it on the main window form
-                        if (this.thePerformLatencyAnalysisCheckBox.Checked)
-                        {
-                            theDebugInformation.WriteBlankLine();
-
-                            theDebugInformation.WriteTextLine(
-                                new string('=', 144));
-
-                            theDebugInformation.WriteBlankLine();
-
-                            //// Finalise the latency analysis on the messages found including printing the results to debug output
-                            //// Only perform this action if the analysis of the packet capture completed successfully
-
-                            // Read the start time to allow later calculation of the duration of the latency analysis finalisation
-                            System.DateTime theLatencyAnalysisStartTime = System.DateTime.Now;
-
-                            theDebugInformation.WriteTestRunEvent(
-                                "Latency analysis for the " +
-                                thePacketCaptureFileName +
-                                " packet capture started");
-
-                            theProgressWindowForm.ProgressBar += 20 / theScaling;
-
-                            theLatencyAnalysisProcessing.Finalise();
-
-                            theProgressWindowForm.ProgressBar += 60 / theScaling;
-
-                            //// Compute the duration between the start and the end times
-
-                            System.DateTime theLatencyAnalysisEndTime = System.DateTime.Now;
-
-                            System.TimeSpan theLatencyAnalysisDuration =
-                                theLatencyAnalysisEndTime - theLatencyAnalysisStartTime;
-
-                            theDebugInformation.WriteTestRunEvent(
-                                "Latency analysis for the " +
-                                thePacketCaptureFileName +
-                                " packet capture completed in " +
-                                theLatencyAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
-                                " seconds");
-
-                            theProgressWindowForm.ProgressBar += 20 / theScaling;
-                        }
-
-                        // Only perform the burst analysis if the check box was selected for it on the main window form
-                        if (this.thePerformBurstAnalysisCheckBox.Checked)
-                        {
-                            theDebugInformation.WriteBlankLine();
-
-                            theDebugInformation.WriteTextLine(
-                                new string('=', 144));
-
-                            theDebugInformation.WriteBlankLine();
-
-                            //// Finalise the burst analysis on the messages found including printing the results to debug output
-                            //// Only perform this action if the analysis of the packet capture completed successfully
-
-                            // Read the start time to allow later calculation of the duration of the burst analysis finalisation
-                            System.DateTime theBurstAnalysisStartTime = System.DateTime.Now;
-
-                            theDebugInformation.WriteTestRunEvent(
-                                "Burst analysis for the " +
-                                thePacketCaptureFileName +
-                                " packet capture started");
-
-                            //// theProgressWindowForm.ProgressBar += 20 / theScaling;
-
-                            theBurstAnalysisProcessing.Finalise();
-
-                            //// theProgressWindowForm.ProgressBar += 60 / theScaling;
-
-                            //// Compute the duration between the start and the end times
-
-                            System.DateTime theBurstAnalysisEndTime = System.DateTime.Now;
-
-                            System.TimeSpan theBurstAnalysisDuration =
-                                theBurstAnalysisEndTime - theBurstAnalysisStartTime;
-
-                            theDebugInformation.WriteTestRunEvent(
-                                "Burst analysis for the " +
-                                thePacketCaptureFileName +
-                                " packet capture completed in " +
-                                theBurstAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
-                                " seconds");
-
-                            //// theProgressWindowForm.ProgressBar += 20 / theScaling;
-                        }
-
-                        // Only perform the time analysis if the check box was selected for it on the main window form
-                        if (this.thePerformTimeAnalysisCheckBox.Checked)
-                        {
-                            theDebugInformation.WriteBlankLine();
-
-                            theDebugInformation.WriteTextLine(
-                                new string('=', 144));
-
-                            theDebugInformation.WriteBlankLine();
-
-                            //// Finalise the time analysis on the messages found including printing the results to debug output
-                            //// Only perform this action if the analysis of the packet capture completed successfully
-
-                            // Read the start time to allow later calculation of the duration of the time analysis finalisation
-                            System.DateTime theTimeAnalysisStartTime = System.DateTime.Now;
-
-                            theDebugInformation.WriteTestRunEvent(
-                                "Time analysis for the " +
-                                thePacketCaptureFileName +
-                                " packet capture started");
-
-                            theProgressWindowForm.ProgressBar += 20 / theScaling;
-
-                            theTimeAnalysisProcessing.Finalise();
-
-                            theProgressWindowForm.ProgressBar += 60 / theScaling;
-
-                            //// Compute the duration between the start and the end times
-
-                            System.DateTime theTimeAnalysisEndTime = System.DateTime.Now;
-
-                            System.TimeSpan theTimeAnalysisDuration =
-                                theTimeAnalysisEndTime - theTimeAnalysisStartTime;
-
-                            theDebugInformation.WriteTestRunEvent(
-                                "Time analysis for the " +
-                                thePacketCaptureFileName +
-                                " packet capture completed in " +
-                                theTimeAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
-                                " seconds");
-
-                            theProgressWindowForm.ProgressBar += 20 / theScaling;
-                        }
+                        // Perform the actions to analyze the packet capture
+                        theResult = this.PerformAnalysisForPacketCapture(
+                            theDebugInformation,
+                            theProgressWindowForm,
+                            thePacketCaptureFileName);
 
                         theDebugInformation.WriteBlankLine();
 
@@ -1128,19 +846,19 @@ namespace PacketCaptureAnalyzer
 
                     //// Dispose of the resources for the analysis processing if these actions have not already taken place above
 
-                    if (theLatencyAnalysisProcessing != null)
+                    if (this.theLatencyAnalysisProcessing != null)
                     {
-                        theLatencyAnalysisProcessing.Dispose();
+                        this.theLatencyAnalysisProcessing.Dispose();
                     }
 
-                    if (theBurstAnalysisProcessing != null)
+                    if (this.theBurstAnalysisProcessing != null)
                     {
-                        theBurstAnalysisProcessing.Dispose();
+                        this.theBurstAnalysisProcessing.Dispose();
                     }
 
-                    if (theTimeAnalysisProcessing != null)
+                    if (this.theTimeAnalysisProcessing != null)
                     {
-                        theTimeAnalysisProcessing.Dispose();
+                        this.theTimeAnalysisProcessing.Dispose();
                     }
 
                     // Dependent on the button selection at the message box, open the output file
@@ -1158,6 +876,340 @@ namespace PacketCaptureAnalyzer
                     theProgressWindowForm.Dispose();
                 }
             }
+        }
+
+        /// <summary>
+        /// Performs the actions to initialize the analysis of the packet capture
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theProgressWindowForm">The progress window form</param>
+        /// <param name="thePacketCaptureFileName">The name of the packet capture</param>
+        /// <returns>Boolean flag that indicates whether the actions to initialize the analysis of the packet capture was successful</returns>
+        private bool InitialiseAnalysisForPacketCapture(Analysis.DebugInformation theDebugInformation, ProgressWindowForm theProgressWindowForm, string thePacketCaptureFileName)
+        {
+            bool theResult = true;
+
+            theProgressWindowForm.ProgressBar = 30;
+
+            // Only perform the latency analysis if the check box was selected for it on the main window form
+            if (this.thePerformLatencyAnalysisCheckBox.Checked)
+            {
+                this.theLatencyAnalysisProcessing =
+                    new Analysis.LatencyAnalysis.Processing(
+                        theDebugInformation,
+                        this.theOutputLatencyAnalysisHistogramCheckBox.Checked,
+                        this.theOutputAdditionalLatencyAnalysisInformationCheckBox.Checked,
+                        this.theSelectedPacketCapturePath);
+
+                // Initialise the functionality to perform latency analysis on the messages found
+                this.theLatencyAnalysisProcessing.Create();
+            }
+
+            theProgressWindowForm.ProgressBar = 35;
+
+            // Only perform the burst analysis if the check box was selected for it on the main window form
+            if (this.thePerformBurstAnalysisCheckBox.Checked)
+            {
+                this.theBurstAnalysisProcessing =
+                    new Analysis.BurstAnalysis.Processing(
+                        theDebugInformation,
+                        this.theOutputBurstAnalysisHistogramCheckBox.Checked,
+                        this.theOutputAdditionalBurstAnalysisInformationCheckBox.Checked,
+                        this.theSelectedPacketCapturePath);
+
+                // Initialise the functionality to perform burst analysis on the messages found
+                this.theBurstAnalysisProcessing.Create();
+            }
+
+            theProgressWindowForm.ProgressBar = 40;
+
+            // Only perform the time analysis if the check box was selected for it on the main window form
+            if (this.thePerformTimeAnalysisCheckBox.Checked)
+            {
+                this.theTimeAnalysisProcessing =
+                    new Analysis.TimeAnalysis.Processing(
+                        theDebugInformation,
+                        this.theOutputTimeAnalysisHistogramCheckBox.Checked,
+                        this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked,
+                        this.theSelectedPacketCapturePath);
+
+                // Initialise the functionality to perform time analysis on the messages found
+                this.theTimeAnalysisProcessing.Create();
+            }
+
+            theProgressWindowForm.ProgressBar = 45;
+
+            switch (this.theSelectedPacketCaptureType)
+            {
+                case MainWindowFormConstants.PacketCaptureType.PCAPNextGeneration:
+                    {
+                        theDebugInformation.WriteInformationEvent(
+                            "This is a PCAP Next Generation packet capture");
+
+                        PacketCapture.PCAPNGPackageCapture.Processing thePCAPNGPackageCaptureProcessing =
+                            new PacketCapture.PCAPNGPackageCapture.Processing(
+                                theProgressWindowForm,
+                                theDebugInformation,
+                                this.thePerformLatencyAnalysisCheckBox.Checked,
+                                this.theLatencyAnalysisProcessing,
+                                this.thePerformBurstAnalysisCheckBox.Checked,
+                                this.theBurstAnalysisProcessing,
+                                this.thePerformTimeAnalysisCheckBox.Checked,
+                                this.theTimeAnalysisProcessing,
+                                this.theSelectedPacketCapturePath,
+                                this.theUseAlternativeSequenceNumberCheckBox.Checked,
+                                this.theMinimizeMemoryUsageCheckBox.Checked);
+
+                        theProgressWindowForm.ProgressBar = 50;
+
+                        theResult = thePCAPNGPackageCaptureProcessing.ProcessPacketCapture();
+
+                        break;
+                    }
+
+                case MainWindowFormConstants.PacketCaptureType.PCAP:
+                    {
+                        theDebugInformation.WriteInformationEvent(
+                            "This is a PCAP packet capture");
+
+                        PacketCapture.PCAPPackageCapture.Processing thePCAPPackageCaptureProcessing =
+                            new PacketCapture.PCAPPackageCapture.Processing(
+                                theProgressWindowForm,
+                                theDebugInformation,
+                                this.thePerformLatencyAnalysisCheckBox.Checked,
+                                this.theLatencyAnalysisProcessing,
+                                this.thePerformBurstAnalysisCheckBox.Checked,
+                                this.theBurstAnalysisProcessing,
+                                this.thePerformTimeAnalysisCheckBox.Checked,
+                                this.theTimeAnalysisProcessing,
+                                this.theSelectedPacketCapturePath,
+                                this.theUseAlternativeSequenceNumberCheckBox.Checked,
+                                this.theMinimizeMemoryUsageCheckBox.Checked);
+
+                        theProgressWindowForm.ProgressBar = 50;
+
+                        theResult = thePCAPPackageCaptureProcessing.ProcessPacketCapture();
+
+                        break;
+                    }
+
+                case MainWindowFormConstants.PacketCaptureType.NASnifferDOS:
+                    {
+                        theDebugInformation.WriteInformationEvent(
+                            "This is an NA Sniffer (DOS) packet capture");
+
+                        PacketCapture.SnifferPackageCapture.Processing theSnifferPackageCaptureProcessing =
+                            new PacketCapture.SnifferPackageCapture.Processing(
+                                theProgressWindowForm,
+                                theDebugInformation,
+                                this.thePerformLatencyAnalysisCheckBox.Checked,
+                                this.theLatencyAnalysisProcessing,
+                                this.thePerformBurstAnalysisCheckBox.Checked,
+                                this.theBurstAnalysisProcessing,
+                                this.thePerformTimeAnalysisCheckBox.Checked,
+                                this.theTimeAnalysisProcessing,
+                                this.theSelectedPacketCapturePath,
+                                this.theUseAlternativeSequenceNumberCheckBox.Checked,
+                                this.theMinimizeMemoryUsageCheckBox.Checked);
+
+                        theProgressWindowForm.ProgressBar = 50;
+
+                        theResult = theSnifferPackageCaptureProcessing.ProcessPacketCapture();
+
+                        break;
+                    }
+
+                default:
+                    {
+                        theDebugInformation.WriteErrorEvent(
+                            "The" +
+                            thePacketCaptureFileName +
+                            " packet capture is of an unknown or incorrect type!!!");
+
+                        theResult = false;
+
+                        break;
+                    }
+            }
+
+            return theResult;
+        }
+
+        /// <summary>
+        /// Performs the actions to analyze the packet capture
+        /// </summary>
+        /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
+        /// <param name="theProgressWindowForm">The progress window form</param>
+        /// <param name="thePacketCaptureFileName">The name of the packet capture</param>
+        /// <returns>Boolean flag that indicates whether performing the actions to analyze the packet capture was successful</returns>
+        private bool PerformAnalysisForPacketCapture(Analysis.DebugInformation theDebugInformation, ProgressWindowForm theProgressWindowForm, string thePacketCaptureFileName)
+        {
+            bool theResult = true;
+
+            int theScaling = 0;
+
+            if (this.thePerformLatencyAnalysisCheckBox.Checked ||
+                this.thePerformTimeAnalysisCheckBox.Checked ||
+                this.thePerformBurstAnalysisCheckBox.Checked)
+            {
+                // Update the label now the analysis of the packet capture has started - the progress bar will stay at zero
+                theProgressWindowForm.ProgressBarLabel = "Performing Analysis Of Packet Capture";
+                theProgressWindowForm.ProgressBar = 0;
+                theProgressWindowForm.Refresh();
+
+                // Calculate the scaling to use for the progress bar
+                if (this.thePerformLatencyAnalysisCheckBox.Checked &&
+                    !this.thePerformTimeAnalysisCheckBox.Checked)
+                {
+                    // Only one set of analysis will be run
+                    theScaling = 1;
+                }
+                else if (!this.thePerformLatencyAnalysisCheckBox.Checked &&
+                    this.thePerformTimeAnalysisCheckBox.Checked)
+                {
+                    // Only one set of analysis will be run
+                    theScaling = 1;
+                }
+                else
+                {
+                    // Both sets of analysis will be run
+                    theScaling = 2;
+                }
+            }
+
+            // Only perform the latency analysis if the check box was selected for it on the main window form
+            if (this.thePerformLatencyAnalysisCheckBox.Checked)
+            {
+                theDebugInformation.WriteBlankLine();
+
+                theDebugInformation.WriteTextLine(
+                    new string('=', 144));
+
+                theDebugInformation.WriteBlankLine();
+
+                //// Finalise the latency analysis on the messages found including printing the results to debug output
+                //// Only perform this action if the analysis of the packet capture completed successfully
+
+                // Read the start time to allow later calculation of the duration of the latency analysis finalisation
+                System.DateTime theLatencyAnalysisStartTime = System.DateTime.Now;
+
+                theDebugInformation.WriteTestRunEvent(
+                    "Latency analysis for the " +
+                    thePacketCaptureFileName +
+                    " packet capture started");
+
+                theProgressWindowForm.ProgressBar += 20 / theScaling;
+
+                this.theLatencyAnalysisProcessing.Finalise();
+
+                theProgressWindowForm.ProgressBar += 60 / theScaling;
+
+                //// Compute the duration between the start and the end times
+
+                System.DateTime theLatencyAnalysisEndTime = System.DateTime.Now;
+
+                System.TimeSpan theLatencyAnalysisDuration =
+                    theLatencyAnalysisEndTime - theLatencyAnalysisStartTime;
+
+                theDebugInformation.WriteTestRunEvent(
+                    "Latency analysis for the " +
+                    thePacketCaptureFileName +
+                    " packet capture completed in " +
+                    theLatencyAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    " seconds");
+
+                theProgressWindowForm.ProgressBar += 20 / theScaling;
+            }
+
+            // Only perform the burst analysis if the check box was selected for it on the main window form
+            if (this.thePerformBurstAnalysisCheckBox.Checked)
+            {
+                theDebugInformation.WriteBlankLine();
+
+                theDebugInformation.WriteTextLine(
+                    new string('=', 144));
+
+                theDebugInformation.WriteBlankLine();
+
+                //// Finalise the burst analysis on the messages found including printing the results to debug output
+                //// Only perform this action if the analysis of the packet capture completed successfully
+
+                // Read the start time to allow later calculation of the duration of the burst analysis finalisation
+                System.DateTime theBurstAnalysisStartTime = System.DateTime.Now;
+
+                theDebugInformation.WriteTestRunEvent(
+                    "Burst analysis for the " +
+                    thePacketCaptureFileName +
+                    " packet capture started");
+
+                //// theProgressWindowForm.ProgressBar += 20 / theScaling;
+
+                this.theBurstAnalysisProcessing.Finalise();
+
+                //// theProgressWindowForm.ProgressBar += 60 / theScaling;
+
+                //// Compute the duration between the start and the end times
+
+                System.DateTime theBurstAnalysisEndTime = System.DateTime.Now;
+
+                System.TimeSpan theBurstAnalysisDuration =
+                    theBurstAnalysisEndTime - theBurstAnalysisStartTime;
+
+                theDebugInformation.WriteTestRunEvent(
+                    "Burst analysis for the " +
+                    thePacketCaptureFileName +
+                    " packet capture completed in " +
+                    theBurstAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    " seconds");
+
+                //// theProgressWindowForm.ProgressBar += 20 / theScaling;
+            }
+
+            // Only perform the time analysis if the check box was selected for it on the main window form
+            if (this.thePerformTimeAnalysisCheckBox.Checked)
+            {
+                theDebugInformation.WriteBlankLine();
+
+                theDebugInformation.WriteTextLine(
+                    new string('=', 144));
+
+                theDebugInformation.WriteBlankLine();
+
+                //// Finalise the time analysis on the messages found including printing the results to debug output
+                //// Only perform this action if the analysis of the packet capture completed successfully
+
+                // Read the start time to allow later calculation of the duration of the time analysis finalisation
+                System.DateTime theTimeAnalysisStartTime = System.DateTime.Now;
+
+                theDebugInformation.WriteTestRunEvent(
+                    "Time analysis for the " +
+                    thePacketCaptureFileName +
+                    " packet capture started");
+
+                theProgressWindowForm.ProgressBar += 20 / theScaling;
+
+                this.theTimeAnalysisProcessing.Finalise();
+
+                theProgressWindowForm.ProgressBar += 60 / theScaling;
+
+                //// Compute the duration between the start and the end times
+
+                System.DateTime theTimeAnalysisEndTime = System.DateTime.Now;
+
+                System.TimeSpan theTimeAnalysisDuration =
+                    theTimeAnalysisEndTime - theTimeAnalysisStartTime;
+
+                theDebugInformation.WriteTestRunEvent(
+                    "Time analysis for the " +
+                    thePacketCaptureFileName +
+                    " packet capture completed in " +
+                    theTimeAnalysisDuration.TotalSeconds.ToString(System.Globalization.CultureInfo.CurrentCulture) +
+                    " seconds");
+
+                theProgressWindowForm.ProgressBar += 20 / theScaling;
+            }
+
+            return theResult;
         }
 
         //// Button support functions

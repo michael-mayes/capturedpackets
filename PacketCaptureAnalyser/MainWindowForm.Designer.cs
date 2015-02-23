@@ -204,6 +204,23 @@ namespace PacketCaptureAnalyzer
                 this.components.Dispose();
             }
 
+            //// Dispose of the resources for the analysis processing if these actions have not already taken place above
+
+            if (disposing && (this.theLatencyAnalysisProcessing != null))
+            {
+                this.theLatencyAnalysisProcessing.Dispose();
+            }
+
+            if (disposing && (this.theBurstAnalysisProcessing != null))
+            {
+                this.theBurstAnalysisProcessing.Dispose();
+            }
+
+            if (disposing && (this.theTimeAnalysisProcessing != null))
+            {
+                this.theTimeAnalysisProcessing.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 
