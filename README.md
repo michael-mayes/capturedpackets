@@ -5,7 +5,7 @@ It is free and unencumbered software released into the public domain as detailed
 
 Developed under Microsoft Visual Studio 2010/12/13 and .Net Framework 4.0/4.5 for Windows XP and later, but also successfully demonstrated under Mono for Linux
 
-No warnings from StyleCop. Large number of warnings from FxCop addressed, but an equally large number remain
+There are no warnings from StyleCop. Several warnings from FxCop addressed remain
 
 The application can fully process a wide selection of PCAP NG, PCAP and NA Sniffer packet captures and can fully unpack a range of frames, packets and datagrams therein, but the unpacked data is not utilised in the configured version of the code
 
