@@ -853,7 +853,7 @@ namespace PacketCaptureAnalyzer
 
                         if (this.thePerformLatencyAnalysisCheckBox.Checked ||
                             this.thePerformTimeAnalysisCheckBox.Checked ||
-                            true)
+                            this.thePerformBurstAnalysisCheckBox.Checked)
                         {
                             // Update the label now the analysis of the packet capture has started - the progress bar will stay at zero
                             theProgressWindowForm.ProgressBarLabel = "Performing Analysis Of Packet Capture";
