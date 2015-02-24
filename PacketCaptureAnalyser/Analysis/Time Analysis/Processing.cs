@@ -164,7 +164,22 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 this.theDebugInformation.WriteTextLine("===========");
                 this.theDebugInformation.WriteBlankLine();
 
-                this.FinaliseForHostId(theHostIdRow.Field<byte>("HostId"));
+                EnumerableRowCollection<System.Data.DataRow>
+                    theTimeValuesRowsFound =
+                    from r in this.theTimeValuesTable.AsEnumerable()
+                    where r.Field<byte>("HostId") == theHostIdRow.Field<byte>("HostId")
+                    select r;
+
+                this.FinaliseTimestamps(
+                    theTimeValuesRowsFound);
+
+                this.FinaliseTimes(
+                    theTimeValuesRowsFound);
+
+                // Output additional information for the supplied type of message
+                this.OutputAdditionalInformation(
+                    theHostIdRow.Field<byte>("HostId"),
+                    theTimeValuesRowsFound);
             }
         }
 
@@ -214,10 +229,9 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
         }
 
         /// <summary>
-        /// Finalize time analysis for the supplied host Id
+        /// Finalize timestamp analysis for the supplied data table rows
         /// </summary>
-        /// <param name="theHostId">The host Id for which time analysis is to be finalized</param>
-        private void FinaliseForHostId(byte theHostId)
+        private void FinaliseTimestamps(EnumerableRowCollection<System.Data.DataRow> theTimeValuesRowsFound)
         {
             CommonHistogram theLowerRangeTimestampHistogram =
                 new CommonHistogram(
@@ -240,27 +254,6 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     Constants.MinUpperRangeTimestampDifference,
                     Constants.MaxUpperRangeTimestampDifference);
 
-            CommonHistogram theLowerRangeTimeHistogram =
-                new CommonHistogram(
-                    this.theDebugInformation,
-                    Constants.LowerRangeTimeNumberOfBins,
-                    Constants.MinLowerRangeTimeDifference,
-                    Constants.MaxLowerRangeTimeDifference);
-
-            CommonHistogram theMiddleRangeTimeHistogram =
-                new CommonHistogram(
-                    this.theDebugInformation,
-                    Constants.MiddleRangeTimeNumberOfBins,
-                    Constants.MinMiddleRangeTimeDifference,
-                    Constants.MaxMiddleRangeTimeDifference);
-
-            CommonHistogram theUpperRangeTimeHistogram =
-                new CommonHistogram(
-                    this.theDebugInformation,
-                    Constants.UpperRangeTimeNumberOfBins,
-                    Constants.MinUpperRangeTimeDifference,
-                    Constants.MaxUpperRangeTimeDifference);
-
             ulong theNumberOfMessages = 0;
 
             ulong theNumberOfIgnoredMessages = 0;
@@ -268,25 +261,13 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
             double theMinTimestampDifference = double.MaxValue;
             double theMaxTimestampDifference = double.MinValue;
 
-            double theMinTimeDifference = double.MaxValue;
-            double theMaxTimeDifference = double.MinValue;
-
             ulong theMinTimestampDifferencePacketNumber = 0;
             ulong theMaxTimestampDifferencePacketNumber = 0;
 
-            ulong theMinTimeDifferencePacketNumber = 0;
-            ulong theMaxTimeDifferencePacketNumber = 0;
-
             double theLastTimestamp = 0.0;
-            double theLastTime = 0.0;
 
             ulong theNumberOfTimestampDifferenceInstances = 0;
             double theTotalOfTimestampDifferences = 0;
-            double theAverageTimestampDifference = 0;
-
-            ulong theNumberOfTimeDifferenceInstances = 0;
-            double theTotalOfTimeDifferences = 0;
-            double theAverageTimeDifference = 0;
 
             bool theFirstRowProcessed = false;
 
@@ -296,15 +277,6 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
             System.Collections.Generic.List<string> theOutOfRangeTimestamps =
                 new System.Collections.Generic.List<string>();
 
-            System.Collections.Generic.List<string> theOutOfRangeTimes =
-                new System.Collections.Generic.List<string>();
-
-            EnumerableRowCollection<System.Data.DataRow>
-                theTimeValuesRowsFound =
-                from r in this.theTimeValuesTable.AsEnumerable()
-                where r.Field<byte>("HostId") == theHostId
-                select r;
-
             foreach (System.Data.DataRow theTimeValuesRow in theTimeValuesRowsFound)
             {
                 // Keep a running total of the number of time-supplying messages
@@ -312,13 +284,11 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 
                 ulong thePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
                 double thePacketTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
-                double thePacketTime = theTimeValuesRow.Field<double>("PacketTime");
 
                 // Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
                 if (!theFirstRowProcessed)
                 {
                     theLastTimestamp = thePacketTimestamp;
-                    theLastTime = thePacketTime;
 
                     // The first time-supplying message is always marked as processed
                     theTimeValuesRow["Processed"] = true;
@@ -367,10 +337,6 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     // Keep a record of the last timestamp received (from this time-supplying
                     // message) to allow comparison with the next timestamp received
                     theLastTimestamp = thePacketTimestamp;
-
-                    // Keep a record of the last time received (from this time-supplying
-                    // message) to allow comparison with the next times received
-                    theLastTime = thePacketTime;
                 }
                 else
                 {
@@ -450,6 +416,143 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     // Keep a record of the last timestamp received (from this time-supplying
                     // message) to allow comparison with the next timestamp received
                     theLastTimestamp = thePacketTimestamp;
+                }
+            }
+
+            this.theDebugInformation.WriteTextLine(
+                "The number of time-supplying messages was " +
+                theNumberOfMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
+
+            if (theNumberOfIgnoredMessages > 0)
+            {
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    "The number of those time-supplying messages that were ignored and discarded was " +
+                    theNumberOfIgnoredMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
+            }
+
+            // 
+            this.OutputTimestampDifferences(
+                theNumberOfTimestampDifferenceInstances,
+                theTotalOfTimestampDifferences,
+                theMinTimestampDifference,
+                theMaxTimestampDifference,
+                theMinTimestampDifferencePacketNumber,
+                theMaxTimestampDifferencePacketNumber,
+                theOutOfRangeTimestamps,
+                theLowerRangeTimestampHistogram,
+                theMiddleRangeTimestampHistogram,
+                theUpperRangeTimestampHistogram);
+
+            if (theIgnoredTimestamps.Any())
+            {
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    new string('-', 144));
+
+                this.theDebugInformation.WriteBlankLine();
+
+                // Output the data for any time-supplying messages that were ignored and discarded
+                foreach (string theString in theIgnoredTimestamps)
+                {
+                    this.theDebugInformation.WriteTextLine(theString);
+                }
+            }
+
+            this.theDebugInformation.WriteBlankLine();
+
+            this.theDebugInformation.WriteTextLine(
+                new string('-', 144));
+
+            this.theDebugInformation.WriteBlankLine();
+        }
+
+        /// <summary>
+        /// Finalize time analysis for the supplied data table rows
+        /// </summary>
+        private void FinaliseTimes(EnumerableRowCollection<System.Data.DataRow> theTimeValuesRowsFound)
+        {
+            CommonHistogram theLowerRangeTimeHistogram =
+                new CommonHistogram(
+                    this.theDebugInformation,
+                    Constants.LowerRangeTimeNumberOfBins,
+                    Constants.MinLowerRangeTimeDifference,
+                    Constants.MaxLowerRangeTimeDifference);
+
+            CommonHistogram theMiddleRangeTimeHistogram =
+                new CommonHistogram(
+                    this.theDebugInformation,
+                    Constants.MiddleRangeTimeNumberOfBins,
+                    Constants.MinMiddleRangeTimeDifference,
+                    Constants.MaxMiddleRangeTimeDifference);
+
+            CommonHistogram theUpperRangeTimeHistogram =
+                new CommonHistogram(
+                    this.theDebugInformation,
+                    Constants.UpperRangeTimeNumberOfBins,
+                    Constants.MinUpperRangeTimeDifference,
+                    Constants.MaxUpperRangeTimeDifference);
+
+            double theMinTimeDifference = double.MaxValue;
+            double theMaxTimeDifference = double.MinValue;
+
+            ulong theMinTimeDifferencePacketNumber = 0;
+            ulong theMaxTimeDifferencePacketNumber = 0;
+
+            double theLastTimestamp = 0.0;
+            double theLastTime = 0.0;
+
+            ulong theNumberOfTimeDifferenceInstances = 0;
+            double theTotalOfTimeDifferences = 0;
+
+            bool theFirstRowProcessed = false;
+
+            System.Collections.Generic.List<string> theOutOfRangeTimes =
+                new System.Collections.Generic.List<string>();
+
+            foreach (System.Data.DataRow theTimeValuesRow in theTimeValuesRowsFound)
+            {
+                ulong thePacketNumber = theTimeValuesRow.Field<ulong>("PacketNumber");
+                double thePacketTimestamp = theTimeValuesRow.Field<double>("PacketTimestamp");
+                double thePacketTime = theTimeValuesRow.Field<double>("PacketTime");
+
+                // Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
+                if (!theFirstRowProcessed)
+                {
+                    theLastTime = thePacketTime;
+
+                    // The first time-supplying message is always marked as processed
+                    theTimeValuesRow["Processed"] = true;
+
+                    theFirstRowProcessed = true;
+
+                    continue;
+                }
+
+                //// The timestamp
+
+                double theAbsoluteTimestampDifference =
+                    System.Math.Abs((thePacketTimestamp - theLastTimestamp) * 1000.0); // Milliseconds
+
+                // Only those time-supplying messages with a timestamp difference in the chosen range will be marked as processed
+                // This should prevent the processing of duplicates of a time-supplying message (e.g. if port mirroring results in two copies of the time-supplying message)
+                // This should prevent a large gap in time-supplying messages unduly affecting the processing (e.g. if the host is in the process of being restarted or becomes available)
+                if (theAbsoluteTimestampDifference > Constants.MaxAbsoluteTimestampDifference)
+                {
+                    // Keep a record of the last timestamp received (from this time-supplying
+                    // message) to allow comparison with the next timestamp received
+                    theLastTimestamp = thePacketTimestamp;
+
+                    // Keep a record of the last time received (from this time-supplying
+                    // message) to allow comparison with the next times received
+                    theLastTime = thePacketTime;
+                }
+                else
+                {
+                    // Mark this time-supplying message as processed as its timestamp difference is within the chosen range
+                    theTimeValuesRow["Processed"] = true;
 
                     //// The time
 
@@ -529,19 +632,42 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 }
             }
 
+            // 
+            this.OutputTimeDifferences(
+                theNumberOfTimeDifferenceInstances,
+                theTotalOfTimeDifferences,
+                theMinTimeDifference,
+                theMaxTimeDifference,
+                theMinTimeDifferencePacketNumber,
+                theMaxTimeDifferencePacketNumber,
+                theOutOfRangeTimes,
+                theLowerRangeTimeHistogram,
+                theMiddleRangeTimeHistogram,
+                theUpperRangeTimeHistogram);
+
+            this.theDebugInformation.WriteBlankLine();
+
             this.theDebugInformation.WriteTextLine(
-                "The number of time-supplying messages was " +
-                theNumberOfMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
+                new string('-', 144));
 
-            if (theNumberOfIgnoredMessages > 0)
-            {
-                this.theDebugInformation.WriteBlankLine();
+            this.theDebugInformation.WriteBlankLine();
+        }
 
-                this.theDebugInformation.WriteTextLine(
-                    "The number of those time-supplying messages that were ignored and discarded was " +
-                    theNumberOfIgnoredMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
-            }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theNumberOfTimestampDifferenceInstances"></param>
+        /// <param name="theTotalOfTimestampDifferences"></param>
+        /// <param name="theMinTimestampDifference"></param>
+        /// <param name="theMaxTimestampDifference"></param>
+        /// <param name="theMinTimestampDifferencePacketNumber"></param>
+        /// <param name="theMaxTimestampDifferencePacketNumber"></param>
+        /// <param name="theOutOfRangeTimestamps"></param>
+        /// <param name="theLowerRangeTimestampHistogram"></param>
+        /// <param name="theMiddleRangeTimestampHistogram"></param>
+        /// <param name="theUpperRangeTimestampHistogram"></param>
+        private void OutputTimestampDifferences(ulong theNumberOfTimestampDifferenceInstances, double theTotalOfTimestampDifferences, double theMinTimestampDifference, double theMaxTimestampDifference, ulong theMinTimestampDifferencePacketNumber, ulong theMaxTimestampDifferencePacketNumber, System.Collections.Generic.List<string> theOutOfRangeTimestamps, CommonHistogram theLowerRangeTimestampHistogram, CommonHistogram theMiddleRangeTimestampHistogram, CommonHistogram theUpperRangeTimestampHistogram)
+        {
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
                 this.theDebugInformation.WriteBlankLine();
@@ -551,13 +677,9 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 
                 this.theDebugInformation.WriteBlankLine();
 
-                theAverageTimestampDifference =
+                double theAverageTimestampDifference =
                     theTotalOfTimestampDifferences /
                     theNumberOfTimestampDifferenceInstances;
-
-                theAverageTimeDifference =
-                    theTotalOfTimeDifferences /
-                    theNumberOfTimeDifferenceInstances;
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum timestamp difference was " +
@@ -619,7 +741,23 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     }
                 }
             }
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="theNumberOfTimeDifferenceInstances"></param>
+        /// <param name="theTotalOfTimeDifferences"></param>
+        /// <param name="theMinTimeDifference"></param>
+        /// <param name="theMaxTimeDifference"></param>
+        /// <param name="theMinTimeDifferencePacketNumber"></param>
+        /// <param name="theMaxTimeDifferencePacketNumber"></param>
+        /// <param name="theOutOfRangeTimes"></param>
+        /// <param name="theLowerRangeTimeHistogram"></param>
+        /// <param name="theMiddleRangeTimeHistogram"></param>
+        /// <param name="theUpperRangeTimeHistogram"></param>
+        private void OutputTimeDifferences(ulong theNumberOfTimeDifferenceInstances, double theTotalOfTimeDifferences, double theMinTimeDifference, double theMaxTimeDifference, ulong theMinTimeDifferencePacketNumber, ulong theMaxTimeDifferencePacketNumber, System.Collections.Generic.List<string> theOutOfRangeTimes, CommonHistogram theLowerRangeTimeHistogram, CommonHistogram theMiddleRangeTimeHistogram, CommonHistogram theUpperRangeTimeHistogram)
+        {
             if (theNumberOfTimeDifferenceInstances > 0)
             {
                 this.theDebugInformation.WriteBlankLine();
@@ -628,6 +766,10 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     new string('-', 144));
 
                 this.theDebugInformation.WriteBlankLine();
+
+                double theAverageTimeDifference =
+                    theTotalOfTimeDifferences /
+                    theNumberOfTimeDifferenceInstances;
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum time difference was " +
@@ -676,35 +818,6 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 }
             }
 
-            if (theIgnoredTimestamps.Any())
-            {
-                this.theDebugInformation.WriteBlankLine();
-
-                this.theDebugInformation.WriteTextLine(
-                    new string('-', 144));
-
-                this.theDebugInformation.WriteBlankLine();
-
-                // Output the data for any time-supplying messages that were ignored and discarded
-                foreach (string theString in theIgnoredTimestamps)
-                {
-                    this.theDebugInformation.WriteTextLine(theString);
-                }
-            }
-
-            this.theDebugInformation.WriteBlankLine();
-
-            this.theDebugInformation.WriteTextLine(
-                new string('-', 144));
-
-            this.theDebugInformation.WriteBlankLine();
-
-            // Output additional information for the supplied type of message
-            this.OutputAdditionalInformation(
-                theHostId,
-                theTimeValuesRowsFound,
-                theNumberOfTimestampDifferenceInstances,
-                theNumberOfTimeDifferenceInstances);
         }
 
         /// <summary>
@@ -712,16 +825,12 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
         /// </summary>
         /// <param name="theHostId">The host Id for the additional information that is to be output</param>
         /// <param name="theTimeValuesRowsFound">The data table rows for which additional information is to be output</param>
-        /// <param name="theNumberOfTimestampDifferenceInstances">The total number of instances of timestamp differences encountered</param>
-        /// <param name="theNumberOfTimeDifferenceInstances">The total number of instances of time differences encountered</param>
-        private void OutputAdditionalInformation(byte theHostId, EnumerableRowCollection<System.Data.DataRow> theTimeValuesRowsFound, ulong theNumberOfTimestampDifferenceInstances, ulong theNumberOfTimeDifferenceInstances)
+        private void OutputAdditionalInformation(byte theHostId, EnumerableRowCollection<System.Data.DataRow> theTimeValuesRowsFound)
         {
             // Only attempt to output additional information if requested and if
             // there are a non-zero number of instances of timestamp differences
             // and a non-zero number of instances of time differences
-            if (this.outputAdditionalInformation &&
-                theNumberOfTimestampDifferenceInstances > 0 &&
-                theNumberOfTimeDifferenceInstances > 0)
+            if (this.outputAdditionalInformation)
             {
                 System.Text.StringBuilder theOutputAdditionalInformationLines =
                     new System.Text.StringBuilder();
