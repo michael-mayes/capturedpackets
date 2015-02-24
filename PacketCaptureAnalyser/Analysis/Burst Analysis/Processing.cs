@@ -557,6 +557,27 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
+            // Output additional information for the supplied type of message
+            this.OutputAdditionalInformation(
+                theHostId,
+                isOutgoing,
+                theMessageId,
+                theRows,
+                theNumberOfTimestampDifferenceInstances);
+        }
+
+        /// <summary>
+        /// Outputs additional information for the supplied type of message
+        /// </summary>
+        /// <param name="theHostId">The host Id for the additional information that is to be output</param>
+        /// <param name="isOutgoing">Boolean flag that indicates whether the additional information to be output is for messages that were received on its outgoing journey or its incoming journey (true indicates outgoing, false indicates incoming)</param>
+        /// <param name="theMessageId">The message Id for the additional information that is to be output</param>
+        /// <param name="theRows">The data table rows for which additional information is to be output</param>
+        /// <param name="theNumberOfTimestampDifferenceInstances">The total number of instances of timestamp differences encountered</param>
+        private void OutputAdditionalInformation(byte theHostId, bool isOutgoing, ulong theMessageId, EnumerableRowCollection<System.Data.DataRow> theRows, ulong theNumberOfTimestampDifferenceInstances)
+        {
+            // Only attempt to output additional information if requested and if
+            // there is a non-zero number of instances of timestamp differences
             if (this.outputAdditionalInformation &&
                 theNumberOfTimestampDifferenceInstances > 0)
             {
@@ -566,7 +587,7 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
                 //// Add a column titles line to the debug output file
 
                 string theOutputAdditionalInformationTitleLine = string.Format(
-                    System.Globalization.CultureInfo.CurrentCulture, 
+                    System.Globalization.CultureInfo.CurrentCulture,
                     "{0},{1},{2},,{3}{4}",
                     "Packet Number",
                     "Sequence Number",
@@ -593,7 +614,7 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
                     {
                         // If this is the first message then there is no previous message and so just output the timestamp
                         theOutputAdditionalInformationLine = string.Format(
-                            System.Globalization.CultureInfo.CurrentCulture, 
+                            System.Globalization.CultureInfo.CurrentCulture,
                             "{0},{1},{2,18}{3}",
                             thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
@@ -607,7 +628,7 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
                         // If this is another message then also calculate the difference in timestamp from the previous message and output it along with the timestamp
                         theOutputAdditionalInformationLine = string.Format(
-                            System.Globalization.CultureInfo.CurrentCulture, 
+                            System.Globalization.CultureInfo.CurrentCulture,
                             "{0},{1},{2,18},,{3,18}{4}",
                             thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),

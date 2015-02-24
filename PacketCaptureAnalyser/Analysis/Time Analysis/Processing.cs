@@ -699,6 +699,26 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
+            // Output additional information for the supplied type of message
+            this.OutputAdditionalInformation(
+                theHostId,
+                theTimeValuesRowsFound,
+                theNumberOfTimestampDifferenceInstances,
+                theNumberOfTimeDifferenceInstances);
+        }
+
+        /// <summary>
+        /// Outputs additional information for the supplied type of message
+        /// </summary>
+        /// <param name="theHostId">The host Id for the additional information that is to be output</param>
+        /// <param name="theTimeValuesRowsFound">The data table rows for which additional information is to be output</param>
+        /// <param name="theNumberOfTimestampDifferenceInstances">The total number of instances of timestamp differences encountered</param>
+        /// <param name="theNumberOfTimeDifferenceInstances">The total number of instances of time differences encountered</param>
+        private void OutputAdditionalInformation(byte theHostId, EnumerableRowCollection<System.Data.DataRow> theTimeValuesRowsFound, ulong theNumberOfTimestampDifferenceInstances, ulong theNumberOfTimeDifferenceInstances)
+        {
+            // Only attempt to output additional information if requested and if
+            // there are a non-zero number of instances of timestamp differences
+            // and a non-zero number of instances of time differences
             if (this.outputAdditionalInformation &&
                 theNumberOfTimestampDifferenceInstances > 0 &&
                 theNumberOfTimeDifferenceInstances > 0)
@@ -709,7 +729,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 //// Add a column titles line to the debug output file
 
                 string theOutputAdditionalInformationTitleLine = string.Format(
-                    System.Globalization.CultureInfo.CurrentCulture, 
+                    System.Globalization.CultureInfo.CurrentCulture,
                     "{0},{1},{2},,{3},{4}{5}",
                     "Packet Number",
                     "Packet Timestamp (s)",
@@ -741,7 +761,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                         {
                             // If this is the first time-supplying message then there is no previous time-supplying message and so just output the timestamp and time
                             theOutputAdditionalInformationLine = string.Format(
-                                System.Globalization.CultureInfo.CurrentCulture, 
+                                System.Globalization.CultureInfo.CurrentCulture,
                                 "{0},{1,18},{2,18}{3}",
                                 thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                                 thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
@@ -758,7 +778,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 
                             // If this is another time-supplying message then also calculate the differences in timestamp and time from the previous time-supplying message and output them along with the timestamp and time
                             theOutputAdditionalInformationLine = string.Format(
-                                System.Globalization.CultureInfo.CurrentCulture, 
+                                System.Globalization.CultureInfo.CurrentCulture,
                                 "{0},{1,18},{2,18},,{3,18},{4,18}{5}",
                                 thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                                 thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),

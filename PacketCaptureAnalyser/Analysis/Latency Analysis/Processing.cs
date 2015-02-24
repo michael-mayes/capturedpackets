@@ -572,6 +572,23 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
             this.theDebugInformation.WriteBlankLine();
 
+            // Output additional information for the supplied type of message
+            this.OutputAdditionalInformation(
+                theMessageId,
+                theRows,
+                theNumberOfTimestampDifferenceInstances);
+        }
+
+        /// <summary>
+        /// Outputs additional information for the supplied type of message
+        /// </summary>
+        /// <param name="theMessageId">The message Id for the additional information that is to be output</param>
+        /// <param name="theRows">The data table rows for which additional information is to be output</param>
+        /// <param name="theNumberOfTimestampDifferenceInstances">The total number of instances of timestamp differences encountered</param>
+        private void OutputAdditionalInformation(ulong theMessageId, DictionaryEnumerableType theRows, ulong theNumberOfTimestampDifferenceInstances)
+        {
+            // Only attempt to output additional information if requested and if
+            // there is a non-zero number of instances of timestamp differences
             if (this.outputAdditionalInformation &&
                 theNumberOfTimestampDifferenceInstances > 0)
             {
@@ -581,7 +598,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
                 //// Add a column titles line to the debug output file
 
                 string theOutputAdditionalInformationTitleLine = string.Format(
-                    System.Globalization.CultureInfo.CurrentCulture, 
+                    System.Globalization.CultureInfo.CurrentCulture,
                     "{0},{1},{2},{3},{4},,{5}{6}",
                     "First Packet Number",
                     "Second Packet Number",
@@ -599,7 +616,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
                 foreach (DictionaryKeyValuePairType theRow in theRows)
                 {
                     string theOutputAdditionalInformationLine = string.Format(
-                        System.Globalization.CultureInfo.CurrentCulture, 
+                        System.Globalization.CultureInfo.CurrentCulture,
                         "{0,7},{1,7},{2,7},{3,18},{4,18},,{5,18}{6}",
                         theRow.Value.FirstInstancePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                         theRow.Value.SecondInstancePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
