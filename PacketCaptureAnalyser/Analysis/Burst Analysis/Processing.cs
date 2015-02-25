@@ -400,6 +400,9 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
             bool theFirstRowProcessed = false;
 
+            System.Collections.Generic.List<string> theIgnoredTimestamps =
+                new System.Collections.Generic.List<string>();
+
             System.Collections.Generic.List<string> theOutOfRangeTimestamps =
                 new System.Collections.Generic.List<string>();
 
@@ -424,42 +427,65 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
                 //// The timestamp
 
-                double theTimestampDifference =
-                    (thePacketTimestamp - theLastTimestamp) * 1000.0; // Milliseconds
+                double theAbsoluteTimestampDifference =
+                    System.Math.Abs((thePacketTimestamp - theLastTimestamp) * 1000.0); // Milliseconds
 
-                //// Keep a running total of the timestamp differences to allow for averaging
-
-                ++theNumberOfTimestampDifferenceInstances;
-
-                theTotalOfTimestampDifferences += theTimestampDifference;
-
-                if (!theTimestampHistogram.AddValue(theTimestampDifference))
+                // Only those messages with a timestamp difference in the chosen range will be marked as processed
+                // This should prevent the processing of duplicates of a message (e.g. if port mirroring results in two copies of the time-supplying message)
+                if (theAbsoluteTimestampDifference < Constants.MinAbsoluteTimestampDifference)
                 {
-                    theOutOfRangeTimestamps.Add(
+                    theIgnoredTimestamps.Add(
                         "The message for packet number " +
                         string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " and sequence number " +
                         string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
-                        " has an out of range timestamp difference of " +
-                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
-                        " ms");
+                        " has an absolute timestamp difference of " +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theAbsoluteTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                        " ms which is below the minimum value of " +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,5}", Constants.MinAbsoluteTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                        " ms so it has been ignored and discarded");
                 }
-
-                if (theMinTimestampDifference > theTimestampDifference)
+                else
                 {
-                    theMinTimestampDifference = theTimestampDifference;
-                    theMinTimestampPacketNumber = thePacketNumber;
-                    theMinTimestampSequenceNumber = theSequenceNumber;
-                }
+                    double theTimestampDifference =
+                        (thePacketTimestamp - theLastTimestamp) * 1000.0; // Milliseconds
 
-                if (theMaxTimestampDifference < theTimestampDifference)
-                {
-                    theMaxTimestampDifference = theTimestampDifference;
-                    theMaxTimestampPacketNumber = thePacketNumber;
-                    theMaxTimestampSequenceNumber = theSequenceNumber;
-                }
+                    //// Keep a running total of the timestamp differences to allow for averaging
 
-                theLastTimestamp = thePacketTimestamp;
+                    ++theNumberOfTimestampDifferenceInstances;
+
+                    theTotalOfTimestampDifferences += theTimestampDifference;
+
+                    if (!theTimestampHistogram.AddValue(theTimestampDifference))
+                    {
+                        theOutOfRangeTimestamps.Add(
+                            "The message for packet number " +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                            " and sequence number " +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                            " has an out of range timestamp difference of " +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                            " ms");
+                    }
+
+                    if (theMinTimestampDifference > theTimestampDifference)
+                    {
+                        theMinTimestampDifference = theTimestampDifference;
+                        theMinTimestampPacketNumber = thePacketNumber;
+                        theMinTimestampSequenceNumber = theSequenceNumber;
+                    }
+
+                    if (theMaxTimestampDifference < theTimestampDifference)
+                    {
+                        theMaxTimestampDifference = theTimestampDifference;
+                        theMaxTimestampPacketNumber = thePacketNumber;
+                        theMaxTimestampSequenceNumber = theSequenceNumber;
+                    }
+
+                    // Keep a record of the last timestamp received (from this time-supplying
+                    // message) to allow comparison with the next timestamp received
+                    theLastTimestamp = thePacketTimestamp;
+                }
             }
 
             if (isOutgoing)
@@ -481,15 +507,20 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    new string('-', 144));
+
+                this.theDebugInformation.WriteBlankLine();
+
                 theAverageTimestampDifference =
                     theTotalOfTimestampDifferences /
                     theNumberOfTimestampDifferenceInstances;
 
-                this.theDebugInformation.WriteBlankLine();
-
                 this.theDebugInformation.WriteTextLine(
                     "The minimum timestamp difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
@@ -497,7 +528,7 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum timestamp difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
@@ -505,7 +536,7 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The average timestamp difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms");
 
                 if (theAverageTimestampDifference > 0)
@@ -518,13 +549,18 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
 
                     this.theDebugInformation.WriteTextLine(
                         "The average message rate was " +
-                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMessageRate.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMessageRate.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " Hz");
                 }
 
                 if (this.outputHistogram)
                 {
                     //// Output the histogram
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    this.theDebugInformation.WriteTextLine(
+                        new string('-', 144));
 
                     this.theDebugInformation.WriteBlankLine();
 
@@ -542,8 +578,59 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
                 {
                     this.theDebugInformation.WriteBlankLine();
 
+                    this.theDebugInformation.WriteTextLine(
+                        new string('-', 144));
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    if (isOutgoing)
+                    {
+                        this.theDebugInformation.WriteTextLine(
+                            "The number of those outgoing messages that had an out of range timestamp difference was " +
+                            theOutOfRangeTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
+                    }
+                    else
+                    {
+                        this.theDebugInformation.WriteTextLine(
+                            "The number of those incoming messages that had an out of range timestamp difference was " +
+                            theOutOfRangeTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
+                    }
+
+                    this.theDebugInformation.WriteBlankLine();
+
                     // Output the data for any message with an out of range timestamp difference
                     foreach (string theString in theOutOfRangeTimestamps)
+                    {
+                        this.theDebugInformation.WriteTextLine(theString);
+                    }
+                }
+
+                if (theIgnoredTimestamps.Any())
+                {
+                    this.theDebugInformation.WriteBlankLine();
+
+                    this.theDebugInformation.WriteTextLine(
+                        new string('-', 144));
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    if (isOutgoing)
+                    {
+                        this.theDebugInformation.WriteTextLine(
+                            "The number of those outgoing messages that were ignored and discarded was " +
+                            theIgnoredTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
+                    }
+                    else
+                    {
+                        this.theDebugInformation.WriteTextLine(
+                            "The number of those incoming messages that were ignored and discarded was " +
+                            theIgnoredTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
+                    }
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    // Output the data for any time-supplying messages that were ignored and discarded
+                    foreach (string theString in theIgnoredTimestamps)
                     {
                         this.theDebugInformation.WriteTextLine(theString);
                     }
@@ -615,7 +702,7 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
                         // If this is the first message then there is no previous message and so just output the timestamp
                         theOutputAdditionalInformationLine = string.Format(
                             System.Globalization.CultureInfo.CurrentCulture,
-                            "{0},{1},{2,18}{3}",
+                            "{0},{1},{2,19}{3}",
                             thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
@@ -629,7 +716,7 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
                         // If this is another message then also calculate the difference in timestamp from the previous message and output it along with the timestamp
                         theOutputAdditionalInformationLine = string.Format(
                             System.Globalization.CultureInfo.CurrentCulture,
-                            "{0},{1},{2,18},,{3,18}{4}",
+                            "{0},{1},{2,19},,{3,19}{4}",
                             thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             theSequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                             thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),

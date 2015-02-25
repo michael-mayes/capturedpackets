@@ -13,7 +13,13 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
     /// </summary>
     public static class Constants
     {
-        //// Timestamps
+        //// Timestamp differences
+
+        /// <summary>
+        /// The minimum absolute timestamp difference that will be accepted for successive messages
+        /// This should prevent the processing of duplicates of a message (e.g. if port mirroring results in two copies of the time-supplying message)
+        /// </summary>
+        public const double MinAbsoluteTimestampDifference = 0.03; // Milliseconds
 
         /// <summary>
         /// The minimum timestamp difference to be shown in the histogram
