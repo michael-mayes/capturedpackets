@@ -477,7 +477,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
                         " and sequence number " +
                         string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theRow.Key.SequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " has an out of range latency of " +
-                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theRow.Value.TimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theRow.Value.TimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " ms");
                 }
 
@@ -518,7 +518,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum latency was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
@@ -526,7 +526,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum latency was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimestampPacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " and sequence number " +
@@ -534,12 +534,17 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The average latency was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms");
 
                 if (this.outputHistogram)
                 {
                     //// Output the histogram
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    this.theDebugInformation.WriteTextLine(
+                        new string('-', 144));
 
                     this.theDebugInformation.WriteBlankLine();
 
@@ -555,6 +560,17 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
 
                 if (theOutOfRangeLatencies.Any())
                 {
+                    this.theDebugInformation.WriteBlankLine();
+
+                    this.theDebugInformation.WriteTextLine(
+                        new string('-', 144));
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    this.theDebugInformation.WriteTextLine(
+                        "The number of those message pairs that had an out of range latency was " +
+                        theOutOfRangeLatencies.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
+
                     this.theDebugInformation.WriteBlankLine();
 
                     // Output the data for any message pair with an out of range latency
@@ -617,7 +633,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
                 {
                     string theOutputAdditionalInformationLine = string.Format(
                         System.Globalization.CultureInfo.CurrentCulture,
-                        "{0,7},{1,7},{2,7},{3,18},{4,18},,{5,18}{6}",
+                        "{0,7},{1,7},{2,7},{3,19},{4,19},,{5,19}{6}",
                         theRow.Value.FirstInstancePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                         theRow.Value.SecondInstancePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                         theRow.Key.SequenceNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
