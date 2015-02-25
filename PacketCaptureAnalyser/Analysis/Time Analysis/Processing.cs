@@ -231,6 +231,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
         /// <summary>
         /// Finalize timestamp analysis for the supplied data table rows
         /// </summary>
+        /// <param name="theTimeValuesRowsFound">The data table rows for which timestamp analysis is to be finalized</param>
         private void FinaliseTimestamps(EnumerableRowCollection<System.Data.DataRow> theTimeValuesRowsFound)
         {
             CommonHistogram theLowerRangeTimestampHistogram =
@@ -255,8 +256,6 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     Constants.MaxUpperRangeTimestampDifference);
 
             ulong theNumberOfMessages = 0;
-
-            ulong theNumberOfIgnoredMessages = 0;
 
             double theMinTimestampDifference = double.MaxValue;
             double theMaxTimestampDifference = double.MinValue;
@@ -308,9 +307,6 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 // This should prevent a large gap in time-supplying messages unduly affecting the processing (e.g. if the host is in the process of being restarted or becomes available)
                 if (theAbsoluteTimestampDifference < Constants.MinAbsoluteTimestampDifference)
                 {
-                    // Keep a running total of the number of time-supplying messages that were ignored and discarded
-                    ++theNumberOfIgnoredMessages;
-
                     theIgnoredTimestamps.Add(
                         "The time-supplying message with packet number " +
                         string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
@@ -322,9 +318,6 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 }
                 else if (theAbsoluteTimestampDifference > Constants.MaxAbsoluteTimestampDifference)
                 {
-                    // Keep a running total of the number of time-supplying messages that were ignored and discarded
-                    ++theNumberOfIgnoredMessages;
-
                     theIgnoredTimestamps.Add(
                         "The time-supplying message with packet number " +
                         string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
@@ -361,7 +354,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                                 "The time-supplying message with packet number " +
                                 string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " has an out of range timestamp difference of " +
-                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " ms");
                         }
                     }
@@ -374,7 +367,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                                 "The time-supplying message with packet number " +
                                 string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " has an out of range timestamp difference of " +
-                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " ms");
                         }
                     }
@@ -387,7 +380,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                                 "The time-supplying message with packet number " +
                                 string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " has an out of range timestamp difference of " +
-                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " ms");
                         }
                     }
@@ -397,7 +390,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                             "The time-supplying message with packet number " +
                             string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                             " has an out of range timestamp difference of " +
-                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                             " ms");
                     }
 
@@ -423,16 +416,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 "The number of time-supplying messages was " +
                 theNumberOfMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
 
-            if (theNumberOfIgnoredMessages > 0)
-            {
-                this.theDebugInformation.WriteBlankLine();
-
-                this.theDebugInformation.WriteTextLine(
-                    "The number of those time-supplying messages that were ignored and discarded was " +
-                    theNumberOfIgnoredMessages.ToString(System.Globalization.CultureInfo.CurrentCulture));
-            }
-
-            // 
+            // Output information, and potentially a histogram, for the timestamp differences
             this.OutputTimestampDifferences(
                 theNumberOfTimestampDifferenceInstances,
                 theTotalOfTimestampDifferences,
@@ -440,10 +424,31 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 theMaxTimestampDifference,
                 theMinTimestampDifferencePacketNumber,
                 theMaxTimestampDifferencePacketNumber,
-                theOutOfRangeTimestamps,
                 theLowerRangeTimestampHistogram,
                 theMiddleRangeTimestampHistogram,
                 theUpperRangeTimestampHistogram);
+
+            if (theOutOfRangeTimestamps.Any())
+            {
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    new string('-', 144));
+
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    "The number of those time-supplying messages that had an out of range timestamp difference was " +
+                    theOutOfRangeTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
+
+                this.theDebugInformation.WriteBlankLine();
+
+                // Output the data for any time-supplying message with an out of range timestamp difference
+                foreach (string theString in theOutOfRangeTimestamps)
+                {
+                    this.theDebugInformation.WriteTextLine(theString);
+                }
+            }
 
             if (theIgnoredTimestamps.Any())
             {
@@ -451,6 +456,12 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     new string('-', 144));
+
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    "The number of those time-supplying messages that were ignored and discarded was " +
+                    theIgnoredTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
 
                 this.theDebugInformation.WriteBlankLine();
 
@@ -472,6 +483,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
         /// <summary>
         /// Finalize time analysis for the supplied data table rows
         /// </summary>
+        /// <param name="theTimeValuesRowsFound">The data table rows for which time analysis is to be finalized</param>
         private void FinaliseTimes(EnumerableRowCollection<System.Data.DataRow> theTimeValuesRowsFound)
         {
             CommonHistogram theLowerRangeTimeHistogram =
@@ -521,6 +533,8 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 // Do not calculate the differences in timestamp and time for first row - just record values and move on to second row
                 if (!theFirstRowProcessed)
                 {
+                    theLastTimestamp = thePacketTimestamp;
+
                     theLastTime = thePacketTime;
 
                     // The first time-supplying message is always marked as processed
@@ -539,7 +553,11 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 // Only those time-supplying messages with a timestamp difference in the chosen range will be marked as processed
                 // This should prevent the processing of duplicates of a time-supplying message (e.g. if port mirroring results in two copies of the time-supplying message)
                 // This should prevent a large gap in time-supplying messages unduly affecting the processing (e.g. if the host is in the process of being restarted or becomes available)
-                if (theAbsoluteTimestampDifference > Constants.MaxAbsoluteTimestampDifference)
+                if (theAbsoluteTimestampDifference < Constants.MinAbsoluteTimestampDifference)
+                {
+                    // No functionality required in this case for the time analysis
+                }
+                else if (theAbsoluteTimestampDifference > Constants.MaxAbsoluteTimestampDifference)
                 {
                     // Keep a record of the last timestamp received (from this time-supplying
                     // message) to allow comparison with the next timestamp received
@@ -574,7 +592,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                                 "The time-supplying message with packet number " +
                                 string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " has an out of range time difference of " +
-                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " ms");
                         }
                     }
@@ -587,7 +605,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                                 "The time-supplying message with packet number " +
                                 string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " has an out of range time difference of " +
-                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " ms");
                         }
                     }
@@ -600,7 +618,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                                 "The time-supplying message with packet number " +
                                 string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " has an out of range time difference of " +
-                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                                string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                                 " ms");
                         }
                     }
@@ -610,7 +628,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                             "The time-supplying message with packet number " +
                             string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                             " has an out of range time difference of " +
-                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                             " ms");
                     }
 
@@ -626,13 +644,17 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                         theMaxTimeDifferencePacketNumber = thePacketNumber;
                     }
 
+                    // Keep a record of the last timestamp received (from this time-supplying
+                    // message) to allow comparison with the next timestamp received
+                    theLastTimestamp = thePacketTimestamp;
+
                     // Keep a record of the last time received (from this time-supplying
                     // message) to allow comparison with the next time received
                     theLastTime = thePacketTime;
                 }
             }
 
-            // 
+            // Output information, and potentially a histogram, for the times differences
             this.OutputTimeDifferences(
                 theNumberOfTimeDifferenceInstances,
                 theTotalOfTimeDifferences,
@@ -640,10 +662,29 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                 theMaxTimeDifference,
                 theMinTimeDifferencePacketNumber,
                 theMaxTimeDifferencePacketNumber,
-                theOutOfRangeTimes,
                 theLowerRangeTimeHistogram,
                 theMiddleRangeTimeHistogram,
                 theUpperRangeTimeHistogram);
+
+            if (theOutOfRangeTimes.Any())
+            {
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    new string('-', 144));
+
+                this.theDebugInformation.WriteBlankLine();
+
+                this.theDebugInformation.WriteTextLine(
+                    "The number of those time-supplying messages that had an out of range time difference was " +
+                    theOutOfRangeTimes.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
+
+                // Output the data for any time-supplying message with an out of range time difference
+                foreach (string theString in theOutOfRangeTimes)
+                {
+                    this.theDebugInformation.WriteTextLine(theString);
+                }
+            }
 
             this.theDebugInformation.WriteBlankLine();
 
@@ -654,19 +695,18 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
         }
 
         /// <summary>
-        /// 
+        /// Output information, and potentially a histogram, for the timestamp differences
         /// </summary>
-        /// <param name="theNumberOfTimestampDifferenceInstances"></param>
-        /// <param name="theTotalOfTimestampDifferences"></param>
-        /// <param name="theMinTimestampDifference"></param>
-        /// <param name="theMaxTimestampDifference"></param>
-        /// <param name="theMinTimestampDifferencePacketNumber"></param>
-        /// <param name="theMaxTimestampDifferencePacketNumber"></param>
-        /// <param name="theOutOfRangeTimestamps"></param>
-        /// <param name="theLowerRangeTimestampHistogram"></param>
-        /// <param name="theMiddleRangeTimestampHistogram"></param>
-        /// <param name="theUpperRangeTimestampHistogram"></param>
-        private void OutputTimestampDifferences(ulong theNumberOfTimestampDifferenceInstances, double theTotalOfTimestampDifferences, double theMinTimestampDifference, double theMaxTimestampDifference, ulong theMinTimestampDifferencePacketNumber, ulong theMaxTimestampDifferencePacketNumber, System.Collections.Generic.List<string> theOutOfRangeTimestamps, CommonHistogram theLowerRangeTimestampHistogram, CommonHistogram theMiddleRangeTimestampHistogram, CommonHistogram theUpperRangeTimestampHistogram)
+        /// <param name="theNumberOfTimestampDifferenceInstances">The number of timestamp differences</param>
+        /// <param name="theTotalOfTimestampDifferences">The total of all the timestamp differences</param>
+        /// <param name="theMinTimestampDifference">The minimum timestamp difference</param>
+        /// <param name="theMaxTimestampDifference">The maximum timestamp difference</param>
+        /// <param name="theMinTimestampDifferencePacketNumber">The packet number with the minimum timestamp difference</param>
+        /// <param name="theMaxTimestampDifferencePacketNumber">The packet number with the maximum timestamp difference</param>
+        /// <param name="theLowerRangeTimestampHistogram">The histogram for the lower range of timestamp differences</param>
+        /// <param name="theMiddleRangeTimestampHistogram">The histogram for the middle range of timestamp differences</param>
+        /// <param name="theUpperRangeTimestampHistogram">The histogram for the upper range of timestamp differences</param>
+        private void OutputTimestampDifferences(ulong theNumberOfTimestampDifferenceInstances, double theTotalOfTimestampDifferences, double theMinTimestampDifference, double theMaxTimestampDifference, ulong theMinTimestampDifferencePacketNumber, ulong theMaxTimestampDifferencePacketNumber, CommonHistogram theLowerRangeTimestampHistogram, CommonHistogram theMiddleRangeTimestampHistogram, CommonHistogram theUpperRangeTimestampHistogram)
         {
             if (theNumberOfTimestampDifferenceInstances > 0)
             {
@@ -683,19 +723,19 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum timestamp difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMinTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimestampDifferencePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum timestamp difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMaxTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimestampDifferencePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The average timestamp difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theAverageTimestampDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms");
 
                 if (theAverageTimestampDifference > 0)
@@ -708,13 +748,18 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
 
                     this.theDebugInformation.WriteTextLine(
                         "The average rate for the time-supplying messages was " +
-                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMessageRate.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                        string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMessageRate.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                         " Hz");
                 }
 
                 if (this.outputHistograms)
                 {
                     //// Output the histogram
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    this.theDebugInformation.WriteTextLine(
+                        new string('-', 144));
 
                     this.theDebugInformation.WriteBlankLine();
 
@@ -729,68 +774,54 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     theMiddleRangeTimestampHistogram.OutputValues();
                     theUpperRangeTimestampHistogram.OutputValues();
                 }
-
-                if (theOutOfRangeTimestamps.Any())
-                {
-                    this.theDebugInformation.WriteBlankLine();
-
-                    // Output the data for any time-supplying message with an out of range timestamp difference
-                    foreach (string theString in theOutOfRangeTimestamps)
-                    {
-                        this.theDebugInformation.WriteTextLine(theString);
-                    }
-                }
             }
         }
 
         /// <summary>
-        /// 
+        /// Output information, and potentially a histogram, for the time differences
         /// </summary>
-        /// <param name="theNumberOfTimeDifferenceInstances"></param>
-        /// <param name="theTotalOfTimeDifferences"></param>
-        /// <param name="theMinTimeDifference"></param>
-        /// <param name="theMaxTimeDifference"></param>
-        /// <param name="theMinTimeDifferencePacketNumber"></param>
-        /// <param name="theMaxTimeDifferencePacketNumber"></param>
-        /// <param name="theOutOfRangeTimes"></param>
-        /// <param name="theLowerRangeTimeHistogram"></param>
-        /// <param name="theMiddleRangeTimeHistogram"></param>
-        /// <param name="theUpperRangeTimeHistogram"></param>
-        private void OutputTimeDifferences(ulong theNumberOfTimeDifferenceInstances, double theTotalOfTimeDifferences, double theMinTimeDifference, double theMaxTimeDifference, ulong theMinTimeDifferencePacketNumber, ulong theMaxTimeDifferencePacketNumber, System.Collections.Generic.List<string> theOutOfRangeTimes, CommonHistogram theLowerRangeTimeHistogram, CommonHistogram theMiddleRangeTimeHistogram, CommonHistogram theUpperRangeTimeHistogram)
+        /// <param name="theNumberOfTimeDifferenceInstances">The number of time differences</param>
+        /// <param name="theTotalOfTimeDifferences">The total of all the time differences</param>
+        /// <param name="theMinTimeDifference">The minimum time difference</param>
+        /// <param name="theMaxTimeDifference">The maximum time difference</param>
+        /// <param name="theMinTimeDifferencePacketNumber">The packet number with the minimum time difference</param>
+        /// <param name="theMaxTimeDifferencePacketNumber">The packet number with the maximum time difference</param>
+        /// <param name="theLowerRangeTimeHistogram">The histogram for the lower range of time differences</param>
+        /// <param name="theMiddleRangeTimeHistogram">The histogram for the middle range of time differences</param>
+        /// <param name="theUpperRangeTimeHistogram">The histogram for the upper range of time differences</param>
+        private void OutputTimeDifferences(ulong theNumberOfTimeDifferenceInstances, double theTotalOfTimeDifferences, double theMinTimeDifference, double theMaxTimeDifference, ulong theMinTimeDifferencePacketNumber, ulong theMaxTimeDifferencePacketNumber, CommonHistogram theLowerRangeTimeHistogram, CommonHistogram theMiddleRangeTimeHistogram, CommonHistogram theUpperRangeTimeHistogram)
         {
             if (theNumberOfTimeDifferenceInstances > 0)
             {
-                this.theDebugInformation.WriteBlankLine();
-
-                this.theDebugInformation.WriteTextLine(
-                    new string('-', 144));
-
-                this.theDebugInformation.WriteBlankLine();
-
                 double theAverageTimeDifference =
                     theTotalOfTimeDifferences /
                     theNumberOfTimeDifferenceInstances;
 
                 this.theDebugInformation.WriteTextLine(
                     "The minimum time difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMinTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMinTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMinTimeDifferencePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The maximum time difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theMaxTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theMaxTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms for packet number " +
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,7}", theMaxTimeDifferencePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture)));
 
                 this.theDebugInformation.WriteTextLine(
                     "The average time difference was " +
-                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,18}", theAverageTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theAverageTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms");
 
                 if (this.outputHistograms)
                 {
                     //// Output the histogram
+
+                    this.theDebugInformation.WriteBlankLine();
+
+                    this.theDebugInformation.WriteTextLine(
+                        new string('-', 144));
 
                     this.theDebugInformation.WriteBlankLine();
 
@@ -805,19 +836,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     theMiddleRangeTimeHistogram.OutputValues();
                     theUpperRangeTimeHistogram.OutputValues();
                 }
-
-                if (theOutOfRangeTimes.Any())
-                {
-                    this.theDebugInformation.WriteBlankLine();
-
-                    // Output the data for any time-supplying message with an out of range time difference
-                    foreach (string theString in theOutOfRangeTimes)
-                    {
-                        this.theDebugInformation.WriteTextLine(theString);
-                    }
-                }
             }
-
         }
 
         /// <summary>
@@ -871,7 +890,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                             // If this is the first time-supplying message then there is no previous time-supplying message and so just output the timestamp and time
                             theOutputAdditionalInformationLine = string.Format(
                                 System.Globalization.CultureInfo.CurrentCulture,
-                                "{0},{1,18},{2,18}{3}",
+                                "{0},{1,19},{2,19}{3}",
                                 thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                                 thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
                                 thePacketTime.ToString(System.Globalization.CultureInfo.CurrentCulture),
@@ -888,7 +907,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                             // If this is another time-supplying message then also calculate the differences in timestamp and time from the previous time-supplying message and output them along with the timestamp and time
                             theOutputAdditionalInformationLine = string.Format(
                                 System.Globalization.CultureInfo.CurrentCulture,
-                                "{0},{1,18},{2,18},,{3,18},{4,18}{5}",
+                                "{0},{1,19},{2,19},,{3,19},{4,19}{5}",
                                 thePacketNumber.ToString(System.Globalization.CultureInfo.CurrentCulture),
                                 thePacketTimestamp.ToString(System.Globalization.CultureInfo.CurrentCulture),
                                 thePacketTime.ToString(System.Globalization.CultureInfo.CurrentCulture),
