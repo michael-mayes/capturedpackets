@@ -229,16 +229,25 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
         /// <returns>Boolean flag that indicates whether the two dictionary values are equal</returns>
         public static bool operator ==(DictionaryValue a, DictionaryValue b)
         {
-            // If either of the supplied dictionary values is null then return false
-            if (a == null || b == null)
+            //// If either of the supplied dictionary values is null then return false
+
+            if (object.ReferenceEquals(a, null))
             {
                 return false;
             }
-            else
+
+            if (object.ReferenceEquals(b, null))
             {
-                // Call the Equals operator to compare the two supplied dictionary values
-                return a.Equals(b);
+                return false;
             }
+
+            if (object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            // Call the Equals operator to compare the two supplied dictionary values
+            return a.Equals(b);
         }
 
         /// <summary>
@@ -249,16 +258,25 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
         /// <returns>Boolean flag that indicates whether the two dictionary values are different</returns>
         public static bool operator !=(DictionaryValue a, DictionaryValue b)
         {
-            // If either of the supplied dictionary values is null then return false
-            if (a == null || b == null)
+            //// If either of the supplied dictionary values is null then return false
+
+            if (object.ReferenceEquals(a, null))
             {
                 return false;
             }
-            else
+
+            if (object.ReferenceEquals(b, null))
             {
-                // Call the Equals operator to compare the two supplied dictionary values and take a ! of the returned value
-                return !a.Equals(b);
+                return false;
             }
+
+            if (object.ReferenceEquals(a, b))
+            {
+                return false;
+            }
+
+            // Call the Equals operator to compare the two supplied dictionary values and take a ! of the returned value
+            return !a.Equals(b);
         }
 
         /// <summary>
@@ -269,7 +287,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
         public bool Equals(DictionaryValue other)
         {
             // If the supplied dictionary value is null then return false
-            if (other == null)
+            if (object.ReferenceEquals(other, null))
             {
                 return false;
             }
@@ -297,7 +315,7 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
         public override bool Equals(object obj)
         {
             // If the supplied dictionary value is null then return false
-            if (obj == null)
+            if (object.ReferenceEquals(obj, null))
             {
                 return false;
             }
