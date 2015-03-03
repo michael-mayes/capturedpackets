@@ -45,13 +45,13 @@ namespace PacketCaptureAnalyzer
         }
 
         /// <summary>
-        /// Gets the expected set of fixed extensions for a PCAP Next Generation packet capture
+        /// Gets the expected set of file extensions for a PCAP Next Generation packet capture
         /// </summary>
         public static System.Collections.ObjectModel.ReadOnlyCollection<string> ExpectedPCAPNextGenerationPacketCaptureFileExtensions
         {
             get
             {
-                //// Set up the expected set of fixed extensions for a PCAP Next Generation packet capture
+                //// Set up the expected set of file extensions for a PCAP Next Generation packet capture
 
                 System.Collections.ObjectModel.ReadOnlyCollection<string>
                     theExpectedPCAPNextGenerationPacketCaptureFileExtensions;
@@ -71,13 +71,13 @@ namespace PacketCaptureAnalyzer
         }
 
         /// <summary>
-        /// Gets the expected set of fixed extensions for a PCAP packet capture
+        /// Gets the expected set of file extensions for a PCAP packet capture
         /// </summary>
         public static System.Collections.ObjectModel.ReadOnlyCollection<string> ExpectedPCAPPacketCaptureFileExtensions
         {
             get
             {
-                //// Set up the expected set of fixed extensions for a PCAP packet capture
+                //// Set up the expected set of file extensions for a PCAP packet capture
 
                 System.Collections.ObjectModel.ReadOnlyCollection<string>
                     theExpectedPCAPPacketCaptureFileExtensions;
@@ -98,13 +98,13 @@ namespace PacketCaptureAnalyzer
         }
 
         /// <summary>
-        /// Gets the expected set of fixed extensions for an NA Sniffer (DOS) packet capture
+        /// Gets the expected set of file extensions for an NA Sniffer (DOS) packet capture
         /// </summary>
         public static System.Collections.ObjectModel.ReadOnlyCollection<string> ExpectedNASnifferDOSPacketCaptureFileExtensions
         {
             get
             {
-                //// Set up the expected set of fixed extensions for a NA Sniffer (DOS) packet capture
+                //// Set up the expected set of file extensions for a NA Sniffer (DOS) packet capture
 
                 System.Collections.ObjectModel.ReadOnlyCollection<string>
                     theExpectedNASnifferDOSPacketCaptureFileExtensions;
