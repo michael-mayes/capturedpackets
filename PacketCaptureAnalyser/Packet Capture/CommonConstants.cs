@@ -12,7 +12,7 @@ namespace PacketCaptureAnalyzer.PacketCapture
     /// This class provides constants for use by the common packet capture processing
     /// </summary>
     public static class CommonConstants
-    {        
+    {
         /// <summary>
         /// Network data link type/Network encapsulation type
         /// </summary>

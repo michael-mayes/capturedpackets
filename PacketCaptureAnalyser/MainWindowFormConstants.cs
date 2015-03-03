@@ -52,7 +52,7 @@ namespace PacketCaptureAnalyzer
             get
             {
                 //// Set up the expected set of fixed extensions for a PCAP Next Generation packet capture
-                
+
                 System.Collections.ObjectModel.ReadOnlyCollection<string>
                     theExpectedPCAPNextGenerationPacketCaptureFileExtensions;
 
@@ -78,7 +78,7 @@ namespace PacketCaptureAnalyzer
             get
             {
                 //// Set up the expected set of fixed extensions for a PCAP packet capture
-                
+
                 System.Collections.ObjectModel.ReadOnlyCollection<string>
                     theExpectedPCAPPacketCaptureFileExtensions;
 
@@ -105,7 +105,7 @@ namespace PacketCaptureAnalyzer
             get
             {
                 //// Set up the expected set of fixed extensions for a NA Sniffer (DOS) packet capture
-                
+
                 System.Collections.ObjectModel.ReadOnlyCollection<string>
                     theExpectedNASnifferDOSPacketCaptureFileExtensions;
 
