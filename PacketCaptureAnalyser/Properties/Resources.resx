@@ -169,7 +169,7 @@
     <value>Packet Capture Analyser</value>
   </data>
   <data name="PacketCapturesFilter" xml:space="preserve">
-    <value>Packet Captures (*pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.libpcap;*.enc;*.cap;*.ntar</value>
+    <value>Packet Captures (*.pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.libpcap;*.enc;*.cap;*.ntar</value>
   </data>
   <data name="Path" xml:space="preserve">
     <value>Path</value>

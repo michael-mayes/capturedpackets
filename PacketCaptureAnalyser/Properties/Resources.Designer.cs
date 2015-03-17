@@ -214,7 +214,7 @@ namespace PacketCaptureAnalyzer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Packet Captures (*pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.libpcap;*.enc;*.cap;*.ntar.
+        ///   Looks up a localized string similar to Packet Captures (*.pcapng,*.pcap,*.libpcap,*.enc,*.cap,*.ntar)|*.pcapng;*.pcap;*.libpcap;*.enc;*.cap;*.ntar.
         /// </summary>
         internal static string PacketCapturesFilter {
             get {
