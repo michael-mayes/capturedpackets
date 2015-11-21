@@ -214,8 +214,8 @@ namespace PacketCaptureAnalyzer
                     this.theOutputBurstAnalysisHistogramCheckBox.Checked = false;
                     this.theOutputBurstAnalysisHistogramCheckBox.Enabled = false;
 
-                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
-                    this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
+                    this.theOutputAdditionalBurstAnalysisInformationCheckBox.Checked = false;
+                    this.theOutputAdditionalBurstAnalysisInformationCheckBox.Enabled = false;
                 }
             }
         }
