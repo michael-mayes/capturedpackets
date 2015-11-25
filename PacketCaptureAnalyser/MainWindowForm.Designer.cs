@@ -153,9 +153,14 @@ namespace PacketCaptureAnalyzer
         private System.Windows.Forms.CheckBox thePerformTimeAnalysisCheckBox;
 
         /// <summary>
-        /// The check box that indicates whether to output histograms from the time analysis for the selected packet capture
+        /// The check box that indicates whether to output timestamp histograms from the time analysis for the selected packet capture
         /// </summary>
-        private System.Windows.Forms.CheckBox theOutputTimeAnalysisHistogramCheckBox;
+        private System.Windows.Forms.CheckBox theOutputTimeAnalysisTimestampHistogramCheckBox;
+
+        /// <summary>
+        /// The check box that indicates whether to output time histograms from the time analysis for the selected packet capture
+        /// </summary>
+        private System.Windows.Forms.CheckBox theOutputTimeAnalysisTimeHistogramCheckBox;
 
         /// <summary>
         /// The check box that indicates whether to output additional information from the time analysis for the selected packet capture
@@ -257,7 +262,8 @@ namespace PacketCaptureAnalyzer
             this.theOutputLatencyAnalysisHistogramCheckBox = new System.Windows.Forms.CheckBox();
             this.theDebugInformationGroupBox = new System.Windows.Forms.GroupBox();
             this.theTimeAnalysisGroupBox = new System.Windows.Forms.GroupBox();
-            this.theOutputTimeAnalysisHistogramCheckBox = new System.Windows.Forms.CheckBox();
+            this.theOutputTimeAnalysisTimeHistogramCheckBox = new System.Windows.Forms.CheckBox();
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox = new System.Windows.Forms.CheckBox();
             this.theSelectedPacketCaptureGroupBox = new System.Windows.Forms.GroupBox();
             this.theBurstAnalysisGroupBox = new System.Windows.Forms.GroupBox();
             this.theOutputBurstAnalysisHistogramCheckBox = new System.Windows.Forms.CheckBox();
@@ -273,7 +279,7 @@ namespace PacketCaptureAnalyzer
             // theRunAnalysisOnSelectedPackageCaptureButton
             // 
             this.theRunAnalysisOnSelectedPackageCaptureButton.Enabled = false;
-            this.theRunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 535);
+            this.theRunAnalysisOnSelectedPackageCaptureButton.Location = new System.Drawing.Point(12, 560);
             this.theRunAnalysisOnSelectedPackageCaptureButton.Name = "theRunAnalysisOnSelectedPackageCaptureButton";
             this.theRunAnalysisOnSelectedPackageCaptureButton.Size = new System.Drawing.Size(357, 23);
             this.theRunAnalysisOnSelectedPackageCaptureButton.TabIndex = 10;
@@ -283,7 +289,7 @@ namespace PacketCaptureAnalyzer
             // 
             // theExitButton
             // 
-            this.theExitButton.Location = new System.Drawing.Point(12, 564);
+            this.theExitButton.Location = new System.Drawing.Point(12, 589);
             this.theExitButton.Name = "theExitButton";
             this.theExitButton.Size = new System.Drawing.Size(357, 23);
             this.theExitButton.TabIndex = 11;
@@ -435,7 +441,7 @@ namespace PacketCaptureAnalyzer
             // 
             this.theMinimizeMemoryUsageCheckBox.AutoSize = true;
             this.theMinimizeMemoryUsageCheckBox.Enabled = false;
-            this.theMinimizeMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 512);
+            this.theMinimizeMemoryUsageCheckBox.Location = new System.Drawing.Point(12, 537);
             this.theMinimizeMemoryUsageCheckBox.Name = "theMinimizeMemoryUsageCheckBox";
             this.theMinimizeMemoryUsageCheckBox.Size = new System.Drawing.Size(346, 17);
             this.theMinimizeMemoryUsageCheckBox.TabIndex = 9;
@@ -457,7 +463,7 @@ namespace PacketCaptureAnalyzer
             // 
             this.theEnableInformationEventsInDebugInformationCheckBox.AutoSize = true;
             this.theEnableInformationEventsInDebugInformationCheckBox.Enabled = false;
-            this.theEnableInformationEventsInDebugInformationCheckBox.Location = new System.Drawing.Point(31, 42);
+            this.theEnableInformationEventsInDebugInformationCheckBox.Location = new System.Drawing.Point(21, 42);
             this.theEnableInformationEventsInDebugInformationCheckBox.Name = "theEnableInformationEventsInDebugInformationCheckBox";
             this.theEnableInformationEventsInDebugInformationCheckBox.Size = new System.Drawing.Size(150, 17);
             this.theEnableInformationEventsInDebugInformationCheckBox.TabIndex = 1;
@@ -480,7 +486,7 @@ namespace PacketCaptureAnalyzer
             // 
             this.theUseAlternativeSequenceNumberCheckBox.AutoSize = true;
             this.theUseAlternativeSequenceNumberCheckBox.Enabled = false;
-            this.theUseAlternativeSequenceNumberCheckBox.Location = new System.Drawing.Point(12, 489);
+            this.theUseAlternativeSequenceNumberCheckBox.Location = new System.Drawing.Point(12, 514);
             this.theUseAlternativeSequenceNumberCheckBox.Name = "theUseAlternativeSequenceNumberCheckBox";
             this.theUseAlternativeSequenceNumberCheckBox.Size = new System.Drawing.Size(309, 17);
             this.theUseAlternativeSequenceNumberCheckBox.TabIndex = 8;
@@ -504,7 +510,7 @@ namespace PacketCaptureAnalyzer
             // 
             this.theOutputLatencyAnalysisHistogramCheckBox.AutoSize = true;
             this.theOutputLatencyAnalysisHistogramCheckBox.Enabled = false;
-            this.theOutputLatencyAnalysisHistogramCheckBox.Location = new System.Drawing.Point(31, 42);
+            this.theOutputLatencyAnalysisHistogramCheckBox.Location = new System.Drawing.Point(21, 42);
             this.theOutputLatencyAnalysisHistogramCheckBox.Name = "theOutputLatencyAnalysisHistogramCheckBox";
             this.theOutputLatencyAnalysisHistogramCheckBox.Size = new System.Drawing.Size(108, 17);
             this.theOutputLatencyAnalysisHistogramCheckBox.TabIndex = 1;
@@ -526,27 +532,39 @@ namespace PacketCaptureAnalyzer
             // 
             // theTimeAnalysisGroupBox
             // 
-            this.theTimeAnalysisGroupBox.Controls.Add(this.theOutputTimeAnalysisHistogramCheckBox);
+            this.theTimeAnalysisGroupBox.Controls.Add(this.theOutputTimeAnalysisTimeHistogramCheckBox);
+            this.theTimeAnalysisGroupBox.Controls.Add(this.theOutputTimeAnalysisTimestampHistogramCheckBox);
             this.theTimeAnalysisGroupBox.Controls.Add(this.thePerformTimeAnalysisCheckBox);
             this.theTimeAnalysisGroupBox.Controls.Add(this.theOutputAdditionalTimeAnalysisInformationCheckBox);
             this.theTimeAnalysisGroupBox.Enabled = false;
             this.theTimeAnalysisGroupBox.Location = new System.Drawing.Point(12, 419);
             this.theTimeAnalysisGroupBox.Name = "theTimeAnalysisGroupBox";
-            this.theTimeAnalysisGroupBox.Size = new System.Drawing.Size(357, 64);
+            this.theTimeAnalysisGroupBox.Size = new System.Drawing.Size(357, 89);
             this.theTimeAnalysisGroupBox.TabIndex = 7;
             this.theTimeAnalysisGroupBox.TabStop = false;
             this.theTimeAnalysisGroupBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.TimeAnalysis;
             // 
-            // theOutputTimeAnalysisHistogramCheckBox
+            // theOutputTimeAnalysisTimeHistogramCheckBox
             // 
-            this.theOutputTimeAnalysisHistogramCheckBox.AutoSize = true;
-            this.theOutputTimeAnalysisHistogramCheckBox.Enabled = false;
-            this.theOutputTimeAnalysisHistogramCheckBox.Location = new System.Drawing.Point(31, 42);
-            this.theOutputTimeAnalysisHistogramCheckBox.Name = "theOutputTimeAnalysisHistogramCheckBox";
-            this.theOutputTimeAnalysisHistogramCheckBox.Size = new System.Drawing.Size(108, 17);
-            this.theOutputTimeAnalysisHistogramCheckBox.TabIndex = 1;
-            this.theOutputTimeAnalysisHistogramCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputHistogram;
-            this.theOutputTimeAnalysisHistogramCheckBox.UseVisualStyleBackColor = true;
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.AutoSize = true;
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Enabled = false;
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Location = new System.Drawing.Point(21, 65);
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Name = "theOutputTimeAnalysisTimeHistogramCheckBox";
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Size = new System.Drawing.Size(134, 17);
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.TabIndex = 3;
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputTimeHistogram;
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // theOutputTimeAnalysisTimestampHistogramCheckBox
+            // 
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.AutoSize = true;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Enabled = false;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Location = new System.Drawing.Point(21, 42);
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Name = "theOutputTimeAnalysisTimestampHistogramCheckBox";
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Size = new System.Drawing.Size(162, 17);
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.TabIndex = 1;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Text = global::PacketCaptureAnalyzer.Properties.Resources.OutputTimestampHistogram;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.UseVisualStyleBackColor = true;
             // 
             // theSelectedPacketCaptureGroupBox
             // 
@@ -581,7 +599,7 @@ namespace PacketCaptureAnalyzer
             // 
             this.theOutputBurstAnalysisHistogramCheckBox.AutoSize = true;
             this.theOutputBurstAnalysisHistogramCheckBox.Enabled = false;
-            this.theOutputBurstAnalysisHistogramCheckBox.Location = new System.Drawing.Point(31, 43);
+            this.theOutputBurstAnalysisHistogramCheckBox.Location = new System.Drawing.Point(21, 43);
             this.theOutputBurstAnalysisHistogramCheckBox.Name = "theOutputBurstAnalysisHistogramCheckBox";
             this.theOutputBurstAnalysisHistogramCheckBox.Size = new System.Drawing.Size(108, 17);
             this.theOutputBurstAnalysisHistogramCheckBox.TabIndex = 1;
@@ -616,7 +634,7 @@ namespace PacketCaptureAnalyzer
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(378, 596);
+            this.ClientSize = new System.Drawing.Size(378, 624);
             this.Controls.Add(this.theBurstAnalysisGroupBox);
             this.Controls.Add(this.theSelectedPacketCaptureGroupBox);
             this.Controls.Add(this.theUseAlternativeSequenceNumberCheckBox);

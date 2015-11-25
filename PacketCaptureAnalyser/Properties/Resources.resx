@@ -210,4 +210,16 @@
   <data name="UseAlternativeSequenceNumber" xml:space="preserve">
     <value>Use Alternative Sequence Number (For Legacy Recordings)</value>
   </data>
+  <data name="OutputTimeAdditionalInformation" xml:space="preserve">
+    <value>Output Time Additional Information</value>
+  </data>
+  <data name="OutputTimeHistogram" xml:space="preserve">
+    <value>Output Time Histogram</value>
+  </data>
+  <data name="OutputTimestampAdditionalInformation" xml:space="preserve">
+    <value>Output Timestamp Additional Information</value>
+  </data>
+  <data name="OutputTimestampHistogram" xml:space="preserve">
+    <value>Output Timestamp Histogram</value>
+  </data>
 </root>

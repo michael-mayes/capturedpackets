@@ -205,6 +205,42 @@ namespace PacketCaptureAnalyzer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output Time Additional Information.
+        /// </summary>
+        internal static string OutputTimeAdditionalInformation {
+            get {
+                return ResourceManager.GetString("OutputTimeAdditionalInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output Time Histogram.
+        /// </summary>
+        internal static string OutputTimeHistogram {
+            get {
+                return ResourceManager.GetString("OutputTimeHistogram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output Timestamp Additional Information.
+        /// </summary>
+        internal static string OutputTimestampAdditionalInformation {
+            get {
+                return ResourceManager.GetString("OutputTimestampAdditionalInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output Timestamp Histogram.
+        /// </summary>
+        internal static string OutputTimestampHistogram {
+            get {
+                return ResourceManager.GetString("OutputTimestampHistogram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Packet Capture Analyser.
         /// </summary>
         internal static string PacketCaptureAnalyser {

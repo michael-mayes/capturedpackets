@@ -23,9 +23,14 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
         private Analysis.DebugInformation theDebugInformation;
 
         /// <summary>
-        /// Boolean flag that indicates whether to output the histograms
+        /// Boolean flag that indicates whether to output the histogram for timestamps
         /// </summary>
-        private bool outputHistograms;
+        private bool outputTimestampHistograms;
+
+        /// <summary>
+        /// Boolean flag that indicates whether to output the histogram for times
+        /// </summary>
+        private bool outputTimeHistograms;
 
         /// <summary>
         /// Boolean flag that indicates whether to output additional information
@@ -51,14 +56,17 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
         /// Initializes a new instance of the Processing class
         /// </summary>
         /// <param name="theDebugInformation">The object that provides for the logging of debug information</param>
-        /// <param name="outputHistograms">Boolean flag that indicates whether to output the histograms</param>
+        /// <param name="outputTimestampHistograms">Boolean flag that indicates whether to output the histogram for timestamps</param>
+        /// <param name="outputTimeHistograms">Boolean flag that indicates whether to output the histogram for times</param>
         /// <param name="outputAdditionalInformation">Boolean flag that indicates whether to output additional information</param>
         /// <param name="theSelectedPacketCaptureFile">The path of the selected packet capture</param>
-        public Processing(Analysis.DebugInformation theDebugInformation, bool outputHistograms, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
+        public Processing(Analysis.DebugInformation theDebugInformation, bool outputTimestampHistograms, bool outputTimeHistograms, bool outputAdditionalInformation, string theSelectedPacketCaptureFile)
         {
             this.theDebugInformation = theDebugInformation;
 
-            this.outputHistograms = outputHistograms;
+            this.outputTimestampHistograms = outputTimestampHistograms;
+
+            this.outputTimeHistograms = outputTimeHistograms;
 
             this.outputAdditionalInformation = outputAdditionalInformation;
 
@@ -679,10 +687,15 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     "The number of those time-supplying messages that had an out of range time difference was " +
                     theOutOfRangeTimes.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
 
-                // Output the data for any time-supplying message with an out of range time difference
-                foreach (string theString in theOutOfRangeTimes)
+                if (this.outputAdditionalInformation)
                 {
-                    this.theDebugInformation.WriteTextLine(theString);
+                    this.theDebugInformation.WriteBlankLine();
+
+                    // Output the data for any time-supplying message with an out of range time difference
+                    foreach (string theString in theOutOfRangeTimes)
+                    {
+                        this.theDebugInformation.WriteTextLine(theString);
+                    }
                 }
             }
 
@@ -752,7 +765,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                         " Hz");
                 }
 
-                if (this.outputHistograms)
+                if (this.outputTimestampHistograms)
                 {
                     //// Output the histogram
 
@@ -814,7 +827,7 @@ namespace PacketCaptureAnalyzer.Analysis.TimeAnalysis
                     string.Format(System.Globalization.CultureInfo.CurrentCulture, "{0,19}", theAverageTimeDifference.ToString(System.Globalization.CultureInfo.CurrentCulture)) +
                     " ms");
 
-                if (this.outputHistograms)
+                if (this.outputTimeHistograms)
                 {
                     //// Output the histogram
 

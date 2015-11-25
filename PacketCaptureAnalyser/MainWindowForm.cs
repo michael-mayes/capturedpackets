@@ -232,16 +232,22 @@ namespace PacketCaptureAnalyzer
             {
                 if (this.thePerformTimeAnalysisCheckBox.Checked)
                 {
-                    this.theOutputTimeAnalysisHistogramCheckBox.Checked = false;
-                    this.theOutputTimeAnalysisHistogramCheckBox.Enabled = true;
+                    this.theOutputTimeAnalysisTimestampHistogramCheckBox.Checked = false;
+                    this.theOutputTimeAnalysisTimestampHistogramCheckBox.Enabled = true;
+
+                    this.theOutputTimeAnalysisTimeHistogramCheckBox.Checked = false;
+                    this.theOutputTimeAnalysisTimeHistogramCheckBox.Enabled = true;
 
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = true;
                 }
                 else
                 {
-                    this.theOutputTimeAnalysisHistogramCheckBox.Checked = false;
-                    this.theOutputTimeAnalysisHistogramCheckBox.Enabled = false;
+                    this.theOutputTimeAnalysisTimestampHistogramCheckBox.Checked = false;
+                    this.theOutputTimeAnalysisTimestampHistogramCheckBox.Enabled = false;
+
+                    this.theOutputTimeAnalysisTimeHistogramCheckBox.Checked = false;
+                    this.theOutputTimeAnalysisTimeHistogramCheckBox.Enabled = false;
 
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
                     this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
@@ -929,7 +935,8 @@ namespace PacketCaptureAnalyzer
                 this.theTimeAnalysisProcessing =
                     new Analysis.TimeAnalysis.Processing(
                         theDebugInformation,
-                        this.theOutputTimeAnalysisHistogramCheckBox.Checked,
+                        this.theOutputTimeAnalysisTimestampHistogramCheckBox.Checked,
+                        this.theOutputTimeAnalysisTimeHistogramCheckBox.Checked,
                         this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked,
                         this.theSelectedPacketCapturePath);
 
@@ -1298,8 +1305,11 @@ namespace PacketCaptureAnalyzer
             this.thePerformTimeAnalysisCheckBox.Checked = false;
             this.thePerformTimeAnalysisCheckBox.Enabled = true;
 
-            this.theOutputTimeAnalysisHistogramCheckBox.Checked = false;
-            this.theOutputTimeAnalysisHistogramCheckBox.Enabled = false;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Checked = false;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Enabled = false;
+
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Checked = false;
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Enabled = false;
 
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;
@@ -1368,8 +1378,11 @@ namespace PacketCaptureAnalyzer
             this.thePerformTimeAnalysisCheckBox.Checked = false;
             this.thePerformTimeAnalysisCheckBox.Enabled = false;
 
-            this.theOutputTimeAnalysisHistogramCheckBox.Checked = false;
-            this.theOutputTimeAnalysisHistogramCheckBox.Enabled = false;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Checked = false;
+            this.theOutputTimeAnalysisTimestampHistogramCheckBox.Enabled = false;
+
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Checked = false;
+            this.theOutputTimeAnalysisTimeHistogramCheckBox.Enabled = false;
 
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Checked = false;
             this.theOutputAdditionalTimeAnalysisInformationCheckBox.Enabled = false;

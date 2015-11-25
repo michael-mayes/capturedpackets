@@ -571,12 +571,15 @@ namespace PacketCaptureAnalyzer.Analysis.LatencyAnalysis
                         "The number of those message pairs that had an out of range latency was " +
                         theOutOfRangeLatencies.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
 
-                    this.theDebugInformation.WriteBlankLine();
-
-                    // Output the data for any message pair with an out of range latency
-                    foreach (string theString in theOutOfRangeLatencies)
+                    if (this.outputAdditionalInformation)
                     {
-                        this.theDebugInformation.WriteTextLine(theString);
+                        this.theDebugInformation.WriteBlankLine();
+
+                        // Output the data for any message pair with an out of range latency
+                        foreach (string theString in theOutOfRangeLatencies)
+                        {
+                            this.theDebugInformation.WriteTextLine(theString);
+                        }
                     }
                 }
             }

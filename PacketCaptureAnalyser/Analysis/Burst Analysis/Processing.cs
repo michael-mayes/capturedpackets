@@ -596,12 +596,15 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
                             theOutOfRangeTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
                     }
 
-                    this.theDebugInformation.WriteBlankLine();
-
-                    // Output the data for any message with an out of range timestamp difference
-                    foreach (string theString in theOutOfRangeTimestamps)
+                    if (this.outputAdditionalInformation)
                     {
-                        this.theDebugInformation.WriteTextLine(theString);
+                        this.theDebugInformation.WriteBlankLine();
+
+                        // Output the data for any message with an out of range timestamp difference
+                        foreach (string theString in theOutOfRangeTimestamps)
+                        {
+                            this.theDebugInformation.WriteTextLine(theString);
+                        }
                     }
                 }
 
@@ -627,12 +630,15 @@ namespace PacketCaptureAnalyzer.Analysis.BurstAnalysis
                             theIgnoredTimestamps.Count().ToString(System.Globalization.CultureInfo.CurrentCulture));
                     }
 
-                    this.theDebugInformation.WriteBlankLine();
-
-                    // Output the data for any time-supplying messages that were ignored and discarded
-                    foreach (string theString in theIgnoredTimestamps)
+                    if (this.outputAdditionalInformation)
                     {
-                        this.theDebugInformation.WriteTextLine(theString);
+                        this.theDebugInformation.WriteBlankLine();
+
+                        // Output the data for any time-supplying messages that were ignored and discarded
+                        foreach (string theString in theIgnoredTimestamps)
+                        {
+                            this.theDebugInformation.WriteTextLine(theString);
+                        }
                     }
                 }
             }
