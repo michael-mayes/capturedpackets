@@ -7,9 +7,7 @@ Developed under Microsoft Visual Studio 2010/12/13 and .Net Framework 4.0/4.5 fo
 
 There are no warnings from StyleCop. Several warnings from FxCop remain
 
-The application can fully process a wide selection of PCAP NG, PCAP and NA Sniffer packet captures and can fully unpack a range of frames, packets and datagrams therein, but the unpacked data is not utilised in the configured version of the code
-
-The set of structures and constants for different types of Ethernet frames and IP packets are no longer required by this application, but have been preserved in the new [packetstructures](https://github.com/michael-mayes/packetstructures) repository
+The application can fully process a wide selection of PCAP NG, PCAP and NA Sniffer packet (DOS) captures and can fully unpack a range of frames, packets and datagrams therein, but the unpacked data is not utilised in the configured version of the code
 
 Without additional knowledge of the structure of the messages, the application cannot handle multiple messages within a TCP packet
 
