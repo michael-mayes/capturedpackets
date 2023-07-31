@@ -12,6 +12,9 @@ on:
 jobs:
   build:
 
+    # Set the value of the "runs-on" parameter to "windows-2019" to ensure that this project
+    # builds, as per https://github.com/orgs/community/discussions/25253#discussioncomment-5449328
+
     runs-on: windows-2019
 
     steps:
