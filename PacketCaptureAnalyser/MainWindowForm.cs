@@ -18,7 +18,7 @@ namespace PacketCaptureAnalyzer
         /// <summary>
         /// The path of the selected packet capture
         /// </summary>
-        private string theSelectedPacketCapturePath
+        private string theSelectedPacketCapturePath;
 
         /// <summary>
         /// The type of the selected packet capture
